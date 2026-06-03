@@ -1,0 +1,46 @@
+interface Thing { // interface methods must be public
+    fn greet();
+    // non-void function format: fn name(Type param1, Type param2, ...) -> returnType;
+    // async function format: async fn name();
+}
+
+struct Person impl Thing {
+    String name; // struct attributes end with semicolon
+    uint32 age;
+    private { // struct attributes and methods are publicly accessible unless specified in a private block
+        String id;
+         fn something() -> String {
+            return id; // can omit equivalent to this.id
+        }
+    }
+    fn stateAge() {
+        if (this.something() == "124") {
+            println("My age is a secret");
+        }
+        println("My age is " + this.age.toString());
+    }
+
+    Thing { // required for proper interface implementation
+        fn greet() {
+            println("My name is " + this.name);
+        }
+    }
+}
+
+fn test(Thing t) {
+    t.greet(); // valid since it's defined in the interface
+    // t.stateAge() would not be valid since it's only defined in one of the implementations
+}
+
+fn main() -> int {
+    Person p = Person {
+        name: "T",
+        age: 19,
+        id: "123",
+    }; // trailing commas allowed
+    p.greet();
+    p.stateAge();
+    // both functions are valid
+    test(p);
+    return 0;
+}

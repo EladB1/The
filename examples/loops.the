@@ -1,0 +1,37 @@
+fn main() -> int {
+    for (int i, char c in "Hello") {
+        if (i % 2 == 0)
+            println(c);
+        else
+            println('_');
+    }
+    for (char c in "World") { // if index not need, can omit the int from here
+        println(c);
+    }
+    mut int sum = 0;
+    for (int i in 0 .. 10) {
+        sum += i;
+    }
+    for (int i in 0 ..= 10) {
+        sum -= i;
+    }
+    for (int i in 10 ..= 0 .. -3) { // can add another .. for the increment / decrement value
+        println(i);
+    }
+    for (mut int i = 1; i < 10; i *= 2 ) { // for more complex loop behavior, need use mutable iterator in C-style for loop
+        println(i);
+    }
+    mut int x = 1;
+    while (true) {
+        if (x % 3 == 0) {
+            x += 2;
+            continue;
+        }
+        if (x >= 10 || sum < 0) {
+            println(x);
+            break;
+        }
+        x++;
+    }
+    return 0;
+}
