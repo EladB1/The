@@ -63,18 +63,20 @@ Phases:
 
 #### Variables
 
-All variables are immutable by default; to define a mutable variable, preference the definiton with `mut`
+All variables are immutable by default; to define a mutable variable, preface the definiton with `mut`.
+An immutable variable must have an assigned value when defined.
 
 ```
 bool isOpen = false; // Cannot be changed
 mut bool isCorrect = verify(value); // Can be changed
+
+double pi; // This will cause an error since pi is immutable but has no value
+mut double e; // Since it's mutable, a value can be set later so this is valid
 ```
 
-An immutable variable must have an assigned value when defined
-
-Any variables defined within a function (including parameters) are local and any properties within a `struct` are local to that instance
-
-Any variables outside of a function are global and global variables cannot be set as mutable
+Any variables defined within a function (including parameters) are local and any properties within a `struct` are local to that.
+Any variables outside of a function or struct definition are global and global variables cannot be set as mutable.
+Function parameters cannot be mutable.
 
 #### Functions
 
@@ -102,7 +104,7 @@ fn divisibleByTwo(int i) -> bool {
 bool isEven = divisibleByTwo(value);
 ```
 
-The `divisibleByTwo` function takes an int parameter and returns a bool value
+The `divisibleByTwo` function takes an `int` parameter and returns a `bool` value.
 
 
 #### Loops
@@ -111,7 +113,7 @@ Loops come in different shapes depending on the use case
 
 There are two types of loops: `while` and `for`
 
-While loops are like most other languages
+While loops are like most other languages:
 
 ```
 while (condition) {
@@ -119,7 +121,7 @@ while (condition) {
 }
 ```
 
-Since variables are immutable by default, there are restrictions on using C-style for loops
+Since variables are immutable by default, there are restrictions on using C-style for loops. The code below will not work since it violates the immutability rules enforced by the compiler.
 
 ```
 for (int i = 0; i < limit; i++) {
@@ -127,13 +129,15 @@ for (int i = 0; i < limit; i++) {
 } // this will fail since i is immutable but the loop is trying to increment it
 ```
 
-For iterating a set of int values, this syntax can be used instead
+For iterating a set of int values, this syntax can be used instead:
 
 ```
 for (int i in 0 .. limit) {
     // code goes here
 }
 ```
+
+This is equivalent to `for (int i = 0; i < limit; i++)` but the compiler will handle the mutability of `i` for you so no error happens. Within the body of the loop `i` cannot be changed.
 
 What if you wanted to change `i < limit` to `i <= limit`?
 
@@ -151,19 +155,19 @@ for (int i in limit ..= 0 .. -2) {
 }
 ```
 
-the loop above will start at limit and stop when it's greater than or equal to 0, it will iterate by -2 each iteration
+The loop above will start at limit and stop when it's greater than or equal to 0, it will iterate by -2 each iteration.
 
 So far, we've only handled addition... what if you want multiplication as the iteration part of the loop?
 
-For that, you would have to use a C-style loop with a mutable iterator (can also be done for any of the above cases)
+For that, you would have to use a C-style loop with a mutable iterator (can also be done for any of the above cases).
 
 ```
-    for (mut int i = 1; i < limit; i *= 2) { // i is mutable to this should work
-    // code goes here
-}
+    for (mut int i = 1; i < limit; i *= 2) { // i is mutable so this will work
+        // code goes here
+    }
 ```
 
-Looping over strings works similar to the for loops covered already
+Looping over strings works in a similar way to the for loops covered already:
 
 ```
 for (char c in "Hello, world!") {
@@ -171,7 +175,9 @@ for (char c in "Hello, world!") {
 }
 ```
 
-If you want to include the index of the character, you can change the loop variables to support that
+"The" will automatically set c to each character in the string and stops when it hits the end.
+
+If you want to include the index of the character, you can change the loop variables to support that.
 
 ```
 for (int i, char c in "Hello, world!") {
@@ -179,11 +185,11 @@ for (int i, char c in "Hello, world!") {
 }
 ```
 
-The compiler will automatically handle both "shapes" of loops so either case is simple
+The compiler will automatically handle setting both the `i` with the index of the character in the string and `c` with the character itself.
 
-> C-style mutable loops can be used as well but indexing a string has not been planned yet
+> C-style mutable loops can be used as well for iterating over strings but indexing a string has not been planned yet.
 
-Flow control keywords `break` to stop the loop and `continue` to skip to the next iteration are only valid in loops
+Flow control keywords `break` (to stop the loop) and `continue` (to skip to the next iteration) are only valid in loops.
 
 #### User defined types
 
@@ -195,7 +201,7 @@ struct Employee {
     String name;
     float salary;
 }
-Employee emp = Employ {
+Employee emp = Employee {
     id: 12,
     name: "CEO",
     salary: 0.01,
@@ -203,9 +209,9 @@ Employee emp = Employ {
 println(emp.id)
 ```
 
-In the definition of a `struct`, all properties must have a type and end with a semi-colon
+In the definition of a `struct`, all properties must have a type and end with a semi-colon.
 
-By default, everything is public, but you can use `private` or create a `private` block to prevent outside access to properties
+By default, everything is public, but you can use `private` or create a `private` block to prevent outside access to properties.
 
 ```
 struct Account {
@@ -249,7 +255,7 @@ A `struct` can also have functions embedded within its definition. Struct functi
     }
 ```
 
-The `struct` functions allow you to use the syntactic convention of `instanceName.function()` rather than having to pass a type as a parameter
+The `struct` functions allow you to use the syntactic convention of `instanceName.function()` rather than having to pass the `struct` type as a parameter
 
 ```
 File file = File {
@@ -258,7 +264,9 @@ File file = File {
 String doc = file.read();
 ```
 
-A mutable instance of a `struct` means that any of its public properties are mutable as well; private properties can be updated via methods but not directly. For example:
+A mutable instance of a `struct` means that any of its public properties are mutable as well; private properties can be updated via methods but not directly.
+A private variable can be mutable independent of any instance and the declaration order does not matter.
+For example:
 
 ```
 struct Time {
@@ -266,6 +274,9 @@ struct Time {
     uint32 minute;
     uint32 second;
     private uint64 nanoseconds;
+    // both lines below are valid and equivalent
+    private mut String timezone;
+    mut private String region;
 }
 
 mut Time now = Time {
@@ -278,24 +289,22 @@ now.hour = 23;
 now.minute = 59;
 now.minute = 59;
 now.setNanoSeconds(1111111); // only works the instance is mutable or the private property is marked as mutable
+
 ```
 
 
 #### Interfaces
 
-An interface is just a contract of functions that can be used
+An interface is just a contract of functions that can be used. 
+Any types that implement all functions within the interface, can be considered to be the same type. 
+If a function accepts the `Vehicle` interface as a parameter and the `Car` type implements the interface, then the function can take a `Car`. 
+All interface functions are public and must remain public during implementation.
 
 ```
 interface Vehicle {
     fn move(int position, int distance) -> int;
 }
 ```
-
-Any types that implement all functions within the interface, can be considered to be the same type
-
-If a function accepts the `Vehicle` interface as a parameter and the `Car` type implements the interface, then the function can take a `Car`
-
-All interface functions are public and must remain public during implementation
 
 To implement the interface:
 
@@ -326,6 +335,18 @@ To implement the interface:
     }
 ```
 
-A struct can implent multiple interfaces (comma separated) using the `impl` keyword in the definition
+A struct can implent multiple interfaces (comma separated) using the `impl` keyword in the definition.
+Each interface must have a block with all of its functions implemented to be proprely defined.
 
-Each interface must have a block with all of its functions implemented to be proprely defined
+An interface cannot be directly instantiated to a variable, but it can be used in the left hand side of a variable declaration only if the right hand side is a `struct` that implements the interface.
+
+```
+Device speaker; // invalid
+mut Device headphones; // invalid
+Device phone = Device{}; // invalid
+
+Device speaker2 = Speaker{}; // valid
+mut Device speaker3 = Speaker{}; // valid
+
+speaker3 = NonDeviceStruct{}; // invalid since `NonDeviceStruct` does not implement `Device` so this is violating the type checking
+```

@@ -10,14 +10,14 @@ struct Person impl Thing {
     private { // struct attributes and methods are publicly accessible unless specified in a private block
         String id;
          fn something() -> String {
-            return id; // can omit equivalent to this.id
+            return id; // equivalent to this.id
         }
     }
     fn stateAge() {
         if (this.something() == "124") {
             println("My age is a secret");
         }
-        println("My age is " + this.age.toString());
+        println("My age is " + this.age.toString()); // TODO: define actual convention of casting other types to strings
     }
 
     Thing { // required for proper interface implementation
@@ -29,7 +29,7 @@ struct Person impl Thing {
 
 fn test(Thing t) {
     t.greet(); // valid since it's defined in the interface
-    // t.stateAge() would not be valid since it's only defined in one of the implementations
+    // t.stateAge() would not be valid since it's only defined in one of the implementations of the interface
 }
 
 fn main() -> int {
