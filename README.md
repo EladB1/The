@@ -11,7 +11,7 @@ The goal of **The** language is to start with something simple to build a compil
 - [ ] Static strong typing
 - [ ] Immutability by default; `mut` used to declare mutability
 - [ ] User defined types and interfaces
-- Generates WAT file and automatically calls `wat2wasm` on it
+- [ ] Generates WAT file and automatically calls `wat2wasm` on it
 
 #### Future state features
 
@@ -21,6 +21,8 @@ The goal of **The** language is to start with something simple to build a compil
  - [ ] Null safety using the `Maybe<Type>` which could be empty or contain a value
  - [ ] Error handling using `Try<Type, Error>` as well as built-in and definable error types
  - [ ] Container types (i.e. `Array<Type>`)
+ - [ ] `enum` support
+ - [ ] operator overloading for user defined types (via `operator` block)
  - [ ] Format strings
  - [ ] Import/Export system
  - [ ] Package/Dependency management system
@@ -46,7 +48,7 @@ Phases:
 ## Language Specifications
 
 
-#### Basic types
+### Primitive Types
 
 | Type |
 | --- |
@@ -59,7 +61,71 @@ Phases:
 | bool |
 | char |
 | String |
-| enum |
+
+#### Compatibility
+
+| Operation | Result | Valid |
+| --- | --- | --- |
+| `int` **operator** `int64` | `int64` | ✅ |
+| `int` **operator** `float` | `float` | ✅ |
+| `int` **operator** `double` | `double` | ✅ |
+| `int64` **operator** `float` | **Error** | ❌ |
+| `int64` **operator** `double` | `double` | ✅ |
+| `float` **operator** `double` | `double` | ✅ |
+| `uint32` **operator** `uint64` | `uint64` | ✅ |
+| `uint32`/`uint64` **operator** any other type | **Error** | ❌ |
+| `String + char` | `String` | ✅ |
+| `String` **operator** any other type | **Error** | ❌ |
+| `char + char` | `String` | ✅ |
+| `char` **operator** any other type | **Error** | ❌ |
+| `bool` **operator** any other type | **Error** | ❌ |
+
+#### Type casting
+
+Primitive types can be cast to each other (depending on the original and target type) using the `as` keyword. Any lossy conversions will result in a warning; types that cannot support casting from the original type will result in an error. 
+
+All primitive types can be casted to a `String`.
+
+Example:
+
+```
+int i = 0;
+double phi = 1.618;
+uint32 age = 10;
+
+double j = i as double; // valid
+int lossy = phi as int; // warning: lossy conversion
+
+if (age as int == i) {} // valid; helps bridge incompatability between `int` and `uint32` types
+double something = phi + age as double; // valid; helps bridge incompatability between `double` and `uint32` type
+```
+
+| Original | Target | Valid |
+| --- | --- | --- |
+| `int` | `int64` | ✅ |
+| `int` | `float` | ✅ |
+| `int` | `double` | ✅ |
+| `int64` | `int` | ⚠️ |
+| `int64` | `float` | ⚠️ |
+| `int64` | `double` | ✅ |
+| `float` | `double` | ✅ |
+| `double` | `float` | ⚠️ |
+| `uint32` | `int` | ✅ |
+| `uint32` | `int64` | ✅ |
+| `uint32` | `float` | ✅ |
+| `uint32` | `double` | ✅ |
+| `uint64` | `int` | ✅ |
+| `uint64` | `int64` | ✅ |
+| `uint32` | `float` | ⚠️ |
+| `uint32` | `double` | ✅ |
+| `bool` | numeric | ❌ |
+| `bool` | `char` | ❌ |
+| `char` | numeric | ❌ |
+| `char` | `bool` | ❌ |
+| any | `String` | ✅ |
+| `String` | any | ❌ |
+
+Typecasting will help with operations on incompatible types, but won't fix all incompatabilities.
 
 #### Variables
 
