@@ -45,6 +45,12 @@ Phases:
 
 > Optimization phase will come much later
 
+## Compiler developer tooling
+
+1. Go
+2. WABT
+3. A modern web browser
+
 ## Language Specifications
 
 
@@ -62,29 +68,77 @@ Phases:
 | char |
 | String |
 
-#### Compatibility
+#### Strings
 
-| Operation | Result | Valid |
-| --- | --- | --- |
-| `int` **operator** `int64` | `int64` | ✅ |
-| `int` **operator** `float` | `float` | ✅ |
-| `int` **operator** `double` | `double` | ✅ |
-| `int64` **operator** `float` | **Error** | ❌ |
-| `int64` **operator** `double` | `double` | ✅ |
-| `float` **operator** `double` | `double` | ✅ |
-| `uint32` **operator** `uint64` | `uint64` | ✅ |
-| `uint32`/`uint64` **operator** any other type | **Error** | ❌ |
-| `String + char` | `String` | ✅ |
-| `String` **operator** any other type | **Error** | ❌ |
-| `char + char` | `String` | ✅ |
-| `char` **operator** any other type | **Error** | ❌ |
-| `bool` **operator** any other type | **Error** | ❌ |
+The `String` type is a shorthand for an array of `char` values. 
+
+You can get the length of a string using `.length`. Strings can be indexed to get the character at that location. 
+
+```
+String greeting = "hello";
+char c = greeting[1]; // 'e'
+int len = greeting.length;
+bool couldBePalindrome = greeting[0] == greeting[greeting.length - 1]; // comparing the first and last characters
+```
+There is a shorthand for `string.length - number` using the unary operator `^` followed by a value greater than 0. Think of `str[^n]` as `str[str.length - n]` so array bounds still apply.
+
+```
+String str = "Helloo!";
+int n = -5;
+char c = str[^0]; // error
+char c = str[^n]; // error
+char c = str[^1]; // valid; value would be '!'
+char c = str[^(n * -1)]; // valid; value would be 'e'
+```
+
+Strings can also be sliced. A slice will take a portion of the string, based on the provided start and end, and return a new string which is made up of the values at the index that fit those ranges. Both bounds of the slice must fit within array bounds and can be omitted. The left value must be less than or equal to the right value. 
+
+The syntax is `string[start .. end]` where it will begin at `start` and stop before it gets to `end` (not inclusive). To make it inclusive the syntax is `string[start ..= end]`; this will go to start and stop after it gets to `end`. Examples:
+
+```
+String data = "abcde";
+data[4 .. 2]; // error; left value > right value
+data[2 .. 4]; // valid; returns "cd"
+data[2 ..= 4]; // valid; return "cde"
+data[2 .. ]; // valid; returns "cde"
+data[2 ..= ]; // error; this is trying to include nth character in a string of length n (bounds error)
+data[.. 4]; // valid; returns "abcd"
+data[..= 4]; // valid; returns "abcde"
+data[..]; // valid; returns full string
+data[..=]; // error; this is trying to include nth character in a string of length n (bounds error)
+
+// Using string end shorthand
+data[^3 .. ^1]; // valid; returns "cd"
+data[^3 ..= ^1]; // valid; returns "cde"
+data[^3 ..]; // valid; returns "cde"
+data[.. ^1]; // valid; returns "abcd"
+data[..= ^1]; // valid; returns "abcde"
+```
+
+#### Type Compatibility
+
+| Operation | Result | Valid | Context |
+| --- | --- | --- | --- |
+| `int` **operator** `int64` | `int64` | ✅ | |
+| `int` **operator** `float` | `float` | ✅ | |
+| `int` **operator** `double` | `double` | ✅ | |
+| `int64` **operator** `float` | **Error** | ❌ | 64 bit signed int too large for 32 bit float |
+| `int64` **operator** `double` | `double` | ✅ | |
+| `float` **operator** `double` | `double` | ✅ | |
+| `uint32` **operator** `uint64` | `uint64` | ✅ | |
+| `uint32`/`uint64` **operator** any other type | **Error** | ❌ | signed / unsigned conversions are unclear and/or lead to bugs |
+| `String + char` | `String` | ✅ | Only concatenation supported between them |
+| `String` **operator** any other type | **Error** | ❌ | |
+| `char + char` | `String` | ✅ | Concatenate characters to form a `String` |
+| `char + String` | `String` | ✅ | Only concatenation supported between them |
+| `char` **operator** any other type | **Error** | ❌ | |
+| `bool` **operator** any other type | **Error** | ❌ | |
 
 #### Type casting
 
 Primitive types can be cast to each other (depending on the original and target type) using the `as` keyword. Any lossy conversions will result in a warning; types that cannot support casting from the original type will result in an error. 
 
-All primitive types can be casted to a `String`.
+All primitive types can be casted to a `String`. If you want to print something like `"My age is 12"` and the value of 12 was stored in an `int` variable `age`, you would need to do `println("My age is " + age as String);`.
 
 Example:
 
@@ -115,9 +169,9 @@ double something = phi + age as double; // valid; helps bridge incompatability b
 | `uint32` | `float` | ✅ |
 | `uint32` | `double` | ✅ |
 | `uint64` | `int` | ✅ |
-| `uint64` | `int64` | ✅ |
-| `uint32` | `float` | ⚠️ |
-| `uint32` | `double` | ✅ |
+| `uint64` | `uint32` | ⚠️ |
+| `uint64` | `float` | ⚠️ |
+| `uint64` | `double` | ✅ |
 | `bool` | numeric | ❌ |
 | `bool` | `char` | ❌ |
 | `char` | numeric | ❌ |
@@ -305,7 +359,7 @@ A `struct` can also have functions embedded within its definition. Struct functi
                 return "";
             }
             // ...
-            return String fileContents;
+            return fileContents;
         }
 
         private {
@@ -313,7 +367,7 @@ A `struct` can also have functions embedded within its definition. Struct functi
             String group;
             fn checkPermissions() -> bool { // checkPermissions cannot be called directly outside of the struct definition
                 if (this.permissions != 755) { // explicit use of this
-                    return false
+                    return false;
                 }
                 return true;
             }
@@ -353,11 +407,109 @@ mut Time now = Time {
 };
 now.hour = 23;
 now.minute = 59;
-now.minute = 59;
+now.second = 59;
 now.setNanoSeconds(1111111); // only works the instance is mutable or the private property is marked as mutable
 
 ```
 
+All user defined types can be typecasted to a `String` using `instance as String` where `instance` is a variable with a `struct` type; the default implementation of this typecasting prints only the public properties and none of the private ones. The default `String` typecasting implementation can be changed, but that will be covered further in this document.
+
+#### Named blocks
+
+You may have noticed this in the [User defined types](#user-defined-types) section:
+
+```
+private {}
+```
+
+This is called a named block which gives the compiler extra information about aspects of the new type. 
+There are some built-in named blocks which can be used to add functionality to your types.
+
+`private`
+---
+
+The `private` named block tells the compiler about the visibility of the properties and functions contained within. Any code outside of the struct that tries to reference something in a `private` block outside of the struct definition (on the instance) will cause the compiler to throw an error. The `private` named block is the **only** one that can contain properties; the rest can only contain functions.
+
+`cast`
+---
+
+The `cast` named block tells the compiler about how to handle type casting between the `struct` and any other type. Casting can be done using `as TargetType`. For example:
+
+```
+struct TypeA { bool aProp; }
+struct TypeB {
+    int bProp;
+
+    cast {
+        fn toString() -> String { // override the default String casting for this type
+            return "I am TypeB";
+        }
+
+        fn toTypeA() -> TypeA {
+            return TypeA {
+                aProp: bProp == 0,
+            };
+        }
+        /*
+        fn toTypeA2() -> TypeA { // this would cause an error since the compiler won't know which function to use for type casting
+            return TypeA {};
+        }
+        */
+    }
+}
+
+TypeB typeb = TypeB { bProp: 0 };
+TypeA casted = typeb as TypeA; // valid now that a type casting function has been written
+```
+
+The name of the casting function does not really matter (but should be appropriately descriptive) as long as the return type is the one being casted to. If multiple casting functions are defined for the same type, that would be an error. Casting functions cannot take any parameters and must have a return type.
+
+It should be noted that the type casting of one user defined type to another, creates a new instance of the target type; casting will not do an in-place transformation and will not clean up the memory associated with the original object.
+
+`compare`
+---
+
+By default all instances of user defined types are comparable with each other using `==` and `!=`. The two instances will run an equality check on each subfield (including `private` ones).
+
+In order to either overwrite equality/non-equality or add support for other comparisons, the `struct` can contain a `compare` block which has special functions that can be written to overload the operators. The function signatures are:
+
+1. `fn equals(MatchingStructType any_name_here) -> bool`
+2. `fn lessThan(MatchingStructType any_name_here) -> bool`
+3. `fn greaterThan(MatchingStructType any_name_here) -> bool`
+
+> If the parameter type doesn't match the containing `struct`, it will result in an error
+
+All three functions are optional, but anything in the `compare` that is not one of these three functions (or is a duplicate) is an error.
+
+```
+struct Response {
+    int status;
+    private String headers;
+
+    compare {
+        fn equals(Response other) -> bool { // overwrite the default equality implementation
+            return this.status == other.status;
+        }
+
+        fn lessThan(Response other) -> bool { // check if this instance is less than the other instance
+            return this.status < other.status;
+        }
+
+        fn greaterThan(Response other) -> bool {
+            return this.status > other.status;
+        }
+    }
+}
+
+Response valid = Response { status: 200 };
+Response notFound = Response { status: 404 };
+
+if (valid != notFound) {
+    return valid <= notFound;
+}
+```
+
+It's important to note that even if only `equals`, `lessThan`, and `greaterThan` are supported, the compiler can extend equality to also support non-equality (`!=`), extend `lessThan` to also support less than or equal to (`<=`), and extend `greaterThan` to also support greater than or equal to (`>=`).
 
 #### Interfaces
 
@@ -372,7 +524,7 @@ interface Vehicle {
 }
 ```
 
-To implement the interface:
+To implement the interface, you must include a named block for each interface that named block must contain all of the interface's functions and nothing else. For example:
 
 ```
     interface Device {
@@ -401,8 +553,8 @@ To implement the interface:
     }
 ```
 
-A struct can implent multiple interfaces (comma separated) using the `impl` keyword in the definition.
-Each interface must have a block with all of its functions implemented to be proprely defined.
+A struct can implement multiple interfaces (comma separated) using the `impl` keyword in the definition.
+Each interface must have a block with all of its functions implemented to be properly defined.
 
 An interface cannot be directly instantiated to a variable, but it can be used in the left hand side of a variable declaration only if the right hand side is a `struct` that implements the interface.
 
