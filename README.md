@@ -53,6 +53,8 @@ Phases:
 
 ## Language Specifications
 
+[Formal grammar](grammar.md)
+
 ### Operators
 
 Operator types in order of precedence:
@@ -329,6 +331,8 @@ Flow control keywords `break` (to stop the loop) and `continue` (to skip to the 
 
 ### User defined types
 
+AKA structs
+
 A user can define a type which includes its own data and methods
 
 ```
@@ -527,7 +531,9 @@ if (valid != notFound) {
 
 It's important to note that even if only `equals`, `lessThan`, and `greaterThan` are supported, the compiler can extend equality to also support non-equality (`!=`), extend `lessThan` to also support less than or equal to (`<=`), and extend `greaterThan` to also support greater than or equal to (`>=`).
 
-#### Interfaces
+> **NOTE**: If there are multiple of the same named blocks, they will be combined together
+
+### Interfaces
 
 An interface is just a contract of functions that can be used. 
 Any types that implement all functions within the interface, can be considered to be the same type. 
@@ -584,3 +590,66 @@ mut Device speaker3 = Speaker{}; // valid
 
 speaker3 = NonDeviceStruct{}; // invalid since `NonDeviceStruct` does not implement `Device` so this is violating the type checking
 ```
+
+### Disambiguation
+
+What if a struct uses multiple interfaces that all have the same function signature with in them?
+
+```
+interface A {
+    fn do(int a);
+}
+
+interface B {
+    fn do(int b);
+}
+// do has the same parameter types, return type, and name so their signatures match
+
+struct C impl A, B {
+    A {
+        fn do(int a) {
+            // implementation
+        }
+    }
+    B {
+        fn do(int b) {
+            // implementation
+        }
+    }
+}
+
+C instance = C {};
+instance.do(0); // Which do() is used when this is called?
+```
+
+The example above would result in an error since the compiler won't know which `do()` to pick, but there's a way to fix it.
+
+If a function with a matching signature is specified at the top-level, *"The"* will default to that one. Within the top-level `do()`, the specific implementations of the function can be called.
+
+Going back to the earlier example:
+
+```
+struct C impl A, B {
+    fn do(int n) {
+        this.A.do(n);
+        B.do(n); // `this.` is optional
+    }
+    A {
+        fn do(int a) {
+            // implementation
+        }
+    }
+    B {
+        fn do(int b) {
+            // implementation
+        }
+    }
+}
+
+C instance = C {};
+instance.do(0); // Uses top level implementation
+```
+
+The example above works because the intent of how the code should work is made clear by defining a "default" `do()`.
+
+> **Note**: Any top level method that matches the signature of an interface implementation method will take precedence the same way even if there are no conflicts.
