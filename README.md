@@ -53,6 +53,22 @@ Phases:
 
 ## Language Specifications
 
+### Operators
+
+Operator types in order of precedence:
+
+1. Indexing: `[]`
+2. Typecasting: `as`
+3. Unary: `++`, `--`, `^` (string end shortcut found [here](#strings))
+4. Exponents: `**`
+5. Multiplication / Division / Modulo: `*`, `/`, `%`
+6. Addition/Subtraction: `+`, `-`
+7. Bitwise (binary): `&`, `|`, `^` (XOR)
+8. Comparison: `==`, `!=`, `<`, `<=`, `>`, `>=`
+9. Logical Not: `!`
+10. Logical And: `&&`
+11. Logical Or: `||`
+12. Assignment: `=`, `+=`, `-=`, `*=`, `/=`
 
 ### Primitive Types
 
@@ -68,7 +84,7 @@ Phases:
 | char |
 | String |
 
-#### Strings
+### Strings
 
 The `String` type is a shorthand for an array of `char` values. 
 
@@ -115,7 +131,7 @@ data[.. ^1]; // valid; returns "abcd"
 data[..= ^1]; // valid; returns "abcde"
 ```
 
-#### Type Compatibility
+### Type Compatibility
 
 | Operation | Result | Valid | Context |
 | --- | --- | --- | --- |
@@ -134,7 +150,7 @@ data[..= ^1]; // valid; returns "abcde"
 | `char` **operator** any other type | **Error** | ❌ | |
 | `bool` **operator** any other type | **Error** | ❌ | |
 
-#### Type casting
+### Type casting
 
 Primitive types can be cast to each other (depending on the original and target type) using the `as` keyword. Any lossy conversions will result in a warning; types that cannot support casting from the original type will result in an error. 
 
@@ -181,7 +197,7 @@ double something = phi + age as double; // valid; helps bridge incompatability b
 
 Typecasting will help with operations on incompatible types, but won't fix all incompatabilities.
 
-#### Variables
+### Variables
 
 All variables are immutable by default; to define a mutable variable, preface the definiton with `mut`.
 An immutable variable must have an assigned value when defined.
@@ -198,7 +214,7 @@ Any variables defined within a function (including parameters) are local and any
 Any variables outside of a function or struct definition are global and global variables cannot be set as mutable.
 Function parameters cannot be mutable.
 
-#### Functions
+### Functions
 
 No parameters and no return:
 
@@ -227,7 +243,7 @@ bool isEven = divisibleByTwo(value);
 The `divisibleByTwo` function takes an `int` parameter and returns a `bool` value.
 
 
-#### Loops
+### Loops
 
 Loops come in different shapes depending on the use case
 
@@ -311,7 +327,7 @@ The compiler will automatically handle setting both the `i` with the index of th
 
 Flow control keywords `break` (to stop the loop) and `continue` (to skip to the next iteration) are only valid in loops.
 
-#### User defined types
+### User defined types
 
 A user can define a type which includes its own data and methods
 
@@ -414,7 +430,7 @@ now.setNanoSeconds(1111111); // only works the instance is mutable or the privat
 
 All user defined types can be typecasted to a `String` using `instance as String` where `instance` is a variable with a `struct` type; the default implementation of this typecasting prints only the public properties and none of the private ones. The default `String` typecasting implementation can be changed, but that will be covered further in this document.
 
-#### Named blocks
+### Named blocks
 
 You may have noticed this in the [User defined types](#user-defined-types) section:
 
