@@ -13,21 +13,7 @@ The goal of **The** language is to start with something simple to build a compil
 - [ ] User defined types and interfaces
 - [ ] Generates WAT file and automatically calls `wat2wasm` on it
 
-#### Future state features
-
- - [ ] Structured concurrency
- - [ ] Exhaustive pattern matching
- - [ ] Function overloading
- - [ ] Null safety using the `Maybe<Type>` which could be empty or contain a value
- - [ ] Error handling using `Try<Type, Error>` as well as built-in and definable error types
- - [ ] Container types (i.e. `Array<Type>`)
- - [ ] `enum` support
- - [ ] operator overloading for user defined types (via `operator` block)
- - [ ] Format strings
- - [ ] Import/Export system
- - [ ] Package/Dependency management system
- - [ ] Directly generate WASM code
- - [ ] LSP
+Future state features can be found [here](TODO.md)
 
  > Subject to change as development progresses
 
@@ -55,6 +41,12 @@ Phases:
 
 [Formal grammar](grammar.md)
 
+### Comments
+
+Inline comments can be made using `//`. 
+
+Multiline comments start with `/*` and end with `*/`.
+
 ### Operators
 
 Operator types in order of precedence:
@@ -74,17 +66,17 @@ Operator types in order of precedence:
 
 ### Primitive Types
 
-| Type |
-| --- |
-| int |
-| int64 |
-| uint32 |
-| uint64 |
-| float |
-| double |
-| bool |
-| char |
-| String |
+| Type | Default Value |
+| --- | --- |
+| int | 0 |
+| int64 | 0 |
+| uint32 | 0 |
+| uint64 | 0 |
+| float | 0 |
+| double | 0 |
+| bool | false |
+| char | '' |
+| String | "" |
 
 ### Strings
 
@@ -244,6 +236,14 @@ bool isEven = divisibleByTwo(value);
 
 The `divisibleByTwo` function takes an `int` parameter and returns a `bool` value.
 
+A function named can be reused as long as the return type is the same and the parameters are different which would make their function signatures different but compatible. Example:
+
+```
+fn test() -> TestResult {};
+fn test(TestParam param) -> TestResult {}; // valid since the have the same return type and different parameters
+fn test() -> TestResult {}; // invalid; same signature defined twice
+fn test() -> int {}; // invalid; different return type
+```
 
 ### Loops
 
@@ -366,6 +366,8 @@ struct Account {
 
 A `struct` can also have functions embedded within its definition. Struct functions can be in the same `private` blocks as properties or be explicitly marked with `private`. All struct properties are in scope and can be referenced with their names or the developer can explicitly use `this.propertyName`.
 
+> **NOTE**: `this` is a reserved variable in every struct so it cannot be used as a variable/function/property name
+
 ```
     struct File {
         String name;
@@ -386,7 +388,7 @@ A `struct` can also have functions embedded within its definition. Struct functi
             String owner;
             String group;
             fn checkPermissions() -> bool { // checkPermissions cannot be called directly outside of the struct definition
-                if (this.permissions != 755) { // explicit use of this
+                if (this.permissions.asInt() != 755) { // explicit use of this
                     return false;
                 }
                 return true;
@@ -433,6 +435,8 @@ now.setNanoSeconds(1111111); // only works the instance is mutable or the privat
 ```
 
 All user defined types can be typecasted to a `String` using `instance as String` where `instance` is a variable with a `struct` type; the default implementation of this typecasting prints only the public properties and none of the private ones. The default `String` typecasting implementation can be changed, but that will be covered further in this document.
+
+Any struct values not instantiated or set on the instance will be treat as their default values (or an empty struct if they're not a primitive type). An empty Struct instance can be declared with `MyType instance = MyType {}`. Mutability rules still apply to empty structs.
 
 ### Named blocks
 
@@ -536,7 +540,10 @@ It's important to note that even if only `equals`, `lessThan`, and `greaterThan`
 ### Interfaces
 
 An interface is just a contract of functions that can be used. 
-Any types that implement all functions within the interface, can be considered to be the same type. 
+
+Interface functions usually don't have bodies, but if they do, that will be treated as the default implementation. If a function has a body, any consumers of the interface don't have to implement that function, but if they do, their implementation would override the default.
+
+Any types that implement all functions (other than default implementations) within the interface, can be considered to be the same type. 
 If a function accepts the `Vehicle` interface as a parameter and the `Car` type implements the interface, then the function can take a `Car`. 
 All interface functions are public and must remain public during implementation.
 
@@ -593,7 +600,7 @@ speaker3 = NonDeviceStruct{}; // invalid since `NonDeviceStruct` does not implem
 
 ### Disambiguation
 
-What if a struct uses multiple interfaces that all have the same function signature with in them?
+What if a struct uses multiple interfaces that all have the same function signature within them?
 
 ```
 interface A {
