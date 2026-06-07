@@ -1,6 +1,8 @@
 interface Thing { // interface methods must be public
     fn greet();
-    // non-void function format: fn name(Type param1, Type param2, ...) -> returnType;
+    fn defaultFunc() -> int { // includes function body so this is a default implementation
+        return 0
+    }
     // async function format: async fn name();
 }
 
@@ -17,12 +19,20 @@ struct Person impl Thing {
         if (this.something() == "124") {
             println("My age is a secret");
         }
-        println("My age is " + this.age.toString()); // TODO: define actual convention of casting other types to strings
+        println("My age is " + this.age as String);
     }
 
     Thing { // required for proper interface implementation
         fn greet() {
             println("My name is " + this.name);
+        }
+        /* 
+        NOTE: Since defaultFunc() has a default implementation,
+        it is optional here but if included, 
+        it will override the interface definition
+        */
+        fn defaultFunc() -> {
+            return 1;
         }
     }
 }

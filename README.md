@@ -26,8 +26,7 @@ Phases:
     3. Semantic Analysis
     4. IR Generation
     5. Code Generation (WAT)
-    6. Convert WAT to WASM
-    7. Execution in browser and/or CLI
+    6. Execution via wasmtime
 
 > Optimization phase will come much later
 
@@ -35,11 +34,27 @@ Phases:
 
 1. Go
 2. WABT
-3. A modern web browser
+3. wasmtime
 
 ## Language Specifications
 
 [Formal grammar](grammar.md)
+
+### Entry point
+
+Right now, the language doesn't support splitting code up into multiple files, so every file is treated as its own application. Applications must have an entry point so each `.the` file must have a main function defined that returns an `int` (the status code after your program completes).
+
+```
+
+fn main() -> int {
+    //
+    if (condition)
+        return 1; // indicates error
+    return 0; // indicates success
+}
+```
+
+When a program is compiled all type, function, and variable definitions will be placed in the symbol table. When the program runs, it will go through `main` line by line and only use definitions function/type definitions included in main.
 
 ### Comments
 
@@ -453,6 +468,15 @@ There are some built-in named blocks which can be used to add functionality to y
 ---
 
 The `private` named block tells the compiler about the visibility of the properties and functions contained within. Any code outside of the struct that tries to reference something in a `private` block outside of the struct definition (on the instance) will cause the compiler to throw an error. The `private` named block is the **only** one that can contain properties; the rest can only contain functions.
+
+If you mark a variable within a `private` block as `private`, the compiler will warn you about it since it is unnecessary to mark it multiple times. Example:
+
+```
+private {
+    int x;
+    private int y; // generates compiler warning
+}
+```
 
 `cast`
 ---

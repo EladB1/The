@@ -1,0 +1,32 @@
+fn main() -> int {
+    String phrase = "The meaning of life is... ";
+    String line = phrase + (42 as String); // typecasting required for this to work
+    String start = "Hello";
+    String end = "world!";
+    String separator = ',' +  ' '; // concatenating chars produces a String
+    println(start + separator + end);
+    println('a' + "bcd");
+    println("abc" + 'd');
+    for (char c in "Hello") {
+        println(c);
+    }
+    for (int i, char c in "Hello") {
+        println("'" + c + "' at index " + (i as String));
+    }
+    String str = "string";
+    println(str.length); // prints: 6
+    str[0]; // result: 's'
+    str[^1]; // shorthand for str[str.length - 1]; result: 'g'
+    str[^3]; // result 'i'
+
+    mut String sliced = str[0 .. 2]; // result: "st"
+    sliced = str[0 ..= 2]; // result: "str"
+    sliced = str[2 ..]; // result: "ring"
+    sliced = str[.. 4]; // result: "stri"
+    sliced = str[..= 4]; // result: "strin"
+    sliced = str[..]; // result: "string"
+
+    sliced = str[^3 .. ^1]; // result: "in"
+
+    return 0;
+}

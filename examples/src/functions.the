@@ -1,0 +1,56 @@
+fn bark() {
+    println("bark!");
+}
+
+fn generateNumber() -> int {
+    return 1;
+}
+
+// both definitions of generateNumber can be used since they have the same return type
+
+fn generateNumber(int n) -> int {
+    return n;
+}
+
+fn plusOne(int n) -> int {
+    return n + 1;
+}
+
+fn plusTwo(int n) -> int {
+    mut int new = plusOne(n);
+    new = plusOne(new);
+    return new; // only mutable locally
+}
+
+fn fizzBuzz(int limit) {
+    mut String output;
+    for (int i in 0 ..= limit) {
+        if (i % 3 == 0 || i % 5 == 0) {
+            output = "";
+            if (i % 3 == 0)
+                output = "fizz";
+            if (i % 5 == 0)
+                output += "buzz";
+            println(output);
+        }
+        else
+            println(i);
+    }
+}
+
+// recursion
+fn fib(uint32 n) -> uint32 {
+    if (n <= 1)
+        return n;
+    return fib(n - 1) + fib(n - 2);
+    
+}
+
+fn main() -> int {
+    bark();
+    int result = plusOne(generateNumber());
+    int two = plusTwo(0); // not mutable even though the return value is mutable in the function body; must be explicitly marked mut
+    fizzBuzz(100);
+    fib(8);
+    return 0;
+}

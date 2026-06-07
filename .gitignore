@@ -1,0 +1,18 @@
+# Binaries
+*.o
+*.a
+*.so
+*.exe
+*.dll
+the
+
+# Editor generated files
+.vscode
+.idea/
+
+# Go generated files
+*.test
+*.out
+
+# Compiler output
+generated/
