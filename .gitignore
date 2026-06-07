@@ -4,7 +4,12 @@
 *.so
 *.exe
 *.dll
-the
+
+# Go executable
+the 
+
+# Unignore source code directory
+!cmd/the
 
 # Editor generated files
 .vscode
