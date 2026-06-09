@@ -1,0 +1,43 @@
+/*
+ // Source code:
+ 
+float e = 2.718;
+
+fn test(int i) -> int {
+    return i + 1;
+}
+
+fn main() -> int {
+    int i = 1;
+    double pi = 3.14159;
+    mut double value = e ** pi - 1;
+    value -= test(i);
+    String db = "mariadb";
+    bool isOpen = true;
+    return 0;
+}
+*/
+
+STORE global.e: f32 f32(2.718)
+
+fn test(param.i: i32) -> i32 {
+    t1: i32 = GET local.i
+    t2: i32 = t1 + i32(1)
+    return t2 
+}
+fn main -> i32 {
+    STORE local.i: i32 CONST(1)
+    STORE local.pi: f64 CONST(3.14159)
+    t3: f32 = GET global.e
+    t4: f64 = t3 __POWER local.pi
+    t5: f64 = t4 - i32(1)
+    STORE local.value: f64 t5
+    PARAM: i32 local.i
+    t6: i32 = CALL test 1 // number of arguments
+    t7: f64 = GET local.value
+    t8: f64 = t7 - t6
+    STORE local.value: f64 t8
+    STORE local.db: ptr STR_CONST("mariadb")
+    STORE local.isOpen: i32 i32(1) // under the hood, treat bools as i32
+    return CONST(0)
+}
