@@ -1,0 +1,101 @@
+
+[TestNoCommandLineArgs/should_run_compiler_with_no_arguments_or_file - 1]
+Exit code: 1
+===
+
+Output:
+
+Usage: ../../the [options] [file]
+options:
+  -no-color
+     Disable color output
+  -strict
+     Any warnings will cause compilation to fail
+  -suppress-warnings
+     Disable reporting of warnings
+
+Error: no input file
+
+
+---
+
+[TestNoCommandLineArgs/should_run_compiler_with_improper_file_extension - 1]
+Exit code: 1
+===
+
+Output:
+
+Error: only '.the' files accepted
+
+
+---
+
+[TestNoCommandLineArgs/should_fail_when_no_arguments_or_files_provided - 1]
+Exit code: 1
+===
+
+Output:
+
+Usage: ../../the [options] [file]
+options:
+  -no-color
+     Disable color output
+  -strict
+     Any warnings will cause compilation to fail
+  -suppress-warnings
+     Disable reporting of warnings
+
+Error: no input file
+
+
+---
+
+[TestNoCommandLineArgs/should_fail_when_given_improper_file_extension - 1]
+Exit code: 1
+===
+
+Output:
+
+Error: only '.the' files accepted
+
+
+---
+
+[TestNoCommandLineArgs/should_fail_when_conflicting_flags_provided - 1]
+Exit code: 2
+===
+
+Output:
+
+Error: Cannot use strict and suppress-warnings flags together
+
+
+---
+
+[TestNoCommandLineArgs/should_fail_when_file_does_not_exist - 1]
+Exit code: 1
+===
+
+Output:
+
+Error: open something.the: no such file or directory
+
+
+---
+
+[TestNoCommandLineArgs/should_pass_and_show_help_message_on_help_flag - 1]
+Exit code: 0
+===
+
+Output:
+
+Usage: ../../the [options] [file]
+options:
+  -no-color
+     Disable color output
+  -strict
+     Any warnings will cause compilation to fail
+  -suppress-warnings
+     Disable reporting of warnings
+
+---

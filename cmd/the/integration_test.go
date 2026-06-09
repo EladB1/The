@@ -2,34 +2,61 @@
 
 package main_test
 
-/*
-	Integration testing:
-		1. Build up-to-date executable for compiler
-		2. If no snapshot exists, fail the test
-		3. Run source code through compiler and compare output with snapshot
-		4. Report pass/fail
-
-		Command: go test -tags=integration ./cmd/the
-
-	Snapshot creation/updates:
-		1. Write source code for new test file or make change to existing file (.the file)
-		2. Build-up-to-date executable for compiler (using "--update" flag)
-		3. Run command which will create/update the snapshot by running the executable through the compiler and saving the results (.golden file)
-
-		Command: go test -tags=integration ./cmd/the -update="file.the"
-*/
-
 import (
-	"flag"
+	"fmt"
+	"os/exec"
+	"strings"
 	"testing"
+
+	"github.com/gkampitakis/go-snaps/snaps"
 )
 
 var (
-	update *string = flag.String("update", false, "create/update compiler snapshot file from a provided source code file")
+	targetBinary string = "../../the"
 )
 
-func ValidPrograms(t *testing.T) {
+func snapshotTestCompilerWithArgs(t *testing.T, snapshots *snaps.Config, args ...string) {
+	cmd := exec.Command(targetBinary, args...)
+	output, _ := cmd.CombinedOutput() // ignore errors since we'll be expecting errors from the compiler for some tests
+	out := string(output)
+	exitCode := cmd.ProcessState.ExitCode()
+	out = strings.ReplaceAll(out, fmt.Sprintf("exit status %d", exitCode), "") // remove stderr line inserted by cmd.CombinedOutput
+	results := fmt.Sprintf("Exit code: %d\n===\n\nOutput:\n\n%s", exitCode, out)
+	snapshots.MatchSnapshot(t, results)
 
 }
 
-func InvalidPrograms(t *testing.T)
+func TestNoCommandLineArgs(t *testing.T) {
+	snapshots := snaps.WithConfig(
+		snaps.Dir("testdata/cli"),
+	)
+	t.Run("should fail when no arguments or files provided", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots)
+	})
+	t.Run("should fail when given improper file extension", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "file.txt")
+	})
+	t.Run("should fail when conflicting flags provided", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "-strict", "-suppress-warnings", "examples/src/loops.the")
+	})
+	t.Run("should fail when file does not exist", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "something.the")
+	})
+	t.Run("should pass and show help message on help flag", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "-h")
+	})
+}
+
+/* TODO
+func TestValidPrograms(t *testing.T) {
+	snapshots := snaps.WithConfig(
+		snaps.Dir("testdata/valid"),
+	)
+}
+
+func TestInvalidPrograms(t *testing.T) {
+	snapshots := snaps.WithConfig(
+		snaps.Dir("testdata/invalid"),
+	)
+}
+*/
