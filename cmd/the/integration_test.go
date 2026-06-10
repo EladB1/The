@@ -11,11 +11,8 @@ import (
 	"github.com/gkampitakis/go-snaps/snaps"
 )
 
-var (
-	targetBinary string = "../../the"
-)
-
 func snapshotTestCompilerWithArgs(t *testing.T, snapshots *snaps.Config, args ...string) {
+	targetBinary := "../../the"
 	cmd := exec.Command(targetBinary, args...)
 	output, _ := cmd.CombinedOutput() // ignore errors since we'll be expecting errors from the compiler for some tests
 	out := string(output)
