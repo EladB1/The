@@ -34,7 +34,7 @@ logical_not = [ "!" ] comparison ;
 comparison = bitwise [ compare_operator bitwise ] ;
 compare_operator = "==" | "!=" | "<" | ">" | "<=" | ">=" ;
 bitwise =  add { bitwise_operator add };
-bitwise_operator = "^" | "&" | "|" ;
+bitwise_operator = "^" | "&" | "|" | ">>" | "<<" ;
 add = mult { ( "+" | "-" ) mult } ;
 mult = expo { multiplication_operator expo } ;
 expo = unary { "**" expo } ; 
@@ -65,7 +65,7 @@ properties =  property { ","  property } [ "," ] ;
 property = identifier ":" expression ;
 
 (* variable info *)
-modifiers = "private" | "mut" | "private mut" | "mut private" ;
+modifiers = "private" [ "mut" ] | "mut" [ "private" ] ;
 type = "int" | "int64" | "uint32" | "uint64" | "float" | "double" | "String" | "char" | "bool" | identifier ;
 member = identifier { "." identifier } ;
 identifier =  ( "A" ... "Z" | "a" ... "z" | "_" ) { "A" ... "Z" | "a" ... "z" | "_" | "0" ... "9" } ;

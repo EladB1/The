@@ -4,90 +4,33 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 
+	"github.com/EladB1/The/internal/config"
+	"github.com/EladB1/The/internal/diagnostic"
+	"github.com/EladB1/The/internal/lexer"
 	"github.com/fatih/color"
 )
 
 var (
-	// compiler message collections
-	warnings []string
-	errors   []error
-
-	// custom colors
-	boldRed    func(...interface{}) string = color.New(color.FgHiRed, color.Bold).SprintFunc()
-	boldYellow func(...interface{}) string = color.New(color.FgYellow, color.Bold).SprintFunc()
-
 	// cli flags
-	colorOff         *bool = flag.Bool("no-color", false, "Disable color output")
-	suppressWarnings *bool = flag.Bool("suppress-warnings", false, "Disable reporting of warnings")
-	strict           *bool = flag.Bool("strict", false, "Any warnings will cause compilation to fail")
+	colorOff         *bool         = flag.Bool("no-color", false, "Disable color output")
+	suppressWarnings *bool         = flag.Bool("suppress-warnings", false, "Disable reporting of warnings")
+	strict           *bool         = flag.Bool("strict", false, "Any warnings will cause compilation to fail")
+	conf             config.Config = config.Config{
+		Strict:           *strict,
+		SuppressWarnings: *suppressWarnings,
+	}
+	compilerDiagnostics diagnostic.PhaseDiagnostics
 )
-
-func colorPrefix(colorFormatter func(...interface{}) string, prefix string, suffix string) string {
-	return fmt.Sprintf("%s %s", colorFormatter(prefix), suffix)
-}
-
-func Complain(message string) error {
-	err := fmt.Errorf("%s\n", colorPrefix(boldRed, "Error:", message))
-	errors = append(errors, err)
-	return err
-}
-
-func Warn(warning string) {
-	if *suppressWarnings {
-		return
-	}
-	warnStr := colorPrefix(boldYellow, "Warning:", warning)
-	warnings = append(warnings, warnStr)
-}
-
-func ReportFatal(err error, status int) {
-	fmt.Fprintln(os.Stderr, err)
-	os.Exit(status)
-}
-
-func ReportFatalString(message string, status int) {
-	err := Complain(message)
-	ReportFatal(err, status)
-}
-
-func reportStatus() {
-	if !*suppressWarnings {
-		for _, warning := range warnings {
-			if *strict {
-				fmt.Fprintln(os.Stderr, warning)
-			} else {
-				fmt.Println(warning)
-			}
-		}
-	}
-	for _, err := range errors {
-		fmt.Fprintln(os.Stderr, err)
-	}
-	errorsLen := len(errors)
-	errorCount := colorPrefix(boldRed, "Errors", strconv.Itoa(errorsLen))
-	if *suppressWarnings {
-		if errorsLen != 0 {
-			fmt.Println(errorCount)
-		}
-	} else {
-		warningsLen := len(warnings)
-		if warningsLen != 0 || errorsLen != 0 {
-			warningCount := colorPrefix(boldYellow, "Warnings", strconv.Itoa(warningsLen))
-			fmt.Printf("Summary: %s, %s\n", warningCount, errorCount)
-		}
-	}
-}
 
 func getSourceCode(filename string) ([]string, error) {
 	if !strings.HasSuffix(filename, ".the") {
-		return nil, Complain("only '.the' files accepted")
+		return nil, fmt.Errorf("only '.the' files accepted")
 	}
 	contents, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, Complain(err.Error())
+		return nil, err
 	}
 	return strings.Split(string(contents), "\n"), nil
 }
@@ -103,10 +46,55 @@ func init() {
 	}
 }
 
+func compile(source []string) {
+	_, lexerDiagnostics := lexer.Lex(source)
+	compilerDiagnostics = append(compilerDiagnostics, lexerDiagnostics...)
+	if lexerDiagnostics.HasError() {
+		reportStatus()
+		os.Exit(1)
+	}
+	//fmt.Println(tokens)
+	errors, warnings := reportStatus()
+	if (conf.Strict && warnings != 0) || errors != 0 {
+		os.Exit(1)
+	}
+	os.Exit(0)
+}
+
+func reportStatus() (int, int) {
+	var warningCnt int = 0
+	var errorCnt int = 0
+	for _, message := range compilerDiagnostics {
+		if message.Level == diagnostic.Warning {
+			if conf.SuppressWarnings {
+				continue
+			}
+			warningCnt++
+			if conf.Strict {
+				fmt.Fprintln(os.Stderr, message)
+			} else {
+				fmt.Println(message)
+			}
+		} else {
+			errorCnt++
+			fmt.Fprintln(os.Stderr, message)
+		}
+	}
+	var summary string = ""
+	if warningCnt != 0 || errorCnt != 0 {
+		if conf.SuppressWarnings {
+			summary = fmt.Sprintf("%s: %s: %d", color.HiBlueString("Summary"), diagnostic.BoldRed("Errors"), errorCnt)
+		}
+		summary = fmt.Sprintf("%s: %s: %d, %s: %d", color.HiBlueString("Summary"), diagnostic.BoldRed("Errors"), errorCnt, diagnostic.BoldYellow("Warnings"), warningCnt)
+	}
+	fmt.Println(summary)
+	return errorCnt, warningCnt
+}
+
 func main() {
 	flag.Parse()
 	if *strict && *suppressWarnings {
-		ReportFatalString("Cannot use strict and suppress-warnings flags together", 2)
+		diagnostic.ReportFatalStringPositionless(diagnostic.Error, "Cannot use strict and suppress-warnings flags together", 2)
 	}
 	if *colorOff {
 		color.NoColor = true
@@ -115,14 +103,13 @@ func main() {
 	if len(args) == 1 {
 		flag.Usage() // show help message
 		fmt.Fprintln(os.Stderr)
-		ReportFatalString("no input file", 1)
+		diagnostic.ReportFatalStringPositionless(diagnostic.Error, "no input file", 1)
 		os.Exit(1)
 	}
 	filename := os.Args[len(args)-1]
 	src, err := getSourceCode(filename)
 	if err != nil {
-		ReportFatal(err, 1)
+		diagnostic.ReportFatalPositionless(diagnostic.Error, err, 1)
 	}
-	fmt.Println(src) // TODO: replace with compiler pipeline steps (lexer, parser, etc.)
-	reportStatus()
+	compile(src)
 }

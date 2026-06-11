@@ -1,0 +1,12 @@
+fn test()->bool{}
+
+fn main() -> int {
+    // hello
+    int x = 0x12a b//;
+    int y = /*0*/ 1;
+    /*
+    something
+    goes
+    here
+    */
+}
