@@ -1,16 +1,20 @@
-fn test()->bool{}
+0x.a1
+0x1.a
+50
+50.91
+0x59
+//fn test()->bool{}
 
-fn main() -> int {
+/*fn main() -> int {
     // hello
     int x = 0x12a b//;
-    int y = /*0*/ 1;
+    int y = 1;
     y += 0xa. y
     5
     0.01 == .01
+    0x.a1
+    0x1 ..= 0xff
     "aksdadas"
-    /*
-    Force some errors below
-    */
     //"hi
     //'a
     /*"//"
@@ -19,5 +23,5 @@ fn main() -> int {
     '\''
     '\n'
     1
-    */
-}
+    
+}*/

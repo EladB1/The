@@ -16,7 +16,19 @@ type (
 		line      int
 		column    int
 	}
-	hashSet map[string]struct{}
+	hashSet    map[string]struct{}
+	lexerState struct {
+		sequence             strings.Builder
+		startPosition        int
+		tokens               []Token
+		in_string            bool
+		in_char              bool
+		in_multiline_comment bool
+		in_word              bool
+		in_int               bool
+		in_float             bool
+		in_hex               bool
+	}
 )
 
 const (
@@ -113,19 +125,8 @@ var (
 		",",
 		"->",
 	)
-	curr                 byte
-	next                 byte
-	sequence             strings.Builder
-	startPosition        int     = 0
-	tokens               []Token = []Token{}
-	in_string            bool    = false
-	in_char              bool    = false
-	in_multiline_comment bool    = false
-	in_word              bool    = false
-	in_int               bool    = false
-	in_float             bool    = false
-	in_hex               bool    = false
-	in_operator          bool    = false
+	curr byte
+	next byte
 )
 
 func (token Token) String() string {
@@ -142,54 +143,115 @@ func PrintTokens(tokens []Token) {
 	}
 }
 
+func (stateMchn *lexerState) reset() {
+	stateMchn.sequence.Reset()
+	stateMchn.in_char = false
+	stateMchn.in_string = false
+	stateMchn.in_int = false
+	stateMchn.in_hex = false
+	stateMchn.in_float = false
+	stateMchn.in_word = false
+	// manually need to reset in_multiline_comment
+	// do not reset tokens
+}
+
+func (stateMchn *lexerState) push(char byte) {
+	stateMchn.sequence.WriteByte(char)
+}
+
+func (stateMchn *lexerState) clearSequence() {
+	stateMchn.sequence.Reset()
+}
+
+func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType, line int, startCol int) {
+	stateMchn.tokens = append(stateMchn.tokens, Token{
+		tokenType: tokenType,
+		value:     stateMchn.sequence.String(),
+		line:      line + 1,
+		column:    startCol + 1,
+	})
+}
+
+func (stateMchn *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, char byte, line int, startCol int) {
+	stateMchn.tokens = append(stateMchn.tokens, Token{
+		tokenType: tokenType,
+		value:     string(char),
+		line:      line + 1,
+		column:    startCol + 1,
+	})
+}
+
+func (stateMchn *lexerState) debug() {
+	fmt.Printf("State: {Sequence: %s, position: %d, flags: {in_char: %v, in_string: %v, in_word: %v, in_hex: %v, in_int: %v, in_float: %v, in_multiline_comment: %v}}\n",
+		stateMchn.sequence.String(),
+		stateMchn.startPosition,
+		stateMchn.in_char,
+		stateMchn.in_string,
+		stateMchn.in_word,
+		stateMchn.in_hex,
+		stateMchn.in_int,
+		stateMchn.in_float,
+		stateMchn.in_multiline_comment,
+	)
+}
+
 func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 	var report diagnostic.PhaseDiagnostics = []diagnostic.Diagnostic{}
-	var next byte
+	state := &lexerState{
+		tokens:               []Token{},
+		sequence:             strings.Builder{},
+		startPosition:        0,
+		in_string:            false,
+		in_char:              false,
+		in_multiline_comment: false,
+		in_word:              false,
+		in_int:               false,
+		in_float:             false,
+		in_hex:               false,
+	}
 	for i, line := range sourceCode {
-		// reset state
-		sequence.Reset()
-		startPosition = 0
-		in_string = false
-		in_char = false
+		state.reset()
 	lineLoop:
 		for col := 0; col < len(line); col++ {
+			//state.debug()
 			curr = line[col]
 			if col == len(line)-1 {
 				next = 0
 			} else {
 				next = line[col+1]
 			}
-			if in_string {
+			if state.in_string {
 				if curr != '\\' && next == '"' {
-					in_string = false
-					sequence.WriteByte(curr)
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(LIT_STRING, sequence.String(), i, startPosition)
+					state.in_string = false
+					state.push(curr)
+					state.push(next)
+					state.buildAndAppendToken(LIT_STRING, i, state.startPosition)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					sequence.WriteByte(curr)
+					state.push(curr)
 					continue
 				}
 			}
-			if in_char {
+			if state.in_char {
 				if curr != '\\' && next == '\'' {
-					in_char = false
-					sequence.WriteByte(curr)
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(LIT_CHAR, sequence.String(), i, startPosition)
+					state.in_char = false
+					state.push(curr)
+					state.push(next)
+					state.buildAndAppendToken(LIT_CHAR, i, state.startPosition)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					sequence.WriteByte(curr)
+					state.push(curr)
 					continue
 				}
 			}
-			if in_multiline_comment {
+			if state.in_multiline_comment {
 				if curr == '*' && next == '/' {
-					in_multiline_comment = false
+					state.in_multiline_comment = false
+					state.reset()
 					col++
 					continue
 				} else {
@@ -200,247 +262,234 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 				continue
 			}
 
-			if in_hex && !isHexChar(next) { // TODO: Hex validation
-				if isHexChar(curr) {
-					sequence.WriteByte(curr)
-				}
-				in_hex = false
-				if err := validateHexLiteral(sequence); err != nil {
-					report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i+1, startPosition+1))
-				}
-				tokens = buildAndAppendToken(LIT_HEX, sequence.String(), i, startPosition)
-				startPosition = 0
-				sequence.Reset()
-				continue
-			}
-			sequence.WriteByte(curr)
+			state.push(curr)
 			switch curr {
 			case '+':
 				if next == '+' || next == '=' {
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					state.push(next)
+					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '-':
 				if next == '>' {
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(SEPARATOR, sequence.String(), i, col)
+					state.push(next)
+					state.buildAndAppendToken(SEPARATOR, i, col)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else if next == '-' || next == '=' {
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					state.push(next)
+					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '*':
 				if next == '*' || next == '=' {
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					state.push(next)
+					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '/':
 				if next == '/' {
-					sequence.Reset()
+					state.clearSequence()
 					break lineLoop // skip to the next line
 				} else if next == '*' {
-					sequence.Reset()
-					in_multiline_comment = true
+					state.clearSequence()
+					state.in_multiline_comment = true
 					col++ // skip over next char
 					continue
 				} else if next == '=' {
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					state.push(next)
+					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '.':
-				if !in_int && !in_hex && !in_float && unicode.IsDigit(rune(next)) {
-					in_float = true
-					startPosition = col
-					sequence.WriteByte(next)
+				if !state.in_int && !state.in_hex && !state.in_float && unicode.IsDigit(rune(next)) {
+					state.in_float = true
+					state.startPosition = col
+					state.push(next)
 					col++
 					continue
 				}
 				if next == '.' {
-					sequence.WriteByte(next)
+					if state.in_hex {
+						state.in_hex = false
+						state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
+						state.clearSequence()
+						state.push(curr)
+					}
+					state.push(next)
 					// check if character after next is =
-					startPosition = col
+					state.startPosition = col
 					col++
 					if col < len(line)-1 {
 						next = line[col+1]
 						if next == '=' {
-							sequence.WriteByte(next)
+							state.push(next)
 						}
 					}
-					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, startPosition)
-				} else if in_int {
-					in_int = false
-					in_float = next != '.' // handling the case of 1..5 (range operator)
+					state.buildAndAppendToken(OPERATOR, i, state.startPosition)
+				} else if state.in_hex {
+					if err := validateHexLiteral(state.sequence); err != nil {
+						report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i+1, state.startPosition+1))
+					}
+					continue
+				} else if state.in_int {
+					state.in_int = false
+					state.in_float = next != '.' // handling the case of 1..5 (range operator)
 				}
-				if in_float {
+				if state.in_float {
 					if !unicode.IsDigit(rune(next)) {
-						tokens = buildAndAppendToken(LIT_FLOAT, sequence.String(), i, startPosition)
+						state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
 					}
 				} else {
-					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '!':
 				if next == '=' {
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					state.push(next)
+					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '<':
 				if next == '=' || next == '<' {
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					state.push(next)
+					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '>':
 				if next == '=' || next == '>' {
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					state.push(next)
+					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '=':
 				if next == '=' {
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					state.push(next)
+					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '|':
 				if next == '|' {
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					state.push(next)
+					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '&':
 				if next == '&' {
-					sequence.WriteByte(next)
-					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					state.push(next)
+					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					sequence.Reset()
+					state.clearSequence()
 					continue
 				} else {
-					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '"':
-				startPosition = col
-				in_string = true
+				state.startPosition = col
+				state.in_string = true
 				continue
 			case '\'':
-				startPosition = col
-				in_char = true
+				state.startPosition = col
+				state.in_char = true
 				continue
 			default:
-				if !in_int && !in_float && !in_hex && unicode.IsDigit(rune(curr)) && curr != '0' && next != 'x' {
-
-				} else if !in_int && !in_float && curr == '0' && next == 'x' {
-
+				if !state.in_word && isIdentifierFirstChar(curr) {
+					state.clearSequence()
+					state.push(curr)
+					state.in_word = true
+					state.startPosition = col
 				}
-
-				if in_int && unicode.IsDigit(rune(curr)) {
-					if next != '.' && !unicode.IsDigit(rune(next)) {
-						in_int = false
-						tokens = buildAndAppendToken(LIT_INT, sequence.String(), i, startPosition)
-					}
-				}
-
-				if !in_word && isIdentifierFirstChar(curr) {
-					sequence.Reset()
-					sequence.WriteByte(curr)
-					in_word = true
-					startPosition = col
-				}
-				if in_word && !isIdentifierChar(next) {
-					in_word = false
+				if state.in_word && !isIdentifierChar(next) {
+					state.in_word = false
 					// check if keyword
 					var tokenType TokenType = ID
-					_, ok := keywords[sequence.String()]
+					_, ok := keywords[state.sequence.String()]
 					if ok {
 						tokenType = KEYWORD
 					}
-					tokens = buildAndAppendToken(tokenType, sequence.String(), i, startPosition)
-					sequence.Reset()
+					state.buildAndAppendToken(tokenType, i, state.startPosition)
+					state.clearSequence()
 					continue
 				}
-				if !in_word {
+				if !state.in_word {
 					if unicode.IsDigit(rune(curr)) {
-						if !in_int && !in_hex && !in_float { // default state
+						if !state.in_int && !state.in_hex && !state.in_float { // default state
 							if curr == '0' || next == 'x' {
-								startPosition = col
-								sequence.Reset()
-								sequence.WriteByte(curr)
-								sequence.WriteByte(next)
-								in_hex = true
+								state.startPosition = col
+								state.clearSequence()
+								state.push(curr)
+								state.push(next)
+								state.in_hex = true
 								col++
 							} else {
-								in_int = true
-								startPosition = col
+								state.in_int = true
+								state.startPosition = col
 							}
-						} else if in_int {
+						} else if state.in_int {
 							if !unicode.IsDigit(rune(next)) && next != '.' {
-								in_int = false
-								tokens = buildAndAppendToken(LIT_INT, sequence.String(), i, startPosition)
-								sequence.Reset()
+								state.in_int = false
+								state.buildAndAppendToken(LIT_INT, i, state.startPosition)
+								state.clearSequence()
 							}
-						} else if in_hex {
+						} else if state.in_hex {
 							if !isHexChar(next) {
-								in_int = false
-								tokens = buildAndAppendToken(LIT_INT, sequence.String(), i, startPosition)
-								sequence.Reset()
+								state.in_hex = false
+								if err := validateHexLiteral(state.sequence); err != nil {
+									report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i+1, state.startPosition+1))
+								}
+
+								state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
+								state.clearSequence()
 							}
-						} else if in_float {
+						} else if state.in_float {
 							if !unicode.IsDigit(rune(next)) {
-								in_float = false
-								tokens = buildAndAppendToken(LIT_FLOAT, sequence.String(), i, startPosition)
-								sequence.Reset()
+								state.in_float = false
+								state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
+								state.clearSequence()
 							}
 						}
-						continue
-					}
-					if _, ok := separators[string(curr)]; ok {
-						tokens = buildAndAppendTokenFromByte(SEPARATOR, curr, i, col)
-						sequence.Reset()
+					} else if _, ok := separators[string(curr)]; ok {
+						state.buildAndAppendTokenFromByte(SEPARATOR, curr, i, col)
+						state.clearSequence()
 					} else if _, ok := operators[string(curr)]; ok {
-						tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
-						sequence.Reset()
+						state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+						state.clearSequence()
 					} else {
 						message := fmt.Sprintf("Unrecognized character: '%c'", curr)
 						report = append(report, diagnostic.Complain(diagnostic.SyntaxError, message, i+1, col+1))
@@ -449,32 +498,19 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 			}
 		}
 		// EOL actions
-		sequence.Reset()
-		if in_string {
-			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated string literal", i+1, startPosition+1))
+		state.clearSequence()
+		if state.in_string {
+			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated string literal", i+1, state.startPosition+1))
 		}
-		if in_char {
-			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated character literal", i+1, startPosition+1))
+		if state.in_char {
+			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated character literal", i+1, state.startPosition+1))
 		}
 	}
 	// EOF actions
-	if in_multiline_comment {
+	if state.in_multiline_comment {
 		diagnostic.ReportFatalStringPositionless(diagnostic.SyntaxError, "Reached EOF while scanning for */", 1)
 	}
-	return tokens, report
-}
-
-func buildAndAppendToken(tokenType TokenType, value string, line int, startCol int) []Token {
-	return append(tokens, Token{
-		tokenType: tokenType,
-		value:     value,
-		line:      line + 1,
-		column:    startCol + 1,
-	})
-}
-
-func buildAndAppendTokenFromByte(tokenType TokenType, value byte, line int, col int) []Token {
-	return buildAndAppendToken(tokenType, string(value), line, col)
+	return state.tokens, report
 }
 
 func isIdentifierFirstChar(chr byte) bool {
@@ -492,6 +528,9 @@ func isHexChar(char byte) bool {
 func validateHexLiteral(hexVal strings.Builder) error {
 	if hexVal.String() == "0x" {
 		return fmt.Errorf("Incomplete hex literal")
+	}
+	if strings.ContainsAny(hexVal.String(), ".") {
+		return fmt.Errorf("Floating point hexadecimal literals not supported")
 	}
 	return nil
 }
