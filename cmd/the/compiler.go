@@ -47,24 +47,25 @@ func init() {
 }
 
 func compile(source []string) {
-	_, lexerDiagnostics := lexer.Lex(source)
+	tokens, lexerDiagnostics := lexer.Lex(source)
 	compilerDiagnostics = append(compilerDiagnostics, lexerDiagnostics...)
 	if lexerDiagnostics.HasError() {
-		reportStatus()
+		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}
 	//fmt.Println(tokens)
-	errors, warnings := reportStatus()
+	lexer.PrintTokens(tokens)
+	errors, warnings := reportStatus(compilerDiagnostics)
 	if (conf.Strict && warnings != 0) || errors != 0 {
 		os.Exit(1)
 	}
 	os.Exit(0)
 }
 
-func reportStatus() (int, int) {
+func reportStatus(messages diagnostic.PhaseDiagnostics) (int, int) {
 	var warningCnt int = 0
 	var errorCnt int = 0
-	for _, message := range compilerDiagnostics {
+	for _, message := range messages {
 		if message.Level == diagnostic.Warning {
 			if conf.SuppressWarnings {
 				continue
@@ -83,9 +84,9 @@ func reportStatus() (int, int) {
 	var summary string = ""
 	if warningCnt != 0 || errorCnt != 0 {
 		if conf.SuppressWarnings {
-			summary = fmt.Sprintf("%s: %s: %d", color.HiBlueString("Summary"), diagnostic.BoldRed("Errors"), errorCnt)
+			summary = fmt.Sprintf("\n%s:\n%s: %d", color.HiBlueString("Summary"), diagnostic.BoldRed("Errors"), errorCnt)
 		}
-		summary = fmt.Sprintf("%s: %s: %d, %s: %d", color.HiBlueString("Summary"), diagnostic.BoldRed("Errors"), errorCnt, diagnostic.BoldYellow("Warnings"), warningCnt)
+		summary = fmt.Sprintf("\n%s:\n%s: %d, %s: %d", color.HiBlueString("Summary"), diagnostic.BoldRed("Errors"), errorCnt, diagnostic.BoldYellow("Warnings"), warningCnt)
 	}
 	fmt.Println(summary)
 	return errorCnt, warningCnt

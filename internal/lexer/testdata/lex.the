@@ -5,8 +5,14 @@ fn main() -> int {
     int x = 0x12a b//;
     int y = /*0*/ 1;
     /*
-    something
-    goes
-    here
+    Force some errors below
     */
+    "hi
+    'a
+    /*"//"
+    "hello"
+    "\""
+    '\''
+    '\n'
+    1
 }

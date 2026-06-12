@@ -48,19 +48,19 @@ func (diagnostic Diagnostic) String() string {
 		prefix = BoldRed(diagnostic.Level)
 	}
 	var position string = ""
-	if diagnostic.Line != 0 && diagnostic.Column != 0 {
+	if diagnostic.Line != -1 && diagnostic.Column != -1 {
 		position = fmt.Sprintf("at line: %d, column: %d", diagnostic.Line, diagnostic.Column)
 	}
-	return fmt.Sprintf("%s %s %s", prefix, diagnostic.Message, position)
+	return fmt.Sprintf("%s: %s %s", prefix, diagnostic.Message, position)
 }
 
 func ReportFatalPositionless(level Severity, err error, status int) {
-	ReportFatal(level, err, 0, 0, status)
+	ReportFatal(level, err, -1, -1, status)
 
 }
 
 func ReportFatalStringPositionless(level Severity, message string, status int) {
-	ReportFatalString(level, message, 0, 0, status)
+	ReportFatalString(level, message, -1, -1, status)
 }
 
 func ReportFatal(level Severity, err error, line int, col int, status int) {
@@ -83,7 +83,7 @@ func Complain(level Severity, message string, line int, col int) Diagnostic {
 }
 
 func ComplainPositionless(level Severity, message string) Diagnostic {
-	return Complain(level, message, 0, 0)
+	return Complain(level, message, -1, -1)
 }
 
 func Warn(message string, line int, col int) Diagnostic {
@@ -96,5 +96,5 @@ func Warn(message string, line int, col int) Diagnostic {
 }
 
 func WarnPositionless(message string) Diagnostic {
-	return Warn(message, 0, 0)
+	return Warn(message, -1, -1)
 }

@@ -111,8 +111,6 @@ var (
 		";",
 		":",
 		",",
-		"'",
-		"\"",
 		"->",
 	)
 	curr                 byte
@@ -124,12 +122,14 @@ var (
 	in_char              bool    = false
 	in_multiline_comment bool    = false
 	in_word              bool    = false
-	in_num               bool    = false
+	in_int               bool    = false
+	in_float             bool    = false
 	in_hex               bool    = false
+	in_operator          bool    = false
 )
 
 func (token Token) String() string {
-	return fmt.Sprintf("{Value: \"%s\", Type: %s, Line: %d, Column: %d}", token.value, token.tokenType, token.line, token.column)
+	return fmt.Sprintf("{Value: %s, Type: %s, Line: %d, Column: %d}", token.value, token.tokenType, token.line, token.column)
 }
 
 func (token Token) HasValue(value string) bool {
@@ -144,42 +144,57 @@ func PrintTokens(tokens []Token) {
 
 func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 	var report diagnostic.PhaseDiagnostics = []diagnostic.Diagnostic{}
+	var next byte
 	for i, line := range sourceCode {
 		sequence.Reset()
 		startPosition = 0
-		for col := 0; col < len(line)-1; col++ {
+	lineLoop:
+		for col := 0; col < len(line); col++ {
 			curr = line[col]
-			next = line[col+1]
-			if (curr == '/' && next == '/') && !in_string && !in_multiline_comment {
-				fmt.Printf("Found comment at line: %d, col: %d\n", i+1, col+1)
-				break
+			if col == len(line)-1 {
+				next = 0
+			} else {
+				next = line[col+1]
 			}
-			if curr == '/' && next == '*' {
-				in_multiline_comment = true
-				col++ // skip over next char
-				continue
+			if in_string {
+				if curr != '\\' && next == '"' {
+					in_string = false
+					sequence.WriteByte(curr)
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(LIT_STRING, sequence.String(), i, startPosition)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					sequence.WriteByte(curr)
+					continue
+				}
 			}
-			if in_multiline_comment && curr != '*' && next != '/' {
-				continue
+			if in_char {
+				if curr != '\\' && next == '\'' {
+					in_char = false
+					sequence.WriteByte(curr)
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(LIT_CHAR, sequence.String(), i, startPosition)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					sequence.WriteByte(curr)
+					continue
+				}
 			}
-			if in_multiline_comment && curr == '*' && next == '/' {
-				in_multiline_comment = false
-				col++
-				fmt.Printf("End multiline comment at line: %d, col: %d\n", i+1, col+1)
-				continue
+			if in_multiline_comment {
+				if curr == '*' && next == '/' {
+					in_multiline_comment = false
+					col++
+					continue
+				} else {
+					continue
+				}
 			}
-
 			if unicode.IsSpace(rune(curr)) { // TODO
 				continue
-			}
-			if _, ok := separators[string(curr)]; ok {
-				tokens = buildAndAppendTokenFromByte(SEPARATOR, curr, i, col)
-				continue
-			}
-			if sequence.String() == "->" {
-				tokens = buildAndAppendToken(SEPARATOR, sequence.String(), i, col-1)
-				sequence.Reset()
-				//continue
 			}
 			sequence.WriteByte(curr)
 			if in_hex && (!unicode.IsDigit(rune(next)) && (next < 'a' || next > 'f') && (next < 'A' || next > 'F')) { // TODO: Hex validation
@@ -190,47 +205,199 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 				continue
 
 			}
-			if unicode.IsDigit(rune(curr)) && curr != '0' && next != 'x' {
-				// int logic
-				// float logic
-				// validate any invalid characters
-			}
-			if curr == '0' && next == 'x' {
-				startPosition = col
-				fmt.Println(sequence.String())
-				sequence.WriteByte(next)
-				in_hex = true
-				col++
-				continue
-			}
-			if !in_word && isIdentifierFirstChar(curr) {
-				sequence.Reset()
-				sequence.WriteByte(curr)
-				in_word = true
-			}
-			if in_word && !isIdentifierChar(next) {
-				in_word = false
-				// check if keyword
-				var tokenType TokenType = ID
-				_, ok := keywords[sequence.String()]
-				if ok {
-					tokenType = KEYWORD
+			switch curr {
+			case '+':
+				if next == '+' || next == '=' {
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
-				tokens = append(tokens, Token{
-					tokenType: tokenType,
-					value:     sequence.String(),
-					line:      i + 1,
-					column:    col + 1,
-				})
-				sequence.Reset()
+			case '-':
+				if next == '>' {
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(SEPARATOR, sequence.String(), i, col)
+					col++
+					sequence.Reset()
+					continue
+				} else if next == '-' || next == '=' {
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+				}
+			case '*':
+				if next == '*' || next == '=' {
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+				}
+			case '/':
+				if next == '/' {
+					break lineLoop // skip to the next line
+				} else if next == '*' {
+					in_multiline_comment = true
+					col++ // skip over next char
+					continue
+				} else if next == '=' {
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+				}
+			case '.':
+				if next == '.' {
+					sequence.WriteByte(next)
+					// check if character after next is =
+					startPosition = col
+					col++
+					if col < len(line)-1 {
+						next = line[col+1]
+						if next == '=' {
+							sequence.WriteByte(next)
+						}
+					}
+					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, startPosition)
+				} else {
+					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+				}
+			case '!':
+				if next == '=' {
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+				}
+			case '<':
+				if next == '=' || next == '<' {
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+				}
+			case '>':
+				if next == '=' || next == '>' {
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+				}
+			case '=':
+				if next == '=' {
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+				}
+			case '|':
+				if next == '|' {
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+				}
+			case '&':
+				if next == '&' {
+					sequence.WriteByte(next)
+					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, col)
+					col++
+					sequence.Reset()
+					continue
+				} else {
+					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+				}
+			case '"':
+				startPosition = col
+				in_string = true
+				continue
+			case '\'':
+				startPosition = col
+				in_char = true
+				continue
+			default:
+				if unicode.IsDigit(rune(curr)) && curr != '0' && next != 'x' {
+					// TODO
+					continue
+				} else if curr == '0' && next == 'x' {
+					startPosition = col
+					sequence.WriteByte(next)
+					in_hex = true
+					col++
+					continue
+				}
+
+				if !in_word && isIdentifierFirstChar(curr) {
+					sequence.Reset()
+					sequence.WriteByte(curr)
+					in_word = true
+					startPosition = col
+				}
+				if in_word && !isIdentifierChar(next) {
+					in_word = false
+					// check if keyword
+					var tokenType TokenType = ID
+					_, ok := keywords[sequence.String()]
+					if ok {
+						tokenType = KEYWORD
+					}
+					tokens = buildAndAppendToken(tokenType, sequence.String(), i, startPosition)
+					sequence.Reset()
+					continue
+				}
+				if !in_word {
+					if _, ok := separators[string(curr)]; ok {
+						tokens = buildAndAppendTokenFromByte(SEPARATOR, curr, i, col)
+						sequence.Reset()
+					} else if _, ok := operators[string(curr)]; ok {
+						tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+						sequence.Reset()
+					} else {
+						message := fmt.Sprintf("Unrecognized character: '%c'", curr)
+						report = append(report, diagnostic.Complain(diagnostic.SyntaxError, message, i, col))
+					}
+				}
 			}
+		}
+		// EOL actions
+		if in_string {
+			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated string literal", i, startPosition))
+		}
+		if in_char {
+			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated character literal", i, startPosition))
 		}
 	}
 	// EOF actions
 	if in_multiline_comment {
 		diagnostic.ReportFatalStringPositionless(diagnostic.SyntaxError, "Reached EOF while scanning for */", 1)
 	}
-	PrintTokens(tokens)
 	return tokens, report
 }
 
