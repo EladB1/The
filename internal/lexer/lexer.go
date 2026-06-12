@@ -146,8 +146,11 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 	var report diagnostic.PhaseDiagnostics = []diagnostic.Diagnostic{}
 	var next byte
 	for i, line := range sourceCode {
+		// reset state
 		sequence.Reset()
 		startPosition = 0
+		in_string = false
+		in_char = false
 	lineLoop:
 		for col := 0; col < len(line); col++ {
 			curr = line[col]
@@ -244,8 +247,10 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 				}
 			case '/':
 				if next == '/' {
+					sequence.Reset()
 					break lineLoop // skip to the next line
 				} else if next == '*' {
+					sequence.Reset()
 					in_multiline_comment = true
 					col++ // skip over next char
 					continue
@@ -387,6 +392,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 			}
 		}
 		// EOL actions
+		sequence.Reset()
 		if in_string {
 			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated string literal", i, startPosition))
 		}
