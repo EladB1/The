@@ -49,12 +49,12 @@ func init() {
 func compile(source []string) {
 	tokens, lexerDiagnostics := lexer.Lex(source)
 	compilerDiagnostics = append(compilerDiagnostics, lexerDiagnostics...)
+	lexer.PrintTokens(tokens)
 	if lexerDiagnostics.HasError() {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}
 	//fmt.Println(tokens)
-	lexer.PrintTokens(tokens)
 	errors, warnings := reportStatus(compilerDiagnostics)
 	if (conf.Strict && warnings != 0) || errors != 0 {
 		os.Exit(1)

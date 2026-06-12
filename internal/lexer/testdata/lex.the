@@ -4,11 +4,15 @@ fn main() -> int {
     // hello
     int x = 0x12a b//;
     int y = /*0*/ 1;
+    y += 0xa. y
+    5
+    0.01 == .01
+    "aksdadas"
     /*
     Force some errors below
     */
-    "hi
-    'a
+    //"hi
+    //'a
     /*"//"
     "hello"
     "\""

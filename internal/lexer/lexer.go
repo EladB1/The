@@ -199,15 +199,21 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 			if unicode.IsSpace(rune(curr)) { // TODO
 				continue
 			}
-			sequence.WriteByte(curr)
-			if in_hex && (!unicode.IsDigit(rune(next)) && (next < 'a' || next > 'f') && (next < 'A' || next > 'F')) { // TODO: Hex validation
+
+			if in_hex && !isHexChar(next) { // TODO: Hex validation
+				if isHexChar(curr) {
+					sequence.WriteByte(curr)
+				}
 				in_hex = false
+				if err := validateHexLiteral(sequence); err != nil {
+					report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i+1, startPosition+1))
+				}
 				tokens = buildAndAppendToken(LIT_HEX, sequence.String(), i, startPosition)
-				startPosition = col + 1
+				startPosition = 0
 				sequence.Reset()
 				continue
-
 			}
+			sequence.WriteByte(curr)
 			switch curr {
 			case '+':
 				if next == '+' || next == '=' {
@@ -264,6 +270,13 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '.':
+				if !in_int && !in_hex && !in_float && unicode.IsDigit(rune(next)) {
+					in_float = true
+					startPosition = col
+					sequence.WriteByte(next)
+					col++
+					continue
+				}
 				if next == '.' {
 					sequence.WriteByte(next)
 					// check if character after next is =
@@ -276,6 +289,14 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 						}
 					}
 					tokens = buildAndAppendToken(OPERATOR, sequence.String(), i, startPosition)
+				} else if in_int {
+					in_int = false
+					in_float = next != '.' // handling the case of 1..5 (range operator)
+				}
+				if in_float {
+					if !unicode.IsDigit(rune(next)) {
+						tokens = buildAndAppendToken(LIT_FLOAT, sequence.String(), i, startPosition)
+					}
 				} else {
 					tokens = buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
@@ -348,15 +369,17 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 				in_char = true
 				continue
 			default:
-				if unicode.IsDigit(rune(curr)) && curr != '0' && next != 'x' {
-					// TODO
-					continue
-				} else if curr == '0' && next == 'x' {
-					startPosition = col
-					sequence.WriteByte(next)
-					in_hex = true
-					col++
-					continue
+				if !in_int && !in_float && !in_hex && unicode.IsDigit(rune(curr)) && curr != '0' && next != 'x' {
+
+				} else if !in_int && !in_float && curr == '0' && next == 'x' {
+
+				}
+
+				if in_int && unicode.IsDigit(rune(curr)) {
+					if next != '.' && !unicode.IsDigit(rune(next)) {
+						in_int = false
+						tokens = buildAndAppendToken(LIT_INT, sequence.String(), i, startPosition)
+					}
 				}
 
 				if !in_word && isIdentifierFirstChar(curr) {
@@ -378,6 +401,40 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					continue
 				}
 				if !in_word {
+					if unicode.IsDigit(rune(curr)) {
+						if !in_int && !in_hex && !in_float { // default state
+							if curr == '0' || next == 'x' {
+								startPosition = col
+								sequence.Reset()
+								sequence.WriteByte(curr)
+								sequence.WriteByte(next)
+								in_hex = true
+								col++
+							} else {
+								in_int = true
+								startPosition = col
+							}
+						} else if in_int {
+							if !unicode.IsDigit(rune(next)) && next != '.' {
+								in_int = false
+								tokens = buildAndAppendToken(LIT_INT, sequence.String(), i, startPosition)
+								sequence.Reset()
+							}
+						} else if in_hex {
+							if !isHexChar(next) {
+								in_int = false
+								tokens = buildAndAppendToken(LIT_INT, sequence.String(), i, startPosition)
+								sequence.Reset()
+							}
+						} else if in_float {
+							if !unicode.IsDigit(rune(next)) {
+								in_float = false
+								tokens = buildAndAppendToken(LIT_FLOAT, sequence.String(), i, startPosition)
+								sequence.Reset()
+							}
+						}
+						continue
+					}
 					if _, ok := separators[string(curr)]; ok {
 						tokens = buildAndAppendTokenFromByte(SEPARATOR, curr, i, col)
 						sequence.Reset()
@@ -386,7 +443,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 						sequence.Reset()
 					} else {
 						message := fmt.Sprintf("Unrecognized character: '%c'", curr)
-						report = append(report, diagnostic.Complain(diagnostic.SyntaxError, message, i, col))
+						report = append(report, diagnostic.Complain(diagnostic.SyntaxError, message, i+1, col+1))
 					}
 				}
 			}
@@ -394,10 +451,10 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 		// EOL actions
 		sequence.Reset()
 		if in_string {
-			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated string literal", i, startPosition))
+			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated string literal", i+1, startPosition+1))
 		}
 		if in_char {
-			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated character literal", i, startPosition))
+			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated character literal", i+1, startPosition+1))
 		}
 	}
 	// EOF actions
@@ -426,4 +483,15 @@ func isIdentifierFirstChar(chr byte) bool {
 
 func isIdentifierChar(chr byte) bool {
 	return isIdentifierFirstChar(chr) || unicode.IsDigit(rune(chr))
+}
+
+func isHexChar(char byte) bool {
+	return unicode.IsDigit(rune(char)) || (char >= 'a' && char <= 'f') || (char >= 'A' && char <= 'F')
+}
+
+func validateHexLiteral(hexVal strings.Builder) error {
+	if hexVal.String() == "0x" {
+		return fmt.Errorf("Incomplete hex literal")
+	}
+	return nil
 }
