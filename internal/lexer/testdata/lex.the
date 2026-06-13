@@ -1,8 +1,13 @@
 0x.a1
 0x1.a
+getResponse()[0xfff..0xfafafafa];
 50
 50.91
-0x59
+0x59 .. 0xff
+50.
+.50
+50
+f
 //fn test()->bool{}
 
 /*fn main() -> int {

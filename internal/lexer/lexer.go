@@ -329,21 +329,28 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 				if next == '.' {
 					if state.in_hex {
 						state.in_hex = false
-						state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
+						if err := validateHexLiteral(state.sequence); err != nil {
+							report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i+1, state.startPosition+1))
+						} else {
+							state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
+						}
 						state.clearSequence()
 						state.push(curr)
 					}
 					state.push(next)
 					// check if character after next is =
 					state.startPosition = col
-					col++
 					if col < len(line)-1 {
-						next = line[col+1]
+						next = line[col+2]
 						if next == '=' {
 							state.push(next)
+							col++
 						}
 					}
+					col++
 					state.buildAndAppendToken(OPERATOR, i, state.startPosition)
+					state.clearSequence()
+					continue
 				} else if state.in_hex {
 					if err := validateHexLiteral(state.sequence); err != nil {
 						report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i+1, state.startPosition+1))
@@ -355,6 +362,9 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 				}
 				if state.in_float {
 					if !unicode.IsDigit(rune(next)) {
+						if err := validateFloatLiteral(state.sequence); err != nil {
+							report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+						}
 						state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
 					}
 				} else {
@@ -429,7 +439,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 				state.in_char = true
 				continue
 			default:
-				if !state.in_word && isIdentifierFirstChar(curr) {
+				if !state.in_hex && !state.in_word && isIdentifierFirstChar(curr) {
 					state.clearSequence()
 					state.push(curr)
 					state.in_word = true
@@ -447,7 +457,19 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.clearSequence()
 					continue
 				}
-				if !state.in_word {
+				if state.in_hex {
+					if !isHexChar(next) {
+						state.in_hex = false
+						if err := validateHexLiteral(state.sequence); err != nil {
+							report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i+1, state.startPosition+1))
+						}
+
+						state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
+						state.clearSequence()
+						continue
+					}
+				}
+				if !state.in_word && !state.in_hex {
 					if unicode.IsDigit(rune(curr)) {
 						if !state.in_int && !state.in_hex && !state.in_float { // default state
 							if curr == '0' || next == 'x' {
@@ -467,19 +489,12 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 								state.buildAndAppendToken(LIT_INT, i, state.startPosition)
 								state.clearSequence()
 							}
-						} else if state.in_hex {
-							if !isHexChar(next) {
-								state.in_hex = false
-								if err := validateHexLiteral(state.sequence); err != nil {
-									report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i+1, state.startPosition+1))
-								}
-
-								state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
-								state.clearSequence()
-							}
 						} else if state.in_float {
 							if !unicode.IsDigit(rune(next)) {
 								state.in_float = false
+								if err := validateFloatLiteral(state.sequence); err != nil {
+									report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+								}
 								state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
 								state.clearSequence()
 							}
@@ -526,11 +541,20 @@ func isHexChar(char byte) bool {
 }
 
 func validateHexLiteral(hexVal strings.Builder) error {
-	if hexVal.String() == "0x" {
-		return fmt.Errorf("Incomplete hex literal")
+	literal := hexVal.String()
+	if literal == "0x" {
+		return fmt.Errorf("Incomplete hex literal: %s", literal)
 	}
-	if strings.ContainsAny(hexVal.String(), ".") {
+	if strings.ContainsAny(literal, ".") {
 		return fmt.Errorf("Floating point hexadecimal literals not supported")
+	}
+	return nil
+}
+
+func validateFloatLiteral(floatVal strings.Builder) error {
+	literal := floatVal.String()
+	if literal[len(literal)-1] == '.' || strings.Count(literal, ".") > 1 {
+		return fmt.Errorf("Invalid float point literal: %s", literal)
 	}
 	return nil
 }

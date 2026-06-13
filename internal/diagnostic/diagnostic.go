@@ -49,7 +49,7 @@ func (diagnostic Diagnostic) String() string {
 	}
 	var position string = ""
 	if diagnostic.Line != -1 && diagnostic.Column != -1 {
-		position = fmt.Sprintf("at line: %d, column: %d", diagnostic.Line, diagnostic.Column)
+		position = fmt.Sprintf("at line: %d, column: %d", diagnostic.Line+1, diagnostic.Column+1)
 	}
 	return fmt.Sprintf("%s: %s %s", prefix, diagnostic.Message, position)
 }
