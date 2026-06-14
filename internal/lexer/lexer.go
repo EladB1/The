@@ -166,6 +166,7 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType, line int, 
 		line:      line + 1,
 		column:    startCol + 1,
 	})
+	stateMchn.clearSequence()
 }
 
 func (stateMchn *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, char byte, line int, startCol int) {
@@ -175,6 +176,7 @@ func (stateMchn *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, ch
 		line:      line + 1,
 		column:    startCol + 1,
 	})
+	stateMchn.clearSequence()
 }
 
 func (stateMchn *lexerState) debug() {
@@ -225,7 +227,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					continue
 				}
 			}
-			if unicode.IsSpace(rune(curr)) { // TODO
+			if unicode.IsSpace(rune(curr)) {
 				continue
 			}
 
@@ -236,7 +238,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(next)
 					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					state.clearSequence()
 					continue
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
@@ -246,13 +247,11 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(next)
 					state.buildAndAppendToken(SEPARATOR, i, col)
 					col++
-					state.clearSequence()
 					continue
 				} else if next == '-' || next == '=' {
 					state.push(next)
 					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					state.clearSequence()
 					continue
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
@@ -262,7 +261,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(next)
 					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					state.clearSequence()
 					continue
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
@@ -280,46 +278,12 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(next)
 					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					state.clearSequence()
 					continue
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '.':
-				if !state.in_int && !state.in_hex && !state.in_float && unicode.IsDigit(rune(next)) {
-					state.in_float = true
-					state.startPosition = col
-					state.push(next)
-					col++
-					continue
-				}
-				if next == '.' {
-					if state.in_hex {
-						state.in_hex = false
-						fmt.Println("HERE0")
-						if err := validateHexLiteral(state.sequence); err != nil {
-							report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
-						} else {
-							state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
-						}
-						state.clearSequence()
-						state.push(curr)
-					} else if state.in_int {
-						state.in_int = false
-						state.buildAndAppendToken(LIT_INT, i, state.startPosition)
-						state.clearSequence()
-						state.push(curr)
-
-					} else if state.in_float {
-						state.in_float = false
-						if err := validateFloatLiteral(state.sequence); err != nil {
-							report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
-						} else {
-							state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
-						}
-						state.clearSequence()
-						state.push(curr)
-					}
+				if next == '.' { // .. or ..=
 					state.push(next)
 					// check if character after next is =
 					state.startPosition = col
@@ -332,25 +296,27 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					}
 					col++
 					state.buildAndAppendToken(OPERATOR, i, state.startPosition)
-					state.clearSequence()
 					continue
-				} else if state.in_hex {
-					fmt.Println("HERE1")
-					if err := validateHexLiteral(state.sequence); err != nil {
-						report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
-					}
-					continue
-				} else if state.in_int {
-					state.in_int = false
-					state.in_float = next != '.' // handling the case of 1..5 (range operator)
-				}
-				if state.in_float {
-					if !unicode.IsDigit(rune(next)) {
-						if err := validateFloatLiteral(state.sequence); err != nil {
-							report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+				} else if unicode.IsDigit(rune(next)) && !(curr == '0' && next == 'x') { // Example: .234
+					state.startPosition = col
+					col++
+					for col < length {
+						curr = line[col]
+						if col == length-1 {
+							next = 0
 						} else {
-							state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
+							next = line[col+1]
 						}
+						state.push(curr)
+						if !unicode.IsDigit(rune(next)) {
+							if err := validateFloatLiteral(state.sequence); err != nil {
+								report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+								break
+							}
+							state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
+							break
+						}
+						col++
 					}
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
@@ -360,7 +326,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(next)
 					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					state.clearSequence()
 					continue
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
@@ -370,7 +335,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(next)
 					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					state.clearSequence()
 					continue
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
@@ -380,7 +344,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(next)
 					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					state.clearSequence()
 					continue
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
@@ -390,19 +353,16 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(next)
 					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					state.clearSequence()
 					continue
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
-				state.clearSequence()
 				continue
 			case '|':
 				if next == '|' {
 					state.push(next)
 					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					state.clearSequence()
 					continue
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
@@ -412,14 +372,12 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(next)
 					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
-					state.clearSequence()
 					continue
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
 			case '"':
 				state.startPosition = col
-				//state.clearSequence()
 				for col < length-1 {
 					curr = line[col]
 					next = line[col+1]
@@ -429,7 +387,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					if curr != '\\' && next == '"' {
 						state.push(next)
 						state.buildAndAppendToken(LIT_STRING, i, state.startPosition)
-						state.clearSequence()
 						col++
 						continue lineLoop
 					}
@@ -445,7 +402,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(curr)
 					state.push(next)
 					state.buildAndAppendToken(LIT_STRING, i, state.startPosition)
-					state.clearSequence()
 					col++
 					continue
 				} else {
@@ -465,7 +421,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					if curr != '\\' && next == '\'' {
 						state.push(next)
 						state.buildAndAppendToken(LIT_CHAR, i, state.startPosition)
-						state.clearSequence()
 						col++
 						continue lineLoop
 					}
@@ -481,7 +436,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(curr)
 					state.push(next)
 					state.buildAndAppendToken(LIT_CHAR, i, state.startPosition)
-					state.clearSequence()
 					col++
 					continue
 				} else {
@@ -489,7 +443,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.clearSequence()
 				}
 			default:
-				if isWordStartChar(curr) {
+				if isWordStartChar(curr) { // identifiers and keywords
 					state.startPosition = col
 					var tokenType TokenType = ID
 					for col < length {
@@ -499,7 +453,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 						} else {
 							next = line[col+1]
 						}
-						fmt.Printf("curr: %c, next: %c\n", curr, next)
 
 						if col != state.startPosition {
 							state.push(curr)
@@ -511,31 +464,13 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 								tokenType = KEYWORD
 							}
 							state.buildAndAppendToken(tokenType, i, state.startPosition)
-							state.clearSequence()
 							break
 						}
 						col++
 					}
-					/*curr = line[col]
-					fmt.Printf("char: %c", curr)
-
-					if isWordChar(curr) {
-						state.push(curr)
-						_, ok := keywords[state.sequence.String()]
-						if ok {
-							tokenType = KEYWORD
-						}
-						state.buildAndAppendToken(tokenType, i, state.startPosition)
-						state.clearSequence()
-					} else {
-						state.clearSequence()
-						col--
-						continue
-					}*/
-
-				} else if unicode.IsDigit(rune(curr)) {
+				} else if unicode.IsDigit(rune(curr)) { // number literals
 					state.startPosition = col
-					if curr == '0' && next == 'x' {
+					if curr == '0' && next == 'x' { // hex numbers
 						state.push(next)
 						col++
 						// TODO: hex
@@ -556,13 +491,12 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 									report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
 								}
 								state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
-								state.clearSequence()
-								col++
+								break
 							}
 
 							col++
 						}
-					} else {
+					} else { // int or float numbers
 						in_float := false
 						for col < length {
 							curr = line[col]
@@ -571,13 +505,15 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 							} else {
 								next = line[col+1]
 							}
-
-							if next == '.' {
+							if col != state.startPosition {
+								state.push(curr)
+							}
+							if next == '.' { // TODO: fix case of something like 1..5 being treated as a float
 								in_float = true
 								state.push(next)
 								col++
 							}
-							if !unicode.IsDigit(rune(next)) {
+							if !unicode.IsDigit(rune(next)) && next != '.' {
 								var tokenType TokenType = LIT_INT
 								if in_float {
 									tokenType = LIT_FLOAT
@@ -592,18 +528,15 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					}
 				} else if _, ok := separators[string(curr)]; ok {
 					state.buildAndAppendTokenFromByte(SEPARATOR, curr, i, col)
-					state.clearSequence()
 				} else if _, ok := operators[string(curr)]; ok {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
-					state.clearSequence()
 				} else {
 					message := fmt.Sprintf("Unrecognized character: '%c'", curr)
 					report = append(report, diagnostic.Complain(diagnostic.SyntaxError, message, i, col))
+					state.clearSequence()
 				}
 			}
 		}
-		// EOL actions
-		state.clearSequence()
 	}
 	// EOF actions
 	if state.in_multiline_comment {
