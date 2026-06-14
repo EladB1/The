@@ -17,4 +17,12 @@ fn main() -> int {
 
 int y = /*0*/ 1;
 
+if (y <= 1 || true) {
+  result = test();
+}
+
+for (mut int i = 0; i < y; i++) {
+  println(i);
+}
+
 bool isOpen?

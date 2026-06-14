@@ -1,0 +1,41 @@
+interface Greeter {
+    fn greet();
+}
+
+stuct Shift {
+    int hour_start;
+    int hour_end;
+    private mut float hourlyRate;
+
+    private {
+        fn changeRate(float newRate) {
+            this.hourlyRate = newRate;
+        }
+        fn calculateWeeklyPay(float shiftsWorked) -> float {
+            return hourlyRate * shiftsWorked * (hour_end - hour_start);
+        }
+    }
+}
+
+struct Guard impl Greeter {
+    mut Shift shift;
+    String firstName;
+    String lastName;
+
+    Greeter {
+        fn greet() {
+            println("...");
+        }
+    }
+}
+
+Guard worker = Guard {
+    firstName: "name",
+    lastName: "otherName",
+    shift: Shift {
+        hour_start: 7,
+        hour_end: 14,
+        hourlyRate: 21.50,
+    }  
+};
+worker.greet();

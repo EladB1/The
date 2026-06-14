@@ -59,4 +59,7 @@ func TestLexer(t *testing.T) {
 	t.Run("should run endless_comment.the and result in an error", func(t *testing.T) {
 		snapshotTestLexer(t, "testdata/fixtures/endless_comment.the")
 	})
+	t.Run("should run struct.the and get no errors", func(t *testing.T) {
+		snapshotTestLexer(t, "testdata/fixtures/struct.the")
+	})
 }

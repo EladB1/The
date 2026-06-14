@@ -11,6 +11,10 @@ int n = 50;
 0.1..0.5
 int i = 1i // lexer will interpret as int i = 1 then i
 0x1.a // lexer will interpret as 0x1 then a
+-100
+5 % 2
+2 ** 5
+0.00 == 0
 
 // Invalid
 0x
