@@ -28,8 +28,6 @@ type (
 
 const (
 	ID        TokenType = "identifier"
-	KEYWORD   TokenType = "keyword"
-	OPERATOR  TokenType = "operator"
 	SEPARATOR TokenType = "separator"
 	// literals
 	LIT_INT    TokenType = "int literal"
@@ -37,6 +35,22 @@ const (
 	LIT_FLOAT  TokenType = "float literal"
 	LIT_STRING TokenType = "string literal"
 	LIT_CHAR   TokenType = "char literal"
+	// keywords
+	KW_TYPE      TokenType = "type keyword"
+	KW_STRUCTURE TokenType = "structure keyword"
+	KW_FLOW      TokenType = "flow keyword"
+	KW_OPERATOR  TokenType = "operator keyword"
+	KW_MODIFIER  TokenType = "modifier keyword"
+	KW_BOOLVALUE TokenType = "boolean value keyword"
+	// operators
+	OPERATOR         TokenType = "operator"
+	OPERATOR_ADD     TokenType = "add operator"
+	OPERATOR_MULT    TokenType = "multiply operator"
+	OPERATOR_BW      TokenType = "bitwise operator"
+	OPERATOR_COMPARE TokenType = "compare operator"
+	OPERATOR_ASSIGN  TokenType = "assign operator"
+	OPERATOR_RANGE   TokenType = "range operator"
+	OPERATOR_UNARY   TokenType = "unary operator"
 
 	errLevel diagnostic.Severity = diagnostic.SyntaxError
 )
@@ -50,44 +64,54 @@ func buildHashSet(items ...string) hashSet {
 }
 
 var (
-	operators hashSet = buildHashSet(
+	add_operators hashSet = buildHashSet(
 		"+",
 		"-",
+	)
+	mult_operators hashSet = buildHashSet(
 		"*",
 		"/",
 		"%",
-		"**",
-		"++",
-		"--",
-		"!",
-		"||",
-		"&&",
+	)
+	bitwise_operators hashSet = buildHashSet(
 		"|",
 		"&",
 		"^",
 		"<<",
 		">>",
+	)
+	compare_operators hashSet = buildHashSet(
 		">",
 		">=",
 		"<",
 		"<=",
 		"!=",
 		"==",
+	)
+	assign_operators hashSet = buildHashSet(
 		"=",
 		"+=",
 		"-=",
 		"*=",
 		"/=",
+	)
+	range_operators hashSet = buildHashSet(
 		"..",
 		"..=",
+	)
+	unary_operators hashSet = buildHashSet(
+		"!",
+		"++",
+		"--",
+	)
+	// any other operators that can't fit into the other categories
+	operators hashSet = buildHashSet(
+		"**",
+		"||",
+		"&&",
 		".",
 	)
-	keywords hashSet = buildHashSet(
-		"fn",
-		"mut",
-		"private",
-		"in",
-		"as",
+	type_keywords hashSet = buildHashSet(
 		"int",
 		"int64",
 		"uint32",
@@ -97,18 +121,33 @@ var (
 		"String",
 		"char",
 		"bool",
+	)
+	structure_keywords hashSet = buildHashSet(
+		"fn",
 		"struct",
 		"interface",
-		"impl",
-		"if",
-		"else",
 		"for",
 		"while",
-		"true",
-		"false",
+		"if",
+		"else",
+	)
+	flow_keywords hashSet = buildHashSet(
 		"return",
 		"continue",
 		"break",
+	)
+	operator_keywords hashSet = buildHashSet(
+		"in",
+		"as",
+	)
+	modifier_keywords hashSet = buildHashSet(
+		"mut",
+		"private",
+		"impl",
+	)
+	bool_keywords hashSet = buildHashSet(
+		"true",
+		"false",
 	)
 	separators hashSet = buildHashSet(
 		"(",
@@ -224,11 +263,12 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 			case '+':
 				if next == '+' || next == '=' {
 					state.push(next)
-					state.buildAndAppendToken(OPERATOR, i, col)
+					tokenType := getTokenTypeForOperator(state.sequence)
+					state.buildAndAppendToken(tokenType, i, col)
 					col++
 					continue
 				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR_ADD, curr, i, col)
 				}
 			case '-':
 				if next == '>' {
@@ -238,20 +278,22 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					continue
 				} else if next == '-' || next == '=' {
 					state.push(next)
-					state.buildAndAppendToken(OPERATOR, i, col)
+					tokenType := getTokenTypeForOperator(state.sequence)
+					state.buildAndAppendToken(tokenType, i, col)
 					col++
 					continue
 				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR_ADD, curr, i, col)
 				}
 			case '*':
 				if next == '*' || next == '=' {
 					state.push(next)
-					state.buildAndAppendToken(OPERATOR, i, col)
+					tokenType := getTokenTypeForOperator(state.sequence)
+					state.buildAndAppendToken(tokenType, i, col)
 					col++
 					continue
 				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR_MULT, curr, i, col)
 				}
 			case '/':
 				if next == '/' {
@@ -265,12 +307,14 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					continue
 				} else if next == '=' {
 					state.push(next)
-					state.buildAndAppendToken(OPERATOR, i, col)
+					state.buildAndAppendToken(OPERATOR_ASSIGN, i, col)
 					col++
 					continue
 				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR_MULT, curr, i, col)
 				}
+			case '%':
+				state.buildAndAppendTokenFromByte(OPERATOR_MULT, curr, i, col)
 			case '.':
 				if next == '.' { // .. or ..=
 					state.push(next)
@@ -284,7 +328,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 						}
 					}
 					col++
-					state.buildAndAppendToken(OPERATOR, i, state.startPosition)
+					state.buildAndAppendToken(OPERATOR_RANGE, i, state.startPosition)
 					continue
 				} else if unicode.IsDigit(rune(next)) && !(curr == '0' && next == 'x') { // Example: .234
 					state.startPosition = col
@@ -313,38 +357,40 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 			case '!':
 				if next == '=' {
 					state.push(next)
-					state.buildAndAppendToken(OPERATOR, i, col)
+					state.buildAndAppendToken(OPERATOR_COMPARE, i, col)
 					col++
 					continue
 				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR_UNARY, curr, i, col)
 				}
 			case '<':
 				if next == '=' || next == '<' {
 					state.push(next)
-					state.buildAndAppendToken(OPERATOR, i, col)
+					tokenType := getTokenTypeForOperator(state.sequence)
+					state.buildAndAppendToken(tokenType, i, col)
 					col++
 					continue
 				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR_COMPARE, curr, i, col)
 				}
 			case '>':
 				if next == '=' || next == '>' {
 					state.push(next)
-					state.buildAndAppendToken(OPERATOR, i, col)
+					tokenType := getTokenTypeForOperator(state.sequence)
+					state.buildAndAppendToken(tokenType, i, col)
 					col++
 					continue
 				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR_COMPARE, curr, i, col)
 				}
 			case '=':
 				if next == '=' {
 					state.push(next)
-					state.buildAndAppendToken(OPERATOR, i, col)
+					state.buildAndAppendToken(OPERATOR_COMPARE, i, col)
 					col++
 					continue
 				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR_ASSIGN, curr, i, col)
 				}
 				continue
 			case '|':
@@ -354,7 +400,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					col++
 					continue
 				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR_BW, curr, i, col)
 				}
 			case '&':
 				if next == '&' {
@@ -363,8 +409,10 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					col++
 					continue
 				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.buildAndAppendTokenFromByte(OPERATOR_BW, curr, i, col)
 				}
+			case '^':
+				state.buildAndAppendTokenFromByte(OPERATOR_BW, curr, i, col)
 			case '"':
 				state.startPosition = col
 				for col < length-1 {
@@ -434,7 +482,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 			default:
 				if isWordStartChar(curr) { // identifiers and keywords
 					state.startPosition = col
-					var tokenType TokenType = ID
 					for col < length {
 						curr = line[col]
 						if col == length-1 {
@@ -448,10 +495,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 						}
 
 						if !isWordChar(next) {
-							_, ok := keywords[state.sequence.String()]
-							if ok {
-								tokenType = KEYWORD
-							}
+							tokenType := getTokenTypeForWord(state.sequence)
 							state.buildAndAppendToken(tokenType, i, state.startPosition)
 							break
 						}
@@ -535,8 +579,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					}
 				} else if _, ok := separators[string(curr)]; ok {
 					state.buildAndAppendTokenFromByte(SEPARATOR, curr, i, col)
-				} else if _, ok := operators[string(curr)]; ok {
-					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				} else {
 					message := fmt.Sprintf("Unrecognized character: '%c'", curr)
 					report = report.Complain(errLevel, message, i, col)
@@ -581,4 +623,44 @@ func validateFloatLiteral(floatVal strings.Builder) error {
 		return fmt.Errorf("Invalid float point literal: %s", literal)
 	}
 	return nil
+}
+
+func getTokenTypeForWord(sequence strings.Builder) TokenType {
+	word := sequence.String()
+	if _, ok := structure_keywords[word]; ok {
+		return KW_STRUCTURE
+	} else if _, ok := type_keywords[word]; ok {
+		return KW_TYPE
+	} else if _, ok := bool_keywords[word]; ok {
+		return KW_BOOLVALUE
+	} else if _, ok := flow_keywords[word]; ok {
+		return KW_FLOW
+	} else if _, ok := operator_keywords[word]; ok {
+		return KW_OPERATOR
+	} else if _, ok := modifier_keywords[word]; ok {
+		return KW_MODIFIER
+	} else {
+		return ID
+	}
+}
+
+func getTokenTypeForOperator(sequence strings.Builder) TokenType {
+	operator := sequence.String()
+	if _, ok := assign_operators[operator]; ok {
+		return OPERATOR_ASSIGN
+	} else if _, ok := add_operators[operator]; ok {
+		return OPERATOR_ADD
+	} else if _, ok := mult_operators[operator]; ok {
+		return OPERATOR_MULT
+	} else if _, ok := unary_operators[operator]; ok {
+		return OPERATOR_UNARY
+	} else if _, ok := bitwise_operators[operator]; ok {
+		return OPERATOR_BW
+	} else if _, ok := unary_operators[operator]; ok {
+		return OPERATOR_UNARY
+	} else if _, ok := range_operators[operator]; ok {
+		return OPERATOR_RANGE
+	} else {
+		return OPERATOR
+	}
 }

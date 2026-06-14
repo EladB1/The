@@ -67,7 +67,7 @@ property = identifier ":" expression ;
 (* variable info *)
 modifiers = "private" [ "mut" ] | "mut" [ "private" ] ;
 type = "int" | "int64" | "uint32" | "uint64" | "float" | "double" | "String" | "char" | "bool" | identifier ;
-member = identifier { "." identifier } ;
+member = ( identifier | string_literal ) { "." identifier } ;
 identifier =  ( "A" ... "Z" | "a" ... "z" | "_" ) { "A" ... "Z" | "a" ... "z" | "_" | "0" ... "9" } ;
 
 (* control flow *)

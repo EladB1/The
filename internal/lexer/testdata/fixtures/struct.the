@@ -2,7 +2,7 @@ interface Greeter {
     fn greet();
 }
 
-stuct Shift {
+struct Shift {
     int hour_start;
     int hour_end;
     private mut float hourlyRate;

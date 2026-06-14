@@ -1,10 +1,13 @@
-.PHONY: build test integration update-snaps-lexer update-snaps-parser update-snaps-semantic update-snaps-irgen update-snaps-codegen update-snaps-integration
+.PHONY: build test test-coverage integration update-snaps-lexer update-snaps-parser update-snaps-semantic update-snaps-irgen update-snaps-codegen update-snaps-integration
 
 build:
 	go build -o the ./cmd/the
 
 test:
 	go test -v ./internal/...
+
+test-coverage:
+	go test -cover ./internal/...
 
 integration: build
 	go test -tags=integration -v ./cmd/the/...
