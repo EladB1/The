@@ -22,6 +22,7 @@ char c = 'a';
 a..b
 String name1;
 String name0x1;
+0.1..0.5
 
 fn test()->bool{}
 

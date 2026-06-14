@@ -473,7 +473,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					if curr == '0' && next == 'x' { // hex numbers
 						state.push(next)
 						col++
-						// TODO: hex
 						for col < length {
 							curr = line[col]
 							if col == length-1 {
@@ -508,10 +507,20 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 							if col != state.startPosition {
 								state.push(curr)
 							}
-							if next == '.' { // TODO: fix case of something like 1..5 being treated as a float
-								in_float = true
-								state.push(next)
-								col++
+							if next == '.' {
+								if col < length-2 && line[col+2] == '.' {
+									if in_float {
+										state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
+
+									} else {
+										state.buildAndAppendToken(LIT_INT, i, state.startPosition)
+									}
+									break
+								} else {
+									in_float = true
+									state.push(next)
+									col++
+								}
 							}
 							if !unicode.IsDigit(rune(next)) && next != '.' {
 								var tokenType TokenType = LIT_INT
