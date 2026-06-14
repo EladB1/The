@@ -84,7 +84,7 @@ func reportStatus(messages diagnostic.PhaseDiagnostics) (int, int) {
 func main() {
 	flag.Parse()
 	if *strict && *suppressWarnings {
-		diagnostic.ReportFatalStringPositionless(diagnostic.Error, "Cannot use strict and suppress-warnings flags together", 2)
+		diagnostic.ReportFatal("Cannot use strict and suppress-warnings flags together", 2)
 	}
 	if *colorOff {
 		color.NoColor = true
@@ -93,13 +93,13 @@ func main() {
 	if len(args) == 1 {
 		flag.Usage() // show help message
 		fmt.Fprintln(os.Stderr)
-		diagnostic.ReportFatalStringPositionless(diagnostic.Error, "no input file", 1)
+		diagnostic.ReportFatal("no input file", 1)
 		os.Exit(1)
 	}
 	filename := os.Args[len(args)-1]
 	src, err := filehandler.GetSourceCode(filename)
 	if err != nil {
-		diagnostic.ReportFatalPositionless(diagnostic.Error, err, 1)
+		diagnostic.ReportFatal(err.Error(), 1)
 	}
 	compile(src)
 }

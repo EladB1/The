@@ -1,5 +1,5 @@
 
-[TestLexerNonFatal/should_run_chars.the_and_have_mixed_results - 1]
+[TestLexer/should_run_chars.the_and_have_mixed_results - 1]
 Tokens:
 [
     {Value: '', Type: char literal, Line: 2, Column: 1},
@@ -20,7 +20,7 @@ Compiler messages:
 
 ---
 
-[TestLexerNonFatal/should_run_strings.the_and_have_mixed_results - 1]
+[TestLexer/should_run_strings.the_and_have_mixed_results - 1]
 Tokens:
 [
     {Value: String, Type: keyword, Line: 2, Column: 1},
@@ -32,18 +32,41 @@ Tokens:
     {Value: "", Type: string literal, Line: 4, Column: 1},
     {Value: "\"", Type: string literal, Line: 5, Column: 1},
     {Value: "Is this string \"hello\" valid?", Type: string literal, Line: 6, Column: 1},
-    {Value: hello, Type: identifier, Line: 11, Column: 1}
+    {Value: "hello", Type: string literal, Line: 7, Column: 1},
+    {Value: [, Type: separator, Line: 7, Column: 8},
+    {Value: 1, Type: int literal, Line: 7, Column: 9},
+    {Value: ], Type: separator, Line: 7, Column: 10},
+    {Value: s, Type: identifier, Line: 8, Column: 1},
+    {Value: [, Type: separator, Line: 8, Column: 2},
+    {Value: ^, Type: operator, Line: 8, Column: 3},
+    {Value: 1, Type: int literal, Line: 8, Column: 4},
+    {Value: ], Type: separator, Line: 8, Column: 5},
+    {Value: s, Type: identifier, Line: 9, Column: 1},
+    {Value: [, Type: separator, Line: 9, Column: 2},
+    {Value: 1, Type: int literal, Line: 9, Column: 3},
+    {Value: .., Type: operator, Line: 9, Column: 4},
+    {Value: 4, Type: int literal, Line: 9, Column: 6},
+    {Value: ], Type: separator, Line: 9, Column: 7},
+    {Value: s, Type: identifier, Line: 10, Column: 1},
+    {Value: [, Type: separator, Line: 10, Column: 2},
+    {Value: ^, Type: operator, Line: 10, Column: 3},
+    {Value: 3, Type: int literal, Line: 10, Column: 4},
+    {Value: ..=, Type: operator, Line: 10, Column: 5},
+    {Value: ^, Type: operator, Line: 10, Column: 8},
+    {Value: 1, Type: int literal, Line: 10, Column: 9},
+    {Value: ], Type: separator, Line: 10, Column: 10},
+    {Value: hello, Type: identifier, Line: 15, Column: 1}
 ]
 Compiler messages:
 [
-    "SyntaxError: Unterminated string literal at line: 9, column: 1",
-    "SyntaxError: Unterminated string literal at line: 10, column: 1",
-    "SyntaxError: Unterminated string literal at line: 11, column: 6"
+    "SyntaxError: Unterminated string literal at line: 13, column: 1",
+    "SyntaxError: Unterminated string literal at line: 14, column: 1",
+    "SyntaxError: Unterminated string literal at line: 15, column: 6"
 ]
 
 ---
 
-[TestLexerNonFatal/should_run_numbers.the_and_have_mixed_results - 1]
+[TestLexer/should_run_numbers.the_and_have_mixed_results - 1]
 Tokens:
 [
     {Value: 0x2c, Type: hex literal, Line: 2, Column: 2},
@@ -97,7 +120,7 @@ Compiler messages:
 
 ---
 
-[TestLexerNonFatal/should_run_symbols.the_and_have_one_error - 1]
+[TestLexer/should_run_symbols.the_and_have_one_error - 1]
 Tokens:
 [
     {Value: a1, Type: identifier, Line: 2, Column: 1},
@@ -142,6 +165,22 @@ Tokens:
 Compiler messages:
 [
     "SyntaxError: Unrecognized character: '?' at line: 20, column: 12"
+]
+
+---
+
+[TestLexer/should_run_endless_comment.the_and_result_in_an_error - 1]
+Tokens:
+[
+    {Value: bool, Type: keyword, Line: 1, Column: 1},
+    {Value: valid, Type: identifier, Line: 1, Column: 6},
+    {Value: =, Type: operator, Line: 1, Column: 12},
+    {Value: true, Type: keyword, Line: 1, Column: 14},
+    {Value: ;, Type: separator, Line: 1, Column: 18}
+]
+Compiler messages:
+[
+    "SyntaxError: Reached EOF while scanning for */ "
 ]
 
 ---

@@ -42,7 +42,7 @@ func snapshotTestLexer(t *testing.T, filename string) {
 	snapshots.MatchSnapshot(t, results)
 }
 
-func TestLexerNonFatal(t *testing.T) {
+func TestLexer(t *testing.T) {
 	t.Run("should run chars.the and have mixed results", func(t *testing.T) {
 		snapshotTestLexer(t, "testdata/fixtures/chars.the")
 	})
@@ -56,12 +56,7 @@ func TestLexerNonFatal(t *testing.T) {
 	t.Run("should run symbols.the and have one error", func(t *testing.T) {
 		snapshotTestLexer(t, "testdata/fixtures/symbols.the")
 	})
-}
-
-/* TODO: Make fatal errors more testable
-func TestLexerFatal(t *testing.T) {
-	t.Run("Unterminated multiline comment should cause fatal error", func(t *testing.T) {
-		snapshotTestLexer(t, "testdata/fixtures/fatal.the")
+	t.Run("should run endless_comment.the and result in an error", func(t *testing.T) {
+		snapshotTestLexer(t, "testdata/fixtures/endless_comment.the")
 	})
 }
-*/

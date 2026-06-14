@@ -23,9 +23,6 @@ type (
 		tokens               []Token
 		in_multiline_comment bool
 		in_word              bool
-		in_int               bool
-		in_float             bool
-		in_hex               bool
 	}
 )
 
@@ -40,6 +37,8 @@ const (
 	LIT_FLOAT  TokenType = "float literal"
 	LIT_STRING TokenType = "string literal"
 	LIT_CHAR   TokenType = "char literal"
+
+	errLevel diagnostic.Severity = diagnostic.SyntaxError
 )
 
 func buildHashSet(items ...string) hashSet {
@@ -143,10 +142,6 @@ func PrintTokens(tokens []Token) {
 
 func (stateMchn *lexerState) reset() {
 	stateMchn.sequence.Reset()
-	stateMchn.in_int = false
-	stateMchn.in_hex = false
-	stateMchn.in_float = false
-	stateMchn.in_word = false
 	// manually need to reset in_multiline_comment
 	// do not reset tokens
 }
@@ -180,28 +175,21 @@ func (stateMchn *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, ch
 }
 
 func (stateMchn *lexerState) debug() {
-	fmt.Printf("State: {Sequence: %s, position: %d, flags: {in_word: %v, in_hex: %v, in_int: %v, in_float: %v, in_multiline_comment: %v}}\n",
+	fmt.Printf("State: {Sequence: %s, position: %d, flags: {in_multiline_comment: %v}, sequence start: %d}\n",
 		stateMchn.sequence.String(),
 		stateMchn.startPosition,
-		stateMchn.in_word,
-		stateMchn.in_hex,
-		stateMchn.in_int,
-		stateMchn.in_float,
 		stateMchn.in_multiline_comment,
+		stateMchn.startPosition,
 	)
 }
 
 func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
-	var report diagnostic.PhaseDiagnostics = []diagnostic.Diagnostic{}
+	var report diagnostic.PhaseDiagnostics = diagnostic.PhaseDiagnostics{}
 	state := &lexerState{
 		tokens:               []Token{},
 		sequence:             strings.Builder{},
 		startPosition:        0,
 		in_multiline_comment: false,
-		in_word:              false,
-		in_int:               false,
-		in_float:             false,
-		in_hex:               false,
 	}
 	for i, line := range sourceCode {
 		state.reset()
@@ -311,7 +299,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 						state.push(curr)
 						if !unicode.IsDigit(rune(next)) {
 							if err := validateFloatLiteral(state.sequence); err != nil {
-								report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+								report = report.Complain(errLevel, err.Error(), i, state.startPosition)
 								break
 							}
 							state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
@@ -406,7 +394,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					col++
 					continue
 				} else {
-					report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated string literal", i, state.startPosition))
+					report = report.Complain(errLevel, "Unterminated string literal", i, state.startPosition)
 					state.clearSequence()
 				}
 			case '\'':
@@ -440,7 +428,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					col++
 					continue
 				} else {
-					report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated character literal", i, state.startPosition))
+					report = report.Complain(errLevel, "Unterminated character literal", i, state.startPosition)
 					state.clearSequence()
 				}
 			default:
@@ -488,7 +476,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 
 							if col == length-1 || !isHexChar(next) {
 								if err := validateHexLiteral(state.sequence); err != nil {
-									report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+									report = report.Complain(errLevel, err.Error(), i, state.startPosition)
 								}
 								state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
 								break
@@ -512,12 +500,12 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 								if col == length-2 {
 									state.push(next)
 									err := fmt.Sprintf("Invalid float point literal: %s", state.sequence.String())
-									report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err, i, state.startPosition))
+									report = report.Complain(errLevel, err, i, state.startPosition)
 								}
 								if col < length-2 && line[col+2] == '.' {
 									if in_float {
 										if err := validateFloatLiteral(state.sequence); err != nil {
-											report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+											report = report.Complain(errLevel, err.Error(), i, state.startPosition)
 										}
 										state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
 
@@ -536,7 +524,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 								if in_float {
 									tokenType = LIT_FLOAT
 									if err := validateFloatLiteral(state.sequence); err != nil {
-										report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+										report = report.Complain(errLevel, err.Error(), i, state.startPosition)
 									}
 								}
 								state.buildAndAppendToken(tokenType, i, state.startPosition)
@@ -551,7 +539,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				} else {
 					message := fmt.Sprintf("Unrecognized character: '%c'", curr)
-					report = append(report, diagnostic.Complain(diagnostic.SyntaxError, message, i, col))
+					report = report.Complain(errLevel, message, i, col)
 					state.clearSequence()
 				}
 			}
@@ -559,7 +547,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 	}
 	// EOF actions
 	if state.in_multiline_comment {
-		diagnostic.ReportFatalStringPositionless(diagnostic.SyntaxError, "Reached EOF while scanning for */", 1)
+		report = report.ComplainPositionless(errLevel, "Reached EOF while scanning for */")
 	}
 	return state.tokens, report
 }

@@ -34,6 +34,40 @@ func (diagnostics PhaseDiagnostics) HasError() bool {
 	return false
 }
 
+func (diagnostics PhaseDiagnostics) Complain(level Severity, message string, line int, column int) PhaseDiagnostics {
+	diagnostic := Diagnostic{
+		Level:   level,
+		Message: message,
+		Line:    line,
+		Column:  column,
+	}
+	return append(diagnostics, diagnostic)
+}
+
+func (diagnostics PhaseDiagnostics) ComplainPositionless(level Severity, message string) PhaseDiagnostics {
+	return diagnostics.Complain(level, message, -1, -1)
+}
+
+func (diagnostics PhaseDiagnostics) Warn(message string, line int, column int) PhaseDiagnostics {
+	return diagnostics.Complain(Warning, message, line, column)
+}
+
+func (diagnostics PhaseDiagnostics) WarnPositionless(message string) PhaseDiagnostics {
+	return diagnostics.Warn(message, -1, -1)
+}
+
+// Use for errors outside of source code
+func ReportFatal(message string, status int) {
+	fatal_err := Diagnostic{
+		Level:   Error,
+		Message: message,
+		Line:    -1,
+		Column:  -1,
+	}
+	fmt.Fprintln(os.Stderr, fatal_err)
+	os.Exit(status)
+}
+
 var (
 	// custom colors
 	BoldRed    func(...interface{}) string = color.New(color.FgHiRed, color.Bold).SprintFunc()
@@ -52,49 +86,4 @@ func (diagnostic Diagnostic) String() string {
 		position = fmt.Sprintf("at line: %d, column: %d", diagnostic.Line+1, diagnostic.Column+1)
 	}
 	return fmt.Sprintf("%s: %s %s", prefix, diagnostic.Message, position)
-}
-
-func ReportFatalPositionless(level Severity, err error, status int) {
-	ReportFatal(level, err, -1, -1, status)
-
-}
-
-func ReportFatalStringPositionless(level Severity, message string, status int) {
-	ReportFatalString(level, message, -1, -1, status)
-}
-
-func ReportFatal(level Severity, err error, line int, col int, status int) {
-	fmt.Fprintln(os.Stderr, Complain(level, err.Error(), line, col))
-	os.Exit(status)
-}
-
-func ReportFatalString(level Severity, message string, line int, col int, status int) {
-	fmt.Fprintln(os.Stderr, Complain(level, message, line, col))
-	os.Exit(status)
-}
-
-func Complain(level Severity, message string, line int, col int) Diagnostic {
-	return Diagnostic{
-		Level:   level,
-		Message: message,
-		Line:    line,
-		Column:  col,
-	}
-}
-
-func ComplainPositionless(level Severity, message string) Diagnostic {
-	return Complain(level, message, -1, -1)
-}
-
-func Warn(message string, line int, col int) Diagnostic {
-	return Diagnostic{
-		Level:   Warning,
-		Message: message,
-		Line:    line,
-		Column:  col,
-	}
-}
-
-func WarnPositionless(message string) Diagnostic {
-	return Warn(message, -1, -1)
 }

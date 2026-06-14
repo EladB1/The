@@ -45,8 +45,7 @@ options:
   -suppress-warnings
      Disable reporting of warnings
 
-Error: no input file
-
+Error: no input file 
 
 ---
 
@@ -56,8 +55,7 @@ Exit code: 1
 
 Output:
 
-Error: only '.the' files accepted
-
+Error: only '.the' files accepted 
 
 ---
 
@@ -67,8 +65,7 @@ Exit code: 2
 
 Output:
 
-Error: Cannot use strict and suppress-warnings flags together
-
+Error: Cannot use strict and suppress-warnings flags together 
 
 ---
 
@@ -78,8 +75,7 @@ Exit code: 1
 
 Output:
 
-Error: open something.the: no such file or directory
-
+Error: open something.the: no such file or directory 
 
 ---
 

@@ -4,6 +4,10 @@ String s = "hello, world!";
 ""
 "\""
 "Is this string \"hello\" valid?"
+"hello"[1]
+s[^1]
+s[1..4]
+s[^3..=^1]
 
 // Invalid
 "what
