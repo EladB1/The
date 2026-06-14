@@ -268,6 +268,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 			case '/':
 				if next == '/' {
 					state.clearSequence()
+					i++
 					break lineLoop // skip to the next line
 				} else if next == '*' {
 					state.clearSequence()
@@ -508,8 +509,16 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 								state.push(curr)
 							}
 							if next == '.' {
+								if col == length-2 {
+									state.push(next)
+									err := fmt.Sprintf("Invalid float point literal: %s", state.sequence.String())
+									report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err, i, state.startPosition))
+								}
 								if col < length-2 && line[col+2] == '.' {
 									if in_float {
+										if err := validateFloatLiteral(state.sequence); err != nil {
+											report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+										}
 										state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
 
 									} else {
@@ -531,6 +540,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 									}
 								}
 								state.buildAndAppendToken(tokenType, i, state.startPosition)
+								break
 							}
 							col++
 						}

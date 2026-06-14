@@ -1,0 +1,19 @@
+// Valid
+ 0x2c
+0x3a .. 0xff
+0x3a..0xff
+0x1..=0xff
+int n = 50;
+50.91
+0.5
+ .5 + 1
+1..5
+0.1..0.5
+int i = 1i // lexer will interpret as int i = 1 then i
+0x1.a // lexer will interpret as 0x1 then a
+
+// Invalid
+0x
+0xp
+0x.a1
+50.

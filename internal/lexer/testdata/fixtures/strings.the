@@ -1,0 +1,11 @@
+// Valid
+String s = "hello, world!";
+"world + 1"
+""
+"\""
+"Is this string \"hello\" valid?"
+
+// Invalid
+"what
+"aaa ;
+hello";

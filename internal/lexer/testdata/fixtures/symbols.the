@@ -1,0 +1,20 @@
+// Valid
+a1;
+var
+
+a..b
+String name1;
+String name0x1;
+
+/*
+  Run test code and return true for success
+*/
+fn test()->bool{}
+
+fn main() -> int {
+    return 0;
+}
+
+int y = /*0*/ 1;
+
+bool isOpen?

@@ -1,0 +1,147 @@
+
+[TestLexerNonFatal/should_run_chars.the_and_have_mixed_results - 1]
+Tokens:
+[
+    {Value: '', Type: char literal, Line: 2, Column: 1},
+    {Value: char, Type: keyword, Line: 3, Column: 1},
+    {Value: c, Type: identifier, Line: 3, Column: 6},
+    {Value: =, Type: operator, Line: 3, Column: 8},
+    {Value: 'a', Type: char literal, Line: 3, Column: 10},
+    {Value: ;, Type: separator, Line: 3, Column: 13},
+    {Value: 'a', Type: char literal, Line: 4, Column: 1},
+    {Value: '\'', Type: char literal, Line: 5, Column: 1},
+    {Value: b, Type: identifier, Line: 9, Column: 1}
+]
+Compiler messages:
+[
+    "SyntaxError: Unterminated character literal at line: 8, column: 1",
+    "SyntaxError: Unterminated character literal at line: 9, column: 2"
+]
+
+---
+
+[TestLexerNonFatal/should_run_strings.the_and_have_mixed_results - 1]
+Tokens:
+[
+    {Value: String, Type: keyword, Line: 2, Column: 1},
+    {Value: s, Type: identifier, Line: 2, Column: 8},
+    {Value: =, Type: operator, Line: 2, Column: 10},
+    {Value: "hello, world!", Type: string literal, Line: 2, Column: 12},
+    {Value: ;, Type: separator, Line: 2, Column: 27},
+    {Value: "world + 1", Type: string literal, Line: 3, Column: 1},
+    {Value: "", Type: string literal, Line: 4, Column: 1},
+    {Value: "\"", Type: string literal, Line: 5, Column: 1},
+    {Value: "Is this string \"hello\" valid?", Type: string literal, Line: 6, Column: 1},
+    {Value: hello, Type: identifier, Line: 11, Column: 1}
+]
+Compiler messages:
+[
+    "SyntaxError: Unterminated string literal at line: 9, column: 1",
+    "SyntaxError: Unterminated string literal at line: 10, column: 1",
+    "SyntaxError: Unterminated string literal at line: 11, column: 6"
+]
+
+---
+
+[TestLexerNonFatal/should_run_numbers.the_and_have_mixed_results - 1]
+Tokens:
+[
+    {Value: 0x2c, Type: hex literal, Line: 2, Column: 2},
+    {Value: 0x3a, Type: hex literal, Line: 3, Column: 1},
+    {Value: .., Type: operator, Line: 3, Column: 6},
+    {Value: 0xff, Type: hex literal, Line: 3, Column: 9},
+    {Value: 0x3a, Type: hex literal, Line: 4, Column: 1},
+    {Value: .., Type: operator, Line: 4, Column: 5},
+    {Value: 0xff, Type: hex literal, Line: 4, Column: 7},
+    {Value: 0x1, Type: hex literal, Line: 5, Column: 1},
+    {Value: ..=, Type: operator, Line: 5, Column: 4},
+    {Value: 0xff, Type: hex literal, Line: 5, Column: 7},
+    {Value: int, Type: keyword, Line: 6, Column: 1},
+    {Value: n, Type: identifier, Line: 6, Column: 5},
+    {Value: =, Type: operator, Line: 6, Column: 7},
+    {Value: 50, Type: int literal, Line: 6, Column: 9},
+    {Value: ;, Type: separator, Line: 6, Column: 11},
+    {Value: 50.91, Type: float literal, Line: 7, Column: 1},
+    {Value: 0.5, Type: float literal, Line: 8, Column: 1},
+    {Value: .5, Type: float literal, Line: 9, Column: 2},
+    {Value: +, Type: operator, Line: 9, Column: 5},
+    {Value: 1, Type: int literal, Line: 9, Column: 7},
+    {Value: 1, Type: int literal, Line: 10, Column: 1},
+    {Value: .., Type: operator, Line: 10, Column: 2},
+    {Value: 5, Type: int literal, Line: 10, Column: 4},
+    {Value: 0.1, Type: float literal, Line: 11, Column: 1},
+    {Value: .., Type: operator, Line: 11, Column: 4},
+    {Value: 0.5, Type: float literal, Line: 11, Column: 6},
+    {Value: int, Type: keyword, Line: 12, Column: 1},
+    {Value: i, Type: identifier, Line: 12, Column: 5},
+    {Value: =, Type: operator, Line: 12, Column: 7},
+    {Value: 1, Type: int literal, Line: 12, Column: 9},
+    {Value: i, Type: identifier, Line: 12, Column: 10},
+    {Value: 0x1, Type: hex literal, Line: 13, Column: 1},
+    {Value: ., Type: operator, Line: 13, Column: 4},
+    {Value: a, Type: identifier, Line: 13, Column: 5},
+    {Value: 0x, Type: hex literal, Line: 16, Column: 1},
+    {Value: 0x, Type: hex literal, Line: 17, Column: 1},
+    {Value: p, Type: identifier, Line: 17, Column: 3},
+    {Value: 0x, Type: hex literal, Line: 18, Column: 1},
+    {Value: ., Type: operator, Line: 18, Column: 3},
+    {Value: a1, Type: identifier, Line: 18, Column: 4}
+]
+Compiler messages:
+[
+    "SyntaxError: Incomplete hex literal: 0x at line: 16, column: 1",
+    "SyntaxError: Incomplete hex literal: 0x at line: 17, column: 1",
+    "SyntaxError: Incomplete hex literal: 0x at line: 18, column: 1",
+    "SyntaxError: Invalid float point literal: 50. at line: 19, column: 1"
+]
+
+---
+
+[TestLexerNonFatal/should_run_symbols.the_and_have_one_error - 1]
+Tokens:
+[
+    {Value: a1, Type: identifier, Line: 2, Column: 1},
+    {Value: ;, Type: separator, Line: 2, Column: 3},
+    {Value: var, Type: identifier, Line: 3, Column: 1},
+    {Value: a, Type: identifier, Line: 5, Column: 1},
+    {Value: .., Type: operator, Line: 5, Column: 2},
+    {Value: b, Type: identifier, Line: 5, Column: 4},
+    {Value: String, Type: keyword, Line: 6, Column: 1},
+    {Value: name1, Type: identifier, Line: 6, Column: 8},
+    {Value: ;, Type: separator, Line: 6, Column: 13},
+    {Value: String, Type: keyword, Line: 7, Column: 1},
+    {Value: name0x1, Type: identifier, Line: 7, Column: 8},
+    {Value: ;, Type: separator, Line: 7, Column: 15},
+    {Value: fn, Type: keyword, Line: 12, Column: 1},
+    {Value: test, Type: identifier, Line: 12, Column: 4},
+    {Value: (, Type: separator, Line: 12, Column: 8},
+    {Value: ), Type: separator, Line: 12, Column: 9},
+    {Value: ->, Type: separator, Line: 12, Column: 10},
+    {Value: bool, Type: keyword, Line: 12, Column: 12},
+    {Value: {, Type: separator, Line: 12, Column: 16},
+    {Value: }, Type: separator, Line: 12, Column: 17},
+    {Value: fn, Type: keyword, Line: 14, Column: 1},
+    {Value: main, Type: identifier, Line: 14, Column: 4},
+    {Value: (, Type: separator, Line: 14, Column: 8},
+    {Value: ), Type: separator, Line: 14, Column: 9},
+    {Value: ->, Type: separator, Line: 14, Column: 11},
+    {Value: int, Type: keyword, Line: 14, Column: 14},
+    {Value: {, Type: separator, Line: 14, Column: 18},
+    {Value: return, Type: keyword, Line: 15, Column: 5},
+    {Value: 0, Type: int literal, Line: 15, Column: 12},
+    {Value: ;, Type: separator, Line: 15, Column: 13},
+    {Value: }, Type: separator, Line: 16, Column: 1},
+    {Value: int, Type: keyword, Line: 18, Column: 1},
+    {Value: y, Type: identifier, Line: 18, Column: 5},
+    {Value: =, Type: operator, Line: 18, Column: 7},
+    {Value: 1, Type: int literal, Line: 18, Column: 15},
+    {Value: ;, Type: separator, Line: 18, Column: 16},
+    {Value: bool, Type: keyword, Line: 20, Column: 1},
+    {Value: isOpen, Type: identifier, Line: 20, Column: 6}
+]
+Compiler messages:
+[
+    "SyntaxError: Unrecognized character: '?' at line: 20, column: 12"
+]
+
+---

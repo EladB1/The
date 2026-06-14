@@ -1,0 +1,11 @@
+bool valid = true; // no problem yet
+
+/*
+Missing
+comment
+close 
+should
+cause
+fatal error
+
+valid = false;
