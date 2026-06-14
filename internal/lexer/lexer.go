@@ -21,8 +21,6 @@ type (
 		sequence             strings.Builder
 		startPosition        int
 		tokens               []Token
-		in_string            bool
-		in_char              bool
 		in_multiline_comment bool
 		in_word              bool
 		in_int               bool
@@ -145,8 +143,6 @@ func PrintTokens(tokens []Token) {
 
 func (stateMchn *lexerState) reset() {
 	stateMchn.sequence.Reset()
-	stateMchn.in_char = false
-	stateMchn.in_string = false
 	stateMchn.in_int = false
 	stateMchn.in_hex = false
 	stateMchn.in_float = false
@@ -182,11 +178,9 @@ func (stateMchn *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, ch
 }
 
 func (stateMchn *lexerState) debug() {
-	fmt.Printf("State: {Sequence: %s, position: %d, flags: {in_char: %v, in_string: %v, in_word: %v, in_hex: %v, in_int: %v, in_float: %v, in_multiline_comment: %v}}\n",
+	fmt.Printf("State: {Sequence: %s, position: %d, flags: {in_word: %v, in_hex: %v, in_int: %v, in_float: %v, in_multiline_comment: %v}}\n",
 		stateMchn.sequence.String(),
 		stateMchn.startPosition,
-		stateMchn.in_char,
-		stateMchn.in_string,
 		stateMchn.in_word,
 		stateMchn.in_hex,
 		stateMchn.in_int,
@@ -201,8 +195,6 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 		tokens:               []Token{},
 		sequence:             strings.Builder{},
 		startPosition:        0,
-		in_string:            false,
-		in_char:              false,
 		in_multiline_comment: false,
 		in_word:              false,
 		in_int:               false,
@@ -211,42 +203,17 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 	}
 	for i, line := range sourceCode {
 		state.reset()
+		length := len(line)
 	lineLoop:
-		for col := 0; col < len(line); col++ {
-			//state.debug()
+		for col := 0; col < length; col++ {
+			// if !state.in_multiline_comment {
+			// 	state.debug()
+			// }
 			curr = line[col]
-			if col == len(line)-1 {
+			if col == length-1 {
 				next = 0
 			} else {
 				next = line[col+1]
-			}
-			if state.in_string {
-				if curr != '\\' && next == '"' {
-					state.in_string = false
-					state.push(curr)
-					state.push(next)
-					state.buildAndAppendToken(LIT_STRING, i, state.startPosition)
-					col++
-					state.clearSequence()
-					continue
-				} else {
-					state.push(curr)
-					continue
-				}
-			}
-			if state.in_char {
-				if curr != '\\' && next == '\'' {
-					state.in_char = false
-					state.push(curr)
-					state.push(next)
-					state.buildAndAppendToken(LIT_CHAR, i, state.startPosition)
-					col++
-					state.clearSequence()
-					continue
-				} else {
-					state.push(curr)
-					continue
-				}
 			}
 			if state.in_multiline_comment {
 				if curr == '*' && next == '/' {
@@ -329,10 +296,26 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 				if next == '.' {
 					if state.in_hex {
 						state.in_hex = false
+						fmt.Println("HERE0")
 						if err := validateHexLiteral(state.sequence); err != nil {
-							report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i+1, state.startPosition+1))
+							report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
 						} else {
 							state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
+						}
+						state.clearSequence()
+						state.push(curr)
+					} else if state.in_int {
+						state.in_int = false
+						state.buildAndAppendToken(LIT_INT, i, state.startPosition)
+						state.clearSequence()
+						state.push(curr)
+
+					} else if state.in_float {
+						state.in_float = false
+						if err := validateFloatLiteral(state.sequence); err != nil {
+							report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+						} else {
+							state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
 						}
 						state.clearSequence()
 						state.push(curr)
@@ -340,7 +323,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(next)
 					// check if character after next is =
 					state.startPosition = col
-					if col < len(line)-1 {
+					if col < length-1 {
 						next = line[col+2]
 						if next == '=' {
 							state.push(next)
@@ -352,8 +335,9 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.clearSequence()
 					continue
 				} else if state.in_hex {
+					fmt.Println("HERE1")
 					if err := validateHexLiteral(state.sequence); err != nil {
-						report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i+1, state.startPosition+1))
+						report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
 					}
 					continue
 				} else if state.in_int {
@@ -364,8 +348,9 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					if !unicode.IsDigit(rune(next)) {
 						if err := validateFloatLiteral(state.sequence); err != nil {
 							report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+						} else {
+							state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
 						}
-						state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
 					}
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
@@ -410,6 +395,8 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
 				}
+				state.clearSequence()
+				continue
 			case '|':
 				if next == '|' {
 					state.push(next)
@@ -432,94 +419,191 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 				}
 			case '"':
 				state.startPosition = col
-				state.in_string = true
-				continue
+				//state.clearSequence()
+				for col < length-1 {
+					curr = line[col]
+					next = line[col+1]
+					if col != state.startPosition {
+						state.push(curr)
+					}
+					if curr != '\\' && next == '"' {
+						state.push(next)
+						state.buildAndAppendToken(LIT_STRING, i, state.startPosition)
+						state.clearSequence()
+						col++
+						continue lineLoop
+					}
+					col++
+				}
+				curr = line[col]
+				if col == length-1 {
+					next = 0
+				} else {
+					next = line[col+1]
+				}
+				if curr != '\\' && next == '"' {
+					state.push(curr)
+					state.push(next)
+					state.buildAndAppendToken(LIT_STRING, i, state.startPosition)
+					state.clearSequence()
+					col++
+					continue
+				} else {
+					report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated string literal", i, state.startPosition))
+					state.clearSequence()
+				}
 			case '\'':
 				state.startPosition = col
-				state.in_char = true
-				continue
-			default:
-				if !state.in_hex && !state.in_word && isIdentifierFirstChar(curr) {
-					state.clearSequence()
-					state.push(curr)
-					state.in_word = true
-					state.startPosition = col
-				}
-				if state.in_word && !isIdentifierChar(next) {
-					state.in_word = false
-					// check if keyword
-					var tokenType TokenType = ID
-					_, ok := keywords[state.sequence.String()]
-					if ok {
-						tokenType = KEYWORD
+				for col < length-1 {
+					curr = line[col]
+					next = line[col+1]
+
+					if col != state.startPosition {
+						state.push(curr)
 					}
-					state.buildAndAppendToken(tokenType, i, state.startPosition)
-					state.clearSequence()
-					continue
+
+					if curr != '\\' && next == '\'' {
+						state.push(next)
+						state.buildAndAppendToken(LIT_CHAR, i, state.startPosition)
+						state.clearSequence()
+						col++
+						continue lineLoop
+					}
+					col++
 				}
-				if state.in_hex {
-					if !isHexChar(next) {
-						state.in_hex = false
-						if err := validateHexLiteral(state.sequence); err != nil {
-							report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i+1, state.startPosition+1))
+				curr = line[col]
+				if col == length-1 {
+					next = 0
+				} else {
+					next = line[col+1]
+				}
+				if curr != '\\' && next == '\'' {
+					state.push(curr)
+					state.push(next)
+					state.buildAndAppendToken(LIT_CHAR, i, state.startPosition)
+					state.clearSequence()
+					col++
+					continue
+				} else {
+					report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated character literal", i, state.startPosition))
+					state.clearSequence()
+				}
+			default:
+				if isWordStartChar(curr) {
+					state.startPosition = col
+					var tokenType TokenType = ID
+					for col < length {
+						curr = line[col]
+						if col == length-1 {
+							next = 0
+						} else {
+							next = line[col+1]
+						}
+						fmt.Printf("curr: %c, next: %c\n", curr, next)
+
+						if col != state.startPosition {
+							state.push(curr)
 						}
 
-						state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
-						state.clearSequence()
-						continue
-					}
-				}
-				if !state.in_word && !state.in_hex {
-					if unicode.IsDigit(rune(curr)) {
-						if !state.in_int && !state.in_hex && !state.in_float { // default state
-							if curr == '0' || next == 'x' {
-								state.startPosition = col
-								state.clearSequence()
-								state.push(curr)
-								state.push(next)
-								state.in_hex = true
-								col++
-							} else {
-								state.in_int = true
-								state.startPosition = col
+						if !isWordChar(next) {
+							_, ok := keywords[state.sequence.String()]
+							if ok {
+								tokenType = KEYWORD
 							}
-						} else if state.in_int {
-							if !unicode.IsDigit(rune(next)) && next != '.' {
-								state.in_int = false
-								state.buildAndAppendToken(LIT_INT, i, state.startPosition)
-								state.clearSequence()
-							}
-						} else if state.in_float {
-							if !unicode.IsDigit(rune(next)) {
-								state.in_float = false
-								if err := validateFloatLiteral(state.sequence); err != nil {
-									report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
-								}
-								state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
-								state.clearSequence()
-							}
+							state.buildAndAppendToken(tokenType, i, state.startPosition)
+							state.clearSequence()
+							break
 						}
-					} else if _, ok := separators[string(curr)]; ok {
-						state.buildAndAppendTokenFromByte(SEPARATOR, curr, i, col)
-						state.clearSequence()
-					} else if _, ok := operators[string(curr)]; ok {
-						state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+						col++
+					}
+					/*curr = line[col]
+					fmt.Printf("char: %c", curr)
+
+					if isWordChar(curr) {
+						state.push(curr)
+						_, ok := keywords[state.sequence.String()]
+						if ok {
+							tokenType = KEYWORD
+						}
+						state.buildAndAppendToken(tokenType, i, state.startPosition)
 						state.clearSequence()
 					} else {
-						message := fmt.Sprintf("Unrecognized character: '%c'", curr)
-						report = append(report, diagnostic.Complain(diagnostic.SyntaxError, message, i+1, col+1))
+						state.clearSequence()
+						col--
+						continue
+					}*/
+
+				} else if unicode.IsDigit(rune(curr)) {
+					state.startPosition = col
+					if curr == '0' && next == 'x' {
+						state.push(next)
+						col++
+						// TODO: hex
+						for col < length {
+							curr = line[col]
+							if col == length-1 {
+								next = 0
+							} else {
+								next = line[col+1]
+							}
+
+							if col != state.startPosition+1 {
+								state.push(curr)
+							}
+
+							if col == length-1 || !isHexChar(next) {
+								if err := validateHexLiteral(state.sequence); err != nil {
+									report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+								}
+								state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
+								state.clearSequence()
+								col++
+							}
+
+							col++
+						}
+					} else {
+						in_float := false
+						for col < length {
+							curr = line[col]
+							if col == length-1 {
+								next = 0
+							} else {
+								next = line[col+1]
+							}
+
+							if next == '.' {
+								in_float = true
+								state.push(next)
+								col++
+							}
+							if !unicode.IsDigit(rune(next)) {
+								var tokenType TokenType = LIT_INT
+								if in_float {
+									tokenType = LIT_FLOAT
+									if err := validateFloatLiteral(state.sequence); err != nil {
+										report = append(report, diagnostic.Complain(diagnostic.SyntaxError, err.Error(), i, state.startPosition))
+									}
+								}
+								state.buildAndAppendToken(tokenType, i, state.startPosition)
+							}
+							col++
+						}
 					}
+				} else if _, ok := separators[string(curr)]; ok {
+					state.buildAndAppendTokenFromByte(SEPARATOR, curr, i, col)
+					state.clearSequence()
+				} else if _, ok := operators[string(curr)]; ok {
+					state.buildAndAppendTokenFromByte(OPERATOR, curr, i, col)
+					state.clearSequence()
+				} else {
+					message := fmt.Sprintf("Unrecognized character: '%c'", curr)
+					report = append(report, diagnostic.Complain(diagnostic.SyntaxError, message, i, col))
 				}
 			}
 		}
 		// EOL actions
 		state.clearSequence()
-		if state.in_string {
-			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated string literal", i+1, state.startPosition+1))
-		}
-		if state.in_char {
-			report = append(report, diagnostic.Complain(diagnostic.SyntaxError, "Unterminated character literal", i+1, state.startPosition+1))
-		}
 	}
 	// EOF actions
 	if state.in_multiline_comment {
@@ -528,12 +612,12 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 	return state.tokens, report
 }
 
-func isIdentifierFirstChar(chr byte) bool {
+func isWordStartChar(chr byte) bool {
 	return chr == '_' || unicode.IsLetter(rune(chr))
 }
 
-func isIdentifierChar(chr byte) bool {
-	return isIdentifierFirstChar(chr) || unicode.IsDigit(rune(chr))
+func isWordChar(chr byte) bool {
+	return isWordStartChar(chr) || unicode.IsDigit(rune(chr))
 }
 
 func isHexChar(char byte) bool {
