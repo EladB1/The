@@ -15,9 +15,19 @@ int i = 1i // lexer will interpret as int i = 1 then i
 5 % 2
 2 ** 5
 0.00 == 0
+n -= 1 | 0 & 1 >> 2
+if (n >= 0) {
+    n..
+    1+
+    ..n
+    ++n++
+    n--
+    --n
+}
 
 // Invalid
 0x
 0xp
 0x.a1
 50.
+1.1.12

@@ -320,7 +320,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.push(next)
 					// check if character after next is =
 					state.startPosition = col
-					if col < length-1 {
+					if col < length-2 {
 						next = line[col+2]
 						if next == '=' {
 							state.push(next)

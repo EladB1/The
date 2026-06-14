@@ -1,4 +1,4 @@
-.PHONY: build test test-coverage integration update-snaps-lexer update-snaps-parser update-snaps-semantic update-snaps-irgen update-snaps-codegen update-snaps-integration
+.PHONY: build test run test-coverage test-coverage-html integration update-snaps-lexer update-snaps-parser update-snaps-semantic update-snaps-irgen update-snaps-codegen update-snaps-integration
 
 build:
 	go build -o the ./cmd/the
@@ -6,8 +6,18 @@ build:
 test:
 	go test -v ./internal/...
 
+IN_FILE ?= ''
+
+run: build
+	./the $(IN_FILE)
+
+# Example: make run IN_FILE=examples/src/strings.the
+
 test-coverage:
-	go test -cover ./internal/...
+	go test -coverprofile cover.out ./internal/...
+
+test-coverage-html:
+	go test -coverprofile cover.out ./internal/...; go tool cover -html=cover.out
 
 integration: build
 	go test -tags=integration -v ./cmd/the/...
