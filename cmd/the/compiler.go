@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/EladB1/The/internal/config"
 	"github.com/EladB1/The/internal/diagnostic"
+	"github.com/EladB1/The/internal/filehandler"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/fatih/color"
 )
@@ -23,17 +23,6 @@ var (
 	}
 	compilerDiagnostics diagnostic.PhaseDiagnostics
 )
-
-func getSourceCode(filename string) ([]string, error) {
-	if !strings.HasSuffix(filename, ".the") {
-		return nil, fmt.Errorf("only '.the' files accepted")
-	}
-	contents, err := os.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-	return strings.Split(string(contents), "\n"), nil
-}
 
 func init() {
 	// Override the default help message
@@ -108,7 +97,7 @@ func main() {
 		os.Exit(1)
 	}
 	filename := os.Args[len(args)-1]
-	src, err := getSourceCode(filename)
+	src, err := filehandler.GetSourceCode(filename)
 	if err != nil {
 		diagnostic.ReportFatalPositionless(diagnostic.Error, err, 1)
 	}
