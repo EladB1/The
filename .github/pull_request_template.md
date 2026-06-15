@@ -13,6 +13,7 @@ Added related issue [here](#)
 - [ ] Enhancement
 - [ ] Refactor
 - [ ] Security
+- [ ] Expanded testing
 
 # Impact
 
@@ -39,7 +40,6 @@ Added related issue [here](#)
 - [ ] Snapshot updates reviewed for correctness
 - [ ] Documentation updates (if necessary)
 
-Fun Gif
----
-
-![fun gif](https://media0.giphy.com/media/mvoxdYnpyk23u/giphy.gif)
+| ![fun gif](https://media0.giphy.com/media/mvoxdYnpyk23u/giphy.gif) |
+|:---:|
+| *fun gif* |

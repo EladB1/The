@@ -4,7 +4,7 @@
 
 A statically typed language which compiles to WebAssembly
 
-The goal of **The** language is to start with something simple to build a compiler for and expand from there. 
+The goal of **The** language is to start with something simple to build a compiler for and expand from there.
 
 #### Initial version features
 
@@ -17,24 +17,24 @@ Future state features can be found [here](TODO.md)
 
  > Subject to change as development progresses
 
-## Compiler Structure
+Table of contents
+---
 
-Phases:
+1. [Installation and CLI Usage](#installation-and-cli-usage)
+2. [Language specifications](#language-specifications)
+3. [Compiler Developer Info](#compiler-developer-info)
 
-    1. Lexical Analysis
-    2. Parsing
-    3. Semantic Analysis
-    4. IR Generation
-    5. Code Generation (WAT)
-    6. Execution via wasmtime
+## Installation and CLI Usage
 
-> Optimization phase will come much later
+> TODO: installation
 
-## Compiler developer tooling
+For getting all command line options run: `the -h` or `the --help`
 
-1. Go
-2. WABT
-3. wasmtime
+A `.the` file is required as input. For example:
+
+`the examples/src/functions.the` is valid
+
+`the` and `the file.txt` are not valid
 
 ## Language Specifications
 
@@ -684,3 +684,34 @@ instance.do(0); // Uses top level implementation
 The example above works because the intent of how the code should work is made clear by defining a "default" `do()`.
 
 > **Note**: Any top level method that matches the signature of an interface implementation method will take precedence the same way even if there are no conflicts.
+
+## Compiler Developer Info
+
+Phases:
+
+    1. Lexical Analysis <- WIP
+    2. Parsing
+    3. Semantic Analysis
+    4. IR Generation
+    5. Code Generation (WAT)
+    6. Execution via wasmtime
+
+> Optimization phase will come much later
+
+### Tooling
+
+1. Go
+2. Make
+3. go-snaps (for unit/integration testing)
+3. WABT
+4. wasmtime
+
+### Testing
+
+There are two main types of testing being used: unit and integration. Both rely heavily on snapshot testing using [go-snaps](https://github.com/gkampitakis/go-snaps). Unit tests are for the individual compiler phases (lexer, parsers, etc.) and integration tests are for testing the compiler end-to-end.
+
+The [Makefile](Makefile) has options for updating snapshots, getting coverage information, and running the different types of tests.
+
+When changing snapshots, you **must** review them to verify their correctness.
+
+High test coverage is the goal (not enforced yet). Aim for at least 85%-90% coverage of unit tests.
