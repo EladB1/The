@@ -21,6 +21,9 @@ type (
 		sequence             strings.Builder
 		startPosition        int
 		tokens               []Token
+		messages             diagnostic.PhaseDiagnostics
+		lineNum              int
+		lineIndex            int
 		in_multiline_comment bool
 		in_word              bool
 	}
@@ -44,8 +47,14 @@ func (token Token) HasValue(value string) bool {
 
 func (stateMchn *lexerState) reset() {
 	stateMchn.sequence.Reset()
+	stateMchn.startPosition = 0
+	stateMchn.lineIndex = 0
 	// manually need to reset in_multiline_comment
 	// do not reset tokens
+}
+
+func (stateMchn *lexerState) addError(message string, lineIndex int) {
+	stateMchn.messages = stateMchn.messages.Complain(errLevel, message, stateMchn.lineNum, lineIndex)
 }
 
 func (stateMchn *lexerState) push(char byte) {
@@ -217,15 +226,18 @@ var (
 )
 
 func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics) {
-	var report diagnostic.PhaseDiagnostics = diagnostic.PhaseDiagnostics{}
 	state := &lexerState{
 		tokens:               []Token{},
 		sequence:             strings.Builder{},
 		startPosition:        0,
 		in_multiline_comment: false,
+		messages:             diagnostic.PhaseDiagnostics{},
+		lineNum:              0,
+		lineIndex:            0,
 	}
 	for i, line := range sourceCode {
 		state.reset()
+		state.lineNum = i
 		length := len(line)
 	lineLoop:
 		for col := 0; col < length; col++ {
@@ -334,7 +346,7 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 						state.push(curr)
 						if !unicode.IsDigit(rune(next)) {
 							if err := validateFloatLiteral(state.sequence); err != nil {
-								report = report.Complain(errLevel, err.Error(), i, state.startPosition)
+								state.addError(err.Error(), state.startPosition)
 								break
 							}
 							state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
@@ -354,18 +366,8 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 				} else {
 					state.buildAndAppendTokenFromByte(OPERATOR_UNARY, curr, i, col)
 				}
-			case '<':
-				if next == '=' || next == '<' {
-					state.push(next)
-					tokenType := getTokenTypeForOperator(state.sequence)
-					state.buildAndAppendToken(tokenType, i, col)
-					col++
-					continue
-				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR_COMPARE, curr, i, col)
-				}
-			case '>':
-				if next == '=' || next == '>' {
+			case '<', '>':
+				if next == '=' || next == curr { // <=, <<, >=, or >>
 					state.push(next)
 					tokenType := getTokenTypeForOperator(state.sequence)
 					state.buildAndAppendToken(tokenType, i, col)
@@ -384,17 +386,8 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 					state.buildAndAppendTokenFromByte(OPERATOR_ASSIGN, curr, i, col)
 				}
 				continue
-			case '|':
-				if next == '|' {
-					state.push(next)
-					state.buildAndAppendToken(OPERATOR, i, col)
-					col++
-					continue
-				} else {
-					state.buildAndAppendTokenFromByte(OPERATOR_BW, curr, i, col)
-				}
-			case '&':
-				if next == '&' {
+			case '|', '&':
+				if next == curr { // || or &&
 					state.push(next)
 					state.buildAndAppendToken(OPERATOR, i, col)
 					col++
@@ -404,7 +397,17 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 				}
 			case '^':
 				state.buildAndAppendTokenFromByte(OPERATOR_BW, curr, i, col)
-			case '"':
+			case '"', '\'':
+				delim := curr
+				var literal string
+				var tokenType TokenType
+				if curr == '"' {
+					literal = "string"
+					tokenType = LIT_STRING
+				} else {
+					literal = "character"
+					tokenType = LIT_CHAR
+				}
 				state.startPosition = col
 				for col < length-1 {
 					curr = line[col]
@@ -412,9 +415,9 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 					if col != state.startPosition {
 						state.push(curr)
 					}
-					if curr != '\\' && next == '"' {
+					if curr != '\\' && next == delim {
 						state.push(next)
-						state.buildAndAppendToken(LIT_STRING, i, state.startPosition)
+						state.buildAndAppendToken(tokenType, i, state.startPosition)
 						col++
 						continue lineLoop
 					}
@@ -426,48 +429,14 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 				} else {
 					next = line[col+1]
 				}
-				if curr != '\\' && next == '"' {
+				if curr != '\\' && next == delim {
 					state.push(curr)
 					state.push(next)
-					state.buildAndAppendToken(LIT_STRING, i, state.startPosition)
+					state.buildAndAppendToken(tokenType, i, state.startPosition)
 					col++
 					continue
 				} else {
-					report = report.Complain(errLevel, "Unterminated string literal", i, state.startPosition)
-					state.clearSequence()
-				}
-			case '\'':
-				state.startPosition = col
-				for col < length-1 {
-					curr = line[col]
-					next = line[col+1]
-
-					if col != state.startPosition {
-						state.push(curr)
-					}
-
-					if curr != '\\' && next == '\'' {
-						state.push(next)
-						state.buildAndAppendToken(LIT_CHAR, i, state.startPosition)
-						col++
-						continue lineLoop
-					}
-					col++
-				}
-				curr = line[col]
-				if col == length-1 {
-					next = 0
-				} else {
-					next = line[col+1]
-				}
-				if curr != '\\' && next == '\'' {
-					state.push(curr)
-					state.push(next)
-					state.buildAndAppendToken(LIT_CHAR, i, state.startPosition)
-					col++
-					continue
-				} else {
-					report = report.Complain(errLevel, "Unterminated character literal", i, state.startPosition)
+					state.addError(fmt.Sprintf("Unterminated %s literal", literal), state.startPosition)
 					state.clearSequence()
 				}
 			default:
@@ -511,7 +480,7 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 
 							if col == length-1 || !isHexChar(next) {
 								if err := validateHexLiteral(state.sequence); err != nil {
-									report = report.Complain(errLevel, err.Error(), i, state.startPosition)
+									state.addError(err.Error(), state.startPosition)
 								}
 								state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
 								break
@@ -535,12 +504,12 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 								if col == length-2 {
 									state.push(next)
 									err := fmt.Sprintf("Invalid float point literal: %s", state.sequence.String())
-									report = report.Complain(errLevel, err, i, state.startPosition)
+									state.addError(err, state.startPosition)
 								}
 								if col < length-2 && line[col+2] == '.' { // check for .. or ..= (range operators)
 									if in_float {
 										if err := validateFloatLiteral(state.sequence); err != nil {
-											report = report.Complain(errLevel, err.Error(), i, state.startPosition)
+											state.addError(err.Error(), state.startPosition)
 										}
 										state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
 
@@ -559,7 +528,7 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 								if in_float {
 									tokenType = LIT_FLOAT
 									if err := validateFloatLiteral(state.sequence); err != nil {
-										report = report.Complain(errLevel, err.Error(), i, state.startPosition)
+										state.addError(err.Error(), state.startPosition)
 									}
 								}
 								state.buildAndAppendToken(tokenType, i, state.startPosition)
@@ -571,8 +540,7 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 				} else if _, ok := separators[string(curr)]; ok {
 					state.buildAndAppendTokenFromByte(SEPARATOR, curr, i, col)
 				} else {
-					message := fmt.Sprintf("Unrecognized character: '%c'", curr)
-					report = report.Complain(errLevel, message, i, col)
+					state.addError(fmt.Sprintf("Unrecognized character: '%c'", curr), col)
 					state.clearSequence()
 				}
 			}
@@ -580,9 +548,9 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 	}
 	// EOF actions
 	if state.in_multiline_comment {
-		report = report.ComplainPositionless(errLevel, "Reached EOF while scanning for */")
+		state.messages = state.messages.ComplainPositionless(errLevel, "Reached EOF while scanning for */")
 	}
-	return state.tokens, report
+	return state.tokens, state.messages
 }
 
 func isWordStartChar(chr byte) bool {
