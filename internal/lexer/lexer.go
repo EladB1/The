@@ -463,80 +463,8 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 					}
 				} else if unicode.IsDigit(rune(curr)) { // number literals
 					state.startPosition = col
-					if curr == '0' && next == 'x' { // hex numbers
-						state.push(next)
-						col++
-						for col < length {
-							curr = line[col]
-							if col == length-1 {
-								next = 0
-							} else {
-								next = line[col+1]
-							}
-
-							if col != state.startPosition+1 {
-								state.push(curr)
-							}
-
-							if col == length-1 || !isHexChar(next) {
-								if err := validateHexLiteral(state.sequence); err != nil {
-									state.addError(err.Error(), state.startPosition)
-								}
-								state.buildAndAppendToken(LIT_HEX, i, state.startPosition)
-								break
-							}
-
-							col++
-						}
-					} else { // int or float numbers
-						in_float := false
-						for col < length {
-							curr = line[col]
-							if col == length-1 {
-								next = 0
-							} else {
-								next = line[col+1]
-							}
-							if col != state.startPosition {
-								state.push(curr)
-							}
-							if next == '.' {
-								if col == length-2 {
-									state.push(next)
-									err := fmt.Sprintf("Invalid float point literal: %s", state.sequence.String())
-									state.addError(err, state.startPosition)
-								}
-								if col < length-2 && line[col+2] == '.' { // check for .. or ..= (range operators)
-									if in_float {
-										if err := validateFloatLiteral(state.sequence); err != nil {
-											state.addError(err.Error(), state.startPosition)
-										}
-										state.buildAndAppendToken(LIT_FLOAT, i, state.startPosition)
-
-									} else {
-										state.buildAndAppendToken(LIT_INT, i, state.startPosition)
-									}
-									break
-								} else {
-									in_float = true
-									state.push(next)
-									col++
-								}
-							}
-							if !unicode.IsDigit(rune(next)) && next != '.' {
-								var tokenType TokenType = LIT_INT
-								if in_float {
-									tokenType = LIT_FLOAT
-									if err := validateFloatLiteral(state.sequence); err != nil {
-										state.addError(err.Error(), state.startPosition)
-									}
-								}
-								state.buildAndAppendToken(tokenType, i, state.startPosition)
-								break
-							}
-							col++
-						}
-					}
+					state.tokenizeNumber(line)
+					col = state.lineIndex
 				} else if _, ok := separators[string(curr)]; ok {
 					state.buildAndAppendTokenFromByte(SEPARATOR, curr, i, col)
 				} else {
@@ -551,6 +479,91 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 		state.messages = state.messages.ComplainPositionless(errLevel, "Reached EOF while scanning for */")
 	}
 	return state.tokens, state.messages
+}
+
+func (state *lexerState) tokenizeNumber(line string) {
+	state.lineIndex = state.startPosition
+	length := len(line)
+	if curr == '0' && next == 'x' { // hex numbers
+		state.push(next)
+		state.lineIndex++
+		state.tokenizeHex(line)
+
+	} else { // int or float numbers
+		in_float := false
+		for state.lineIndex < length {
+			curr = line[state.lineIndex]
+			if state.lineIndex == length-1 {
+				next = 0
+			} else {
+				next = line[state.lineIndex+1]
+			}
+			if state.lineIndex != state.startPosition {
+				state.push(curr)
+			}
+			if next == '.' {
+				if state.lineIndex == length-2 {
+					state.push(next)
+					err := fmt.Sprintf("Invalid float point literal: %s", state.sequence.String())
+					state.addError(err, state.startPosition)
+				}
+				if state.lineIndex < length-2 && line[state.lineIndex+2] == '.' { // check for .. or ..= (range operators)
+					if in_float {
+						if err := validateFloatLiteral(state.sequence); err != nil {
+							state.addError(err.Error(), state.startPosition)
+						}
+						state.buildAndAppendToken(LIT_FLOAT, state.lineNum, state.startPosition)
+
+					} else {
+						state.buildAndAppendToken(LIT_INT, state.lineNum, state.startPosition)
+					}
+					break
+				} else {
+					in_float = true
+					state.push(next)
+					state.lineIndex++
+				}
+			}
+			if !unicode.IsDigit(rune(next)) && next != '.' {
+				var tokenType TokenType = LIT_INT
+				if in_float {
+					tokenType = LIT_FLOAT
+					if err := validateFloatLiteral(state.sequence); err != nil {
+						state.addError(err.Error(), state.startPosition)
+					}
+				}
+				state.buildAndAppendToken(tokenType, state.lineNum, state.startPosition)
+				break
+			}
+			state.lineIndex++
+		}
+	}
+}
+
+func (state *lexerState) tokenizeHex(line string) {
+	length := len(line)
+	for state.lineIndex < length {
+		curr = line[state.lineIndex]
+		if state.lineIndex == length-1 {
+			next = 0
+		} else {
+			next = line[state.lineIndex+1]
+		}
+
+		if state.lineIndex != state.startPosition+1 {
+			state.push(curr)
+		}
+
+		if state.lineIndex == length-1 || !isHexChar(next) {
+			if err := validateHexLiteral(state.sequence); err != nil {
+				state.addError(err.Error(), state.startPosition)
+			}
+			state.buildAndAppendToken(LIT_HEX, state.lineNum, state.startPosition)
+			break
+		}
+
+		state.lineIndex++
+	}
 }
 
 func isWordStartChar(chr byte) bool {
