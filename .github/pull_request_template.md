@@ -39,7 +39,3 @@ Added related issue [here](#)
 - [ ] All integration tests passing (`make integration`)
 - [ ] Snapshot updates reviewed for correctness
 - [ ] Documentation updates (if necessary)
-
-| ![fun gif](https://media0.giphy.com/media/mvoxdYnpyk23u/giphy.gif) |
-|:---:|
-| *fun gif* |
