@@ -18,7 +18,7 @@ func snapshotTestLexer(t *testing.T, filename string) {
 	snapshots := snaps.WithConfig(
 		snaps.Dir("testdata/lexer-snaps"),
 	)
-	tokens, messages := Lex(src)
+	tokens, messages := Lex(src, false)
 	var tokenBuilder strings.Builder
 	var messagesBuilder strings.Builder
 	var formatStr string

@@ -26,6 +26,65 @@ type (
 	}
 )
 
+func buildHashSet(items ...string) hashSet {
+	set := make(map[string]struct{})
+	for _, item := range items {
+		set[item] = struct{}{}
+	}
+	return set
+}
+
+func (token Token) String() string {
+	return fmt.Sprintf("{Value: %s, Type: %s, Line: %d, Column: %d}", token.value, token.tokenType, token.line, token.column)
+}
+
+func (token Token) HasValue(value string) bool {
+	return token.value == value
+}
+
+func (stateMchn *lexerState) reset() {
+	stateMchn.sequence.Reset()
+	// manually need to reset in_multiline_comment
+	// do not reset tokens
+}
+
+func (stateMchn *lexerState) push(char byte) {
+	stateMchn.sequence.WriteByte(char)
+}
+
+func (stateMchn *lexerState) clearSequence() {
+	stateMchn.sequence.Reset()
+}
+
+func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType, line int, startCol int) {
+	stateMchn.tokens = append(stateMchn.tokens, Token{
+		tokenType: tokenType,
+		value:     stateMchn.sequence.String(),
+		line:      line + 1,
+		column:    startCol + 1,
+	})
+	stateMchn.clearSequence()
+}
+
+func (stateMchn *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, char byte, line int, startCol int) {
+	stateMchn.tokens = append(stateMchn.tokens, Token{
+		tokenType: tokenType,
+		value:     string(char),
+		line:      line + 1,
+		column:    startCol + 1,
+	})
+	stateMchn.clearSequence()
+}
+
+func (stateMchn *lexerState) debug() {
+	fmt.Printf("State: {Sequence: %s, position: %d, flags: {in_multiline_comment: %v}, sequence start: %d}\n",
+		stateMchn.sequence.String(),
+		stateMchn.startPosition,
+		stateMchn.in_multiline_comment,
+		stateMchn.startPosition,
+	)
+}
+
 const (
 	ID        TokenType = "identifier"
 	SEPARATOR TokenType = "separator"
@@ -54,14 +113,6 @@ const (
 
 	errLevel diagnostic.Severity = diagnostic.SyntaxError
 )
-
-func buildHashSet(items ...string) hashSet {
-	set := make(map[string]struct{})
-	for _, item := range items {
-		set[item] = struct{}{}
-	}
-	return set
-}
 
 var (
 	add_operators hashSet = buildHashSet(
@@ -165,64 +216,7 @@ var (
 	next byte
 )
 
-func (token Token) String() string {
-	return fmt.Sprintf("{Value: %s, Type: %s, Line: %d, Column: %d}", token.value, token.tokenType, token.line, token.column)
-}
-
-func (token Token) HasValue(value string) bool {
-	return token.value == value
-}
-
-func PrintTokens(tokens []Token) {
-	for _, token := range tokens {
-		fmt.Println(token)
-	}
-}
-
-func (stateMchn *lexerState) reset() {
-	stateMchn.sequence.Reset()
-	// manually need to reset in_multiline_comment
-	// do not reset tokens
-}
-
-func (stateMchn *lexerState) push(char byte) {
-	stateMchn.sequence.WriteByte(char)
-}
-
-func (stateMchn *lexerState) clearSequence() {
-	stateMchn.sequence.Reset()
-}
-
-func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType, line int, startCol int) {
-	stateMchn.tokens = append(stateMchn.tokens, Token{
-		tokenType: tokenType,
-		value:     stateMchn.sequence.String(),
-		line:      line + 1,
-		column:    startCol + 1,
-	})
-	stateMchn.clearSequence()
-}
-
-func (stateMchn *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, char byte, line int, startCol int) {
-	stateMchn.tokens = append(stateMchn.tokens, Token{
-		tokenType: tokenType,
-		value:     string(char),
-		line:      line + 1,
-		column:    startCol + 1,
-	})
-	stateMchn.clearSequence()
-}
-
-func (stateMchn *lexerState) debug() {
-	fmt.Printf("State: {Sequence: %s, position: %d, flags: {in_multiline_comment: %v}, sequence start: %d}\n",
-		stateMchn.sequence.String(),
-		stateMchn.startPosition,
-		stateMchn.in_multiline_comment,
-		stateMchn.startPosition,
-	)
-}
-
-func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
+func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics) {
 	var report diagnostic.PhaseDiagnostics = diagnostic.PhaseDiagnostics{}
 	state := &lexerState{
 		tokens:               []Token{},
@@ -235,9 +229,9 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 		length := len(line)
 	lineLoop:
 		for col := 0; col < length; col++ {
-			// if !state.in_multiline_comment {
-			// 	state.debug()
-			// }
+			if debug && !state.in_multiline_comment {
+				state.debug()
+			}
 			curr = line[col]
 			if col == length-1 {
 				next = 0
@@ -249,10 +243,8 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 					state.in_multiline_comment = false
 					state.reset()
 					col++
-					continue
-				} else {
-					continue
 				}
+				continue
 			}
 			if unicode.IsSpace(rune(curr)) {
 				continue
@@ -298,7 +290,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 			case '/':
 				if next == '/' {
 					state.clearSequence()
-					i++
+					i++            // iterate line number
 					break lineLoop // skip to the next line
 				} else if next == '*' {
 					state.clearSequence()
@@ -318,9 +310,8 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 			case '.':
 				if next == '.' { // .. or ..=
 					state.push(next)
-					// check if character after next is =
 					state.startPosition = col
-					if col < length-2 {
+					if col < length-2 { // check if character after next is =
 						next = line[col+2]
 						if next == '=' {
 							state.push(next)
@@ -546,7 +537,7 @@ func Lex(sourceCode []string) ([]Token, diagnostic.PhaseDiagnostics) {
 									err := fmt.Sprintf("Invalid float point literal: %s", state.sequence.String())
 									report = report.Complain(errLevel, err, i, state.startPosition)
 								}
-								if col < length-2 && line[col+2] == '.' {
+								if col < length-2 && line[col+2] == '.' { // check for .. or ..= (range operators)
 									if in_float {
 										if err := validateFloatLiteral(state.sequence); err != nil {
 											report = report.Complain(errLevel, err.Error(), i, state.startPosition)
@@ -662,5 +653,11 @@ func getTokenTypeForOperator(sequence strings.Builder) TokenType {
 		return OPERATOR_RANGE
 	} else {
 		return OPERATOR
+	}
+}
+
+func PrintTokens(tokens []Token) {
+	for _, token := range tokens {
+		fmt.Println(token)
 	}
 }

@@ -36,7 +36,7 @@ func init() {
 }
 
 func compile(source []string) {
-	tokens, lexerDiagnostics := lexer.Lex(source)
+	tokens, lexerDiagnostics := lexer.Lex(source, false)
 	compilerDiagnostics = append(compilerDiagnostics, lexerDiagnostics...)
 	lexer.PrintTokens(tokens)
 	if lexerDiagnostics.HasError() {
