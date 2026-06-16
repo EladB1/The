@@ -27,12 +27,10 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 		lineNum:              0,
 		lineIndex:            0,
 	}
-	lines := len(sourceCode)
-	for ; state.lineNum < lines; state.lineNum++ {
+	for ; state.lineNum < len(sourceCode); state.lineNum++ {
 		state.clearSequence()
 		state.lineIndex = 0
-		line := sourceCode[state.lineNum]
-		state.lexLine(line)
+		state.lexLine(sourceCode[state.lineNum])
 	}
 	// EOF actions
 	if state.in_multiline_comment {
@@ -45,11 +43,7 @@ func (state *lexerState) lexLine(line string) {
 	length := len(line)
 	for ; state.lineIndex < length; state.lineIndex++ {
 		curr = line[state.lineIndex]
-		if state.lineIndex == length-1 {
-			next = 0
-		} else {
-			next = line[state.lineIndex+1]
-		}
+		next = state.getNextChar(line)
 		if state.in_multiline_comment {
 			if curr == '*' && next == '/' {
 				state.in_multiline_comment = false
@@ -134,13 +128,9 @@ func (state *lexerState) lexLine(line string) {
 				state.buildAndAppendToken(OPERATOR_RANGE)
 			} else if unicode.IsDigit(rune(next)) && !(curr == '0' && next == 'x') { // Example: .234
 				state.lineIndex++
-				for state.lineIndex < length {
+				for ; state.lineIndex < length; state.lineIndex++ {
 					curr = line[state.lineIndex]
-					if state.lineIndex == length-1 {
-						next = 0
-					} else {
-						next = line[state.lineIndex+1]
-					}
+					next = state.getNextChar(line)
 					state.push(curr)
 					if !unicode.IsDigit(rune(next)) {
 						if err := validateFloatLiteral(state.sequence); err != nil {
@@ -150,7 +140,6 @@ func (state *lexerState) lexLine(line string) {
 						}
 						break
 					}
-					state.lineIndex++
 				}
 			} else {
 				state.buildAndAppendTokenFromByte(OPERATOR, curr)
@@ -212,7 +201,6 @@ func (state *lexerState) tokenizeQuotes(line string) {
 	delim := curr
 	var literal string
 	var tokenType TokenType
-	end := false
 	if curr == '"' {
 		literal = "string"
 		tokenType = LIT_STRING
@@ -230,25 +218,18 @@ func (state *lexerState) tokenizeQuotes(line string) {
 			state.push(next)
 			state.buildAndAppendToken(tokenType)
 			state.lineIndex++
-			end = true
-			break
+			return
 		}
 	}
-	if !end {
-		state.addError(fmt.Sprintf("Unterminated %s literal", literal))
-		state.clearSequence()
-	}
+	state.addError(fmt.Sprintf("Unterminated %s literal", literal))
+	state.clearSequence()
 }
 
 func (state *lexerState) tokenizeWord(line string) {
 	length := len(line)
 	for state.lineIndex = state.startPosition; state.lineIndex < length; state.lineIndex++ {
 		curr = line[state.lineIndex]
-		if state.lineIndex == length-1 {
-			next = 0
-		} else {
-			next = line[state.lineIndex+1]
-		}
+		next = state.getNextChar(line)
 
 		if state.lineIndex != state.startPosition {
 			state.push(curr)
@@ -274,11 +255,7 @@ func (state *lexerState) tokenizeNumber(line string) {
 		in_float := false
 		for ; state.lineIndex < length; state.lineIndex++ {
 			curr = line[state.lineIndex]
-			if state.lineIndex == length-1 {
-				next = 0
-			} else {
-				next = line[state.lineIndex+1]
-			}
+			next = state.getNextChar(line)
 			if state.lineIndex != state.startPosition {
 				state.push(curr)
 			}
@@ -298,7 +275,7 @@ func (state *lexerState) tokenizeNumber(line string) {
 					} else {
 						state.buildAndAppendToken(LIT_INT)
 					}
-					break
+					return
 				} else {
 					in_float = true
 					state.push(next)
@@ -310,11 +287,11 @@ func (state *lexerState) tokenizeNumber(line string) {
 					tokenType = LIT_FLOAT
 					if err := validateFloatLiteral(state.sequence); err != nil {
 						state.addError(err.Error())
-						break
+						return
 					}
 				}
 				state.buildAndAppendToken(tokenType)
-				break
+				return
 			}
 		}
 	}
@@ -324,11 +301,7 @@ func (state *lexerState) tokenizeHex(line string) {
 	length := len(line)
 	for ; state.lineIndex < length; state.lineIndex++ {
 		curr = line[state.lineIndex]
-		if state.lineIndex == length-1 {
-			next = 0
-		} else {
-			next = line[state.lineIndex+1]
-		}
+		next = state.getNextChar(line)
 
 		if state.lineIndex != state.startPosition+1 { // already processed 0 and x
 			state.push(curr)
@@ -339,9 +312,16 @@ func (state *lexerState) tokenizeHex(line string) {
 				state.addError(err.Error())
 			}
 			state.buildAndAppendToken(LIT_HEX)
-			break
+			return
 		}
 	}
+}
+
+func (state *lexerState) getNextChar(line string) byte {
+	if state.lineIndex == len(line)-1 {
+		return 0
+	}
+	return line[state.lineIndex+1]
 }
 
 func isWordStartChar(chr byte) bool {
