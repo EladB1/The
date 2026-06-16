@@ -114,6 +114,25 @@ Format strings
 
 Strings that can insert dynamic values to cut down on typecasting and string concatenation
 
+```
+int i = 0;
+String s = `i is {i}`;
+println(`\{ {i+5} \});
+```
+
+Internally, this would be treated as:
+
+```
+String s = "i is " + (i as String);
+println("{" + ((i+5) as string) + "}");
+```
+
+EBNF rule:
+
+```ebnf
+FormatStringLiteral = "`" .* { "{" expression "}" } .* "`" ;
+```
+
 Multi-line strings
 ---
 

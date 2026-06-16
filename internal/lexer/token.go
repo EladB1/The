@@ -2,6 +2,7 @@ package lexer
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	ds "github.com/EladB1/The/internal/datastructures"
@@ -11,9 +12,15 @@ type (
 	TokenType string
 	Token     struct {
 		tokenType TokenType
-		value     string
 		line      int
 		column    int
+		value     string // use for non-literals
+		// use for literals
+		CharVal  rune
+		IntVal   uint64
+		IsSigned bool
+		FloatVal float64
+		StrIndex int
 	}
 )
 
@@ -45,7 +52,24 @@ const (
 )
 
 func (token Token) String() string {
-	return fmt.Sprintf("{Value: %s, Type: %s, Line: %d, Column: %d}", token.value, token.tokenType, token.line, token.column)
+	value := fmt.Sprintf("Value: %s", token.value)
+	switch token.tokenType {
+	case LIT_INT:
+		value = fmt.Sprintf("Value: %d", token.IntVal)
+	case LIT_HEX:
+		value = fmt.Sprintf("Value: %#x", token.IntVal)
+	case LIT_FLOAT:
+		value = fmt.Sprintf("Value: %g", token.FloatVal)
+	case LIT_STRING:
+		value = fmt.Sprintf("Value: %s", strconv.Quote(string(ds.LiteralStorage[token.StrIndex])))
+	case LIT_CHAR:
+		if token.CharVal == 0 {
+			value = "Value: ''"
+		} else {
+			value = fmt.Sprintf("Value: %q", token.CharVal)
+		}
+	}
+	return fmt.Sprintf("{%s, Type: %s, Line: %d, Column: %d}", value, token.tokenType, token.line, token.column)
 }
 
 func (token Token) HasValue(value string) bool {

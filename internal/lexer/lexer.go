@@ -201,6 +201,7 @@ func (state *lexerState) tokenizeQuotes(line string) {
 	delim := curr
 	var literal string
 	var tokenType TokenType
+	escaped := false
 	if curr == '"' {
 		literal = "string"
 		tokenType = LIT_STRING
@@ -214,11 +215,17 @@ func (state *lexerState) tokenizeQuotes(line string) {
 		if state.lineIndex != state.startPosition {
 			state.push(curr)
 		}
-		if curr != '\\' && next == delim {
-			state.push(next)
-			state.buildAndAppendToken(tokenType)
-			state.lineIndex++
-			return
+		if curr == '\\' && next == '\\' {
+			escaped = !escaped
+			continue
+		}
+		if next == delim {
+			if curr != '\\' || (escaped && curr == '\\') {
+				state.push(next)
+				state.buildAndAppendToken(tokenType)
+				state.lineIndex++
+				return
+			}
 		}
 	}
 	state.addError(fmt.Sprintf("Unterminated %s literal", literal))
@@ -310,8 +317,10 @@ func (state *lexerState) tokenizeHex(line string) {
 		if !isHexChar(next) {
 			if err := validateHexLiteral(state.sequence); err != nil {
 				state.addError(err.Error())
+				state.clearSequence()
+			} else {
+				state.buildAndAppendToken(LIT_HEX)
 			}
-			state.buildAndAppendToken(LIT_HEX)
 			return
 		}
 	}

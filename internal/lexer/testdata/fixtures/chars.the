@@ -7,3 +7,5 @@ char c = 'a';
 // Invalid
 'b
 b'
+'⚠️'
+';ssdfsdf'

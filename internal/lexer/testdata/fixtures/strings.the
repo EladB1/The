@@ -4,12 +4,17 @@ String s = "hello, world!";
 ""
 "\""
 "Is this string \"hello\" valid?"
+"\\"
+"\\\\"
+"\n"
 "hello"[1]
 s[^1]
 s[1..4]
 s[^3..=^1]
+String prefix = "⚠️ Warning: ";
 
 // Invalid
 "what
 "aaa ;
 hello";
+"\\\"

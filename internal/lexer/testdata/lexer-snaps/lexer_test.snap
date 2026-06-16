@@ -15,7 +15,9 @@ Tokens:
 Compiler messages:
 [
     "SyntaxError: Unterminated character literal at line: 8, column: 1",
-    "SyntaxError: Unterminated character literal at line: 9, column: 2"
+    "SyntaxError: Unterminated character literal at line: 9, column: 2",
+    "SyntaxError: Invalid character literal '⚠️' at line: 10, column: 1",
+    "SyntaxError: Invalid character literal ';ssdfsdf' at line: 11, column: 1"
 ]
 
 ---
@@ -32,36 +34,45 @@ Tokens:
     {Value: "", Type: string literal, Line: 4, Column: 1},
     {Value: "\"", Type: string literal, Line: 5, Column: 1},
     {Value: "Is this string \"hello\" valid?", Type: string literal, Line: 6, Column: 1},
-    {Value: "hello", Type: string literal, Line: 7, Column: 1},
-    {Value: [, Type: separator, Line: 7, Column: 8},
-    {Value: 1, Type: int literal, Line: 7, Column: 9},
-    {Value: ], Type: separator, Line: 7, Column: 10},
-    {Value: s, Type: identifier, Line: 8, Column: 1},
-    {Value: [, Type: separator, Line: 8, Column: 2},
-    {Value: ^, Type: bitwise operator, Line: 8, Column: 3},
-    {Value: 1, Type: int literal, Line: 8, Column: 4},
-    {Value: ], Type: separator, Line: 8, Column: 5},
-    {Value: s, Type: identifier, Line: 9, Column: 1},
-    {Value: [, Type: separator, Line: 9, Column: 2},
-    {Value: 1, Type: int literal, Line: 9, Column: 3},
-    {Value: .., Type: range operator, Line: 9, Column: 4},
-    {Value: 4, Type: int literal, Line: 9, Column: 6},
-    {Value: ], Type: separator, Line: 9, Column: 7},
-    {Value: s, Type: identifier, Line: 10, Column: 1},
-    {Value: [, Type: separator, Line: 10, Column: 2},
-    {Value: ^, Type: bitwise operator, Line: 10, Column: 3},
-    {Value: 3, Type: int literal, Line: 10, Column: 4},
-    {Value: ..=, Type: range operator, Line: 10, Column: 5},
-    {Value: ^, Type: bitwise operator, Line: 10, Column: 8},
+    {Value: "\\", Type: string literal, Line: 7, Column: 1},
+    {Value: "\\\\", Type: string literal, Line: 8, Column: 1},
+    {Value: "\n", Type: string literal, Line: 9, Column: 1},
+    {Value: "hello", Type: string literal, Line: 10, Column: 1},
+    {Value: [, Type: separator, Line: 10, Column: 8},
     {Value: 1, Type: int literal, Line: 10, Column: 9},
     {Value: ], Type: separator, Line: 10, Column: 10},
-    {Value: hello, Type: identifier, Line: 15, Column: 1}
+    {Value: s, Type: identifier, Line: 11, Column: 1},
+    {Value: [, Type: separator, Line: 11, Column: 2},
+    {Value: ^, Type: bitwise operator, Line: 11, Column: 3},
+    {Value: 1, Type: int literal, Line: 11, Column: 4},
+    {Value: ], Type: separator, Line: 11, Column: 5},
+    {Value: s, Type: identifier, Line: 12, Column: 1},
+    {Value: [, Type: separator, Line: 12, Column: 2},
+    {Value: 1, Type: int literal, Line: 12, Column: 3},
+    {Value: .., Type: range operator, Line: 12, Column: 4},
+    {Value: 4, Type: int literal, Line: 12, Column: 6},
+    {Value: ], Type: separator, Line: 12, Column: 7},
+    {Value: s, Type: identifier, Line: 13, Column: 1},
+    {Value: [, Type: separator, Line: 13, Column: 2},
+    {Value: ^, Type: bitwise operator, Line: 13, Column: 3},
+    {Value: 3, Type: int literal, Line: 13, Column: 4},
+    {Value: ..=, Type: range operator, Line: 13, Column: 5},
+    {Value: ^, Type: bitwise operator, Line: 13, Column: 8},
+    {Value: 1, Type: int literal, Line: 13, Column: 9},
+    {Value: ], Type: separator, Line: 13, Column: 10},
+    {Value: String, Type: type keyword, Line: 14, Column: 1},
+    {Value: prefix, Type: identifier, Line: 14, Column: 8},
+    {Value: =, Type: assign operator, Line: 14, Column: 15},
+    {Value: "⚠️ Warning: ", Type: string literal, Line: 14, Column: 17},
+    {Value: ;, Type: separator, Line: 14, Column: 35},
+    {Value: hello, Type: identifier, Line: 19, Column: 1}
 ]
 Compiler messages:
 [
-    "SyntaxError: Unterminated string literal at line: 13, column: 1",
-    "SyntaxError: Unterminated string literal at line: 14, column: 1",
-    "SyntaxError: Unterminated string literal at line: 15, column: 6"
+    "SyntaxError: Unterminated string literal at line: 17, column: 1",
+    "SyntaxError: Unterminated string literal at line: 18, column: 1",
+    "SyntaxError: Unterminated string literal at line: 19, column: 6",
+    "SyntaxError: Unterminated string literal at line: 20, column: 1"
 ]
 
 ---
@@ -93,10 +104,10 @@ Tokens:
     {Value: /=, Type: assign operator, Line: 9, Column: 3},
     {Value: 10, Type: int literal, Line: 9, Column: 6},
     {Value: 0.5, Type: float literal, Line: 10, Column: 1},
-    {Value: .5, Type: float literal, Line: 11, Column: 2},
+    {Value: 0.5, Type: float literal, Line: 11, Column: 2},
     {Value: +, Type: add operator, Line: 11, Column: 5},
     {Value: 1, Type: int literal, Line: 11, Column: 7},
-    {Value: .234, Type: float literal, Line: 12, Column: 1},
+    {Value: 0.234, Type: float literal, Line: 12, Column: 1},
     {Value: 1, Type: int literal, Line: 13, Column: 1},
     {Value: .., Type: range operator, Line: 13, Column: 2},
     {Value: 5, Type: int literal, Line: 13, Column: 4},
@@ -119,10 +130,10 @@ Tokens:
     {Value: 2, Type: int literal, Line: 19, Column: 1},
     {Value: **, Type: operator, Line: 19, Column: 3},
     {Value: 5, Type: int literal, Line: 19, Column: 6},
-    {Value: 0.00, Type: float literal, Line: 20, Column: 1},
+    {Value: 0, Type: float literal, Line: 20, Column: 1},
     {Value: ==, Type: compare operator, Line: 20, Column: 6},
     {Value: 0, Type: int literal, Line: 20, Column: 9},
-    {Value: 0.00, Type: float literal, Line: 21, Column: 1},
+    {Value: 0, Type: float literal, Line: 21, Column: 1},
     {Value: !=, Type: compare operator, Line: 21, Column: 6},
     {Value: 0, Type: int literal, Line: 21, Column: 9},
     {Value: 1, Type: int literal, Line: 22, Column: 1},
@@ -158,10 +169,7 @@ Tokens:
     {Value: --, Type: unary operator, Line: 30, Column: 5},
     {Value: n, Type: identifier, Line: 30, Column: 7},
     {Value: }, Type: separator, Line: 31, Column: 1},
-    {Value: 0x, Type: hex literal, Line: 34, Column: 1},
-    {Value: 0x, Type: hex literal, Line: 35, Column: 1},
     {Value: p, Type: identifier, Line: 35, Column: 3},
-    {Value: 0x, Type: hex literal, Line: 36, Column: 1},
     {Value: ., Type: operator, Line: 36, Column: 3},
     {Value: a1, Type: identifier, Line: 36, Column: 4}
 ]
@@ -431,7 +439,7 @@ Tokens:
     {Value: ,, Type: separator, Line: 37, Column: 21},
     {Value: hourlyRate, Type: identifier, Line: 38, Column: 9},
     {Value: :, Type: separator, Line: 38, Column: 19},
-    {Value: 21.50, Type: float literal, Line: 38, Column: 21},
+    {Value: 21.5, Type: float literal, Line: 38, Column: 21},
     {Value: ,, Type: separator, Line: 38, Column: 26},
     {Value: }, Type: separator, Line: 39, Column: 5},
     {Value: }, Type: separator, Line: 40, Column: 1},

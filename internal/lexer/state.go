@@ -2,8 +2,11 @@ package lexer
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
+	"unicode/utf8"
 
+	ds "github.com/EladB1/The/internal/datastructures"
 	"github.com/EladB1/The/internal/diagnostic"
 )
 
@@ -41,12 +44,87 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 	if stateMchn.sequence.Len() > 1 && stateMchn.startPosition != stateMchn.lineIndex {
 		column = stateMchn.startPosition
 	}
-	stateMchn.tokens = append(stateMchn.tokens, Token{
-		tokenType: tokenType,
-		value:     stateMchn.sequence.String(),
-		line:      stateMchn.lineNum + 1,
-		column:    column + 1,
-	})
+	var token Token
+	switch tokenType {
+	case LIT_CHAR:
+		str, err := strconv.Unquote(stateMchn.sequence.String())
+		if err != nil {
+			stateMchn.addError(fmt.Sprintf("Invalid character literal %s", stateMchn.sequence.String()))
+			return
+		}
+		char, size := utf8.DecodeRuneInString(str)
+		if char == utf8.RuneError && size > 1 {
+			stateMchn.addError(fmt.Sprintf("Invalid character literal %s", stateMchn.sequence.String()))
+			return
+		} else if size == 0 {
+			char = 0
+		}
+		token = Token{
+			tokenType: tokenType,
+			CharVal:   char,
+			line:      stateMchn.lineNum + 1,
+			column:    column + 1,
+		}
+	case LIT_STRING:
+		str, err := strconv.Unquote(stateMchn.sequence.String())
+		if err != nil {
+			fmt.Println(stateMchn.sequence.String())
+			stateMchn.addError(fmt.Sprintf("Invalid string literal %s", stateMchn.sequence.String()))
+			return
+		}
+		index := 0
+		ds.LiteralStorage, index = ds.LiteralStorage.Add(str)
+		token = Token{
+			tokenType: tokenType,
+			StrIndex:  index,
+			line:      stateMchn.lineNum + 1,
+			column:    column + 1,
+		}
+	case LIT_FLOAT:
+		val, err := strconv.ParseFloat(stateMchn.sequence.String(), 64)
+		if err != nil {
+			stateMchn.addError(fmt.Sprintf("Invalid floating point literal %s", stateMchn.sequence.String()))
+			return
+		}
+		token = Token{
+			tokenType: tokenType,
+			FloatVal:  val,
+			line:      stateMchn.lineNum + 1,
+			column:    column + 1,
+		}
+	case LIT_INT:
+		val, err := strconv.ParseInt(stateMchn.sequence.String(), 10, 64)
+		if err != nil {
+			stateMchn.addError(fmt.Sprintf("Invalid integer literal %s", stateMchn.sequence.String()))
+			return
+		}
+		token = Token{
+			tokenType: tokenType,
+			IntVal:    uint64(val),
+			line:      stateMchn.lineNum + 1,
+			column:    column + 1,
+		}
+	case LIT_HEX:
+		val, err := strconv.ParseInt(stateMchn.sequence.String(), 0, 64)
+		if err != nil {
+			stateMchn.addError(fmt.Sprintf("Invalid hexadecimal literal %s", stateMchn.sequence.String()))
+			return
+		}
+		token = Token{
+			tokenType: tokenType,
+			IntVal:    uint64(val),
+			line:      stateMchn.lineNum + 1,
+			column:    column + 1,
+		}
+	default:
+		token = Token{
+			tokenType: tokenType,
+			value:     stateMchn.sequence.String(),
+			line:      stateMchn.lineNum + 1,
+			column:    column + 1,
+		}
+	}
+	stateMchn.tokens = append(stateMchn.tokens, token)
 	stateMchn.clearSequence()
 }
 
