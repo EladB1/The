@@ -45,13 +45,6 @@ func (token Token) HasValue(value string) bool {
 	return token.value == value
 }
 
-func (stateMchn *lexerState) reset() {
-	stateMchn.sequence.Reset()
-	stateMchn.startPosition = 0
-	// manually need to reset in_multiline_comment
-	// do not reset tokens
-}
-
 func (stateMchn *lexerState) addError(message string) {
 	lineIndex := stateMchn.lineIndex
 	if stateMchn.startPosition != stateMchn.lineIndex {
@@ -244,7 +237,7 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 	}
 	lines := len(sourceCode)
 	for ; state.lineNum < lines; state.lineNum++ {
-		state.reset()
+		state.clearSequence()
 		state.lineIndex = 0
 		line := sourceCode[state.lineNum]
 		state.lexLine(line)
@@ -268,7 +261,7 @@ func (state *lexerState) lexLine(line string) {
 		if state.in_multiline_comment {
 			if curr == '*' && next == '/' {
 				state.in_multiline_comment = false
-				state.reset()
+				state.clearSequence()
 				state.lineIndex++
 			}
 			continue
@@ -278,10 +271,10 @@ func (state *lexerState) lexLine(line string) {
 		}
 		state.push(curr)
 		//fmt.Printf("line: %d, curr: %c, next: %c\n", state.lineNum, curr, next)
+		state.startPosition = state.lineIndex
 		switch curr {
 		case '+':
 			if next == '+' || next == '=' {
-				state.startPosition = state.lineIndex
 				state.push(next)
 				tokenType := getTokenTypeForOperator(state.sequence)
 				state.buildAndAppendToken(tokenType)
@@ -292,12 +285,10 @@ func (state *lexerState) lexLine(line string) {
 		case '-':
 			switch next {
 			case '>':
-				state.startPosition = state.lineIndex
 				state.push(next)
 				state.buildAndAppendToken(SEPARATOR)
 				state.lineIndex++
 			case '-', '=':
-				state.startPosition = state.lineIndex
 				state.push(next)
 				tokenType := getTokenTypeForOperator(state.sequence)
 				state.buildAndAppendToken(tokenType)
@@ -307,7 +298,6 @@ func (state *lexerState) lexLine(line string) {
 			}
 		case '*':
 			if next == '*' || next == '=' {
-				state.startPosition = state.lineIndex
 				state.push(next)
 				tokenType := getTokenTypeForOperator(state.sequence)
 				state.buildAndAppendToken(tokenType)
@@ -330,7 +320,6 @@ func (state *lexerState) lexLine(line string) {
 				state.clearSequence()
 				state.in_multiline_comment = true
 			case '=':
-				state.startPosition = state.lineIndex
 				state.push(next)
 				state.buildAndAppendToken(OPERATOR_ASSIGN)
 				state.lineIndex++
@@ -342,7 +331,6 @@ func (state *lexerState) lexLine(line string) {
 		case '.':
 			if next == '.' { // .. or ..=
 				state.push(next)
-				state.startPosition = state.lineIndex
 				if state.lineIndex < length-2 { // check if character after next is =
 					next = line[state.lineIndex+2]
 					if next == '=' {
@@ -353,7 +341,6 @@ func (state *lexerState) lexLine(line string) {
 				state.lineIndex++
 				state.buildAndAppendToken(OPERATOR_RANGE)
 			} else if unicode.IsDigit(rune(next)) && !(curr == '0' && next == 'x') { // Example: .234
-				state.startPosition = state.lineIndex
 				state.lineIndex++
 				for state.lineIndex < length {
 					curr = line[state.lineIndex]
@@ -378,7 +365,6 @@ func (state *lexerState) lexLine(line string) {
 			}
 		case '!':
 			if next == '=' {
-				state.startPosition = state.lineIndex
 				state.push(next)
 				state.buildAndAppendToken(OPERATOR_COMPARE)
 				state.lineIndex++
@@ -387,7 +373,6 @@ func (state *lexerState) lexLine(line string) {
 			}
 		case '<', '>':
 			if next == '=' || next == curr { // <=, <<, >=, or >>
-				state.startPosition = state.lineIndex
 				state.push(next)
 				tokenType := getTokenTypeForOperator(state.sequence)
 				state.buildAndAppendToken(tokenType)
@@ -397,7 +382,6 @@ func (state *lexerState) lexLine(line string) {
 			}
 		case '=':
 			if next == '=' {
-				state.startPosition = state.lineIndex
 				state.push(next)
 				state.buildAndAppendToken(OPERATOR_COMPARE)
 				state.lineIndex++
@@ -406,7 +390,6 @@ func (state *lexerState) lexLine(line string) {
 			}
 		case '|', '&':
 			if next == curr { // || or &&
-				state.startPosition = state.lineIndex
 				state.push(next)
 				state.buildAndAppendToken(OPERATOR)
 				state.lineIndex++
@@ -416,19 +399,15 @@ func (state *lexerState) lexLine(line string) {
 		case '^':
 			state.buildAndAppendTokenFromByte(OPERATOR_BW, curr)
 		case '"', '\'':
-			state.startPosition = state.lineIndex
 			state.tokenizeQuotes(line)
 		default:
 			if isWordStartChar(curr) {
-				state.startPosition = state.lineIndex
 				state.tokenizeWord(line)
 			} else if unicode.IsDigit(rune(curr)) {
-				state.startPosition = state.lineIndex
 				state.tokenizeNumber(line)
 			} else if _, ok := separators[string(curr)]; ok {
 				state.buildAndAppendTokenFromByte(SEPARATOR, curr)
 			} else {
-				state.startPosition = state.lineIndex
 				state.addError(fmt.Sprintf("Unrecognized character: '%c'", curr))
 				state.clearSequence()
 			}
