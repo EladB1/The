@@ -62,4 +62,22 @@ func TestLexer(t *testing.T) {
 	t.Run("should run struct.the and get no errors", func(t *testing.T) {
 		snapshotTestLexer(t, "testdata/fixtures/struct.the")
 	})
+	t.Run("token.HasValue() should return true when given matching value", func(t *testing.T) {
+		token := Token{
+			tokenType: ID,
+			value:     "name",
+		}
+		if !token.HasValue("name") {
+			t.Errorf("Token %v should have matched value %s\n", token, "name")
+		}
+	})
+	t.Run("token.HasValue() should return false when given non-matching value", func(t *testing.T) {
+		token := Token{
+			tokenType: ID,
+			value:     "name",
+		}
+		if token.HasValue("x") {
+			t.Errorf("Token %v should not have matched value %s\n", token, "x")
+		}
+	})
 }

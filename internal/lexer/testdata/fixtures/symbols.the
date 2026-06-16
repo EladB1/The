@@ -34,3 +34,4 @@ mut uint32 age = 90;
 
 // Invalid
 bool isOpen?
+*/

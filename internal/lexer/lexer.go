@@ -48,7 +48,6 @@ func (token Token) HasValue(value string) bool {
 func (stateMchn *lexerState) reset() {
 	stateMchn.sequence.Reset()
 	stateMchn.startPosition = 0
-	stateMchn.lineIndex = 0
 	// manually need to reset in_multiline_comment
 	// do not reset tokens
 }
@@ -238,6 +237,7 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 	lines := len(sourceCode)
 	for ; state.lineNum < lines; state.lineNum++ {
 		state.reset()
+		state.lineIndex = 0
 		line := sourceCode[state.lineNum]
 		state.lexLine(line)
 	}
@@ -250,100 +250,103 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 
 func (state *lexerState) lexLine(line string) {
 	length := len(line)
-	for i := 0; i < length; i++ {
-		curr = line[i]
-		if i == length-1 {
+	for ; state.lineIndex < length; state.lineIndex++ {
+		curr = line[state.lineIndex]
+		if state.lineIndex == length-1 {
 			next = 0
 		} else {
-			next = line[i+1]
+			next = line[state.lineIndex+1]
 		}
 		if state.in_multiline_comment {
 			if curr == '*' && next == '/' {
 				state.in_multiline_comment = false
 				state.reset()
-				i++
+				state.lineIndex++
 			}
 			continue
 		}
 		if unicode.IsSpace(rune(curr)) {
 			continue
 		}
-		//fmt.Printf("curr: %c, next: %c\n", curr, next)
 		state.push(curr)
+		//fmt.Printf("line: %d, curr: %c, next: %c\n", state.lineNum, curr, next)
 		switch curr {
 		case '+':
 			if next == '+' || next == '=' {
 				state.push(next)
 				tokenType := getTokenTypeForOperator(state.sequence)
-				state.buildAndAppendToken(tokenType, state.lineNum, i)
-				i++
+				state.buildAndAppendToken(tokenType, state.lineNum, state.lineIndex)
+				state.lineIndex++
 			} else {
-				state.buildAndAppendTokenFromByte(OPERATOR_ADD, curr, state.lineNum, i)
+				state.buildAndAppendTokenFromByte(OPERATOR_ADD, curr, state.lineNum, state.lineIndex)
 			}
 		case '-':
 			switch next {
 			case '>':
 				state.push(next)
-				state.buildAndAppendToken(SEPARATOR, state.lineNum, i)
-				i++
+				state.buildAndAppendToken(SEPARATOR, state.lineNum, state.lineIndex)
+				state.lineIndex++
 			case '-', '=':
 				state.push(next)
 				tokenType := getTokenTypeForOperator(state.sequence)
-				state.buildAndAppendToken(tokenType, state.lineNum, i)
-				i++
+				state.buildAndAppendToken(tokenType, state.lineNum, state.lineIndex)
+				state.lineIndex++
 			default:
-				state.buildAndAppendTokenFromByte(OPERATOR_ADD, curr, state.lineNum, i)
+				state.buildAndAppendTokenFromByte(OPERATOR_ADD, curr, state.lineNum, state.lineIndex)
 			}
 		case '*':
 			if next == '*' || next == '=' {
 				state.push(next)
 				tokenType := getTokenTypeForOperator(state.sequence)
-				state.buildAndAppendToken(tokenType, state.lineNum, i)
-				i++
+				state.buildAndAppendToken(tokenType, state.lineNum, state.lineIndex)
+				state.lineIndex++
+			} else if next == '/' && !state.in_multiline_comment {
+				state.addError("Founding multiline comment close but no open", state.lineIndex)
+				state.lineIndex++
 			} else {
-				state.buildAndAppendTokenFromByte(OPERATOR_MULT, curr, state.lineNum, i)
+				state.buildAndAppendTokenFromByte(OPERATOR_MULT, curr, state.lineNum, state.lineIndex)
 			}
 		case '/':
 			switch next {
 			case '/':
-				i++
+				state.lineIndex++
 				state.clearSequence()
 				return // skip to the next line
 			case '*':
-				i++
+				state.lineIndex++
 				state.clearSequence()
 				state.in_multiline_comment = true
 			case '=':
 				state.push(next)
-				state.buildAndAppendToken(OPERATOR_ASSIGN, state.lineNum, i)
-				i++
+				state.buildAndAppendToken(OPERATOR_ASSIGN, state.lineNum, state.lineIndex)
+				state.lineIndex++
 			default:
-				state.buildAndAppendTokenFromByte(OPERATOR_MULT, curr, state.lineNum, i)
+				state.buildAndAppendTokenFromByte(OPERATOR_MULT, curr, state.lineNum, state.lineIndex)
 			}
 		case '%':
-			state.buildAndAppendTokenFromByte(OPERATOR_MULT, curr, state.lineNum, i)
+			state.buildAndAppendTokenFromByte(OPERATOR_MULT, curr, state.lineNum, state.lineIndex)
 		case '.':
 			if next == '.' { // .. or ..=
 				state.push(next)
-				state.startPosition = i
-				if i < length-2 { // check if character after next is =
-					next = line[i+2]
+				state.startPosition = state.lineIndex
+				if state.lineIndex < length-2 { // check if character after next is =
+					next = line[state.lineIndex+2]
 					if next == '=' {
 						state.push(next)
-						i++
+						state.lineIndex++
 					}
 				}
-				i++
+				state.lineIndex++
 				state.buildAndAppendToken(OPERATOR_RANGE, state.lineNum, state.startPosition)
 			} else if unicode.IsDigit(rune(next)) && !(curr == '0' && next == 'x') { // Example: .234
-				state.startPosition = i
-				i++
-				for i < length {
-					curr = line[i]
-					if i == length-1 {
+				state.startPosition = state.lineIndex
+				state.lineIndex++
+				for state.lineIndex < length {
+					curr = line[state.lineIndex]
+					if state.lineIndex == length-1 {
 						next = 0
 					} else {
-						next = line[i+1]
+						next = line[state.lineIndex+1]
 					}
 					state.push(curr)
 					if !unicode.IsDigit(rune(next)) {
@@ -354,65 +357,60 @@ func (state *lexerState) lexLine(line string) {
 						}
 						break
 					}
-					i++
+					state.lineIndex++
 				}
 			} else {
-				state.buildAndAppendTokenFromByte(OPERATOR, curr, state.lineNum, i)
+				state.buildAndAppendTokenFromByte(OPERATOR, curr, state.lineNum, state.lineIndex)
 			}
 		case '!':
 			if next == '=' {
 				state.push(next)
-				state.buildAndAppendToken(OPERATOR_COMPARE, state.lineNum, i)
-				i++
+				state.buildAndAppendToken(OPERATOR_COMPARE, state.lineNum, state.lineIndex)
+				state.lineIndex++
 			} else {
-				state.buildAndAppendTokenFromByte(OPERATOR_UNARY, curr, state.lineNum, i)
+				state.buildAndAppendTokenFromByte(OPERATOR_UNARY, curr, state.lineNum, state.lineIndex)
 			}
 		case '<', '>':
 			if next == '=' || next == curr { // <=, <<, >=, or >>
 				state.push(next)
 				tokenType := getTokenTypeForOperator(state.sequence)
-				state.buildAndAppendToken(tokenType, state.lineNum, i)
-				i++
+				state.buildAndAppendToken(tokenType, state.lineNum, state.lineIndex)
+				state.lineIndex++
 			} else {
-				state.buildAndAppendTokenFromByte(OPERATOR_COMPARE, curr, state.lineNum, i)
+				state.buildAndAppendTokenFromByte(OPERATOR_COMPARE, curr, state.lineNum, state.lineIndex)
 			}
 		case '=':
 			if next == '=' {
 				state.push(next)
-				state.buildAndAppendToken(OPERATOR_COMPARE, state.lineNum, i)
-				i++
-				continue
+				state.buildAndAppendToken(OPERATOR_COMPARE, state.lineNum, state.lineIndex)
+				state.lineIndex++
 			} else {
-				state.buildAndAppendTokenFromByte(OPERATOR_ASSIGN, curr, state.lineNum, i)
+				state.buildAndAppendTokenFromByte(OPERATOR_ASSIGN, curr, state.lineNum, state.lineIndex)
 			}
 		case '|', '&':
 			if next == curr { // || or &&
 				state.push(next)
-				state.buildAndAppendToken(OPERATOR, state.lineNum, i)
-				i++
-				continue
+				state.buildAndAppendToken(OPERATOR, state.lineNum, state.lineIndex)
+				state.lineIndex++
 			} else {
-				state.buildAndAppendTokenFromByte(OPERATOR_BW, curr, state.lineNum, i)
+				state.buildAndAppendTokenFromByte(OPERATOR_BW, curr, state.lineNum, state.lineIndex)
 			}
 		case '^':
-			state.buildAndAppendTokenFromByte(OPERATOR_BW, curr, state.lineNum, i)
+			state.buildAndAppendTokenFromByte(OPERATOR_BW, curr, state.lineNum, state.lineIndex)
 		case '"', '\'':
-			state.startPosition = i
+			state.startPosition = state.lineIndex
 			state.tokenizeQuotes(line)
-			i = state.lineIndex
 		default:
 			if isWordStartChar(curr) {
-				state.startPosition = i
+				state.startPosition = state.lineIndex
 				state.tokenizeWord(line)
-				i = state.lineIndex
 			} else if unicode.IsDigit(rune(curr)) {
-				state.startPosition = i
+				state.startPosition = state.lineIndex
 				state.tokenizeNumber(line)
-				i = state.lineIndex
 			} else if _, ok := separators[string(curr)]; ok {
-				state.buildAndAppendTokenFromByte(SEPARATOR, curr, state.lineNum, i)
+				state.buildAndAppendTokenFromByte(SEPARATOR, curr, state.lineNum, state.lineIndex)
 			} else {
-				state.addError(fmt.Sprintf("Unrecognized character: '%c'", curr), i)
+				state.addError(fmt.Sprintf("Unrecognized character: '%c'", curr), state.lineIndex)
 				state.clearSequence()
 			}
 		}
@@ -420,7 +418,6 @@ func (state *lexerState) lexLine(line string) {
 }
 
 func (state *lexerState) tokenizeQuotes(line string) {
-	state.lineIndex = state.startPosition
 	length := len(line)
 	delim := curr
 	var literal string
@@ -433,7 +430,7 @@ func (state *lexerState) tokenizeQuotes(line string) {
 		literal = "character"
 		tokenType = LIT_CHAR
 	}
-	for ; state.lineIndex < length-1; state.lineIndex++ {
+	for state.lineIndex = state.startPosition; state.lineIndex < length-1; state.lineIndex++ {
 		curr = line[state.lineIndex]
 		next = line[state.lineIndex+1]
 		if state.lineIndex != state.startPosition {
@@ -454,9 +451,8 @@ func (state *lexerState) tokenizeQuotes(line string) {
 }
 
 func (state *lexerState) tokenizeWord(line string) {
-	state.lineIndex = state.startPosition
 	length := len(line)
-	for ; state.lineIndex < length; state.lineIndex++ {
+	for state.lineIndex = state.startPosition; state.lineIndex < length; state.lineIndex++ {
 		curr = line[state.lineIndex]
 		if state.lineIndex == length-1 {
 			next = 0
@@ -486,7 +482,7 @@ func (state *lexerState) tokenizeNumber(line string) {
 
 	} else { // int or float numbers
 		in_float := false
-		for state.lineIndex < length {
+		for ; state.lineIndex < length; state.lineIndex++ {
 			curr = line[state.lineIndex]
 			if state.lineIndex == length-1 {
 				next = 0
@@ -506,9 +502,9 @@ func (state *lexerState) tokenizeNumber(line string) {
 					if in_float {
 						if err := validateFloatLiteral(state.sequence); err != nil {
 							state.addError(err.Error(), state.startPosition)
+						} else {
+							state.buildAndAppendToken(LIT_FLOAT, state.lineNum, state.startPosition)
 						}
-						state.buildAndAppendToken(LIT_FLOAT, state.lineNum, state.startPosition)
-
 					} else {
 						state.buildAndAppendToken(LIT_INT, state.lineNum, state.startPosition)
 					}
@@ -518,19 +514,18 @@ func (state *lexerState) tokenizeNumber(line string) {
 					state.push(next)
 					state.lineIndex++
 				}
-			}
-			if !unicode.IsDigit(rune(next)) && next != '.' {
+			} else if !unicode.IsDigit(rune(next)) {
 				var tokenType TokenType = LIT_INT
 				if in_float {
 					tokenType = LIT_FLOAT
 					if err := validateFloatLiteral(state.sequence); err != nil {
 						state.addError(err.Error(), state.startPosition)
+						break
 					}
 				}
 				state.buildAndAppendToken(tokenType, state.lineNum, state.startPosition)
 				break
 			}
-			state.lineIndex++
 		}
 	}
 }
