@@ -2,6 +2,9 @@ package lexer
 
 import (
 	"fmt"
+	"strings"
+
+	ds "github.com/EladB1/The/internal/datastructures"
 )
 
 type (
@@ -12,6 +15,7 @@ type (
 		line      int
 		column    int
 	}
+	a int
 )
 
 const (
@@ -52,5 +56,145 @@ func (token Token) HasValue(value string) bool {
 func PrintTokens(tokens []Token) {
 	for _, token := range tokens {
 		fmt.Println(token)
+	}
+}
+
+var (
+	add_operators ds.HashSet = ds.BuildHashSet(
+		"+",
+		"-",
+	)
+	mult_operators ds.HashSet = ds.BuildHashSet(
+		"*",
+		"/",
+		"%",
+	)
+	bitwise_operators ds.HashSet = ds.BuildHashSet(
+		"|",
+		"&",
+		"^",
+		"<<",
+		">>",
+	)
+	compare_operators ds.HashSet = ds.BuildHashSet(
+		">",
+		">=",
+		"<",
+		"<=",
+		"!=",
+		"==",
+	)
+	assign_operators ds.HashSet = ds.BuildHashSet(
+		"=",
+		"+=",
+		"-=",
+		"*=",
+		"/=",
+	)
+	range_operators ds.HashSet = ds.BuildHashSet(
+		"..",
+		"..=",
+	)
+	unary_operators ds.HashSet = ds.BuildHashSet(
+		"!",
+		"++",
+		"--",
+	)
+	// any other operators that can't fit into the other categories
+	operators ds.HashSet = ds.BuildHashSet(
+		"**",
+		"||",
+		"&&",
+		".",
+	)
+	type_keywords ds.HashSet = ds.BuildHashSet(
+		"int",
+		"int64",
+		"uint32",
+		"uint64",
+		"float",
+		"double",
+		"String",
+		"char",
+		"bool",
+	)
+	structure_keywords ds.HashSet = ds.BuildHashSet(
+		"fn",
+		"struct",
+		"interface",
+		"for",
+		"while",
+		"if",
+		"else",
+	)
+	flow_keywords ds.HashSet = ds.BuildHashSet(
+		"return",
+		"continue",
+		"break",
+	)
+	operator_keywords ds.HashSet = ds.BuildHashSet(
+		"in",
+		"as",
+	)
+	modifier_keywords ds.HashSet = ds.BuildHashSet(
+		"mut",
+		"private",
+		"impl",
+	)
+	bool_keywords ds.HashSet = ds.BuildHashSet(
+		"true",
+		"false",
+	)
+	separators ds.HashSet = ds.BuildHashSet(
+		"(",
+		")",
+		"{",
+		"}",
+		"[",
+		"]",
+		";",
+		":",
+		",",
+		"->",
+	)
+)
+
+func getTokenTypeForWord(sequence strings.Builder) TokenType {
+	word := sequence.String()
+	if _, ok := structure_keywords[word]; ok {
+		return KW_STRUCTURE
+	} else if _, ok := type_keywords[word]; ok {
+		return KW_TYPE
+	} else if _, ok := bool_keywords[word]; ok {
+		return KW_BOOLVALUE
+	} else if _, ok := flow_keywords[word]; ok {
+		return KW_FLOW
+	} else if _, ok := operator_keywords[word]; ok {
+		return KW_OPERATOR
+	} else if _, ok := modifier_keywords[word]; ok {
+		return KW_MODIFIER
+	} else {
+		return ID
+	}
+}
+
+func getTokenTypeForOperator(sequence strings.Builder) TokenType {
+	operator := sequence.String()
+	if _, ok := assign_operators[operator]; ok {
+		return OPERATOR_ASSIGN
+	} else if _, ok := add_operators[operator]; ok {
+		return OPERATOR_ADD
+	} else if _, ok := mult_operators[operator]; ok {
+		return OPERATOR_MULT
+	} else if _, ok := unary_operators[operator]; ok {
+		return OPERATOR_UNARY
+	} else if _, ok := bitwise_operators[operator]; ok {
+		return OPERATOR_BW
+	} else if _, ok := unary_operators[operator]; ok {
+		return OPERATOR_UNARY
+	} else if _, ok := range_operators[operator]; ok {
+		return OPERATOR_RANGE
+	} else {
+		return OPERATOR
 	}
 }
