@@ -15,7 +15,6 @@ type (
 		line      int
 		column    int
 	}
-	a int
 )
 
 const (

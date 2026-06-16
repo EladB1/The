@@ -5,11 +5,6 @@ import (
 	"github.com/EladB1/The/internal/lexer"
 )
 
-type (
-	AST struct {
-	}
-)
-
 /*
  *	program = { declaration } ;
  */
