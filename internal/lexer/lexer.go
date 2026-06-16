@@ -5,18 +5,11 @@ import (
 	"strings"
 	"unicode"
 
+	ds "github.com/EladB1/The/internal/datastructures"
 	"github.com/EladB1/The/internal/diagnostic"
 )
 
 type (
-	TokenType string
-	Token     struct {
-		tokenType TokenType
-		value     string
-		line      int
-		column    int
-	}
-	hashSet    map[string]struct{}
 	lexerState struct {
 		sequence             strings.Builder
 		startPosition        int
@@ -28,22 +21,6 @@ type (
 		in_word              bool
 	}
 )
-
-func buildHashSet(items ...string) hashSet {
-	set := make(map[string]struct{})
-	for _, item := range items {
-		set[item] = struct{}{}
-	}
-	return set
-}
-
-func (token Token) String() string {
-	return fmt.Sprintf("{Value: %s, Type: %s, Line: %d, Column: %d}", token.value, token.tokenType, token.line, token.column)
-}
-
-func (token Token) HasValue(value string) bool {
-	return token.value == value
-}
 
 func (stateMchn *lexerState) addError(message string) {
 	lineIndex := stateMchn.lineIndex
@@ -95,52 +72,27 @@ func (stateMchn *lexerState) debug() {
 }
 
 const (
-	ID        TokenType = "identifier"
-	SEPARATOR TokenType = "separator"
-	// literals
-	LIT_INT    TokenType = "int literal"
-	LIT_HEX    TokenType = "hex literal"
-	LIT_FLOAT  TokenType = "float literal"
-	LIT_STRING TokenType = "string literal"
-	LIT_CHAR   TokenType = "char literal"
-	// keywords
-	KW_TYPE      TokenType = "type keyword"
-	KW_STRUCTURE TokenType = "structure keyword"
-	KW_FLOW      TokenType = "flow keyword"
-	KW_OPERATOR  TokenType = "operator keyword"
-	KW_MODIFIER  TokenType = "modifier keyword"
-	KW_BOOLVALUE TokenType = "boolean value keyword"
-	// operators
-	OPERATOR         TokenType = "operator"
-	OPERATOR_ADD     TokenType = "add operator"
-	OPERATOR_MULT    TokenType = "multiply operator"
-	OPERATOR_BW      TokenType = "bitwise operator"
-	OPERATOR_COMPARE TokenType = "compare operator"
-	OPERATOR_ASSIGN  TokenType = "assign operator"
-	OPERATOR_RANGE   TokenType = "range operator"
-	OPERATOR_UNARY   TokenType = "unary operator"
-
 	errLevel diagnostic.Severity = diagnostic.SyntaxError
 )
 
 var (
-	add_operators hashSet = buildHashSet(
+	add_operators ds.HashSet = ds.BuildHashSet(
 		"+",
 		"-",
 	)
-	mult_operators hashSet = buildHashSet(
+	mult_operators ds.HashSet = ds.BuildHashSet(
 		"*",
 		"/",
 		"%",
 	)
-	bitwise_operators hashSet = buildHashSet(
+	bitwise_operators ds.HashSet = ds.BuildHashSet(
 		"|",
 		"&",
 		"^",
 		"<<",
 		">>",
 	)
-	compare_operators hashSet = buildHashSet(
+	compare_operators ds.HashSet = ds.BuildHashSet(
 		">",
 		">=",
 		"<",
@@ -148,30 +100,30 @@ var (
 		"!=",
 		"==",
 	)
-	assign_operators hashSet = buildHashSet(
+	assign_operators ds.HashSet = ds.BuildHashSet(
 		"=",
 		"+=",
 		"-=",
 		"*=",
 		"/=",
 	)
-	range_operators hashSet = buildHashSet(
+	range_operators ds.HashSet = ds.BuildHashSet(
 		"..",
 		"..=",
 	)
-	unary_operators hashSet = buildHashSet(
+	unary_operators ds.HashSet = ds.BuildHashSet(
 		"!",
 		"++",
 		"--",
 	)
 	// any other operators that can't fit into the other categories
-	operators hashSet = buildHashSet(
+	operators ds.HashSet = ds.BuildHashSet(
 		"**",
 		"||",
 		"&&",
 		".",
 	)
-	type_keywords hashSet = buildHashSet(
+	type_keywords ds.HashSet = ds.BuildHashSet(
 		"int",
 		"int64",
 		"uint32",
@@ -182,7 +134,7 @@ var (
 		"char",
 		"bool",
 	)
-	structure_keywords hashSet = buildHashSet(
+	structure_keywords ds.HashSet = ds.BuildHashSet(
 		"fn",
 		"struct",
 		"interface",
@@ -191,25 +143,25 @@ var (
 		"if",
 		"else",
 	)
-	flow_keywords hashSet = buildHashSet(
+	flow_keywords ds.HashSet = ds.BuildHashSet(
 		"return",
 		"continue",
 		"break",
 	)
-	operator_keywords hashSet = buildHashSet(
+	operator_keywords ds.HashSet = ds.BuildHashSet(
 		"in",
 		"as",
 	)
-	modifier_keywords hashSet = buildHashSet(
+	modifier_keywords ds.HashSet = ds.BuildHashSet(
 		"mut",
 		"private",
 		"impl",
 	)
-	bool_keywords hashSet = buildHashSet(
+	bool_keywords ds.HashSet = ds.BuildHashSet(
 		"true",
 		"false",
 	)
-	separators hashSet = buildHashSet(
+	separators ds.HashSet = ds.BuildHashSet(
 		"(",
 		")",
 		"{",
@@ -620,11 +572,5 @@ func getTokenTypeForOperator(sequence strings.Builder) TokenType {
 		return OPERATOR_RANGE
 	} else {
 		return OPERATOR
-	}
-}
-
-func PrintTokens(tokens []Token) {
-	for _, token := range tokens {
-		fmt.Println(token)
 	}
 }
