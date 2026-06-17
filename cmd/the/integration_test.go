@@ -25,7 +25,8 @@ func snapshotTestCompilerWithArgs(t *testing.T, snapshots *snaps.Config, args ..
 
 func TestNoCommandLineArgs(t *testing.T) {
 	snapshots := snaps.WithConfig(
-		snaps.Dir("testdata/cli"),
+		snaps.Dir("testdata/"),
+		snaps.Filename("cli"),
 	)
 	t.Run("should fail when no arguments or files provided", func(t *testing.T) {
 		snapshotTestCompilerWithArgs(t, snapshots)
@@ -44,16 +45,22 @@ func TestNoCommandLineArgs(t *testing.T) {
 	})
 }
 
-/* TODO
 func TestValidPrograms(t *testing.T) {
 	snapshots := snaps.WithConfig(
-		snaps.Dir("testdata/valid"),
+		snaps.Dir("testdata/"),
+		snaps.Filename("valid"),
 	)
+	t.Run("should compile program.the with no issues", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "testdata/fixtures/valid/program.the")
+	})
 }
 
 func TestInvalidPrograms(t *testing.T) {
 	snapshots := snaps.WithConfig(
-		snaps.Dir("testdata/invalid"),
+		snaps.Dir("testdata/"),
+		snaps.Filename("invalid"),
 	)
+	t.Run("should try to compile syntax_errors.the and report syntax_errors", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "testdata/fixtures/invalid/syntax_errors.the")
+	})
 }
-*/

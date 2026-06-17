@@ -1,0 +1,40 @@
+
+[TestInvalidPrograms/should_try_to_compile_syntax_errors.the_and_report_syntax_errors - 1]
+Exit code: 1
+===
+
+Output:
+
+{Value: int, Type: type keyword, Line: 1, Column: 1}
+{Value: y, Type: identifier, Line: 1, Column: 5}
+{Value: =, Type: assign operator, Line: 1, Column: 7}
+{Value: ., Type: operator, Line: 5, Column: 3}
+{Value: ff, Type: identifier, Line: 5, Column: 4}
+{Value: p1, Type: identifier, Line: 6, Column: 3}
+{Value: world, Type: identifier, Line: 9, Column: 1}
+{Value: d, Type: identifier, Line: 13, Column: 1}
+{Value: 1, Type: int literal, Line: 14, Column: 1}
+{Value: g, Type: identifier, Line: 14, Column: 2}
+{Value: '❌', Type: char literal, Line: 15, Column: 1}
+{Value: "", Type: string literal, Line: 16, Column: 1}
+{Value: '', Type: char literal, Line: 17, Column: 1}
+SyntaxError: Unrecognized character: '$' at line: 1, column: 9
+SyntaxError: Unrecognized character: '#' at line: 2, column: 1
+SyntaxError: Found multiline comment close but no open at line: 3, column: 1
+SyntaxError: Incomplete hex literal: 0x at line: 5, column: 1
+SyntaxError: Incomplete hex literal: 0x at line: 6, column: 1
+SyntaxError: Invalid float point literal: 1.1.12 at line: 7, column: 1
+SyntaxError: Unterminated string literal at line: 8, column: 1
+SyntaxError: Unterminated string literal at line: 9, column: 6
+SyntaxError: Unterminated string literal at line: 10, column: 1
+SyntaxError: Unterminated character literal at line: 11, column: 1
+SyntaxError: Unterminated character literal at line: 12, column: 1
+SyntaxError: Unterminated character literal at line: 13, column: 2
+SyntaxError: Unterminated string literal at line: 16, column: 3
+SyntaxError: Unterminated character literal at line: 17, column: 3
+SyntaxError: Reached EOF while scanning for */ 
+
+Summary:
+Errors: 15, Warnings: 0
+
+---

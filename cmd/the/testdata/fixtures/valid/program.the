@@ -1,0 +1,39 @@
+uint32 SOME_CONST = 50000;
+
+interface Logger {
+    fn log(String message);
+}
+
+struct ErrorLogger impl Logger {
+    Logger {
+        fn log(String error) {
+            println("Error: " + error);
+        }
+    }
+}
+
+fn main() -> {
+    Logger logger = ErrorLogger{};
+    uint32 i = SOME_CONST ** 2;
+    if (i > UINT32_MAX) {
+        logger.log("This number is too big!");
+        return 1;
+    }
+    else if (i % 2 == 0)
+        logger.log("Number is even");
+    else
+        logger.log("Number is odd");
+    String str = "hello";
+    for (int k, char c in str) {
+        if (k == 0 || k == str.length - 1)
+            continue;
+        println(c);
+    }
+    int indx = 0;
+    while (indx < str.length) {
+        if (indx != 0 && indx % 7 == 0)
+            break;
+        indx++;
+    }
+    return 0;
+}
