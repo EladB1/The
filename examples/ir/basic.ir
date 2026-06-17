@@ -22,12 +22,12 @@ STORE global.e: f32 f32(2.718)
 
 fn test(param.i: i32) -> i32 {
     t1: i32 = GET local.i
-    t2: i32 = i32.add t1 32(1)
+    t2: i32 = i32.add t1 i32(1)
     return t2 
 }
 fn main -> i32 {
-    STORE local.i: i32 CONST(1)
-    STORE local.pi: f64 CONST(3.14159)
+    STORE local.i: i32 i32(1)
+    STORE local.pi: f64 f64(3.14159)
     t3: f32 = GET global.e
     PARAM: f32 e
     PARAM: f64 local.pi

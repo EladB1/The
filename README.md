@@ -72,7 +72,7 @@ Operator types in order of precedence:
 4. Exponents: `**`
 5. Multiplication / Division / Modulo: `*`, `/`, `%`
 6. Addition/Subtraction: `+`, `-`
-7. Bitwise (binary): `&`, `|`, `^` (XOR)
+7. Bitwise (binary): `&`, `|`, `^` (XOR), `>>`, `<<`
 8. Comparison: `==`, `!=`, `<`, `<=`, `>`, `>=`
 9. Logical Not: `!`
 10. Logical And: `&&`
@@ -684,6 +684,14 @@ instance.do(0); // Uses top level implementation
 The example above works because the intent of how the code should work is made clear by defining a "default" `do()`.
 
 > **Note**: Any top level method that matches the signature of an interface implementation method will take precedence the same way even if there are no conflicts.
+
+### Memory Management
+
+If the compiler knows the amount of memory of something ahead of time, it will be allocated on the stack and cleaned up when the scope exits
+
+For dynamic data (strings) and structs containing dynamic data, they will be allocated on the heap.
+
+Memory will be managed using Automatic Reference Counting (ARC). After the MVP of the compiler/language, Cycle Detection will be added as well to deal with some of the issues with ARC.
 
 ## Compiler Developer Info
 
