@@ -11,13 +11,13 @@ import (
 type (
 	TokenType string
 	Token     struct {
-		tokenType TokenType
-		line      int
-		column    int
-		value     string // use for non-literals
+		Kind   TokenType
+		Line   int
+		Column int
+		Value  string // use for non-literals
 		// use for literals
 		CharVal  rune
-		IntVal   uint64
+		IntVal   int64
 		IsSigned bool
 		FloatVal float64
 		StrIndex int
@@ -52,8 +52,8 @@ const (
 )
 
 func (token Token) String() string {
-	value := fmt.Sprintf("Value: %s", token.value)
-	switch token.tokenType {
+	value := fmt.Sprintf("Value: %s", token.Value)
+	switch token.Kind {
 	case LIT_INT:
 		value = fmt.Sprintf("Value: %d", token.IntVal)
 	case LIT_HEX:
@@ -69,11 +69,11 @@ func (token Token) String() string {
 			value = fmt.Sprintf("Value: %q", token.CharVal)
 		}
 	}
-	return fmt.Sprintf("{%s, Type: %s, Line: %d, Column: %d}", value, token.tokenType, token.line, token.column)
+	return fmt.Sprintf("{%s, Type: %s, Line: %d, Column: %d}", value, token.Kind, token.Line, token.Column)
 }
 
 func (token Token) HasValue(value string) bool {
-	return token.value == value
+	return token.Value == value
 }
 
 func PrintTokens(tokens []Token) {

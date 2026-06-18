@@ -16,7 +16,7 @@ interface_list = identifier { "," identifier };
 struct_body =  "{" { variable | function | named_block } "}" ;
 named_block = identifier "{" { function | variable } "}" ;
 interface = "interface" identifier "{" { function } "}" ;
-variable = [ modifiers ] type identifier [ assignment ] ;
+variable = [ modifiers ] type identifier [ "=" expression ] ;
 if_block = if { "else" if } [ "else" conditional_body ] ;
 if = "if" "(" expression ")" conditional_body ;
 conditional_body = block | statement ;

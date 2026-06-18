@@ -9,6 +9,7 @@ import (
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/filehandler"
 	"github.com/EladB1/The/internal/lexer"
+	"github.com/EladB1/The/internal/parser"
 	"github.com/fatih/color"
 )
 
@@ -44,7 +45,13 @@ func compile(source []string) {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}
-	//fmt.Println(tokens)
+	ast, parserDiagnostics := parser.Parse(tokens)
+	compilerDiagnostics = append(compilerDiagnostics, parserDiagnostics...)
+	fmt.Println(ast)
+	if parserDiagnostics.HasError() {
+		reportStatus(compilerDiagnostics)
+		os.Exit(1)
+	}
 	errors, warnings := reportStatus(compilerDiagnostics)
 	if (conf.Strict && warnings != 0) || errors != 0 {
 		os.Exit(1)
