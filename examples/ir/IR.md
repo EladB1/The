@@ -1,7 +1,80 @@
-/*
+Basic Program
+---
 
-// Source code:
+<table>
+<tr>
+<th><center>Source Code</center></th>
+<th><center>IR</center></th>
+</tr>
+<tr>
+<td>
 
+```
+float e = 2.718;
+
+fn test(int i) -> int {
+    return i + 1;
+}
+
+fn main() -> int {
+    int i = 1;
+    double pi = 3.14159;
+    mut double value = e ** pi - 1;
+    value -= test(i);
+    String db = "mariadb";
+    bool isOpen = true;
+    return 0;
+}
+
+```
+
+</td>
+<td>
+
+```
+STORE global.e: f32 f32(2.718)
+
+fn test(param.i: i32) -> i32 {
+    t1: i32 = GET local.i
+    t2: i32 = i32.add t1 i32(1)
+    return t2 
+}
+fn main -> i32 {
+    STORE local.i: i32 i32(1)
+    STORE local.pi: f64 f64(3.14159)
+    t3: f32 = GET global.e
+    PARAM: f32 e
+    PARAM: f64 local.pi
+    t4: f64 = CALL __pow 2 // __pow is part of the runtime library
+    t5: f64 = f64.sub t4 i32(1)
+    STORE local.value: f64 t5
+    PARAM: i32 local.i
+    t6: i32 = CALL test 1 // number of arguments
+    t7: f64 = GET local.value
+    t8: f64 = f64.sub t7 t6
+    STORE local.value: f64 t8
+    STORE local.db: ptr STR_CONST("mariadb")
+    STORE local.isOpen: i32 i32(1) // under the hood, treat bools as i32
+    return i32(0)
+}
+```
+
+</td>
+</tr>
+</table>
+
+Control Flow
+---
+
+<table>
+<tr>
+<th><center>Source Code</center></th>
+<th><center>IR</center></th>
+</tr>
+<tr>
+<td>
+
+```
 fn main() -> int {
     int limit = 100;
     for (int i in 0 ..= limit) {
@@ -24,15 +97,14 @@ fn main() -> int {
     return 0;
 }
 
-*/
+```
 
+</td>
+<td>
+
+```
 fn main -> i32 {
     STORE local.limit: i32 i32(100)
-    /*
-    JMP/JMPIF:
-        block: execute from the end of the last "instruction"
-        loop:  execute from the first "instruction"
-    */
     block loop_exit@0: {
         // Loop initialization(s)
         STORE local.i: i32 i32(0)
@@ -93,3 +165,22 @@ fn main -> i32 {
     }
     return i32(0)
 }
+```
+
+</td>
+</tr>
+</table>
+
+>  JMP/JMPIF: \
+>    block: execute from the end of the last "instruction" \
+>    loop:  execute from the first "instruction"
+    
+
+Strings
+---
+
+
+
+Structs
+---
+
