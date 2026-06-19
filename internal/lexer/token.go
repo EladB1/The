@@ -25,6 +25,7 @@ type (
 )
 
 const (
+	EOF       TokenType = "EOF"
 	ID        TokenType = "identifier"
 	SEPARATOR TokenType = "separator"
 	// literals

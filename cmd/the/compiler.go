@@ -39,7 +39,7 @@ func init() {
 func compile(source []string) {
 	tokens, lexerDiagnostics := lexer.Lex(source, false)
 	compilerDiagnostics = append(compilerDiagnostics, lexerDiagnostics...)
-	lexer.PrintTokens(tokens)
+	//lexer.PrintTokens(tokens)
 	//ds.LiteralStorage.Show()
 	if lexerDiagnostics.HasError() {
 		reportStatus(compilerDiagnostics)

@@ -1,12 +1,12 @@
 int i;
 mut int j;
-private int k;
-private mut float g;
-mut private double h;
-private private bool isError;
-mut mut String s;
-private mut private int i;
-//fn
+// private int k;
+// private mut float g;
+// mut private double h;
+// private private bool isError;
+// mut mut String s;
+// private mut private int i;
+// fn
 // fn test();
 // fn test() -> int;
 // fn test() {}
