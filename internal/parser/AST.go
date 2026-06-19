@@ -51,3 +51,7 @@ func (ast AST) to_string(indentLevel int) string {
 func (ast *AST) AddChildren(nodes ...AST) {
 	ast.children = append(ast.children, nodes...)
 }
+
+func (ast *AST) AddChildToken(token lexer.Token) {
+	ast.AddChildren(AST{token: token})
+}

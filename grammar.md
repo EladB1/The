@@ -40,16 +40,16 @@ mult = expo { multiplication_operator expo } ;
 expo = unary { "**" expo } ; 
 multiplication_operator = "*" | "/" | "%" ;
 unary = left_unary | right_unary ;
-left_unary = [ "^" | "-" | right_unary_operators ] typecast ;
+left_unary = [ "-" | right_unary_operators ] typecast ;
 right_unary = typecast [ right_unary_operators ] ;
 right_unary_operators = "++" | "--" ;
 typecast = index [ "as" type ] ;
 index = term { "[" index_value "]" } ;
 term = literal | member | call | expression ;
-index_value =  slice | expression ;
+index_value =  slice | expression | array_end ;
 slice = [ expression | array_end ] range_operator [ expression | array_end ] ;
 range_operator = ".." [ "=" ] ;
-array_end = "^" ( ( "1" ... "9" ) { "0" ... "9" } ) ;
+array_end = "^" expression ;
 
 (* literals *)
 literal = bool_literal | char_literal | string_literal | number_literal | struct_literal;
