@@ -14,7 +14,6 @@ var (
 	length   int                         = 0
 	ptr      int                         = 0
 	curr     lexer.Token                 = lexer.Token{}
-	next     lexer.Token                 = lexer.Token{}
 )
 
 /*
@@ -41,7 +40,7 @@ Match the current token's kind (or report) error and advance
 */
 func expectKind(kind lexer.TokenType) lexer.Token {
 	if !checkKind(kind) {
-		complainAboutToken("Unexpected", curr) // TODO
+		complainAboutToken("Unexpected") // TODO
 	}
 	return consume()
 }
@@ -51,7 +50,7 @@ Match the current token's value (or report error) and advance
 */
 func expectValue(value string) lexer.Token {
 	if !checkValue(value) {
-		complainAboutToken("Bad", curr) // TODO
+		complainAboutToken("Bad") // TODO
 	}
 	return consume()
 }
@@ -70,10 +69,6 @@ func checkValue(value string) bool {
 	return curr.Value == value
 }
 
-func getToken() lexer.Token {
-	return tokens[ptr]
-}
-
 func checkValueAhead(value string, n int) bool {
 	if ptr+n >= length {
 		return false
@@ -88,27 +83,8 @@ func checkKindAhead(kind lexer.TokenType, n int) bool {
 	return tokens[ptr+n].Kind == kind
 }
 
-func peekToken() lexer.Token {
-	if ptr == len(tokens)-1 {
-		return lexer.Token{}
-	}
-	return tokens[ptr+1]
-}
-
-func movePtr() {
-	ptr++
-	if ptr == len(tokens) {
-		return
-	} else if ptr == len(tokens)-1 {
-		curr = tokens[ptr]
-		next = lexer.Token{}
-	} else {
-		curr = tokens[ptr]
-		next = tokens[ptr+1]
-	}
-}
-
-func complainAboutToken(message string, token lexer.Token) {
+func complainAboutToken(message string) {
+	token := peek()
 	messages = messages.Complain(errLevel, message, token.Line, token.Column)
 }
 
@@ -122,9 +98,6 @@ func Parse(lexerTokens []lexer.Token) (AST, diagnostic.PhaseDiagnostics) {
 	}
 	length = len(tokens)
 	curr = tokens[0]
-	if length > 1 {
-		next = tokens[1]
-	}
 	// fmt.Println("First: ", tokens[0], ptr)
 	//for curr = tokens[ptr]; ptr < length; ptr++ {
 	for !checkKind(lexer.EOF) {
@@ -134,7 +107,7 @@ func Parse(lexerTokens []lexer.Token) (AST, diagnostic.PhaseDiagnostics) {
 		} else {
 			//fmt.Printf("Token: %v\n", token)
 			//ptr++
-			//complainAboutToken("Only declarations supported at top level", curr)
+			//complainAboutToken("Only declarations supported at top level")
 		}
 		//consume()
 	}
@@ -182,7 +155,7 @@ func parseFunction() AST {
 		if checkKind(lexer.KW_TYPE) || checkKind(lexer.ID) {
 			ast.AddChildToken(consume())
 		} else {
-			complainAboutToken(fmt.Sprintf("Expected function return type but got %s", curr.Value), curr)
+			complainAboutToken(fmt.Sprintf("Expected function return type but got %s", peek().Value))
 			return ast
 		}
 	}
@@ -222,7 +195,7 @@ func parseParameters() AST {
 func parseParameter() AST {
 	ast := AST{label: "param"}
 	if !checkKind(lexer.KW_TYPE) && !checkKind(lexer.ID) {
-		complainAboutToken(fmt.Sprintf("Expected type but got %s", curr.Value), curr)
+		complainAboutToken(fmt.Sprintf("Expected type but got %s", peek().Value))
 		return ast
 	}
 	ast.AddChildToken(consume())
@@ -235,6 +208,9 @@ func parseParameter() AST {
  */
 func parseBlock() AST {
 	ast := AST{}
+	expectValue("{")
+	// TODO
+	expectValue("}")
 	return ast
 }
 
@@ -344,7 +320,7 @@ func parseVariable() AST {
 			ast.AddChildren(parseExpression())
 			expectValue(";")
 		} else {
-			complainAboutToken("Expected ';' or '='", curr)
+			complainAboutToken("Expected ';' or '='")
 			consume()
 		}
 	}
@@ -432,17 +408,12 @@ func parseLogicalOr() AST {
 	if ptr >= length-1 {
 		return ast
 	}
-	for curr = tokens[ptr]; curr.Value == "||" && ptr < length-1; ptr++ {
-		ast.AddChildToken(curr)
-		ptr++
-		if ptr >= length-1 {
-			return ast
-		}
-		curr = tokens[ptr]
+	for checkValue("||") {
+		ast.AddChildToken(consume())
 		ast.AddChildren(parseLogicalAnd())
 	}
-	if curr.Value == "||" {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", curr.Value), curr)
+	if checkValue("||") {
+		complainAboutToken(fmt.Sprintf("Expected operand but got %s", peek().Value))
 	}
 	return ast
 }
@@ -452,21 +423,12 @@ func parseLogicalOr() AST {
  */
 func parseLogicalAnd() AST {
 	ast := parseLogicalNot()
-	ptr++
-	if ptr >= length-1 {
-		return ast
-	}
-	for curr = tokens[ptr]; curr.Value == "&&" && ptr < length-1; ptr++ {
-		ast.AddChildToken(curr)
-		ptr++
-		if ptr >= length-1 {
-			return ast
-		}
-		curr = tokens[ptr]
+	for checkValue("&&") {
+		ast.AddChildToken(consume())
 		ast.AddChildren(parseLogicalNot())
 	}
 	if curr.Value == "&&" {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", curr.Value), curr)
+		complainAboutToken(fmt.Sprintf("Expected operand but got %s", peek().Value))
 	}
 	return ast
 }
@@ -477,7 +439,7 @@ func parseLogicalAnd() AST {
 func parseLogicalNot() AST {
 	ast := AST{}
 	if checkValue("!") {
-		ast.AddChildToken(consume())
+		ast = AST{token: consume()}
 	}
 	ast.AddChildren(parseComparison())
 	return ast
@@ -487,11 +449,12 @@ func parseLogicalNot() AST {
  * comparison = bitwise [ compare_operator bitwise ] ;
  */
 func parseComparison() AST {
-	ast := parseBitwise()
+	bw := parseBitwise()
 	if !checkKind(lexer.OPERATOR_COMPARE) {
-		return ast
+		return bw
 	}
-	ast.AddChildToken(consume())
+	ast := AST{token: consume()} // operator is the root of the tree
+	ast.AddChildren(bw)
 	ast.AddChildren(parseBitwise())
 	return ast
 }
@@ -500,19 +463,16 @@ func parseComparison() AST {
  * bitwise =  add { bitwise_operator add };
  */
 func parseBitwise() AST {
+	var operand AST
 	ast := parseAdd()
-	ptr++
-	if ptr >= length-1 {
-		return ast
-	}
-	for curr = tokens[ptr]; curr.Kind == lexer.OPERATOR_BW && ptr < length-1; ptr++ {
-		ast.AddChildToken(curr)
-		ptr++
-		curr = tokens[ptr]
+	for checkKind(lexer.OPERATOR_BW) {
+		operand = ast
+		ast = AST{token: consume()}
+		ast.AddChildren(operand)
 		ast.AddChildren(parseAdd())
 	}
 	if curr.Kind == lexer.OPERATOR_BW {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", curr.Value), curr)
+		complainAboutToken(fmt.Sprintf("Expected operand but got %s", consume().Value))
 	}
 
 	return ast
@@ -522,19 +482,16 @@ func parseBitwise() AST {
  * add = mult { ( "+" | "-" ) mult } ;
  */
 func parseAdd() AST {
+	var operand AST
 	ast := parseMult()
-	ptr++
-	if ptr >= length-1 {
-		return ast
-	}
-	for curr = tokens[ptr]; curr.Kind == lexer.OPERATOR_ADD && ptr < length-1; ptr++ {
-		ast.AddChildToken(curr)
-		ptr++
-		curr = tokens[ptr]
+	for checkKind(lexer.OPERATOR_ADD) {
+		operand = ast
+		ast = AST{token: consume()}
+		ast.AddChildren(operand)
 		ast.AddChildren(parseMult())
 	}
 	if curr.Kind == lexer.OPERATOR_ADD {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", curr.Value), curr)
+		complainAboutToken(fmt.Sprintf("Expected operand but got %s", consume().Value))
 	}
 	return ast
 }
@@ -543,15 +500,16 @@ func parseAdd() AST {
  * mult = expo { multiplication_operator expo } ;
  */
 func parseMult() AST {
-	ast := parseExpo() // TODO
-	for curr = tokens[ptr]; curr.Kind == lexer.OPERATOR_MULT && ptr < length-1; ptr++ {
-		ast.AddChildToken(curr)
-		ptr++
-		curr = tokens[ptr]
+	var operand AST
+	ast := parseExpo()
+	for checkKind(lexer.OPERATOR_MULT) {
+		operand = ast
+		ast = AST{token: consume()}
+		ast.AddChildren(operand)
 		ast.AddChildren(parseExpo())
 	}
 	if curr.Kind == lexer.OPERATOR_MULT {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", curr.Value), curr)
+		complainAboutToken(fmt.Sprintf("Expected operand but got %s", consume().Value))
 	}
 	return ast
 }
@@ -560,15 +518,16 @@ func parseMult() AST {
  * expo = unary { "**" expo } ;
  */
 func parseExpo() AST {
-	ast := parseUnary() // TODO
-	for curr = tokens[ptr]; curr.Value == "**" && ptr < length-1; ptr++ {
-		ast.AddChildToken(curr)
-		ptr++
-		curr = tokens[ptr]
+	var operand AST
+	ast := parseUnary()
+	for checkValue("**") {
+		operand = ast
+		ast = AST{token: consume()}
+		ast.AddChildren(operand)
 		ast.AddChildren(parseExpo())
 	}
 	if curr.Value == "**" {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", curr.Value), curr)
+		complainAboutToken(fmt.Sprintf("Expected operand but got %s", curr.Value))
 	}
 	return ast
 }
@@ -620,7 +579,7 @@ func parseTypecast() AST {
 	if checkKind(lexer.KW_TYPE) || checkKind(lexer.ID) {
 		ast.AddChildToken(consume())
 	} else {
-		complainAboutToken(fmt.Sprintf("Expected type but found %s", curr.Value), curr)
+		complainAboutToken(fmt.Sprintf("Expected type but found %s", peek().Value))
 	}
 	return ast
 }
@@ -629,10 +588,14 @@ func parseTypecast() AST {
  * index = term { "[" index_value "]" } ;
  */
 func parseIndex() AST {
+	var operand AST
 	ast := AST{label: "index"}
-	//term := parseTerm()
-	for curr = tokens[ptr]; curr.Value == "[" && ptr < length-1; ptr++ {
-		// TODO
+	ast.AddChildren(parseTerm())
+	for checkValue("[") {
+		operand = ast
+		ast = AST{label: "index"}
+		ast.AddChildren(operand, parseIndexValue())
+		expectValue("]")
 	}
 	return ast
 }
@@ -651,7 +614,10 @@ func parseTerm() AST {
  */
 func parseIndexValue() AST {
 	ast := AST{}
-
+	if checkValue("^") {
+		return parseArrayEnd()
+	}
+	// TODO
 	return ast
 }
 
@@ -659,8 +625,25 @@ func parseIndexValue() AST {
  * slice = [ expression | array_end ] range_operator [ expression | array_end ] ;
  */
 func parseSlice() AST {
-	ast := AST{}
-
+	ast := AST{label: "slice"}
+	if checkKind(lexer.OPERATOR_RANGE) {
+		ast.AddChildToken(consume())
+		return ast
+	}
+	if checkValue("^") {
+		ast.AddChildren(parseArrayEnd())
+	} else {
+		ast.AddChildren(parseExpression())
+	}
+	ast.AddChildToken(expectKind(lexer.OPERATOR_RANGE))
+	if checkValue("]") {
+		return ast
+	}
+	if checkValue("^") {
+		ast.AddChildren(parseArrayEnd())
+	} else {
+		ast.AddChildren(parseExpression())
+	}
 	return ast
 }
 
@@ -776,14 +759,14 @@ func parseModifiers() AST {
 	ast.AddChildToken(modifier)
 	if checkKind(lexer.KW_MODIFIER) {
 		if checkValue(modifier.Value) {
-			message := fmt.Sprintf("Invalid variable modifiers: %s %s", modifier.Value, curr.Value)
-			complainAboutToken(message, curr)
+			message := fmt.Sprintf("Invalid variable modifiers: %s %s", modifier.Value, peek().Value)
+			complainAboutToken(message)
 			consume()
 		} else {
 			ast.AddChildToken(consume())
 		}
 		if checkKind(lexer.KW_MODIFIER) {
-			complainAboutToken("Too many variable modifiers", curr)
+			complainAboutToken("Too many variable modifiers")
 		}
 	}
 	return ast
@@ -793,10 +776,7 @@ func parseModifiers() AST {
  * member = ( identifier | string_literal ) { "." identifier } ;
  */
 func parseMember() AST {
-	lhs := AST{token: curr}
-	// if ptr >= length-1 {
-	// 	return lhs
-	// }
+	lhs := AST{token: consume()}
 	if checkValue(".") {
 		ast := AST{label: "dot"}
 		consume()
@@ -813,7 +793,7 @@ func parseCall() AST {
 	ast := AST{label: "call"}
 	ast.AddChildren(parseMember())
 	if curr.Value != "(" {
-		complainAboutToken(fmt.Sprintf("Expected '(' but got %s", curr.Value), curr)
+		complainAboutToken(fmt.Sprintf("Expected '(' but got %s", peek().Value))
 		return ast
 	}
 	expectValue("(")
@@ -826,7 +806,7 @@ func parseCall() AST {
 		params.AddChildren(parseExpression())
 		ptr++
 		if ptr >= length-1 {
-			complainAboutToken("Expected ')' but could not find it", curr)
+			complainAboutToken("Expected ')' but could not find it")
 			return ast
 		}
 		if curr.Value == ")" {
@@ -835,13 +815,13 @@ func parseCall() AST {
 		if curr.Value == "," {
 			ptr++
 			if ptr >= length-1 {
-				complainAboutToken("Expected ',' but reached EOF", curr)
+				complainAboutToken("Expected ',' but reached EOF")
 				return ast
 			}
 			curr = tokens[ptr]
 			params.AddChildren(parseExpression())
 		} else {
-			complainAboutToken(fmt.Sprintf("Expected ',' but got %s", curr.Value), curr)
+			complainAboutToken(fmt.Sprintf("Expected ',' but got %s", peek().Value))
 			return ast
 		}
 	}

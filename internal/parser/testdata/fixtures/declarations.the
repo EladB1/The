@@ -6,12 +6,13 @@ mut private double h;
 private private bool isError;
 mut mut String s;
 private mut private int i;
+//int i = a || b;
 //fn();
-fn test();
+// fn test();
 // fn test() -> int;
 // fn test() {}
 // fn test() -> int {}
-// fn () -> bool {}
+//fn () -> bool {}
 // fn test()
 // fn test() -> 1;
 // fn test() -> true

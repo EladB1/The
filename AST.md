@@ -1,6 +1,83 @@
 AST Examples
 ---
 
+# Arithmetic Operations
+
+Grammar rule(s):
+
+```ebnf
+add = mult { ( "+" | "-" ) mult } ;
+mult = expo { multiplication_operator expo } ;
+expo = unary { "**" expo } ; 
+```
+
+<table>
+<tr>
+<th><center>Source Code</center></th>
+<th><center>AST</center></th>
+</tr>
+<tr>
+<td>
+
+```
+2 + 4 + 5
+```
+
+</td>
+<td>
+
+```
+        +
+      /   \
+     +     5
+    / \    
+   2   4
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```
+2 + 3 * 5
+```
+
+</td>
+<td>
+
+```
+        +
+      /   \
+     2     *
+          / \
+         3   5
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```
+2 ** 3 ** 4
+```
+
+</td>
+<td>
+
+```
+    **
+  /    \
+ 2      **
+      /    \
+     3      4
+```
+
+</td>
+</tr>
+</table>
+
 # Variable Declaration
 
 Grammar rule(s):
@@ -468,6 +545,26 @@ getName     params 1  ..=  arr-end
 
 </td>
 </tr>
+<tr>
+<td>
+
+```
+a[1][0]
+```
+
+</td>
+<td>
+
+```
+     index
+    /     \
+  index    0
+ /     \
+a       1
+```
+
+</td>
+</tr>
 </table>
 
 # Member Access / Function Call
@@ -562,6 +659,79 @@ doNothing();
        /   \
 "hello"     length
 
+```
+
+</td>
+</tr>
+</table>
+
+# if statements
+
+Grammar rule(s):
+
+```ebnf
+if_block = if { "else" if } [ "else" conditional_body ] ;
+if = "if" "(" expression ")" conditional_body ;
+conditional_body = block | statement ;
+```
+
+<table>
+<tr>
+<th><center>Source Code</center></th>
+<th><center>AST</center></th>
+</tr>
+<tr>
+<td>
+
+```
+if (true)
+    i++
+```
+
+</td>
+<td>
+
+```
+    if-block
+       |
+       if
+      /  \
+    true  unary
+         /     \
+        i       ++
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```
+if (isOpen)
+    x = 0;
+else if (x < 10) {
+    x += 10;
+    println(x);
+} else {
+    continue;
+}
+```
+
+</td>
+<td>
+
+```
+            if-block
+      /          |          \
+     if         else if   else
+   /    \         |   \       \
+isOpen cond-body  < cond-body  cond-body
+          |      / \    |   \           \
+          =     x   10  +=    call      control-flow
+         / \           / \   /     \           |
+        x  10         x  10 println params    continue
+                                      |
+                                      x
 ```
 
 </td>
