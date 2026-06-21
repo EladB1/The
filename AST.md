@@ -738,6 +738,122 @@ isOpen cond-body  < cond-body  cond-body
 </tr>
 </table>
 
+# Loops
+
+Grammar rule(s):
+
+```ebnf
+while = "while" "(" expression ")" block;
+for = "for" "(" for_conditions ")" block ;
+for_conditions = ( ( variable | assignment ) ";" expression ";" expression ) | ( variable [ "," variable ] "in" range ) ;
+range = expression [ range_operator expression [ ".." expression ] ] ; 
+block = "{" { statement | branch } "}" ;
+```
+
+<table>
+<tr>
+<th><center>Source Code</center></th>
+<th><center>AST</center></th>
+</tr>
+<tr>
+<td>
+
+```
+    while(x < 10) {
+        x++;
+    }
+```
+
+</td>
+<td>
+
+```
+    while
+   /     \
+  <      unary
+ / \     /   \
+x  10   x     ++
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```
+for (int i in 0..lim) {
+    print(i);
+}
+```
+
+</td>
+<td>
+
+```
+                    for
+                /         \
+        condition         loop-body
+      /    |     \            |
+variable   in     range       call
+ /      \         / |  \     /    \
+int      i       0  .. lim  print  params
+                                    |
+                                    i
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```
+for (int i, char c in str[1..6]) {}
+```
+
+</td>
+<td>
+
+```
+                  for
+             /           \
+        condition       loop-body
+      /   |   |   \
+    var  var  in  index
+   / |  /  \      /    \
+ int i char c   str    slice
+                      /  |  \
+                     1   ..  6 
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```
+for (i = 0; i < lim; i++) {
+    sum += i;
+}
+```
+
+</td>
+<td>
+
+```
+              for
+            /       \
+      condition     loop-body
+    /     |    \          |
+  =       <    unary      +=
+ / \     / \    | \      /  \
+i   0   i  lim  i  ++   sum  i
+
+```
+
+</td>
+</tr>
+</table>
+
 ---
 
 # Template

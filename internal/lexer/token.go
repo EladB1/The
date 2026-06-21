@@ -37,6 +37,7 @@ const (
 	// keywords
 	KW_TYPE      TokenType = "type keyword"
 	KW_STRUCTURE TokenType = "structure keyword"
+	KW_BRANCH    TokenType = "branch keyword"
 	KW_FLOW      TokenType = "flow keyword"
 	KW_OPERATOR  TokenType = "operator keyword"
 	KW_MODIFIER  TokenType = "modifier keyword"
@@ -146,6 +147,8 @@ var (
 		"fn",
 		"struct",
 		"interface",
+	)
+	branch_keywords ds.HashSet = ds.BuildHashSet(
 		"for",
 		"while",
 		"if",
