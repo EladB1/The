@@ -3,7 +3,7 @@ Formal language grammar for parser
 ```ebnf
 (* structural *)
 program = { declaration } ;
-declaration = function | struct | interface | variable ;
+declaration = function | struct | interface | ( variable ";" ) ;
 function = "fn" identifier "(" [ parameters ] ")" [ "->" type ] ( ";" | block ) ;
 parameters =  parameter { "," parameter } ;
 parameter = type identifier ;

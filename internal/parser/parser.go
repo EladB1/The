@@ -38,7 +38,7 @@ Match the current token's kind (or report) error and advance
 */
 func expectKind(kind lexer.TokenType) lexer.Token {
 	if !checkKind(kind) {
-		complainAboutToken("Unexpected") // TODO
+		complainAboutToken(fmt.Sprintf("Expected '%s' but got '%s'", kind, peek().Kind)) // TODO
 	}
 	return consume()
 }
@@ -48,7 +48,7 @@ Match the current token's value (or report error) and advance
 */
 func expectValue(value string) lexer.Token {
 	if !checkValue(value) {
-		complainAboutToken("Bad") // TODO
+		complainAboutToken(fmt.Sprintf("Expected '%s' but got '%s'", value, peek().Value)) // TODO
 	}
 	return consume()
 }
@@ -98,12 +98,13 @@ func Parse(lexerTokens []lexer.Token) (AST, diagnostic.PhaseDiagnostics) {
 	for !checkKind(lexer.EOF) {
 		if checkValue("fn") || checkValue("struct") || checkValue("interface") || isVariableDeclaration() {
 			root.AddChildren(parseDeclaration())
+			continue
 		} else {
-			//fmt.Printf("Token: %v\n", token)
+			fmt.Printf("Token: %v\n", peek())
 			//ptr++
-			//complainAboutToken("Only declarations supported at top level")
+			complainAboutToken("Only declarations supported at top level")
 		}
-		//consume()
+		consume()
 	}
 	return root, messages
 }
@@ -116,7 +117,7 @@ func isVariableDeclaration() bool {
 }
 
 /*
- *	declaration = function | struct | interface | variable ;
+ *	declaration = function | struct | interface | ( variable ";" ) ;
  */
 func parseDeclaration() AST {
 	if checkValue("fn") {
@@ -126,7 +127,9 @@ func parseDeclaration() AST {
 	} else if checkValue("interface") {
 		return parseInterface()
 	} else {
-		return parseVariable()
+		variable := parseVariable()
+		expectValue(";")
+		return variable
 	}
 }
 
@@ -212,7 +215,7 @@ func parseStatement() AST {
 	if isVariableDeclaration() {
 		ast = parseVariable()
 	} else if checkKind(lexer.ID) && checkKindAhead(lexer.OPERATOR_ASSIGN, 1) {
-		return parseAssignment()
+		ast = parseAssignment()
 	} else if checkKind(lexer.KW_FLOW) {
 		ast = parseControlFlow()
 	} else {
@@ -239,13 +242,12 @@ func parseBranch() AST {
  * expression = logical_or | "(" logical_or ")" ;
  */
 func parseExpression() AST {
-	ast := AST{}
 	in_parens := false
 	if checkValue("(") {
 		in_parens = true
 		consume()
 	}
-	ast.AddChildren(parseLogicalOr())
+	ast := parseLogicalOr()
 	if in_parens {
 		expectValue(")")
 	}
@@ -308,7 +310,6 @@ func parseNamedBlock() AST {
 		if isVariableDeclaration() {
 			ast.AddChildren(parseVariable())
 		} else {
-			// TODO: modifiers
 			ast.AddChildren(parseFunction())
 		}
 	}
@@ -343,13 +344,11 @@ func parseVariable() AST {
 		id := consume()
 		ast.AddChildren(AST{token: varType}, AST{token: id})
 		if checkValue(";") {
-			consume()
 			return ast
 		}
 		if checkValue("=") {
 			consume()
 			ast.AddChildren(parseExpression())
-			expectValue(";")
 		} else {
 			complainAboutToken("Expected ';' or '='")
 			consume()
@@ -520,11 +519,17 @@ func parseLogicalAnd() AST {
  */
 func parseLogicalNot() AST {
 	ast := AST{}
+	hasNot := false
 	if checkValue("!") {
 		ast = AST{token: consume()}
+		hasNot = true
 	}
-	ast.AddChildren(parseComparison())
-	return ast
+	compare := parseComparison()
+	if hasNot {
+		ast.AddChildren(compare)
+		return ast
+	}
+	return compare
 }
 
 /*
@@ -639,10 +644,11 @@ func parseLeftUnary() AST {
  */
 func parseRightUnary() AST {
 	ast := AST{label: "Unary"}
-	ast.AddChildren(parseTypecast())
+	typecast := parseTypecast()
 	if !checkKind(lexer.OPERATOR_UNARY) {
-		return ast
+		return typecast
 	}
+	ast.AddChildren(typecast)
 	ast.AddChildToken(consume())
 	return ast
 }
@@ -653,7 +659,7 @@ func parseRightUnary() AST {
 func parseTypecast() AST {
 	ast := AST{label: "typecast"}
 	index := parseIndex()
-	if checkValue("as") {
+	if !checkValue("as") {
 		return index
 	}
 	ast.AddChildren(index)
@@ -672,7 +678,11 @@ func parseTypecast() AST {
 func parseIndex() AST {
 	var operand AST
 	ast := AST{label: "index"}
-	ast.AddChildren(parseTerm())
+	operand = parseTerm()
+	if !checkValue("[") {
+		return operand
+	}
+	ast.AddChildren(operand)
 	for checkValue("[") {
 		operand = ast
 		ast = AST{label: "index"}
@@ -686,18 +696,55 @@ func parseIndex() AST {
  * term = literal | member | call | expression ;
  */
 func parseTerm() AST {
-	ast := AST{}
-	// TODO
-	return ast
+	if isLiteral() {
+		return parseLiteral()
+	}
+	if checkValueAhead(".", 1) {
+		if checkValueAhead("(", 3) {
+			return parseCall()
+		}
+		return parseMember()
+	}
+	if checkValueAhead("(", 1) {
+		return parseCall()
+	}
+	return parseExpression()
+}
+
+func isLiteral() bool {
+	return (checkKind(lexer.LIT_CHAR) ||
+		(checkKind(lexer.LIT_STRING) && !checkValueAhead(".", 1)) ||
+		checkKind(lexer.KW_BOOLVALUE) ||
+		checkKind(lexer.LIT_FLOAT) ||
+		checkKind(lexer.LIT_HEX) ||
+		checkKind(lexer.LIT_INT) ||
+		(checkKind(lexer.OPERATOR_ADD) &&
+			(checkKindAhead(lexer.LIT_FLOAT, 1) ||
+				checkKindAhead(lexer.LIT_HEX, 1) ||
+				checkKindAhead(lexer.LIT_INT, 1))) ||
+		(checkKind(lexer.ID) && checkValueAhead("{", 1)))
 }
 
 /*
  * index_value =  slice | expression | array_end ;
  */
 func parseIndexValue() AST {
-	ast := AST{}
-	// TODO
-	return ast
+	if isSlice() {
+		return parseSlice()
+	}
+	if checkValue("^") && checkValueAhead("]", 2) {
+		return parseArrayEnd()
+	}
+	return parseExpression()
+}
+
+func isSlice() bool {
+	for i := ptr; i < length-1 && tokens[i+1].Value != "]"; i++ {
+		if tokens[i].Kind == lexer.OPERATOR_RANGE {
+			return true
+		}
+	}
+	return false
 }
 
 /*
@@ -740,15 +787,13 @@ func parseArrayEnd() AST {
  * literal = bool_literal | char_literal | string_literal | number_literal | struct_literal;
  */
 func parseLiteral() AST {
-	ast := AST{}
 	if checkKind(lexer.LIT_CHAR) || checkKind(lexer.LIT_STRING) {
-		ast.AddChildToken(consume())
+		return AST{token: consume()}
 	} else if checkKind(lexer.LIT_INT) || checkKind(lexer.LIT_HEX) || checkKind(lexer.LIT_FLOAT) || checkValue("+") || checkValue("-") {
 		return parseNumLiteral()
 	} else {
 		return parseStructLiteral()
 	}
-	return ast
 }
 
 /*
@@ -756,11 +801,14 @@ func parseLiteral() AST {
  */
 func parseNumLiteral() AST {
 	sign := "+"
+	var token lexer.Token
 	if checkValue("+") || checkValue("-") {
 		sign = consume().Value
+		token = consume()
+		token.IsSigned = true
+	} else {
+		token = consume()
 	}
-	token := peek()
-	token.IsSigned = true
 	switch token.Kind {
 	case lexer.LIT_INT, lexer.LIT_HEX:
 		if sign == "-" {
