@@ -11,10 +11,11 @@ import (
 type (
 	TokenType string
 	Token     struct {
-		Kind   TokenType
-		Line   int
-		Column int
-		Value  string // use for non-literals
+		Kind    TokenType
+		Missing bool
+		Line    int
+		Column  int
+		Value   string // use for non-literals
 		// use for literals
 		CharVal  rune
 		IntVal   int64
@@ -26,6 +27,7 @@ type (
 
 const (
 	EOF       TokenType = "EOF"
+	Virtual   TokenType = "Virtual"
 	ID        TokenType = "identifier"
 	SEPARATOR TokenType = "separator"
 	// literals
@@ -53,25 +55,35 @@ const (
 	OPERATOR_UNARY   TokenType = "unary operator"
 )
 
-func (token Token) String() string {
-	value := fmt.Sprintf("Value: %s", token.Value)
+func (token Token) GetValueString() string {
+	value := token.Value
 	switch token.Kind {
 	case LIT_INT:
-		value = fmt.Sprintf("Value: %d", token.IntVal)
+		value = fmt.Sprintf("%d", token.IntVal)
 	case LIT_HEX:
-		value = fmt.Sprintf("Value: %#x", token.IntVal)
+		value = fmt.Sprintf("%#x", token.IntVal)
 	case LIT_FLOAT:
-		value = fmt.Sprintf("Value: %g", token.FloatVal)
+		value = fmt.Sprintf("%g", token.FloatVal)
 	case LIT_STRING:
-		value = fmt.Sprintf("Value: %s", strconv.Quote(string(ds.LiteralStorage[token.StrIndex])))
+		value = strconv.Quote(string(ds.LiteralStorage[token.StrIndex]))
 	case LIT_CHAR:
 		if token.CharVal == 0 {
-			value = "Value: ''"
+			value = "''"
 		} else {
-			value = fmt.Sprintf("Value: %q", token.CharVal)
+			value = fmt.Sprintf("%q", token.CharVal)
 		}
+	case EOF:
+		value = "EOF"
 	}
-	return fmt.Sprintf("{%s, Type: %s, Line: %d, Column: %d}", value, token.Kind, token.Line, token.Column)
+	return value
+}
+
+func (token Token) String() string {
+	missing := ""
+	if token.Missing {
+		missing = " Missing: true,"
+	}
+	return fmt.Sprintf("{Value: %s, Type: %s,%s Line: %d, Column: %d}", token.GetValueString(), token.Kind, missing, token.Line, token.Column)
 }
 
 func (token Token) HasValue(value string) bool {

@@ -3,6 +3,7 @@ package parser
 import (
 	"fmt"
 
+	ds "github.com/EladB1/The/internal/datastructures"
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/lexer"
 )
@@ -33,24 +34,50 @@ func consume() lexer.Token {
 	return token
 }
 
+func errorRecovery() {
+	syncValues := ds.BuildHashSet(";", "}", ")", "]", "fn", "interface", "struct")
+	_, hasValue := syncValues[peek().Value]
+	for !checkKindAhead(lexer.EOF, 1) && !checkKind(lexer.EOF) && !hasValue {
+		consume()
+	}
+	if !checkKind(lexer.EOF) {
+		consume()
+	}
+}
+
 /*
 Match the current token's kind (or report) error and advance
 */
 func expectKind(kind lexer.TokenType) lexer.Token {
-	if !checkKind(kind) {
-		complainAboutToken(fmt.Sprintf("Expected '%s' but got '%s'", kind, peek().Kind)) // TODO
+	if checkKind(kind) {
+		return consume()
 	}
-	return consume()
+	complainAboutToken(fmt.Sprintf("Expected '%s' but got '%s'", kind, peek().Kind))
+	return lexer.Token{
+		Kind:    kind,
+		Value:   "",
+		Missing: true,
+		Line:    peek().Line,
+		Column:  peek().Column,
+	}
 }
 
 /*
 Match the current token's value (or report error) and advance
 */
 func expectValue(value string) lexer.Token {
-	if !checkValue(value) {
-		complainAboutToken(fmt.Sprintf("Expected '%s' but got '%s'", value, peek().Value)) // TODO
+	if checkValue(value) {
+		return consume()
 	}
-	return consume()
+	complainAboutToken(fmt.Sprintf("Expected '%s' but got '%s'", value, peek().GetValueString()))
+	return lexer.Token{
+		Kind:    lexer.Virtual,
+		Value:   value,
+		Missing: true,
+		Line:    peek().Line,
+		Column:  peek().Column,
+	}
+
 }
 
 /*
@@ -100,9 +127,9 @@ func Parse(lexerTokens []lexer.Token) (AST, diagnostic.PhaseDiagnostics) {
 			root.AddChildren(parseDeclaration())
 			continue
 		} else {
-			fmt.Printf("Token: %v\n", peek())
-			//ptr++
+			// fmt.Printf("Token: %v\n", peek())
 			complainAboutToken("Only declarations supported at top level")
+			errorRecovery()
 		}
 		consume()
 	}
@@ -152,7 +179,8 @@ func parseFunction() AST {
 		if checkKind(lexer.KW_TYPE) || checkKind(lexer.ID) {
 			ast.AddChildToken(consume())
 		} else {
-			complainAboutToken(fmt.Sprintf("Expected function return type but got %s", peek().Value))
+			token := consume()
+			complainAboutToken(fmt.Sprintf("Expected function return type but got %s", token.GetValueString()))
 			return ast
 		}
 	}
@@ -196,7 +224,9 @@ func parseParameter() AST {
  */
 func parseBlock(label string) AST {
 	ast := AST{label: label}
-	expectValue("{")
+	if expectValue("{").Missing {
+		return AST{}
+	}
 	for !checkValue("}") && !checkKind(lexer.EOF) {
 		if checkKind(lexer.KW_BRANCH) {
 			ast.AddChildren(parseBranch())
@@ -242,6 +272,7 @@ func parseBranch() AST {
  * expression = logical_or | "(" logical_or ")" ;
  */
 func parseExpression() AST {
+	//fmt.Println("In expression with token: ", peek())
 	in_parens := false
 	if checkValue("(") {
 		in_parens = true
@@ -488,10 +519,12 @@ func parseAssignment() AST {
  * logical_or = logical_and { "||" logical_and } ;
  */
 func parseLogicalOr() AST {
+	var operand AST
 	ast := parseLogicalAnd()
 	for checkValue("||") {
-		ast.AddChildToken(consume())
-		ast.AddChildren(parseLogicalAnd())
+		operand = ast
+		ast = AST{token: consume()}
+		ast.AddChildren(operand, parseLogicalAnd())
 	}
 	if checkValue("||") {
 		complainAboutToken(fmt.Sprintf("Expected operand but got %s", peek().Value))
@@ -503,10 +536,12 @@ func parseLogicalOr() AST {
  * logical_and = logical_not { "&&" logical_not } ;
  */
 func parseLogicalAnd() AST {
+	var operand AST
 	ast := parseLogicalNot()
 	for checkValue("&&") {
-		ast.AddChildToken(consume())
-		ast.AddChildren(parseLogicalNot())
+		operand = ast
+		ast = AST{token: consume()}
+		ast.AddChildren(operand, parseLogicalNot())
 	}
 	if checkValue("&&") {
 		complainAboutToken(fmt.Sprintf("Expected operand but got %s", peek().Value))
@@ -555,8 +590,7 @@ func parseBitwise() AST {
 	for checkKind(lexer.OPERATOR_BW) {
 		operand = ast
 		ast = AST{token: consume()}
-		ast.AddChildren(operand)
-		ast.AddChildren(parseAdd())
+		ast.AddChildren(operand, parseAdd())
 	}
 	if checkKind(lexer.OPERATOR_BW) {
 		complainAboutToken(fmt.Sprintf("Expected operand but got %s", consume().Value))
@@ -693,22 +727,33 @@ func parseIndex() AST {
 }
 
 /*
- * term = literal | member | call | expression ;
+ * term = literal | member | call | "(" expression ")" ;
  */
 func parseTerm() AST {
+	//fmt.Println("In parseTerm with token: ", peek())
 	if isLiteral() {
 		return parseLiteral()
 	}
-	if checkValueAhead(".", 1) {
-		if checkValueAhead("(", 3) {
+	if checkKind(lexer.ID) || checkKind(lexer.LIT_STRING) {
+		if checkValueAhead(".", 1) {
+			if checkValueAhead("(", 3) {
+				return parseCall()
+			}
+			return parseMember()
+		}
+		if checkValueAhead("(", 1) {
 			return parseCall()
 		}
-		return parseMember()
+		return parseMember() // identifier
 	}
-	if checkValueAhead("(", 1) {
-		return parseCall()
+	if checkValue("(") {
+		consume()
+		expr := parseExpression()
+		expectValue(")")
+		return expr
 	}
-	return parseExpression()
+	complainAboutToken("Invalid term provided")
+	return AST{}
 }
 
 func isLiteral() bool {
@@ -893,6 +938,7 @@ func parseModifiers() AST {
  * member = ( identifier | string_literal ) { "." identifier } ;
  */
 func parseMember() AST {
+	//fmt.Println("In member with token: ", peek())
 	lhs := AST{token: consume()}
 	if checkValue(".") {
 		ast := AST{label: "dot"}

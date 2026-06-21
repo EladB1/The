@@ -11,7 +11,7 @@ Tokens:
     {Value: 'a', Type: char literal, Line: 3, Column: 0},
     {Value: '\'', Type: char literal, Line: 4, Column: 0},
     {Value: b, Type: identifier, Line: 8, Column: 0},
-    {Value: , Type: EOF, Line: 12, Column: 0}
+    {Value: EOF, Type: EOF, Line: 12, Column: 0}
 ]
 Compiler messages:
 [
@@ -67,7 +67,7 @@ Tokens:
     {Value: "⚠️ Warning: ", Type: string literal, Line: 13, Column: 16},
     {Value: ;, Type: separator, Line: 13, Column: 34},
     {Value: hello, Type: identifier, Line: 18, Column: 0},
-    {Value: , Type: EOF, Line: 20, Column: 5}
+    {Value: EOF, Type: EOF, Line: 20, Column: 5}
 ]
 Compiler messages:
 [
@@ -174,7 +174,7 @@ Tokens:
     {Value: p, Type: identifier, Line: 34, Column: 2},
     {Value: ., Type: operator, Line: 35, Column: 2},
     {Value: a1, Type: identifier, Line: 35, Column: 3},
-    {Value: , Type: EOF, Line: 38, Column: 6}
+    {Value: EOF, Type: EOF, Line: 38, Column: 6}
 ]
 Compiler messages:
 [
@@ -295,7 +295,7 @@ Tokens:
     {Value: ;, Type: separator, Line: 32, Column: 14},
     {Value: bool, Type: type keyword, Line: 35, Column: 0},
     {Value: isOpen, Type: identifier, Line: 35, Column: 5},
-    {Value: , Type: EOF, Line: 37, Column: 2}
+    {Value: EOF, Type: EOF, Line: 37, Column: 2}
 ]
 Compiler messages:
 [
@@ -313,7 +313,7 @@ Tokens:
     {Value: =, Type: assign operator, Line: 0, Column: 11},
     {Value: true, Type: boolean value keyword, Line: 0, Column: 13},
     {Value: ;, Type: separator, Line: 0, Column: 17},
-    {Value: , Type: EOF, Line: 11, Column: 14}
+    {Value: EOF, Type: EOF, Line: 11, Column: 14}
 ]
 Compiler messages:
 [
@@ -455,7 +455,7 @@ Tokens:
     {Value: (, Type: separator, Line: 40, Column: 12},
     {Value: ), Type: separator, Line: 40, Column: 13},
     {Value: ;, Type: separator, Line: 40, Column: 14},
-    {Value: , Type: EOF, Line: 41, Column: 15}
+    {Value: EOF, Type: EOF, Line: 41, Column: 15}
 ]
 Compiler messages:
 []

@@ -45,7 +45,7 @@ right_unary = typecast [ right_unary_operators ] ;
 right_unary_operators = "++" | "--" ;
 typecast = index [ "as" type ] ;
 index = term { "[" index_value "]" } ;
-term = literal | member | call | expression ;
+term = literal | member | call | "(" expression ")" ;
 index_value =  slice | expression | array_end ;
 slice = [ expression | array_end ] range_operator [ expression | array_end ] ;
 range_operator = ".." [ "=" ] ;
