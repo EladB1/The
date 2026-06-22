@@ -23,6 +23,18 @@ type (
 	}
 )
 
+func initState() *lexerState {
+	return &lexerState{
+		tokens:               []Token{},
+		sequence:             strings.Builder{},
+		startPosition:        0,
+		in_multiline_comment: false,
+		messages:             diagnostic.PhaseDiagnostics{},
+		lineNum:              0,
+		lineIndex:            0,
+	}
+}
+
 func (stateMchn *lexerState) addError(message string) {
 	lineIndex := stateMchn.lineIndex
 	if stateMchn.startPosition != stateMchn.lineIndex {

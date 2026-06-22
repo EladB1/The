@@ -1,177 +1,4 @@
 
-[TestParser/should_run_declarations.the_and_have_some_errors - 1]
-AST:
-Node: { Label: "program"
-children: [
-    Node: { Label: "Variable"
-    children: [
-        Node: { Token: {Value: int, Type: type keyword, Line: 0, Column: 0} },
-        Node: { Token: {Value: i, Type: identifier, Line: 0, Column: 4} }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Label: "modifiers"
-        children: [
-            Node: { Token: {Value: mut, Type: modifier keyword, Line: 1, Column: 0} }
-        ] },
-        Node: { Token: {Value: int, Type: type keyword, Line: 1, Column: 4} },
-        Node: { Token: {Value: j, Type: identifier, Line: 1, Column: 8} }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Label: "modifiers"
-        children: [
-            Node: { Token: {Value: private, Type: modifier keyword, Line: 2, Column: 0} }
-        ] },
-        Node: { Token: {Value: int, Type: type keyword, Line: 2, Column: 8} },
-        Node: { Token: {Value: k, Type: identifier, Line: 2, Column: 12} }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Label: "modifiers"
-        children: [
-            Node: { Token: {Value: private, Type: modifier keyword, Line: 3, Column: 0} },
-            Node: { Token: {Value: mut, Type: modifier keyword, Line: 3, Column: 8} }
-        ] },
-        Node: { Token: {Value: float, Type: type keyword, Line: 3, Column: 12} },
-        Node: { Token: {Value: g, Type: identifier, Line: 3, Column: 18} }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Label: "modifiers"
-        children: [
-            Node: { Token: {Value: mut, Type: modifier keyword, Line: 4, Column: 0} },
-            Node: { Token: {Value: private, Type: modifier keyword, Line: 4, Column: 4} }
-        ] },
-        Node: { Token: {Value: double, Type: type keyword, Line: 4, Column: 12} },
-        Node: { Token: {Value: h, Type: identifier, Line: 4, Column: 19} }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Label: "modifiers"
-        children: [
-            Node: { Token: {Value: private, Type: modifier keyword, Line: 5, Column: 0} }
-        ] },
-        Node: { Token: {Value: bool, Type: type keyword, Line: 5, Column: 16} },
-        Node: { Token: {Value: isError, Type: identifier, Line: 5, Column: 21} }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Label: "modifiers"
-        children: [
-            Node: { Token: {Value: mut, Type: modifier keyword, Line: 6, Column: 0} }
-        ] },
-        Node: { Token: {Value: String, Type: type keyword, Line: 6, Column: 8} },
-        Node: { Token: {Value: s, Type: identifier, Line: 6, Column: 15} }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Label: "modifiers"
-        children: [
-            Node: { Token: {Value: private, Type: modifier keyword, Line: 7, Column: 0} },
-            Node: { Token: {Value: mut, Type: modifier keyword, Line: 7, Column: 8} }
-        ] }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Label: "modifiers"
-        children: [
-            Node: { Token: {Value: private, Type: modifier keyword, Line: 7, Column: 12} }
-        ] },
-        Node: { Token: {Value: int, Type: type keyword, Line: 7, Column: 20} },
-        Node: { Token: {Value: i, Type: identifier, Line: 7, Column: 24} }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Token: {Value: int, Type: type keyword, Line: 8, Column: 0} },
-        Node: { Token: {Value: i, Type: identifier, Line: 8, Column: 4} },
-        Node: { Label: "Unary"
-        children: [
-            Node: { Token: {Value: -, Type: add operator, Line: 8, Column: 8} },
-            Node: { Token: {Value: 1, Type: int literal, Line: 8, Column: 9} }
-        ] }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Token: {Value: bool, Type: type keyword, Line: 9, Column: 0} },
-        Node: { Token: {Value: d, Type: identifier, Line: 9, Column: 5} },
-        Node: { Token: {Value: ||, Type: operator, Line: 9, Column: 11}
-        children: [
-            Node: { Token: {Value: a, Type: identifier, Line: 9, Column: 9} },
-            Node: { Token: {Value: &&, Type: operator, Line: 9, Column: 16}
-            children: [
-                Node: { Token: {Value: b, Type: identifier, Line: 9, Column: 14} },
-                Node: { Token: {Value: !, Type: unary operator, Line: 9, Column: 19}
-                children: [
-                    Node: { Token: {Value: c, Type: identifier, Line: 9, Column: 20} }
-                ] }
-            ] }
-        ] }
-    ] },
-    Node: { Label: "fn"
-    children: [
-        Node: { Token: {Value: , Type: identifier, Missing: true, Line: 10, Column: 2} }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Token: {Value: bool, Type: type keyword, Line: 11, Column: 0} },
-        Node: { Token: {Value: e, Type: identifier, Line: 11, Column: 5} },
-        Node: { Token: {Value: !, Type: unary operator, Line: 11, Column: 9}
-        children: [
-            Node: { Token: {Value: d, Type: identifier, Line: 11, Column: 10} }
-        ] }
-    ] },
-    Node: { Label: "fn"
-    children: [
-        Node: { Token: {Value: test, Type: identifier, Line: 13, Column: 3} }
-    ] },
-    Node: { Label: "fn"
-    children: [
-        Node: { Token: {Value: test, Type: identifier, Line: 14, Column: 3} },
-        Node: { Token: {Value: int, Type: type keyword, Line: 14, Column: 13} }
-    ] },
-    Node: { Label: "fn"
-    children: [
-        Node: { Token: {Value: test, Type: identifier, Line: 15, Column: 3} },
-        Node: { Label: "fn-body" }
-    ] },
-    Node: { Label: "fn"
-    children: [
-        Node: { Token: {Value: test, Type: identifier, Line: 16, Column: 3} },
-        Node: { Token: {Value: int, Type: type keyword, Line: 16, Column: 13} },
-        Node: { Label: "fn-body" }
-    ] },
-    Node: { Label: "fn"
-    children: [
-        Node: { Token: {Value: , Type: identifier, Missing: true, Line: 17, Column: 3} },
-        Node: { Token: {Value: bool, Type: type keyword, Line: 17, Column: 9} },
-        Node: { Label: "fn-body" }
-    ] },
-    Node: { Label: "fn"
-    children: [
-        Node: { Token: {Value: test, Type: identifier, Line: 18, Column: 3} },
-        Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
-    ] },
-    Node: { Label: "fn"
-    children: [
-        Node: { Token: {Value: test, Type: identifier, Line: 19, Column: 3} }
-    ] }
-] }
-, Compiler messages:
-[
-    "SyntaxError: Invalid variable modifiers: private private at line: 6, column: 9",
-    "SyntaxError: Invalid variable modifiers: mut mut at line: 7, column: 5",
-    "SyntaxError: Too many variable modifiers at line: 8, column: 13",
-    "SyntaxError: Expected ';' but got 'private' at line: 8, column: 13",
-    "SyntaxError: Expected 'identifier' but got 'separator' at line: 11, column: 3",
-    "SyntaxError: Expected 'identifier' but got 'separator' at line: 18, column: 4",
-    "SyntaxError: Expected '{' but got 'fn' at line: 20, column: 1",
-    "SyntaxError: Expected function return type but got 1 at line: 20, column: 15",
-    "SyntaxError: Only declarations supported at top level at line: 20, column: 15"
-]
-
----
-
 [TestParser/should_run_variables.the_and_have_no_errors - 1]
 AST:
 Node: { Label: "program"
@@ -344,18 +171,70 @@ children: [
         Node: { Token: {Value: test, Type: identifier, Line: 3, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 3, Column: 13} },
         Node: { Label: "fn-body" }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: main, Type: identifier, Line: 4, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 4, Column: 13} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 5, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 5, Column: 11} }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: doNothing, Type: identifier, Line: 7, Column: 3} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 8, Column: 4} }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: add, Type: identifier, Line: 10, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 10, Column: 7} },
+                Node: { Token: {Value: x, Type: identifier, Line: 10, Column: 11} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 10, Column: 14} },
+                Node: { Token: {Value: y, Type: identifier, Line: 10, Column: 18} }
+            ] }
+        ] },
+        Node: { Token: {Value: int, Type: type keyword, Line: 10, Column: 24} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "assign"
+            children: [
+                Node: { Token: {Value: sum, Type: identifier, Line: 11, Column: 4} },
+                Node: { Token: {Value: =, Type: assign operator, Line: 11, Column: 8} },
+                Node: { Token: {Value: +, Type: add operator, Line: 11, Column: 12}
+                children: [
+                    Node: { Token: {Value: x, Type: identifier, Line: 11, Column: 10} },
+                    Node: { Token: {Value: y, Type: identifier, Line: 11, Column: 14} }
+                ] }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 12, Column: 4} },
+                Node: { Token: {Value: sum, Type: identifier, Line: 12, Column: 11} }
+            ] }
+        ] }
     ] }
 ] }
 , Compiler messages:
-[
-    "SyntaxError: Invalid variable modifiers: private private at line: 1, column: 9",
-    "SyntaxError: Invalid variable modifiers: mut mut at line: 2, column: 5",
-    "SyntaxError: Too many variable modifiers at line: 3, column: 13",
-    "SyntaxError: Expected ';' but got 'private' at line: 3, column: 13",
-    "SyntaxError: Expected ';' but got 'mut' at line: 5, column: 1",
-    "SyntaxError: Expected ';' but got 's' at line: 5, column: 5",
-    "SyntaxError: Only declarations supported at top level at line: 5, column: 5"
-]
+[]
 
 ---
 
@@ -385,13 +264,6 @@ children: [
 ] }
 , Compiler messages:
 [
-    "SyntaxError: Invalid variable modifiers: private private at line: 1, column: 9",
-    "SyntaxError: Invalid variable modifiers: mut mut at line: 2, column: 5",
-    "SyntaxError: Too many variable modifiers at line: 3, column: 13",
-    "SyntaxError: Expected ';' but got 'private' at line: 3, column: 13",
-    "SyntaxError: Expected ';' but got 'mut' at line: 5, column: 1",
-    "SyntaxError: Expected ';' but got 's' at line: 5, column: 5",
-    "SyntaxError: Only declarations supported at top level at line: 5, column: 5",
     "SyntaxError: Expected 'identifier' but got 'separator' at line: 1, column: 3",
     "SyntaxError: Expected 'identifier' but got 'separator' at line: 2, column: 4",
     "SyntaxError: Expected '{' but got 'fn' at line: 4, column: 1",

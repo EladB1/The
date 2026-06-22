@@ -18,15 +18,7 @@ var (
 )
 
 func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics) {
-	state := &lexerState{
-		tokens:               []Token{},
-		sequence:             strings.Builder{},
-		startPosition:        0,
-		in_multiline_comment: false,
-		messages:             diagnostic.PhaseDiagnostics{},
-		lineNum:              0,
-		lineIndex:            0,
-	}
+	state := initState()
 	for ; state.lineNum < len(sourceCode); state.lineNum++ {
 		state.clearSequence()
 		state.lineIndex = 0

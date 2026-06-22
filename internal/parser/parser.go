@@ -11,16 +11,14 @@ import (
 var (
 	messages diagnostic.PhaseDiagnostics = diagnostic.PhaseDiagnostics{}
 	errLevel diagnostic.Severity         = diagnostic.SyntaxError
-	tokens   []lexer.Token               = []lexer.Token{}
-	length   int                         = 0
-	ptr      int                         = 0
+	state    *parserState                = &parserState{}
 )
 
 /*
 return current token without moving
 */
 func peek() lexer.Token {
-	return tokens[ptr]
+	return state.tokens[state.ptr]
 }
 
 /*
@@ -29,7 +27,7 @@ return current token and move
 func consume() lexer.Token {
 	token := peek()
 	if !checkKind(lexer.EOF) {
-		ptr++
+		state.ptr++
 	}
 	return token
 }
@@ -52,7 +50,7 @@ func expectKind(kind lexer.TokenType) lexer.Token {
 	if checkKind(kind) {
 		return consume()
 	}
-	complainAboutToken(fmt.Sprintf("Expected '%s' but got '%s'", kind, peek().Kind))
+	state.addError(fmt.Sprintf("Expected '%s' but got '%s'", kind, peek().Kind))
 	return lexer.Token{
 		Kind:    kind,
 		Value:   "",
@@ -69,7 +67,7 @@ func expectValue(value string) lexer.Token {
 	if checkValue(value) {
 		return consume()
 	}
-	complainAboutToken(fmt.Sprintf("Expected '%s' but got '%s'", value, peek().GetValueString()))
+	state.addError(fmt.Sprintf("Expected '%s' but got '%s'", value, peek().GetValueString()))
 	return lexer.Token{
 		Kind:    lexer.Virtual,
 		Value:   value,
@@ -95,47 +93,39 @@ func checkValue(value string) bool {
 }
 
 func checkValueAhead(value string, n int) bool {
-	if ptr+n >= length {
+	if state.ptr+n >= state.length {
 		return false
 	}
-	return tokens[ptr+n].Value == value
+	return state.tokens[state.ptr+n].Value == value
 }
 
 func checkKindAhead(kind lexer.TokenType, n int) bool {
-	if ptr+n >= length {
+	if state.ptr+n >= state.length {
 		return false
 	}
-	return tokens[ptr+n].Kind == kind
-}
-
-func complainAboutToken(message string) {
-	token := peek()
-	messages = messages.Complain(errLevel, message, token.Line, token.Column)
+	return state.tokens[state.ptr+n].Kind == kind
 }
 
 /*
  *	program = { declaration } ;
  */
 func Parse(lexerTokens []lexer.Token) (AST, diagnostic.PhaseDiagnostics) {
-	tokens = lexerTokens
+	state = initState(lexerTokens)
 	root := AST{
 		label: "program",
 	}
-	ptr = 0
-	length = len(tokens)
 	for !checkKind(lexer.EOF) {
-		fmt.Println(peek().Kind)
 		if checkValue("fn") || checkValue("struct") || checkValue("interface") || isVariableDeclaration() {
 			root.AddChildren(parseDeclaration())
 			continue
 		} else {
 			// fmt.Printf("Token: %v\n", peek())
-			complainAboutToken("Only declarations supported at top level")
+			state.addError("Only declarations supported at top level")
 			errorRecovery()
 		}
 		consume()
 	}
-	return root, messages
+	return root, state.messages
 }
 
 func isVariableDeclaration() bool {
@@ -182,7 +172,7 @@ func parseFunction() AST {
 			ast.AddChildToken(consume())
 		} else {
 			token := consume()
-			complainAboutToken(fmt.Sprintf("Expected function return type but got %s", token.GetValueString()))
+			state.addError(fmt.Sprintf("Expected function return type but got %s", token.GetValueString()))
 			return ast
 		}
 	}
@@ -213,7 +203,7 @@ func parseParameters() AST {
 func parseParameter() AST {
 	ast := AST{label: "param"}
 	if !checkKind(lexer.KW_TYPE) && !checkKind(lexer.ID) {
-		complainAboutToken(fmt.Sprintf("Expected type but got %s", consume().Value))
+		state.addError(fmt.Sprintf("Expected type but got %s", consume().Value))
 		return ast
 	}
 	ast.AddChildToken(consume())
@@ -383,7 +373,7 @@ func parseVariable() AST {
 			consume()
 			ast.AddChildren(parseExpression())
 		} else {
-			complainAboutToken("Expected ';' or '='")
+			state.addError("Expected ';' or '='")
 			consume()
 		}
 	}
@@ -529,7 +519,7 @@ func parseLogicalOr() AST {
 		ast.AddChildren(operand, parseLogicalAnd())
 	}
 	if checkValue("||") {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", peek().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", peek().Value))
 	}
 	return ast
 }
@@ -546,7 +536,7 @@ func parseLogicalAnd() AST {
 		ast.AddChildren(operand, parseLogicalNot())
 	}
 	if checkValue("&&") {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", peek().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", peek().Value))
 	}
 	return ast
 }
@@ -595,7 +585,7 @@ func parseBitwise() AST {
 		ast.AddChildren(operand, parseAdd())
 	}
 	if checkKind(lexer.OPERATOR_BW) {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", consume().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", consume().Value))
 	}
 
 	return ast
@@ -614,7 +604,7 @@ func parseAdd() AST {
 		ast.AddChildren(parseMult())
 	}
 	if checkKind(lexer.OPERATOR_ADD) {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", consume().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", consume().Value))
 	}
 	return ast
 }
@@ -632,7 +622,7 @@ func parseMult() AST {
 		ast.AddChildren(parseExpo())
 	}
 	if checkKind(lexer.OPERATOR_MULT) {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", consume().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", consume().Value))
 	}
 	return ast
 }
@@ -650,7 +640,7 @@ func parseExpo() AST {
 		ast.AddChildren(parseExpo())
 	}
 	if checkValue("**") {
-		complainAboutToken(fmt.Sprintf("Expected operand but got %s", consume().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", consume().Value))
 	}
 	return ast
 }
@@ -703,7 +693,7 @@ func parseTypecast() AST {
 	if checkKind(lexer.KW_TYPE) || checkKind(lexer.ID) {
 		ast.AddChildToken(consume())
 	} else {
-		complainAboutToken(fmt.Sprintf("Expected type but found %s", peek().Value))
+		state.addError(fmt.Sprintf("Expected type but found %s", peek().Value))
 	}
 	return ast
 }
@@ -754,7 +744,7 @@ func parseTerm() AST {
 		expectValue(")")
 		return expr
 	}
-	complainAboutToken("Invalid term provided")
+	state.addError("Invalid term provided")
 	return AST{}
 }
 
@@ -786,8 +776,8 @@ func parseIndexValue() AST {
 }
 
 func isSlice() bool {
-	for i := ptr; i < length-1 && tokens[i+1].Value != "]"; i++ {
-		if tokens[i].Kind == lexer.OPERATOR_RANGE {
+	for i := state.ptr; i < state.length-1 && state.tokens[i+1].Value != "]"; i++ {
+		if state.tokens[i].Kind == lexer.OPERATOR_RANGE {
 			return true
 		}
 	}
@@ -924,13 +914,13 @@ func parseModifiers() AST {
 	if checkKind(lexer.KW_MODIFIER) {
 		if checkValue(modifier.Value) {
 			message := fmt.Sprintf("Invalid variable modifiers: %s %s", modifier.Value, peek().Value)
-			complainAboutToken(message)
+			state.addError(message)
 			consume()
 		} else {
 			ast.AddChildToken(consume())
 		}
 		if checkKind(lexer.KW_MODIFIER) {
-			complainAboutToken("Too many variable modifiers")
+			state.addError("Too many variable modifiers")
 		}
 	}
 	return ast

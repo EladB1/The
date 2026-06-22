@@ -2,3 +2,13 @@ fn test();
 fn test() -> int;
 fn test() {}
 fn test() -> int {}
+fn main() -> int {
+    return 0;
+}
+fn doNothing() {
+    return;
+}
+fn add(int x, int y) -> int {
+    sum = x + y;
+    return sum;
+}
