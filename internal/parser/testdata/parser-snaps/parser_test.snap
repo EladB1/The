@@ -254,9 +254,70 @@ children: [
 
 [TestParser/should_run_variables_errors.the_and_have_errors - 1]
 AST:
-Node: { Label: "program" }
+Node: { Label: "program"
+children: [
+    Node: { Label: "Variable"
+    children: [
+        Node: { Label: "modifiers"
+        children: [
+            Node: { Token: {Value: private, Type: modifier keyword, Line: 0, Column: 0} }
+        ] },
+        Node: { Token: {Value: bool, Type: type keyword, Line: 0, Column: 16} },
+        Node: { Token: {Value: isError, Type: identifier, Line: 0, Column: 21} }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Label: "modifiers"
+        children: [
+            Node: { Token: {Value: mut, Type: modifier keyword, Line: 1, Column: 0} }
+        ] },
+        Node: { Token: {Value: String, Type: type keyword, Line: 1, Column: 8} },
+        Node: { Token: {Value: s, Type: identifier, Line: 1, Column: 15} }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Label: "modifiers"
+        children: [
+            Node: { Token: {Value: private, Type: modifier keyword, Line: 2, Column: 0} },
+            Node: { Token: {Value: mut, Type: modifier keyword, Line: 2, Column: 8} }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Label: "modifiers"
+        children: [
+            Node: { Token: {Value: private, Type: modifier keyword, Line: 2, Column: 12} }
+        ] },
+        Node: { Token: {Value: int, Type: type keyword, Line: 2, Column: 20} },
+        Node: { Token: {Value: i, Type: identifier, Line: 2, Column: 24} }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: bool, Type: type keyword, Line: 3, Column: 0} },
+        Node: { Token: {Value: isSomething, Type: identifier, Line: 3, Column: 5} },
+        Node: { Token: {Value: !, Type: unary operator, Line: 3, Column: 19}
+        children: [
+            Node: { Token: {Value: d, Type: identifier, Line: 3, Column: 20} }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Label: "modifiers"
+        children: [
+            Node: { Token: {Value: mut, Type: modifier keyword, Line: 4, Column: 0} }
+        ] }
+    ] }
+] }
 , Compiler messages:
-[]
+[
+    "SyntaxError: Invalid variable modifiers: private private at line: 1, column: 9",
+    "SyntaxError: Invalid variable modifiers: mut mut at line: 2, column: 5",
+    "SyntaxError: Too many variable modifiers at line: 3, column: 13",
+    "SyntaxError: Expected ';' but got 'private' at line: 3, column: 13",
+    "SyntaxError: Expected ';' but got 'mut' at line: 5, column: 1",
+    "SyntaxError: Expected ';' but got 's' at line: 5, column: 5",
+    "SyntaxError: Only declarations supported at top level at line: 5, column: 5"
+]
 
 ---
 
@@ -286,7 +347,15 @@ children: [
     ] }
 ] }
 , Compiler messages:
-[]
+[
+    "SyntaxError: Invalid variable modifiers: private private at line: 1, column: 9",
+    "SyntaxError: Invalid variable modifiers: mut mut at line: 2, column: 5",
+    "SyntaxError: Too many variable modifiers at line: 3, column: 13",
+    "SyntaxError: Expected ';' but got 'private' at line: 3, column: 13",
+    "SyntaxError: Expected ';' but got 'mut' at line: 5, column: 1",
+    "SyntaxError: Expected ';' but got 's' at line: 5, column: 5",
+    "SyntaxError: Only declarations supported at top level at line: 5, column: 5"
+]
 
 ---
 
@@ -316,6 +385,13 @@ children: [
 ] }
 , Compiler messages:
 [
+    "SyntaxError: Invalid variable modifiers: private private at line: 1, column: 9",
+    "SyntaxError: Invalid variable modifiers: mut mut at line: 2, column: 5",
+    "SyntaxError: Too many variable modifiers at line: 3, column: 13",
+    "SyntaxError: Expected ';' but got 'private' at line: 3, column: 13",
+    "SyntaxError: Expected ';' but got 'mut' at line: 5, column: 1",
+    "SyntaxError: Expected ';' but got 's' at line: 5, column: 5",
+    "SyntaxError: Only declarations supported at top level at line: 5, column: 5",
     "SyntaxError: Expected 'identifier' but got 'separator' at line: 1, column: 3",
     "SyntaxError: Expected 'identifier' but got 'separator' at line: 2, column: 4",
     "SyntaxError: Expected '{' but got 'fn' at line: 4, column: 1",

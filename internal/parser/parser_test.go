@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -16,12 +17,11 @@ import (
 
 var dir string = "testdata/fixtures/"
 
-func snapshotTestParser(t *testing.T, filename string) {
+func snapshotTestParser(t *testing.T, filename string, debug bool) {
 	snapshots := snaps.WithConfig(
 		snaps.Dir("testdata/parser-snaps"),
 	)
 	tokens := loadTokens(t, filename)
-	fmt.Println(tokens)
 	ast, messages := Parse(tokens)
 	var msgBuilder strings.Builder
 	var formatStr string
@@ -34,6 +34,9 @@ func snapshotTestParser(t *testing.T, filename string) {
 		msgBuilder.WriteString(formatStr)
 	}
 	results := fmt.Sprintf("AST:\n%v\n, Compiler messages:\n[%s]\n", ast, msgBuilder.String())
+	if debug {
+		lexer.PrintTokens(tokens)
+	}
 	snapshots.MatchSnapshot(t, results)
 }
 
@@ -89,17 +92,34 @@ func TestGenerateFixtures(t *testing.T) {
 }
 
 func TestParser(t *testing.T) {
+	t.Run("should run on empty file with no errors", func(t *testing.T) {
+		token := lexer.Token{
+			Kind:   lexer.EOF,
+			Line:   0,
+			Column: 0,
+		}
+		ast, messages := Parse([]lexer.Token{token})
+		if len(messages) != 0 {
+			t.Errorf("Expected no warnings or errors but got %v\n", messages)
+			os.Exit(1)
+		}
+		emptyAST := AST{label: "program"}
+		if !reflect.DeepEqual(ast, emptyAST) {
+			t.Errorf("Expected empty AST but got %v\n", ast)
+			os.Exit(1)
+		}
+	})
 	t.Run("should run variables.the and have no errors", func(t *testing.T) {
-		snapshotTestParser(t, "variables.json")
+		snapshotTestParser(t, "variables.json", false)
 	})
 	t.Run("should run variables_errors.the and have errors", func(t *testing.T) {
-		snapshotTestParser(t, "variables_errors.json")
+		snapshotTestParser(t, "variables_errors.json", false)
 	})
 	t.Run("should run functions.the and have no errors", func(t *testing.T) {
-		snapshotTestParser(t, "functions.json")
+		snapshotTestParser(t, "functions.json", false)
 	})
 	t.Run("should run functions_errors.the and have errors", func(t *testing.T) {
-		snapshotTestParser(t, "functions_errors.json")
+		snapshotTestParser(t, "functions_errors.json", false)
 	})
 
 }

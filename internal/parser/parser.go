@@ -121,8 +121,10 @@ func Parse(lexerTokens []lexer.Token) (AST, diagnostic.PhaseDiagnostics) {
 	root := AST{
 		label: "program",
 	}
+	ptr = 0
 	length = len(tokens)
 	for !checkKind(lexer.EOF) {
+		fmt.Println(peek().Kind)
 		if checkValue("fn") || checkValue("struct") || checkValue("interface") || isVariableDeclaration() {
 			root.AddChildren(parseDeclaration())
 			continue
