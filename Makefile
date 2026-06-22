@@ -25,6 +25,9 @@ integration: build
 update-snaps-lexer: 
 	UPDATE_SNAPS=true go test ./internal/lexer/...
 
+update-fixtures-parser:
+	UPDATE_FIXTURES=true go test ./internal/parser/... -run=TestGenerateFixtures
+
 update-snaps-parser:
 	UPDATE_SNAPS=true go test ./internal/parser/...
 

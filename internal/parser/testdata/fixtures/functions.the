@@ -1,0 +1,4 @@
+fn test();
+fn test() -> int;
+fn test() {}
+fn test() -> int {}

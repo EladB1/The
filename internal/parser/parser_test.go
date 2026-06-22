@@ -21,6 +21,7 @@ func snapshotTestParser(t *testing.T, filename string) {
 		snaps.Dir("testdata/parser-snaps"),
 	)
 	tokens := loadTokens(t, filename)
+	fmt.Println(tokens)
 	ast, messages := Parse(tokens)
 	var msgBuilder strings.Builder
 	var formatStr string
@@ -63,6 +64,7 @@ func TestGenerateFixtures(t *testing.T) {
 	}
 	for _, file := range files {
 		if strings.HasSuffix(file.Name(), ".the") {
+			fmt.Printf("Updating fixture for '%s'... ", file.Name())
 			path := filepath.Join(dir, file.Name())
 			src, err := filehandler.GetSourceCode(path)
 			if err != nil {
@@ -81,13 +83,23 @@ func TestGenerateFixtures(t *testing.T) {
 				fmt.Fprintln(os.Stderr, "Failed to write file\n", err)
 				os.Exit(1)
 			}
+			fmt.Println("Fixture updated")
 		}
 	}
 }
 
 func TestParser(t *testing.T) {
-	t.Run("should run declarations.the and have some errors", func(t *testing.T) {
-		snapshotTestParser(t, "declarations.json")
+	t.Run("should run variables.the and have no errors", func(t *testing.T) {
+		snapshotTestParser(t, "variables.json")
+	})
+	t.Run("should run variables_errors.the and have errors", func(t *testing.T) {
+		snapshotTestParser(t, "variables_errors.json")
+	})
+	t.Run("should run functions.the and have no errors", func(t *testing.T) {
+		snapshotTestParser(t, "functions.json")
+	})
+	t.Run("should run functions_errors.the and have errors", func(t *testing.T) {
+		snapshotTestParser(t, "functions_errors.json")
 	})
 
 }

@@ -1,0 +1,7 @@
+int i;
+mut int j;
+private int k;
+private mut float g;
+mut private double h;
+int i = -1;
+bool d = a || b && !c;
