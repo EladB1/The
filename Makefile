@@ -31,11 +31,20 @@ update-fixtures-parser:
 update-snaps-parser:
 	UPDATE_SNAPS=true go test ./internal/parser/...
 
+update-fixtures-semantic:
+	UPDATE_FIXTURES=true go test ./internal/semantic/... -run=TestGenerateFixtures
+
 update-snaps-semantic:
 	UPDATE_SNAPS=true go test ./internal/semantic/...
 
+update-fixtures-irgen:
+	UPDATE_FIXTURES=true go test ./internal/irgen/... -run=TestGenerateFixtures
+
 update-snaps-irgen:
 	UPDATE_SNAPS=true go test ./internal/irgen/...
+
+update-fixtures-codegen:
+	UPDATE_FIXTURES=true go test ./internal/codegen/... -run=TestGenerateFixtures
 
 update-snaps-codegen:
 	UPDATE_SNAPS=true go test ./internal/codegen/...
