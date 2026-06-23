@@ -229,6 +229,8 @@ func getTokenTypeForOperator(sequence strings.Builder) TokenType {
 		return OPERATOR_MULT
 	} else if _, ok := unary_operators[operator]; ok {
 		return OPERATOR_UNARY
+	} else if _, ok := compare_operators[operator]; ok {
+		return OPERATOR_COMPARE
 	} else if _, ok := bitwise_operators[operator]; ok {
 		return OPERATOR_BW
 	} else if _, ok := unary_operators[operator]; ok {

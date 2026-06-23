@@ -268,23 +268,6 @@ func parseBranch() AST {
 }
 
 /*
- * expression = logical_or | "(" logical_or ")" ;
- */
-func parseExpression() AST {
-	//fmt.Println("In expression with token: ", peek())
-	in_parens := false
-	if checkValue("(") {
-		in_parens = true
-		consume()
-	}
-	ast := parseLogicalOr()
-	if in_parens {
-		expectValue(")")
-	}
-	return ast
-}
-
-/*
  * struct = "struct" identifier [ "impl" interface_list ] struct_body ;
  */
 func parseStruct() AST {
@@ -447,7 +430,9 @@ func parseConditionalBody() AST {
  * while = "while" "(" expression ")" block;
  */
 func parseWhile() AST {
+	// fmt.Println("In while: ", peek())
 	ast := AST{label: "while"}
+	consume()
 	expectValue("(")
 	ast.AddChildren(parseExpression())
 	expectValue(")")
@@ -459,7 +444,7 @@ func parseWhile() AST {
  * for = "for" "(" for_conditions ")" block ;
  */
 func parseFor() AST {
-	fmt.Println("In for with: ", peek())
+	//fmt.Println("In for with: ", peek())
 	ast := AST{label: "for"}
 	consume()
 	expectValue("(")
@@ -473,25 +458,25 @@ func parseFor() AST {
  * for_conditions = ( ( variable | assignment ) ";" expression ";" expression ) | ( variable [ "," variable ] "in" range ) ;
  */
 func parseForConditions() AST {
-	fmt.Println("In for condition with: ", peek())
+	//fmt.Println("In for condition with: ", peek())
 	ast := AST{label: "loop-condition"}
 	if isVariableDeclaration() {
 		ast.AddChildren(parseVariable())
-		if checkKind(";") {
-			ast.AddChildToken(expectValue(";"))
+		if checkValue(";") {
+			expectValue(";")
 			ast.AddChildren(parseExpression())
-			ast.AddChildToken(expectValue(";"))
+			expectValue(";")
 			ast.AddChildren(parseExpression())
 		} else {
-			if checkKind(",") {
+			if checkValue(",") {
 				consume()
 				ast.AddChildren(parseVariable())
 			}
-			fmt.Println("HERE", peek())
 			ast.AddChildToken(expectValue("in"))
 			ast.AddChildren(parseRange())
 		}
 	} else {
+		ast.AddChildren(parseAssignment())
 		ast.AddChildToken(expectValue(";"))
 		ast.AddChildren(parseExpression())
 		ast.AddChildToken(expectValue(";"))
@@ -504,7 +489,7 @@ func parseForConditions() AST {
  * range = expression [ range_operator expression [ ".." expression ] ] ;
  */
 func parseRange() AST {
-	fmt.Println("In range with: ", peek())
+	//fmt.Println("In range with: ", peek())
 	ast := AST{label: "range"}
 	expr := parseExpression()
 	if !checkKind(lexer.OPERATOR_RANGE) {
@@ -521,10 +506,27 @@ func parseRange() AST {
  * assignment = member assign_operator expression ;
  */
 func parseAssignment() AST {
-	ast := AST{label: "assign"}
-	ast.AddChildren(parseMember())
-	ast.AddChildToken(expectKind(lexer.OPERATOR_ASSIGN))
-	ast.AddChildren(parseExpression())
+	//fmt.Println("In assignment: ", peek())
+	member := parseMember()
+	ast := AST{token: expectKind(lexer.OPERATOR_ASSIGN)}
+	ast.AddChildren(member, parseExpression())
+	return ast
+}
+
+/*
+ * expression = logical_or | "(" logical_or ")" ;
+ */
+func parseExpression() AST {
+	//fmt.Println("In expression with token: ", peek())
+	in_parens := false
+	if checkValue("(") {
+		in_parens = true
+		consume()
+	}
+	ast := parseLogicalOr()
+	if in_parens {
+		expectValue(")")
+	}
 	return ast
 }
 
@@ -584,11 +586,12 @@ func parseLogicalNot() AST {
  * comparison = bitwise [ compare_operator bitwise ] ;
  */
 func parseComparison() AST {
+	//fmt.Println("In comparison with: ", peek())
 	bw := parseBitwise()
 	if !checkKind(lexer.OPERATOR_COMPARE) {
 		return bw
 	}
-	ast := AST{token: consume()} // operator is the root of the tree
+	ast := AST{token: expectKind(lexer.OPERATOR_COMPARE)} // operator is the root of the tree
 	ast.AddChildren(bw)
 	ast.AddChildren(parseBitwise())
 	return ast
@@ -731,6 +734,7 @@ func parseIndex() AST {
 	}
 	ast.AddChildren(operand)
 	for checkValue("[") {
+		consume()
 		operand = ast
 		ast = AST{label: "index"}
 		ast.AddChildren(operand, parseIndexValue())
@@ -787,6 +791,7 @@ func isLiteral() bool {
  * index_value =  slice | expression | array_end ;
  */
 func parseIndexValue() AST {
+	//fmt.Println("In index: ", peek())
 	if isSlice() {
 		return parseSlice()
 	}
@@ -797,7 +802,7 @@ func parseIndexValue() AST {
 }
 
 func isSlice() bool {
-	for i := state.ptr; i < state.length-1 && state.tokens[i+1].Value != "]"; i++ {
+	for i := state.ptr; i < state.length-1 && state.tokens[i].Value != "]"; i++ {
 		if state.tokens[i].Kind == lexer.OPERATOR_RANGE {
 			return true
 		}
@@ -809,12 +814,22 @@ func isSlice() bool {
  * slice = [ expression | array_end ] range_operator [ expression | array_end ] ;
  */
 func parseSlice() AST {
+	//fmt.Println("In slice: ", peek())
 	ast := AST{label: "slice"}
 	if checkKind(lexer.OPERATOR_RANGE) {
-		ast.AddChildToken(consume())
-		return ast
-	}
-	if checkValue("^") {
+		rangeOp := AST{token: consume()}
+		if peek().Value == "]" {
+			ast.AddChildren(rangeOp)
+			return ast
+		} else {
+			if checkValue("^") {
+				ast.AddChildren(parseArrayEnd())
+			} else {
+				ast.AddChildren(parseExpression())
+			}
+			return ast
+		}
+	} else if checkValue("^") {
 		ast.AddChildren(parseArrayEnd())
 	} else {
 		ast.AddChildren(parseExpression())
@@ -845,7 +860,7 @@ func parseArrayEnd() AST {
  * literal = bool_literal | char_literal | string_literal | number_literal | struct_literal;
  */
 func parseLiteral() AST {
-	if checkKind(lexer.LIT_CHAR) || checkKind(lexer.LIT_STRING) {
+	if checkKind(lexer.LIT_CHAR) || checkKind(lexer.LIT_STRING) || checkKind(lexer.KW_BOOLVALUE) {
 		return AST{token: consume()}
 	} else if checkKind(lexer.LIT_INT) || checkKind(lexer.LIT_HEX) || checkKind(lexer.LIT_FLOAT) || checkValue("+") || checkValue("-") {
 		return parseNumLiteral()
@@ -972,6 +987,7 @@ func parseCall() AST {
 	ast.AddChildren(parseMember())
 	expectValue("(")
 	if checkValue(")") {
+		consume()
 		return ast
 	}
 	params := AST{label: "params"}

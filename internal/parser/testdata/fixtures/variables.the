@@ -5,3 +5,4 @@ private mut float g;
 mut private double h;
 int i = -1;
 bool d = a || b && !c;
+int64 q = -5 * -16;

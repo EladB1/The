@@ -10,24 +10,6 @@ fn doNothing() {
 }
 fn add(int x, int y) -> int {
     mut int sum = x + y;
+    doNothing();
     return sum;
-}
-fn test(int i) -> int {
-    if (i == 0)
-        return 0;
-    else if (i == 1) {
-        return 1;
-    }
-    else if (i == 2) {
-        mut int j = i + 1;
-        j *= i;
-        return j;
-    }
-    else {
-        mut int sum;
-        for (int j in 0..=i**2) {
-            sum += j;
-        }
-        return sum;
-    }
 }
