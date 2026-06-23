@@ -1,0 +1,37 @@
+interface Test {
+    int x = 5;
+}
+
+struct A {
+    int a;
+    struct B {
+        1+1
+    }
+    uint32 b;
+    while(true) {
+        break;
+    }
+}
+
+interface Test {
+    fn test();
+    interface Nested {
+        int x;
+    }
+    fn test2();
+}
+
+struct Person {
+    private int id;
+    private {
+        int x;
+        println("hello, world!");
+        fn hello();
+        interface Inner {}
+        ;
+        fn helloworld() {
+            println("hello, world");
+        }
+        1*2;
+    }
+}

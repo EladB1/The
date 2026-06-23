@@ -169,7 +169,7 @@ children: [
     children: [
         Node: { Token: {Value: String, Type: type keyword, Line: 11, Column: 0} },
         Node: { Token: {Value: str, Type: identifier, Line: 11, Column: 7} },
-        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [1] with length 0) }
+        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [3] with length 0) }
     ] },
     Node: { Label: "Variable"
     children: [
@@ -622,89 +622,25 @@ children: [
                             ] }
                         ] }
                     ] }
-                ] }
-            ] },
-            Node: { Label: "fn"
-            children: [
-                Node: { Token: {Value: b, Type: identifier, Line: 9, Column: 7} },
-                Node: { Label: "fn-body" }
-            ] }
-        ] }
-    ] },
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 12, Column: 0}
-    children: [
-        Node: { Token: {Value: Empty, Type: identifier, Line: 12, Column: 7} },
-        Node: { Label: "struct-body" }
-    ] },
-    Node: { Label: "interface"
-    children: [
-        Node: { Token: {Value: Test, Type: identifier, Line: 14, Column: 10} },
-        Node: { Label: "fn"
-        children: [
-            Node: { Token: {Value: test, Type: identifier, Line: 15, Column: 7} },
-            Node: { Label: "params"
-            children: [
-                Node: { Label: "param"
-                children: [
-                    Node: { Token: {Value: A, Type: identifier, Line: 15, Column: 12} },
-                    Node: { Token: {Value: a, Type: identifier, Line: 15, Column: 14} }
                 ] },
-                Node: { Label: "param"
+                Node: { Label: "fn"
                 children: [
-                    Node: { Token: {Value: int, Type: type keyword, Line: 15, Column: 17} },
-                    Node: { Token: {Value: num, Type: identifier, Line: 15, Column: 21} }
+                    Node: { Token: {Value: b, Type: identifier, Line: 9, Column: 7} },
+                    Node: { Label: "fn-body" }
                 ] },
-                Node: { Label: "param"
+                Node: { Label: "fn"
                 children: [
-                    Node: { Token: {Value: int, Type: type keyword, Line: 15, Column: 26} },
-                    Node: { Token: {Value: expected, Type: identifier, Line: 15, Column: 30} }
-                ] }
-            ] },
-            Node: { Token: {Value: bool, Type: type keyword, Line: 15, Column: 43} },
-            Node: { Label: "fn-body"
-            children: [
-                Node: { Label: "control-flow"
-                children: [
-                    Node: { Token: {Value: return, Type: flow keyword, Line: 16, Column: 8} },
-                    Node: { Token: {Value: ==, Type: compare operator, Line: 16, Column: 27}
+                    Node: { Token: {Value: report, Type: identifier, Line: 18, Column: 7} },
+                    Node: { Label: "params"
                     children: [
-                        Node: { Label: "call"
+                        Node: { Label: "param"
                         children: [
-                            Node: { Label: "dot"
-                            children: [
-                                Node: { Token: {Value: a, Type: identifier, Line: 16, Column: 15} },
-                                Node: { Token: {Value: sum4, Type: identifier, Line: 16, Column: 17} }
-                            ] },
-                            Node: { Label: "params"
-                            children: [
-                                Node: { Token: {Value: num, Type: identifier, Line: 16, Column: 22} }
-                            ] }
-                        ] },
-                        Node: { Token: {Value: expected, Type: identifier, Line: 16, Column: 30} }
+                            Node: { Token: {Value: string, Type: identifier, Line: 18, Column: 14} },
+                            Node: { Token: {Value: message, Type: identifier, Line: 18, Column: 21} }
+                        ] }
                     ] }
                 ] }
             ] }
-        ] },
-        Node: { Label: "fn"
-        children: [
-            Node: { Token: {Value: report, Type: identifier, Line: 18, Column: 7} },
-            Node: { Label: "params"
-            children: [
-                Node: { Label: "param"
-                children: [
-                    Node: { Token: {Value: string, Type: identifier, Line: 18, Column: 14} },
-                    Node: { Token: {Value: message, Type: identifier, Line: 18, Column: 21} }
-                ] }
-            ] }
-        ] }
-    ] },
-    Node: { Label: "interface"
-    children: [
-        Node: { Token: {Value: Logger, Type: identifier, Line: 21, Column: 10} },
-        Node: { Label: "fn"
-        children: [
-            Node: { Token: {Value: log, Type: identifier, Line: 22, Column: 7} },
-            Node: { Token: {Value: String, Type: type keyword, Line: 22, Column: 16} }
         ] }
     ] },
     Node: { Label: "interface"
@@ -744,23 +680,6 @@ children: [
                             children: [
                                 Node: { Token: {Value: message, Type: identifier, Line: 30, Column: 20} }
                             ] }
-                        ] }
-                    ] }
-                ] }
-            ] },
-            Node: { Label: "named-block"
-            children: [
-                Node: { Token: {Value: Logger, Type: identifier, Line: 33, Column: 4} },
-                Node: { Label: "fn"
-                children: [
-                    Node: { Token: {Value: log, Type: identifier, Line: 34, Column: 11} },
-                    Node: { Token: {Value: String, Type: type keyword, Line: 34, Column: 20} },
-                    Node: { Label: "fn-body"
-                    children: [
-                        Node: { Label: "control-flow"
-                        children: [
-                            Node: { Token: {Value: return, Type: flow keyword, Line: 35, Column: 12} },
-                            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [0] with length 0) }
                         ] }
                     ] }
                 ] }
@@ -832,15 +751,59 @@ children: [
     ] }
 ] }
 , Compiler messages:
-[]
+[
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found } at line: 9, column: 5",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found } at line: 11, column: 1",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found struct at line: 13, column: 1",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found interface at line: 15, column: 1",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found test at line: 16, column: 8",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found a at line: 16, column: 15",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found num at line: 16, column: 22",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found expected at line: 16, column: 31",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found { at line: 16, column: 49",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found } at line: 20, column: 1",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found interface at line: 22, column: 1",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found log at line: 23, column: 8",
+    "SyntaxError: Expected '}' but got ';' at line: 23, column: 23",
+    "SyntaxError: Only variables, functions, and named blocks supported in struct definition, found ; at line: 23, column: 23",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found } at line: 33, column: 5",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found Logger at line: 34, column: 5",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found log at line: 35, column: 12",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found { at line: 35, column: 28"
+]
 
 ---
 
 [TestParser/should_run_structs_errors.the_and_have_errors - 1]
 AST:
-Node: { Label: "program" }
+Node: { Label: "program"
+children: [
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: Test, Type: identifier, Line: 0, Column: 10} }
+    ] }
+] }
 , Compiler messages:
-[]
+[
+    "SyntaxError: Only function definitions supported within interface body. Found int at line: 2, column: 9",
+    "SyntaxError: Only variables, functions, and named blocks supported in struct definition, found struct at line: 7, column: 5",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found 1 at line: 8, column: 9",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found while at line: 11, column: 5",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found } at line: 14, column: 1",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found interface at line: 16, column: 1",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found test at line: 17, column: 8",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found x at line: 19, column: 13",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found } at line: 22, column: 1",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found struct at line: 24, column: 1",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found private at line: 26, column: 5",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found x at line: 27, column: 13",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found hello at line: 29, column: 12",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found ; at line: 31, column: 9",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found helloworld at line: 32, column: 12",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found 1 at line: 35, column: 9",
+    "SyntaxError: Only functions and variable definitions supported in named blocks, found } at line: 37, column: 1",
+    "SyntaxError: Expected '}' but got EOF at line: 38, column: 2"
+]
 
 ---
 

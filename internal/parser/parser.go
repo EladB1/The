@@ -345,8 +345,14 @@ func parseStructBody() AST {
 			expectValue(";")
 		} else if (checkValue("private") || checkKind(lexer.ID)) && checkValueAhead("{", 1) {
 			ast.AddChildren(parseNamedBlock())
-		} else {
+		} else if checkValue("fn") {
 			ast.AddChildren(parseFunction())
+		} else {
+			state.addError(fmt.Sprintf("Only variables, functions, and named blocks supported in struct definition, found %s", peek().GetValueString()))
+			for !checkKind(lexer.EOF) && !checkValue("}") && !checkValue("fn") && checkVariableDeclaration() && !((checkValue("private") || checkKind(lexer.ID)) && checkValueAhead("{", 1)) {
+				consume() // recover
+			}
+			consume()
 		}
 	}
 	expectValue("}")
@@ -357,6 +363,7 @@ func parseStructBody() AST {
  * named_block = identifier "{" { function | ( variable ";" ) } "}" ;
  */
 func parseNamedBlock() AST {
+	//fmt.Println("In named block with: ", peek())
 	ast := AST{label: "named-block"}
 	if checkValue("private") {
 		ast.AddChildToken(consume())
@@ -364,12 +371,18 @@ func parseNamedBlock() AST {
 		ast.AddChildToken(expectKind(lexer.ID))
 	}
 	expectValue("{")
-	for checkVariableDeclaration() || checkKind(lexer.KW_MODIFIER) || checkValue("fn") {
+	for !checkValueAhead("}", 1) && !checkKind(lexer.EOF) {
 		if checkVariableDeclaration() {
 			ast.AddChildren(parseVariable())
 			expectValue(";")
-		} else {
+		} else if checkValue("fn") {
 			ast.AddChildren(parseFunction())
+		} else {
+			state.addError(fmt.Sprintf("Only functions and variable definitions supported in named blocks, found %s", peek().GetValueString()))
+			for !checkKind(lexer.EOF) && !checkValue("}") && !checkValue("fn") && !checkVariableDeclaration() {
+				consume() // recover
+			}
+			consume()
 		}
 	}
 	expectValue("}")
@@ -385,8 +398,15 @@ func parseInterface() AST {
 	consume() // interface keyword
 	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue("{")
-	for checkValue("fn") {
-		ast.AddChildren(parseFunction())
+	for !checkValue("}") {
+		if checkValue("fn") {
+			ast.AddChildren(parseFunction())
+		} else {
+			state.addError(fmt.Sprintf("Only function definitions supported within interface body. Found %s", consume().GetValueString()))
+			for !checkValue("fn") && !checkValue("}") {
+				consume() // recover
+			}
+		}
 	}
 	expectValue("}")
 	return ast
