@@ -613,6 +613,69 @@ children: [
                 ] }
             ] }
         ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: main, Type: identifier, Line: 35, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 35, Column: 13} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: A, Type: identifier, Line: 36, Column: 4} },
+                Node: { Token: {Value: a, Type: identifier, Line: 36, Column: 6} },
+                Node: { Label: "struct_literal"
+                children: [
+                    Node: { Token: {Value: A, Type: identifier, Line: 36, Column: 10} },
+                    Node: { Label: "properties"
+                    children: [
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: i, Type: identifier, Line: 37, Column: 8} },
+                            Node: { Token: {Value: 1, Type: int literal, Line: 37, Column: 11} }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: j, Type: identifier, Line: 38, Column: 8} },
+                            Node: { Token: {Value: 10, Type: int literal, Line: 38, Column: 11} }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: k, Type: identifier, Line: 39, Column: 8} },
+                            Node: { Token: {Value: 200, Type: int literal, Line: 39, Column: 11} }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: ATester, Type: identifier, Line: 41, Column: 4} },
+                Node: { Token: {Value: tester, Type: identifier, Line: 41, Column: 12} },
+                Node: { Label: "struct_literal"
+                children: [
+                    Node: { Token: {Value: ATester, Type: identifier, Line: 41, Column: 21} }
+                ] }
+            ] },
+            Node: { Label: "call"
+            children: [
+                Node: { Label: "dot"
+                children: [
+                    Node: { Token: {Value: tester, Type: identifier, Line: 42, Column: 4} },
+                    Node: { Token: {Value: test, Type: identifier, Line: 42, Column: 11} }
+                ] },
+                Node: { Label: "params"
+                children: [
+                    Node: { Token: {Value: a, Type: identifier, Line: 42, Column: 16} },
+                    Node: { Token: {Value: 15, Type: int literal, Line: 42, Column: 19} },
+                    Node: { Token: {Value: 226, Type: int literal, Line: 42, Column: 23} }
+                ] }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 43, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 43, Column: 11} }
+            ] }
+        ] }
     ] }
 ] }
 , Compiler messages:

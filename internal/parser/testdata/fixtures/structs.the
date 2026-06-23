@@ -32,3 +32,14 @@ struct ATester impl Test, Logger {
         }
     }
 }
+
+fn main() -> int {
+    A a = A {
+        i: 1,
+        j: 10,
+        k: 200,
+    };
+    ATester tester = ATester{};
+    tester.test(a, 15, 226);
+    return 0;
+}
