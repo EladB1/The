@@ -2,4 +2,22 @@ fn();
 fn () -> bool {}
 fn test()
 fn test() -> 1;
+fn fn();
+fn Test() {
+    struct A {
+        int a;
+    }
+}
+
+fn B() {
+    interface B {
+        fn test();
+    }
+
+
 fn test() int {}
+fn T(a)
+fn t(int a, ) -> double {};
+
+}
+fn test(int a int b, c -> 2 {;

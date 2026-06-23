@@ -11,6 +11,7 @@ type (
 		length   int
 		ptr      int
 		messages diagnostic.PhaseDiagnostics
+		in_error bool
 	}
 )
 
@@ -20,6 +21,7 @@ func initState(tokens []lexer.Token) *parserState {
 		length:   len(tokens),
 		ptr:      0,
 		messages: diagnostic.PhaseDiagnostics{},
+		in_error: false,
 	}
 }
 

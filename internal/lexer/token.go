@@ -48,6 +48,7 @@ const (
 	OPERATOR         TokenType = "operator"
 	OPERATOR_ADD     TokenType = "add operator"
 	OPERATOR_MULT    TokenType = "multiply operator"
+	OPERATOR_BS      TokenType = "bitshift operator"
 	OPERATOR_BW      TokenType = "bitwise operator"
 	OPERATOR_COMPARE TokenType = "compare operator"
 	OPERATOR_ASSIGN  TokenType = "assign operator"
@@ -110,6 +111,8 @@ var (
 		"|",
 		"&",
 		"^",
+	)
+	bitshift_operators ds.HashSet = ds.BuildHashSet(
 		"<<",
 		">>",
 	)
@@ -233,6 +236,8 @@ func getTokenTypeForOperator(sequence strings.Builder) TokenType {
 		return OPERATOR_COMPARE
 	} else if _, ok := bitwise_operators[operator]; ok {
 		return OPERATOR_BW
+	} else if _, ok := bitshift_operators[operator]; ok {
+		return OPERATOR_BS
 	} else if _, ok := unary_operators[operator]; ok {
 		return OPERATOR_UNARY
 	} else if _, ok := range_operators[operator]; ok {

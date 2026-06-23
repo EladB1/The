@@ -61,8 +61,8 @@ fn main() -> int {
     while(true) {
         break;
     }
-    println("hello"[0..=^1]);
-    println("world"[0..] + "!"[..=^1]);
-    println("hello, world!"[^1]);
+    for (int ii in 0 ..= 16 .. 2) {
+        println(ii);
+    }
     return 0;
 }

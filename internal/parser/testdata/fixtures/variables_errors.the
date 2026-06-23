@@ -2,4 +2,10 @@ private private bool isError;
 mut mut String s;
 private mut private int i;
 bool isSomething = !d
-mut s = 5;
+mut s = 5
+int x = 5 +;
+int y = 6%
+int j = );
+int squared = ** 2;
+double expo = 3.14 ** 2 **;
+int ii = i as 1;

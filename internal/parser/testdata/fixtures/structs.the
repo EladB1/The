@@ -10,6 +10,8 @@ struct A {
     fn b() {}
 }
 
+struct Empty {}
+
 interface Test {
     fn test(A a, int num, int expected) -> bool {
         return a.sum4(num) == expected;
@@ -20,6 +22,8 @@ interface Test {
 interface Logger {
     fn log() -> String;
 }
+
+interface Empty {}
 
 struct ATester impl Test, Logger {
     Test {

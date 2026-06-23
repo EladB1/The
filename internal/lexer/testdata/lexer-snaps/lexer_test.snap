@@ -148,7 +148,7 @@ Tokens:
     {Value: 0, Type: int literal, Line: 22, Column: 9},
     {Value: &, Type: bitwise operator, Line: 22, Column: 11},
     {Value: 1, Type: int literal, Line: 22, Column: 13},
-    {Value: >>, Type: bitwise operator, Line: 22, Column: 15},
+    {Value: >>, Type: bitshift operator, Line: 22, Column: 15},
     {Value: 2, Type: int literal, Line: 22, Column: 18},
     {Value: if, Type: branch keyword, Line: 23, Column: 0},
     {Value: (, Type: separator, Line: 23, Column: 3},

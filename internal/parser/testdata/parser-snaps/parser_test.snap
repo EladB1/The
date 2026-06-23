@@ -90,10 +90,98 @@ children: [
                 Node: { Token: {Value: 16, Type: int literal, Line: 7, Column: 16} }
             ] }
         ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: double, Type: type keyword, Line: 8, Column: 0} },
+        Node: { Token: {Value: y, Type: identifier, Line: 8, Column: 7} },
+        Node: { Token: {Value: *, Type: multiply operator, Line: 8, Column: 17}
+        children: [
+            Node: { Label: "Unary"
+            children: [
+                Node: { Token: {Value: -, Type: add operator, Line: 8, Column: 11} },
+                Node: { Token: {Value: 13.5, Type: float literal, Line: 8, Column: 12} }
+            ] },
+            Node: { Label: "Unary"
+            children: [
+                Node: { Token: {Value: -, Type: add operator, Line: 8, Column: 19} },
+                Node: { Token: {Value: 44.444, Type: float literal, Line: 8, Column: 20} }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 9, Column: 0} },
+        Node: { Token: {Value: b, Type: identifier, Line: 9, Column: 4} },
+        Node: { Token: {Value: <<, Type: bitshift operator, Line: 9, Column: 24}
+        children: [
+            Node: { Token: {Value: <<, Type: bitshift operator, Line: 9, Column: 19}
+            children: [
+                Node: { Token: {Value: ^, Type: bitwise operator, Line: 9, Column: 15}
+                children: [
+                    Node: { Token: {Value: |, Type: bitwise operator, Line: 9, Column: 10}
+                    children: [
+                        Node: { Token: {Value: 1, Type: int literal, Line: 9, Column: 8} },
+                        Node: { Label: "Unary"
+                        children: [
+                            Node: { Token: {Value: -, Type: add operator, Line: 9, Column: 12} },
+                            Node: { Token: {Value: 1, Type: int literal, Line: 9, Column: 13} }
+                        ] }
+                    ] },
+                    Node: { Token: {Value: 5, Type: int literal, Line: 9, Column: 17} }
+                ] },
+                Node: { Token: {Value: 2, Type: int literal, Line: 9, Column: 22} }
+            ] },
+            Node: { Token: {Value: 3, Type: int literal, Line: 9, Column: 27} }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: double, Type: type keyword, Line: 10, Column: 0} },
+        Node: { Token: {Value: position, Type: identifier, Line: 10, Column: 7} },
+        Node: { Token: {Value: +, Type: add operator, Line: 10, Column: 44}
+        children: [
+            Node: { Token: {Value: +, Type: add operator, Line: 10, Column: 24}
+            children: [
+                Node: { Token: {Value: start, Type: identifier, Line: 10, Column: 18} },
+                Node: { Token: {Value: *, Type: multiply operator, Line: 10, Column: 36}
+                children: [
+                    Node: { Token: {Value: velocity, Type: identifier, Line: 10, Column: 27} },
+                    Node: { Token: {Value: time, Type: identifier, Line: 10, Column: 38} }
+                ] }
+            ] },
+            Node: { Token: {Value: *, Type: multiply operator, Line: 10, Column: 65}
+            children: [
+                Node: { Token: {Value: /, Type: multiply operator, Line: 10, Column: 60}
+                children: [
+                    Node: { Token: {Value: accelaration, Type: identifier, Line: 10, Column: 47} },
+                    Node: { Token: {Value: 2, Type: int literal, Line: 10, Column: 62} }
+                ] },
+                Node: { Token: {Value: **, Type: operator, Line: 10, Column: 72}
+                children: [
+                    Node: { Token: {Value: time, Type: identifier, Line: 10, Column: 67} },
+                    Node: { Token: {Value: 2, Type: int literal, Line: 10, Column: 75} }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: String, Type: type keyword, Line: 11, Column: 0} },
+        Node: { Token: {Value: str, Type: identifier, Line: 11, Column: 7} },
+        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [1] with length 0) }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: uint32, Type: type keyword, Line: 19, Column: 7} },
+        Node: { Token: {Value: , Type: identifier, Missing: true, Line: 19, Column: 13} }
     ] }
 ] }
 , Compiler messages:
-[]
+[
+    "SyntaxError: Expected declaration but found 'str' at line: 13, column: 1",
+    "SyntaxError: Expected 'identifier' but got 'separator' at line: 20, column: 14"
+]
 
 ---
 
@@ -125,13 +213,6 @@ children: [
         children: [
             Node: { Token: {Value: private, Type: modifier keyword, Line: 2, Column: 0} },
             Node: { Token: {Value: mut, Type: modifier keyword, Line: 2, Column: 8} }
-        ] }
-    ] },
-    Node: { Label: "Variable"
-    children: [
-        Node: { Label: "modifiers"
-        children: [
-            Node: { Token: {Value: private, Type: modifier keyword, Line: 2, Column: 12} }
         ] },
         Node: { Token: {Value: int, Type: type keyword, Line: 2, Column: 20} },
         Node: { Token: {Value: i, Type: identifier, Line: 2, Column: 24} }
@@ -150,6 +231,69 @@ children: [
         Node: { Label: "modifiers"
         children: [
             Node: { Token: {Value: mut, Type: modifier keyword, Line: 4, Column: 0} }
+        ] },
+        Node: { Token: {Value: s, Type: identifier, Line: 4, Column: 4} },
+        Node: { Token: {Value: , Type: identifier, Missing: true, Line: 4, Column: 6} },
+        Node: { Token: {Value: 5, Type: int literal, Line: 4, Column: 8} }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 5, Column: 0} },
+        Node: { Token: {Value: x, Type: identifier, Line: 5, Column: 4} },
+        Node: { Token: {Value: +, Type: add operator, Line: 5, Column: 10}
+        children: [
+            Node: { Token: {Value: 5, Type: int literal, Line: 5, Column: 8} },
+            Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 6, Column: 0} },
+        Node: { Token: {Value: y, Type: identifier, Line: 6, Column: 4} },
+        Node: { Token: {Value: %, Type: multiply operator, Line: 6, Column: 9}
+        children: [
+            Node: { Token: {Value: 6, Type: int literal, Line: 6, Column: 8} },
+            Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 7, Column: 0} },
+        Node: { Token: {Value: j, Type: identifier, Line: 7, Column: 4} },
+        Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 8, Column: 0} },
+        Node: { Token: {Value: squared, Type: identifier, Line: 8, Column: 4} },
+        Node: { Token: {Value: **, Type: operator, Line: 8, Column: 14}
+        children: [
+            Node: { Token: {Value: , Type: , Line: 0, Column: 0} },
+            Node: { Token: {Value: 2, Type: int literal, Line: 8, Column: 17} }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: double, Type: type keyword, Line: 9, Column: 0} },
+        Node: { Token: {Value: expo, Type: identifier, Line: 9, Column: 7} },
+        Node: { Token: {Value: **, Type: operator, Line: 9, Column: 19}
+        children: [
+            Node: { Token: {Value: 3.14, Type: float literal, Line: 9, Column: 14} },
+            Node: { Token: {Value: **, Type: operator, Line: 9, Column: 24}
+            children: [
+                Node: { Token: {Value: 2, Type: int literal, Line: 9, Column: 22} },
+                Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 10, Column: 0} },
+        Node: { Token: {Value: ii, Type: identifier, Line: 10, Column: 4} },
+        Node: { Label: "typecast"
+        children: [
+            Node: { Token: {Value: i, Type: identifier, Line: 10, Column: 9} },
+            Node: { Token: {Value: none, Type: Virtual, Missing: true, Line: 10, Column: 14} }
         ] }
     ] }
 ] }
@@ -157,11 +301,21 @@ children: [
 [
     "SyntaxError: Invalid variable modifiers: private private at line: 1, column: 9",
     "SyntaxError: Invalid variable modifiers: mut mut at line: 2, column: 5",
-    "SyntaxError: Too many variable modifiers at line: 3, column: 13",
-    "SyntaxError: Expected ';' but got 'private' at line: 3, column: 13",
+    "SyntaxError: Expected type but got 'modifier keyword' at line: 3, column: 13",
     "SyntaxError: Expected ';' but got 'mut' at line: 5, column: 1",
-    "SyntaxError: Expected ';' but got 's' at line: 5, column: 5",
-    "SyntaxError: Only declarations supported at top level at line: 5, column: 5"
+    "SyntaxError: Expected 'identifier' but got 'assign operator' at line: 5, column: 7",
+    "SyntaxError: Expected ';' but got 'int' at line: 6, column: 1",
+    "SyntaxError: Expected operand but got ; at line: 6, column: 12",
+    "SyntaxError: Expected operand but got int at line: 8, column: 1",
+    "SyntaxError: Expected ';' but got 'int' at line: 8, column: 1",
+    "SyntaxError: Expected operand but got ) at line: 8, column: 9",
+    "SyntaxError: Expected ';' but got ')' at line: 8, column: 9",
+    "SyntaxError: Expected declaration but found ')' at line: 8, column: 9",
+    "SyntaxError: Expected operand but got ** at line: 9, column: 15",
+    "SyntaxError: Expected operand but got ; at line: 10, column: 27",
+    "SyntaxError: Expected type but got 'int literal' at line: 11, column: 15",
+    "SyntaxError: Expected ';' but got '1' at line: 11, column: 15",
+    "SyntaxError: Expected declaration but found '1' at line: 11, column: 15"
 ]
 
 ---
@@ -280,22 +434,123 @@ children: [
     ] },
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: test, Type: identifier, Line: 2, Column: 3} },
-        Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
+        Node: { Token: {Value: test, Type: identifier, Line: 2, Column: 3} }
     ] },
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: test, Type: identifier, Line: 3, Column: 3} }
+        Node: { Token: {Value: test, Type: identifier, Line: 3, Column: 3} },
+        Node: { Token: {Value: none, Type: Virtual, Missing: true, Line: 3, Column: 13} }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: , Type: identifier, Missing: true, Line: 4, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param" }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: Test, Type: identifier, Line: 5, Column: 3} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: B, Type: identifier, Line: 11, Column: 3} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: test, Type: identifier, Line: 17, Column: 3} }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 17, Column: 10} },
+        Node: { Token: {Value: , Type: identifier, Missing: true, Line: 17, Column: 14} }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: T, Type: identifier, Line: 18, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: a, Type: identifier, Line: 18, Column: 5} },
+                Node: { Token: {Value: , Type: identifier, Missing: true, Line: 18, Column: 6} }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: t, Type: identifier, Line: 19, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 19, Column: 5} },
+                Node: { Token: {Value: a, Type: identifier, Line: 19, Column: 9} }
+            ] },
+            Node: { Label: "param" }
+        ] },
+        Node: { Token: {Value: double, Type: type keyword, Line: 19, Column: 17} },
+        Node: { Label: "fn-body" }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: test, Type: identifier, Line: 22, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 22, Column: 8} },
+                Node: { Token: {Value: a, Type: identifier, Line: 22, Column: 12} }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 22, Column: 14} },
+        Node: { Token: {Value: b, Type: identifier, Line: 22, Column: 18} }
     ] }
 ] }
 , Compiler messages:
 [
     "SyntaxError: Expected 'identifier' but got 'separator' at line: 1, column: 3",
     "SyntaxError: Expected 'identifier' but got 'separator' at line: 2, column: 4",
-    "SyntaxError: Expected '{' but got 'fn' at line: 4, column: 1",
-    "SyntaxError: Expected function return type but got 1 at line: 4, column: 15",
-    "SyntaxError: Only declarations supported at top level at line: 4, column: 15",
-    "SyntaxError: Only declarations supported at top level at line: 5, column: 4"
+    "SyntaxError: Expected ';' but got 'fn' at line: 4, column: 1",
+    "SyntaxError: Expected type but got 'int literal' at line: 4, column: 14",
+    "SyntaxError: Expected ';' but got '1' at line: 4, column: 14",
+    "SyntaxError: Expected declaration but found '1' at line: 4, column: 14",
+    "SyntaxError: Expected 'identifier' but got 'structure keyword' at line: 5, column: 4",
+    "SyntaxError: Expected '(' but got 'fn' at line: 5, column: 4",
+    "SyntaxError: Expected type but got fn at line: 5, column: 6",
+    "SyntaxError: Expected ')' but got '(' at line: 5, column: 6",
+    "SyntaxError: Expected ';' but got '(' at line: 5, column: 6",
+    "SyntaxError: Expected declaration but found '(' at line: 5, column: 6",
+    "SyntaxError: Declaration struct not valid in block at line: 7, column: 5",
+    "SyntaxError: Expected operand but got ; at line: 8, column: 14",
+    "SyntaxError: Expected declaration but found '}' at line: 10, column: 1",
+    "SyntaxError: Declaration interface not valid in block at line: 13, column: 5",
+    "SyntaxError: Expected operand but got ; at line: 14, column: 18",
+    "SyntaxError: Expected ';' but got 'int' at line: 18, column: 11",
+    "SyntaxError: Expected 'identifier' but got 'separator' at line: 18, column: 15",
+    "SyntaxError: Expected ';' but got '{' at line: 18, column: 15",
+    "SyntaxError: Expected declaration but found '{' at line: 18, column: 15",
+    "SyntaxError: Expected 'identifier' but got 'separator' at line: 19, column: 7",
+    "SyntaxError: Expected ';' but got 'fn' at line: 20, column: 1",
+    "SyntaxError: Expected type but got ) at line: 20, column: 15",
+    "SyntaxError: Expected ')' but got '->' at line: 20, column: 15",
+    "SyntaxError: Expected declaration but found ';' at line: 20, column: 27",
+    "SyntaxError: Expected ')' but got 'int' at line: 23, column: 15",
+    "SyntaxError: Expected ';' but got 'int' at line: 23, column: 15",
+    "SyntaxError: Expected ';' but got ',' at line: 23, column: 20",
+    "SyntaxError: Expected declaration but found ',' at line: 23, column: 20"
 ]
 
 ---
@@ -376,109 +631,118 @@ children: [
             ] }
         ] }
     ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 12, Column: 0}
+    children: [
+        Node: { Token: {Value: Empty, Type: identifier, Line: 12, Column: 7} },
+        Node: { Label: "struct-body" }
+    ] },
     Node: { Label: "interface"
     children: [
-        Node: { Token: {Value: Test, Type: identifier, Line: 12, Column: 10} },
+        Node: { Token: {Value: Test, Type: identifier, Line: 14, Column: 10} },
         Node: { Label: "fn"
         children: [
-            Node: { Token: {Value: test, Type: identifier, Line: 13, Column: 7} },
+            Node: { Token: {Value: test, Type: identifier, Line: 15, Column: 7} },
             Node: { Label: "params"
             children: [
                 Node: { Label: "param"
                 children: [
-                    Node: { Token: {Value: A, Type: identifier, Line: 13, Column: 12} },
-                    Node: { Token: {Value: a, Type: identifier, Line: 13, Column: 14} }
+                    Node: { Token: {Value: A, Type: identifier, Line: 15, Column: 12} },
+                    Node: { Token: {Value: a, Type: identifier, Line: 15, Column: 14} }
                 ] },
                 Node: { Label: "param"
                 children: [
-                    Node: { Token: {Value: int, Type: type keyword, Line: 13, Column: 17} },
-                    Node: { Token: {Value: num, Type: identifier, Line: 13, Column: 21} }
+                    Node: { Token: {Value: int, Type: type keyword, Line: 15, Column: 17} },
+                    Node: { Token: {Value: num, Type: identifier, Line: 15, Column: 21} }
                 ] },
                 Node: { Label: "param"
                 children: [
-                    Node: { Token: {Value: int, Type: type keyword, Line: 13, Column: 26} },
-                    Node: { Token: {Value: expected, Type: identifier, Line: 13, Column: 30} }
+                    Node: { Token: {Value: int, Type: type keyword, Line: 15, Column: 26} },
+                    Node: { Token: {Value: expected, Type: identifier, Line: 15, Column: 30} }
                 ] }
             ] },
-            Node: { Token: {Value: bool, Type: type keyword, Line: 13, Column: 43} },
+            Node: { Token: {Value: bool, Type: type keyword, Line: 15, Column: 43} },
             Node: { Label: "fn-body"
             children: [
                 Node: { Label: "control-flow"
                 children: [
-                    Node: { Token: {Value: return, Type: flow keyword, Line: 14, Column: 8} },
-                    Node: { Token: {Value: ==, Type: compare operator, Line: 14, Column: 27}
+                    Node: { Token: {Value: return, Type: flow keyword, Line: 16, Column: 8} },
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 16, Column: 27}
                     children: [
                         Node: { Label: "call"
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: a, Type: identifier, Line: 14, Column: 15} },
-                                Node: { Token: {Value: sum4, Type: identifier, Line: 14, Column: 17} }
+                                Node: { Token: {Value: a, Type: identifier, Line: 16, Column: 15} },
+                                Node: { Token: {Value: sum4, Type: identifier, Line: 16, Column: 17} }
                             ] },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: num, Type: identifier, Line: 14, Column: 22} }
+                                Node: { Token: {Value: num, Type: identifier, Line: 16, Column: 22} }
                             ] }
                         ] },
-                        Node: { Token: {Value: expected, Type: identifier, Line: 14, Column: 30} }
+                        Node: { Token: {Value: expected, Type: identifier, Line: 16, Column: 30} }
                     ] }
                 ] }
             ] }
         ] },
         Node: { Label: "fn"
         children: [
-            Node: { Token: {Value: report, Type: identifier, Line: 16, Column: 7} },
+            Node: { Token: {Value: report, Type: identifier, Line: 18, Column: 7} },
             Node: { Label: "params"
             children: [
                 Node: { Label: "param"
                 children: [
-                    Node: { Token: {Value: string, Type: identifier, Line: 16, Column: 14} },
-                    Node: { Token: {Value: message, Type: identifier, Line: 16, Column: 21} }
+                    Node: { Token: {Value: string, Type: identifier, Line: 18, Column: 14} },
+                    Node: { Token: {Value: message, Type: identifier, Line: 18, Column: 21} }
                 ] }
             ] }
         ] }
     ] },
     Node: { Label: "interface"
     children: [
-        Node: { Token: {Value: Logger, Type: identifier, Line: 19, Column: 10} },
+        Node: { Token: {Value: Logger, Type: identifier, Line: 21, Column: 10} },
         Node: { Label: "fn"
         children: [
-            Node: { Token: {Value: log, Type: identifier, Line: 20, Column: 7} },
-            Node: { Token: {Value: String, Type: type keyword, Line: 20, Column: 16} }
+            Node: { Token: {Value: log, Type: identifier, Line: 22, Column: 7} },
+            Node: { Token: {Value: String, Type: type keyword, Line: 22, Column: 16} }
         ] }
     ] },
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 23, Column: 0}
+    Node: { Label: "interface"
     children: [
-        Node: { Token: {Value: ATester, Type: identifier, Line: 23, Column: 7} },
+        Node: { Token: {Value: Empty, Type: identifier, Line: 25, Column: 10} }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 27, Column: 0}
+    children: [
+        Node: { Token: {Value: ATester, Type: identifier, Line: 27, Column: 7} },
         Node: { Label: "interface_list"
         children: [
-            Node: { Token: {Value: Test, Type: identifier, Line: 23, Column: 20} },
-            Node: { Token: {Value: Logger, Type: identifier, Line: 23, Column: 26} }
+            Node: { Token: {Value: Test, Type: identifier, Line: 27, Column: 20} },
+            Node: { Token: {Value: Logger, Type: identifier, Line: 27, Column: 26} }
         ] },
         Node: { Label: "struct-body"
         children: [
             Node: { Label: "named-block"
             children: [
-                Node: { Token: {Value: Test, Type: identifier, Line: 24, Column: 4} },
+                Node: { Token: {Value: Test, Type: identifier, Line: 28, Column: 4} },
                 Node: { Label: "fn"
                 children: [
-                    Node: { Token: {Value: report, Type: identifier, Line: 25, Column: 11} },
+                    Node: { Token: {Value: report, Type: identifier, Line: 29, Column: 11} },
                     Node: { Label: "params"
                     children: [
                         Node: { Label: "param"
                         children: [
-                            Node: { Token: {Value: string, Type: identifier, Line: 25, Column: 18} },
-                            Node: { Token: {Value: message, Type: identifier, Line: 25, Column: 25} }
+                            Node: { Token: {Value: string, Type: identifier, Line: 29, Column: 18} },
+                            Node: { Token: {Value: message, Type: identifier, Line: 29, Column: 25} }
                         ] }
                     ] },
                     Node: { Label: "fn-body"
                     children: [
                         Node: { Label: "call"
                         children: [
-                            Node: { Token: {Value: println, Type: identifier, Line: 26, Column: 12} },
+                            Node: { Token: {Value: println, Type: identifier, Line: 30, Column: 12} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: message, Type: identifier, Line: 26, Column: 20} }
+                                Node: { Token: {Value: message, Type: identifier, Line: 30, Column: 20} }
                             ] }
                         ] }
                     ] }
@@ -486,17 +750,17 @@ children: [
             ] },
             Node: { Label: "named-block"
             children: [
-                Node: { Token: {Value: Logger, Type: identifier, Line: 29, Column: 4} },
+                Node: { Token: {Value: Logger, Type: identifier, Line: 33, Column: 4} },
                 Node: { Label: "fn"
                 children: [
-                    Node: { Token: {Value: log, Type: identifier, Line: 30, Column: 11} },
-                    Node: { Token: {Value: String, Type: type keyword, Line: 30, Column: 20} },
+                    Node: { Token: {Value: log, Type: identifier, Line: 34, Column: 11} },
+                    Node: { Token: {Value: String, Type: type keyword, Line: 34, Column: 20} },
                     Node: { Label: "fn-body"
                     children: [
                         Node: { Label: "control-flow"
                         children: [
-                            Node: { Token: {Value: return, Type: flow keyword, Line: 31, Column: 12} },
-                            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [4] with length 0) }
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 35, Column: 12} },
+                            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [0] with length 0) }
                         ] }
                     ] }
                 ] }
@@ -505,64 +769,64 @@ children: [
     ] },
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: main, Type: identifier, Line: 36, Column: 3} },
-        Node: { Token: {Value: int, Type: type keyword, Line: 36, Column: 13} },
+        Node: { Token: {Value: main, Type: identifier, Line: 40, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 40, Column: 13} },
         Node: { Label: "fn-body"
         children: [
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: A, Type: identifier, Line: 37, Column: 4} },
-                Node: { Token: {Value: a, Type: identifier, Line: 37, Column: 6} },
+                Node: { Token: {Value: A, Type: identifier, Line: 41, Column: 4} },
+                Node: { Token: {Value: a, Type: identifier, Line: 41, Column: 6} },
                 Node: { Label: "struct_literal"
                 children: [
-                    Node: { Token: {Value: A, Type: identifier, Line: 37, Column: 10} },
+                    Node: { Token: {Value: A, Type: identifier, Line: 41, Column: 10} },
                     Node: { Label: "properties"
                     children: [
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: i, Type: identifier, Line: 38, Column: 8} },
-                            Node: { Token: {Value: 1, Type: int literal, Line: 38, Column: 11} }
+                            Node: { Token: {Value: i, Type: identifier, Line: 42, Column: 8} },
+                            Node: { Token: {Value: 1, Type: int literal, Line: 42, Column: 11} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: j, Type: identifier, Line: 39, Column: 8} },
-                            Node: { Token: {Value: 10, Type: int literal, Line: 39, Column: 11} }
+                            Node: { Token: {Value: j, Type: identifier, Line: 43, Column: 8} },
+                            Node: { Token: {Value: 10, Type: int literal, Line: 43, Column: 11} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: k, Type: identifier, Line: 40, Column: 8} },
-                            Node: { Token: {Value: 200, Type: int literal, Line: 40, Column: 11} }
+                            Node: { Token: {Value: k, Type: identifier, Line: 44, Column: 8} },
+                            Node: { Token: {Value: 200, Type: int literal, Line: 44, Column: 11} }
                         ] }
                     ] }
                 ] }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: ATester, Type: identifier, Line: 42, Column: 4} },
-                Node: { Token: {Value: tester, Type: identifier, Line: 42, Column: 12} },
+                Node: { Token: {Value: ATester, Type: identifier, Line: 46, Column: 4} },
+                Node: { Token: {Value: tester, Type: identifier, Line: 46, Column: 12} },
                 Node: { Label: "struct_literal"
                 children: [
-                    Node: { Token: {Value: ATester, Type: identifier, Line: 42, Column: 21} }
+                    Node: { Token: {Value: ATester, Type: identifier, Line: 46, Column: 21} }
                 ] }
             ] },
             Node: { Label: "call"
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: tester, Type: identifier, Line: 43, Column: 4} },
-                    Node: { Token: {Value: test, Type: identifier, Line: 43, Column: 11} }
+                    Node: { Token: {Value: tester, Type: identifier, Line: 47, Column: 4} },
+                    Node: { Token: {Value: test, Type: identifier, Line: 47, Column: 11} }
                 ] },
                 Node: { Label: "params"
                 children: [
-                    Node: { Token: {Value: a, Type: identifier, Line: 43, Column: 16} },
-                    Node: { Token: {Value: 15, Type: int literal, Line: 43, Column: 19} },
-                    Node: { Token: {Value: 226, Type: int literal, Line: 43, Column: 23} }
+                    Node: { Token: {Value: a, Type: identifier, Line: 47, Column: 16} },
+                    Node: { Token: {Value: 15, Type: int literal, Line: 47, Column: 19} },
+                    Node: { Token: {Value: 226, Type: int literal, Line: 47, Column: 23} }
                 ] }
             ] },
             Node: { Label: "control-flow"
             children: [
-                Node: { Token: {Value: return, Type: flow keyword, Line: 44, Column: 4} },
-                Node: { Token: {Value: 0, Type: int literal, Line: 44, Column: 11} }
+                Node: { Token: {Value: return, Type: flow keyword, Line: 48, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 48, Column: 11} }
             ] }
         ] }
     ] }
@@ -1090,82 +1354,33 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "for"
             children: [
-                Node: { Token: {Value: println, Type: identifier, Line: 63, Column: 4} },
-                Node: { Label: "params"
+                Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "index"
+                    Node: { Label: "Variable"
                     children: [
-                        Node: { Label: "index"
-                        children: [
-                            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [0] with length 0) }
-                        ] },
-                        Node: { Label: "slice"
-                        children: [
-                            Node: { Token: {Value: 0, Type: int literal, Line: 63, Column: 20} },
-                            Node: { Token: {Value: ..=, Type: range operator, Line: 63, Column: 21} },
-                            Node: { Label: "ARR-END"
-                            children: [
-                                Node: { Token: {Value: ^, Type: bitwise operator, Line: 63, Column: 24} },
-                                Node: { Token: {Value: 1, Type: int literal, Line: 63, Column: 25} }
-                            ] }
-                        ] }
+                        Node: { Token: {Value: int, Type: type keyword, Line: 63, Column: 9} },
+                        Node: { Token: {Value: ii, Type: identifier, Line: 63, Column: 13} }
+                    ] },
+                    Node: { Token: {Value: in, Type: operator keyword, Line: 63, Column: 16} },
+                    Node: { Label: "range"
+                    children: [
+                        Node: { Token: {Value: 0, Type: int literal, Line: 63, Column: 19} },
+                        Node: { Token: {Value: ..=, Type: range operator, Line: 63, Column: 21} },
+                        Node: { Token: {Value: 16, Type: int literal, Line: 63, Column: 25} },
+                        Node: { Token: {Value: .., Type: range operator, Line: 63, Column: 28} },
+                        Node: { Token: {Value: 2, Type: int literal, Line: 63, Column: 31} }
                     ] }
-                ] }
-            ] },
-            Node: { Label: "call"
-            children: [
-                Node: { Token: {Value: println, Type: identifier, Line: 64, Column: 4} },
-                Node: { Label: "params"
+                ] },
+                Node: { Label: "loop-body"
                 children: [
-                    Node: { Token: {Value: +, Type: add operator, Line: 64, Column: 25}
+                    Node: { Label: "call"
                     children: [
-                        Node: { Label: "index"
+                        Node: { Token: {Value: println, Type: identifier, Line: 64, Column: 8} },
+                        Node: { Label: "params"
                         children: [
-                            Node: { Label: "index"
-                            children: [
-                                Node: { Token: %!v(PANIC=String method: runtime error: index out of range [1] with length 0) }
-                            ] },
-                            Node: { Label: "slice"
-                            children: [
-                                Node: { Token: {Value: 0, Type: int literal, Line: 64, Column: 20} },
-                                Node: { Token: {Value: .., Type: range operator, Line: 64, Column: 21} }
-                            ] }
-                        ] },
-                        Node: { Label: "index"
-                        children: [
-                            Node: { Label: "index"
-                            children: [
-                                Node: { Token: %!v(PANIC=String method: runtime error: index out of range [2] with length 0) }
-                            ] },
-                            Node: { Label: "slice"
-                            children: [
-                                Node: { Label: "ARR-END"
-                                children: [
-                                    Node: { Token: {Value: ^, Type: bitwise operator, Line: 64, Column: 34} },
-                                    Node: { Token: {Value: 1, Type: int literal, Line: 64, Column: 35} }
-                                ] }
-                            ] }
-                        ] }
-                    ] }
-                ] }
-            ] },
-            Node: { Label: "call"
-            children: [
-                Node: { Token: {Value: println, Type: identifier, Line: 65, Column: 4} },
-                Node: { Label: "params"
-                children: [
-                    Node: { Label: "index"
-                    children: [
-                        Node: { Label: "index"
-                        children: [
-                            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [3] with length 0) }
-                        ] },
-                        Node: { Label: "ARR-END"
-                        children: [
-                            Node: { Token: {Value: ^, Type: bitwise operator, Line: 65, Column: 28} },
-                            Node: { Token: {Value: 1, Type: int literal, Line: 65, Column: 29} }
+                            Node: { Token: {Value: ii, Type: identifier, Line: 64, Column: 16} }
                         ] }
                     ] }
                 ] }
