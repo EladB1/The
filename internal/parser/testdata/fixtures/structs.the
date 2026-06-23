@@ -1,0 +1,34 @@
+struct A {
+    int i;
+    private int j;
+    private {
+        int k;
+        fn sum4(int i) -> int {
+            return this.i + j + k + i;
+        }
+    }
+}
+
+interface Test {
+    fn test(A a, int num, int expected) -> bool {
+        return a.sum4(num) == expected;
+    }
+    fn report(string message);
+}
+
+interface Logger {
+    fn log() -> String;
+}
+
+struct ATester impl Test, Logger {
+    Test {
+        fn report(string message) {
+            println(message);
+        }
+    }
+    Logger {
+        fn log() -> String {
+            return "Something";
+        }
+    }
+}

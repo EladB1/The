@@ -9,9 +9,8 @@ import (
 )
 
 var (
-	messages diagnostic.PhaseDiagnostics = diagnostic.PhaseDiagnostics{}
-	errLevel diagnostic.Severity         = diagnostic.SyntaxError
-	state    *parserState                = &parserState{}
+	errLevel diagnostic.Severity = diagnostic.SyntaxError
+	state    *parserState        = &parserState{}
 )
 
 /*
@@ -19,6 +18,13 @@ return current token without moving
 */
 func peek() lexer.Token {
 	return state.tokens[state.ptr]
+}
+
+func peekAhead(n int) lexer.Token {
+	if state.ptr+n >= state.length {
+		return state.tokens[state.length-1]
+	}
+	return state.tokens[state.ptr+n]
 }
 
 /*
@@ -130,7 +136,7 @@ func Parse(lexerTokens []lexer.Token) (AST, diagnostic.PhaseDiagnostics) {
 
 func isVariableDeclaration() bool {
 	return !checkKind(lexer.EOF) && ((checkKind(lexer.KW_TYPE)) ||
-		(checkKind(lexer.KW_MODIFIER) && !checkValueAhead("fn", 1)) ||
+		(checkKind(lexer.KW_MODIFIER) && (!checkValueAhead("fn", 1) && !checkValueAhead("{", 1))) ||
 		(checkKind(lexer.KW_MODIFIER) && checkKindAhead(lexer.KW_MODIFIER, 1) && !checkValueAhead("fn", 2)) ||
 		(checkKind(lexer.ID) && checkKindAhead(lexer.ID, 1)))
 }
@@ -298,13 +304,14 @@ func parseInterfaceList() AST {
 	ast := AST{label: "interface_list"}
 	ast.AddChildToken(expectKind(lexer.ID))
 	for checkValue(",") {
+		consume()
 		ast.AddChildToken(expectKind(lexer.ID))
 	}
 	return ast
 }
 
 /*
- * struct_body =  "{" { variable | function | named_block } "}" ;
+ * struct_body =  "{" { ( variable ";" ) | function | named_block } "}" ;
  */
 func parseStructBody() AST {
 	ast := AST{label: "struct-body"}
@@ -312,7 +319,8 @@ func parseStructBody() AST {
 	for !checkValue("}") && !checkKind(lexer.EOF) {
 		if isVariableDeclaration() {
 			ast.AddChildren(parseVariable())
-		} else if checkKind(lexer.ID) && checkValueAhead("{", 1) {
+			expectValue(";")
+		} else if (checkValue("private") || checkKind(lexer.ID)) && checkValueAhead("{", 1) {
 			ast.AddChildren(parseNamedBlock())
 		} else {
 			ast.AddChildren(parseFunction())
@@ -323,15 +331,20 @@ func parseStructBody() AST {
 }
 
 /*
- * named_block = identifier "{" { function | variable } "}" ;
+ * named_block = identifier "{" { function | ( variable ";" ) } "}" ;
  */
 func parseNamedBlock() AST {
 	ast := AST{label: "named-block"}
-	ast.AddChildToken(expectKind(lexer.ID))
+	if checkValue("private") {
+		ast.AddChildToken(consume())
+	} else {
+		ast.AddChildToken(expectKind(lexer.ID))
+	}
 	expectValue("{")
 	for isVariableDeclaration() || checkKind(lexer.KW_MODIFIER) || checkValue("fn") {
 		if isVariableDeclaration() {
 			ast.AddChildren(parseVariable())
+			expectValue(";")
 		} else {
 			ast.AddChildren(parseFunction())
 		}
@@ -344,7 +357,10 @@ func parseNamedBlock() AST {
  * interface = "interface" identifier "{" { function } "}" ;
  */
 func parseInterface() AST {
+	//fmt.Println("In interface: ", peek())
 	ast := AST{label: "interface"}
+	consume() // interface keyword
+	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue("{")
 	for checkValue("fn") {
 		ast.AddChildren(parseFunction())
@@ -931,20 +947,22 @@ func parseModifiers() AST {
  */
 func parseMember() AST {
 	//fmt.Println("In member with token: ", peek())
-	lhs := AST{token: consume()}
+	ast := AST{token: consume()}
 	if checkValue(".") {
-		ast := AST{label: "dot"}
+		lhs := ast
+		ast = AST{label: "dot"}
 		consume()
 		token := expectKind(lexer.ID)
 		ast.AddChildren(lhs, AST{token: token})
 	}
-	return lhs
+	return ast
 }
 
 /*
  * call = member "(" [  expression { "," expression } ]")" ;
  */
 func parseCall() AST {
+	//fmt.Println("In parseCall with: ", peek())
 	ast := AST{label: "call"}
 	ast.AddChildren(parseMember())
 	expectValue("(")
