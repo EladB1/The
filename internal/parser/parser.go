@@ -228,8 +228,9 @@ func parseBlock(label string) AST {
 	for !checkValue("}") && !checkKind(lexer.EOF) {
 		if checkKind(lexer.KW_BRANCH) {
 			ast.AddChildren(parseBranch())
+		} else {
+			ast.AddChildren(parseStatement())
 		}
-		ast.AddChildren(parseStatement())
 	}
 	expectValue("}")
 	return ast
@@ -373,7 +374,6 @@ func parseInterface() AST {
  * variable = [ modifiers ] type identifier [ "=" expression ] ;
  */
 func parseVariable() AST {
-	//var errMessage string
 	ast := AST{label: "Variable"}
 	if checkKind(lexer.KW_MODIFIER) {
 		ast.AddChildren(parseModifiers())
@@ -388,9 +388,6 @@ func parseVariable() AST {
 		if checkValue("=") {
 			consume()
 			ast.AddChildren(parseExpression())
-		} else {
-			state.addError("Expected ';' or '='")
-			consume()
 		}
 	}
 	return ast
@@ -406,7 +403,10 @@ func parseIfBlock() AST {
 		ast.AddChildren(parseIf(true))
 	}
 	if checkValue("else") {
-		parseConditionalBody()
+		node := AST{label: "else"}
+		consume()
+		node.AddChildren(parseConditionalBody())
+		ast.AddChildren(node)
 	}
 	return ast
 }
@@ -459,7 +459,9 @@ func parseWhile() AST {
  * for = "for" "(" for_conditions ")" block ;
  */
 func parseFor() AST {
+	fmt.Println("In for with: ", peek())
 	ast := AST{label: "for"}
+	consume()
 	expectValue("(")
 	ast.AddChildren(parseForConditions())
 	expectValue(")")
@@ -471,6 +473,7 @@ func parseFor() AST {
  * for_conditions = ( ( variable | assignment ) ";" expression ";" expression ) | ( variable [ "," variable ] "in" range ) ;
  */
 func parseForConditions() AST {
+	fmt.Println("In for condition with: ", peek())
 	ast := AST{label: "loop-condition"}
 	if isVariableDeclaration() {
 		ast.AddChildren(parseVariable())
@@ -484,6 +487,7 @@ func parseForConditions() AST {
 				consume()
 				ast.AddChildren(parseVariable())
 			}
+			fmt.Println("HERE", peek())
 			ast.AddChildToken(expectValue("in"))
 			ast.AddChildren(parseRange())
 		}
@@ -500,6 +504,7 @@ func parseForConditions() AST {
  * range = expression [ range_operator expression [ ".." expression ] ] ;
  */
 func parseRange() AST {
+	fmt.Println("In range with: ", peek())
 	ast := AST{label: "range"}
 	expr := parseExpression()
 	if !checkKind(lexer.OPERATOR_RANGE) {

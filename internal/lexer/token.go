@@ -204,6 +204,8 @@ func getTokenTypeForWord(sequence strings.Builder) TokenType {
 		return KW_STRUCTURE
 	} else if _, ok := type_keywords[word]; ok {
 		return KW_TYPE
+	} else if _, ok := branch_keywords[word]; ok {
+		return KW_BRANCH
 	} else if _, ok := bool_keywords[word]; ok {
 		return KW_BOOLVALUE
 	} else if _, ok := flow_keywords[word]; ok {
