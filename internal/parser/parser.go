@@ -145,10 +145,9 @@ func checkNonVariableDeclaration() bool {
 }
 
 func checkVariableDeclaration() bool {
-	return !checkKind(lexer.EOF) && ((checkKind(lexer.KW_TYPE)) ||
+	return !checkKind(lexer.EOF) && (((checkKind(lexer.KW_TYPE) || checkKind(lexer.ID)) && checkKindAhead(lexer.ID, 1)) ||
 		(checkKind(lexer.KW_MODIFIER) && (!checkValueAhead("fn", 1) && !checkValueAhead("{", 1))) ||
-		(checkKind(lexer.KW_MODIFIER) && checkKindAhead(lexer.KW_MODIFIER, 1) && !checkValueAhead("fn", 2)) ||
-		(checkKind(lexer.ID) && checkKindAhead(lexer.ID, 1)))
+		(checkKind(lexer.KW_MODIFIER) && checkKindAhead(lexer.KW_MODIFIER, 1) && !checkValueAhead("fn", 2)))
 }
 
 /*
@@ -264,9 +263,7 @@ func parseBlock(label string) AST {
 			ast.AddChildren(parseBranch())
 		} else if checkNonVariableDeclaration() {
 			state.addError(fmt.Sprintf("Declaration %s not valid in block", peek().GetValueString()))
-			for !checkValueAhead("}", 1) && !checkKind(lexer.EOF) {
-				consume() // recover to the next valid token
-			}
+			synchronize()
 		} else {
 			ast.AddChildren(parseStatement())
 		}
@@ -349,10 +346,8 @@ func parseStructBody() AST {
 			ast.AddChildren(parseFunction())
 		} else {
 			state.addError(fmt.Sprintf("Only variables, functions, and named blocks supported in struct definition, found %s", peek().GetValueString()))
-			for !checkKind(lexer.EOF) && !checkValue("}") && !checkValue("fn") && checkVariableDeclaration() && !((checkValue("private") || checkKind(lexer.ID)) && checkValueAhead("{", 1)) {
-				consume() // recover
-			}
-			consume()
+			synchronize()
+			//consume()
 		}
 	}
 	expectValue("}")
@@ -370,22 +365,21 @@ func parseNamedBlock() AST {
 	} else {
 		ast.AddChildToken(expectKind(lexer.ID))
 	}
+	body := AST{label: "named-block-body"}
 	expectValue("{")
-	for !checkValueAhead("}", 1) && !checkKind(lexer.EOF) {
+	for !checkValue("}") && !checkKind(lexer.EOF) {
 		if checkVariableDeclaration() {
-			ast.AddChildren(parseVariable())
+			body.AddChildren(parseVariable())
 			expectValue(";")
 		} else if checkValue("fn") {
-			ast.AddChildren(parseFunction())
+			body.AddChildren(parseFunction())
 		} else {
 			state.addError(fmt.Sprintf("Only functions and variable definitions supported in named blocks, found %s", peek().GetValueString()))
-			for !checkKind(lexer.EOF) && !checkValue("}") && !checkValue("fn") && !checkVariableDeclaration() {
-				consume() // recover
-			}
-			consume()
+			synchronize()
 		}
 	}
 	expectValue("}")
+	ast.AddChildren(body)
 	return ast
 }
 
@@ -403,9 +397,7 @@ func parseInterface() AST {
 			ast.AddChildren(parseFunction())
 		} else {
 			state.addError(fmt.Sprintf("Only function definitions supported within interface body. Found %s", consume().GetValueString()))
-			for !checkValue("fn") && !checkValue("}") {
-				consume() // recover
-			}
+			synchronize()
 		}
 	}
 	expectValue("}")

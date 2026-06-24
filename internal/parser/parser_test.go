@@ -131,4 +131,8 @@ func TestParser(t *testing.T) {
 		snapshotTestParser(t, "branch.json", false)
 	})
 
+	t.Run("should run branch_errors.the and have errors", func(t *testing.T) {
+		snapshotTestParser(t, "branch_errors.json", false)
+	})
+
 }

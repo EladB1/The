@@ -1,3 +1,4 @@
+2 + 5;
 private private bool isError;
 mut mut String s;
 private mut private int i;

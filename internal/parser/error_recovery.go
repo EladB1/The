@@ -3,16 +3,25 @@ package parser
 import "github.com/EladB1/The/internal/lexer"
 
 func errorRecoveryTopLevel() {
-	for !checkKind(lexer.EOF) && !checkKind(lexer.KW_MODIFIER) && !checkKind(lexer.KW_TYPE) && !checkValue("fn") && !checkValue("interface") {
+	for !checkKind(lexer.EOF) && !checkVariableDeclaration() && !checkNonVariableDeclaration() {
 		consume()
 	}
 }
 
-func errorRecoveryFunctionDefintion() {
-	//line := peek().Line
-	consume()
-	for !checkKind(lexer.EOF) && !checkValue("fn") && !checkValue("struct") && !checkValue("interface") && !checkValue("}") /*|| peek().Line == line*/ {
+func synchronize() {
+	depth := 0
+	for !checkKind(lexer.EOF) {
+		if checkValue("{") {
+			depth++
+		} else if checkValue("}") {
+			if depth == 0 {
+				return
+			}
+			depth--
+		} else if checkValue(";") && depth == 0 {
+			consume()
+			return
+		}
 		consume()
 	}
-	state.in_error = false
 }

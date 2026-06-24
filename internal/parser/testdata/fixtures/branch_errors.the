@@ -1,0 +1,18 @@
+while (true) {
+    break;
+}
+
+fn main() -> int {
+    for {
+
+    }
+    for() {
+
+    }
+    while {
+
+    }
+    while() {
+        
+    }
+}
