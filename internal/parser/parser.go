@@ -244,7 +244,7 @@ func parseParameters() AST {
 func parseParameter() AST {
 	ast := AST{label: "param"}
 	if !checkKind(lexer.KW_TYPE) && !checkKind(lexer.ID) {
-		state.addError(fmt.Sprintf("Expected type but got %s", consume().Value))
+		state.addError(fmt.Sprintf("Expected type but got %s", consume().GetValueString()))
 		return ast
 	}
 	ast.AddChildToken(consume())
@@ -596,7 +596,7 @@ func parseLogicalOr() AST {
 		ast.AddChildren(operand, parseLogicalAnd())
 	}
 	if checkValue("||") {
-		state.addError(fmt.Sprintf("Expected operand but got %s", peek().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", peek().GetValueString()))
 	}
 	return ast
 }
@@ -613,7 +613,7 @@ func parseLogicalAnd() AST {
 		ast.AddChildren(operand, parseLogicalNot())
 	}
 	if checkValue("&&") {
-		state.addError(fmt.Sprintf("Expected operand but got %s", peek().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", peek().GetValueString()))
 	}
 	return ast
 }
@@ -664,7 +664,7 @@ func parseBitshift() AST {
 		ast.AddChildren(operand, parseBitwise())
 	}
 	if checkKind(lexer.OPERATOR_BS) {
-		state.addError(fmt.Sprintf("Expected operand but got %s", consume().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", consume().GetValueString()))
 	}
 	return ast
 }
@@ -681,7 +681,7 @@ func parseBitwise() AST {
 		ast.AddChildren(operand, parseAdd())
 	}
 	if checkKind(lexer.OPERATOR_BW) {
-		state.addError(fmt.Sprintf("Expected operand but got %s", consume().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", consume().GetValueString()))
 	}
 
 	return ast
@@ -700,7 +700,7 @@ func parseAdd() AST {
 		ast.AddChildren(parseMult())
 	}
 	if checkKind(lexer.OPERATOR_ADD) {
-		state.addError(fmt.Sprintf("Expected operand but got %s", consume().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", consume().GetValueString()))
 	}
 	return ast
 }
@@ -718,7 +718,7 @@ func parseMult() AST {
 		ast.AddChildren(parseExpo())
 	}
 	if checkKind(lexer.OPERATOR_MULT) {
-		state.addError(fmt.Sprintf("Expected operand but got %s", consume().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", consume().GetValueString()))
 	}
 	return ast
 }
@@ -736,7 +736,7 @@ func parseExpo() AST {
 		ast.AddChildren(parseExpo())
 	}
 	if checkValue("**") {
-		state.addError(fmt.Sprintf("Expected operand but got %s", consume().Value))
+		state.addError(fmt.Sprintf("Expected operand but got %s", consume().GetValueString()))
 	}
 	return ast
 }
@@ -1051,7 +1051,7 @@ func parseModifiers() AST {
  * member = ( identifier | string_literal ) { "." identifier } ;
  */
 func parseMember() AST {
-	fmt.Println("In member with token: ", peek())
+	//fmt.Println("In member with token: ", peek())
 	ast := AST{token: consume()}
 	for checkValue(".") {
 		lhs := ast
