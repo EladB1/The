@@ -276,10 +276,24 @@ func parseBlock(label string) AST {
  * statement = ( variable | assignment | expression | control_flow ) ";" ;
  */
 func parseStatement() AST {
+	//fmt.Println("In statement with:", peek())
 	var ast AST
+	isAssignment := false
+	if (checkKind(lexer.ID) || checkKind(lexer.LIT_STRING)) && checkValueAhead(".", 1) { // let semantic analyzer complain about `"hello".length = 5`
+		for i := state.ptr + 2; i < state.length-2; i += 2 {
+			curr := state.tokens[i]
+			next := state.tokens[i+1]
+			if curr.Kind == lexer.ID && next.Kind == lexer.OPERATOR_ASSIGN {
+				isAssignment = true
+				break
+			} else if curr.Kind == lexer.ID && next.Value != "." {
+				break
+			}
+		}
+	}
 	if checkVariableDeclaration() {
 		ast = parseVariable()
-	} else if checkKind(lexer.ID) && checkKindAhead(lexer.OPERATOR_ASSIGN, 1) {
+	} else if isAssignment || (checkKind(lexer.ID) && checkKindAhead(lexer.OPERATOR_ASSIGN, 1)) {
 		ast = parseAssignment()
 	} else if checkKind(lexer.KW_FLOW) {
 		ast = parseControlFlow()
@@ -358,7 +372,7 @@ func parseStructBody() AST {
  * named_block = identifier "{" { function | ( variable ";" ) } "}" ;
  */
 func parseNamedBlock() AST {
-	//fmt.Println("In named block with: ", peek())
+	//fmt.Println("In named block with:", peek())
 	ast := AST{label: "named-block"}
 	if checkValue("private") {
 		ast.AddChildToken(consume())
@@ -493,7 +507,7 @@ func parseWhile() AST {
  * for = "for" "(" for_conditions ")" block ;
  */
 func parseFor() AST {
-	//fmt.Println("In for with: ", peek())
+	//fmt.Println("In for with:", peek())
 	ast := AST{label: "for"}
 	consume()
 	expectValue("(")
@@ -507,7 +521,7 @@ func parseFor() AST {
  * for_conditions = ( ( variable | assignment ) ";" expression ";" expression ) | ( variable [ "," variable ] "in" range ) ;
  */
 func parseForConditions() AST {
-	//fmt.Println("In for condition with: ", peek())
+	//fmt.Println("In for condition with:", peek())
 	ast := AST{label: "loop-condition"}
 	if checkVariableDeclaration() {
 		ast.AddChildren(parseVariable())
@@ -538,7 +552,7 @@ func parseForConditions() AST {
  * range = expression [ range_operator expression [ ".." expression ] ] ;
  */
 func parseRange() AST {
-	//fmt.Println("In range with: ", peek())
+	//fmt.Println("In range with:", peek())
 	ast := AST{label: "range"}
 	expr := parseExpression()
 	if !checkKind(lexer.OPERATOR_RANGE) {
@@ -566,7 +580,7 @@ func parseAssignment() AST {
  * expression = logical_or ;
  */
 func parseExpression() AST {
-	//fmt.Println("In expression with token: ", peek())
+	//fmt.Println("In expression with:", peek())
 	return parseLogicalOr()
 }
 
@@ -626,7 +640,7 @@ func parseLogicalNot() AST {
  * comparison = bitshift [ compare_operator bitshift ] ;
  */
 func parseComparison() AST {
-	//fmt.Println("In comparison with: ", peek())
+	//fmt.Println("In comparison with:", peek())
 	bw := parseBitshift()
 	if !checkKind(lexer.OPERATOR_COMPARE) {
 		return bw
@@ -641,7 +655,7 @@ func parseComparison() AST {
  *	bitshift = bitwise { ( "<<" | ">>" ) bitwise } ;
  */
 func parseBitshift() AST {
-	// fmt.Println("In bitshift with: ", peek())
+	// fmt.Println("In bitshift with:", peek())
 	var operand AST
 	ast := parseBitwise()
 	for checkKind(lexer.OPERATOR_BS) {
@@ -807,8 +821,14 @@ func parseTerm() AST {
 	}
 	if checkKind(lexer.ID) || checkKind(lexer.LIT_STRING) {
 		if checkValueAhead(".", 1) {
-			if checkValueAhead("(", 3) {
-				return parseCall()
+			for i := state.ptr + 2; i < state.length-2; i += 2 {
+				curr := state.tokens[i]
+				next := state.tokens[i+1]
+				if curr.Kind == lexer.ID && next.Value == "(" {
+					return parseCall()
+				} else if curr.Kind == lexer.ID && next.Value != "." {
+					break
+				}
 			}
 			return parseMember()
 		}
@@ -824,7 +844,13 @@ func parseTerm() AST {
 		return expr
 	}
 	state.addError(fmt.Sprintf("Expected operand but got %s", peek().GetValueString()))
-	return AST{}
+	return AST{token: lexer.Token{
+		Kind:    lexer.Virtual,
+		Value:   "term",
+		Missing: true,
+		Line:    peek().Line,
+		Column:  peek().Column,
+	}}
 }
 
 func isLiteral() bool {
@@ -953,8 +979,9 @@ func parseNumLiteral() AST {
  * struct_literal = identifier "{" [ properties ] "}";
  */
 func parseStructLiteral() AST {
+	//fmt.Println("In struct_literal with:", peek())
 	ast := AST{label: "struct_literal"}
-	ast.AddChildToken(consume())
+	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue("{")
 	if !checkValue("}") {
 		ast.AddChildren(parseProperties())
@@ -967,15 +994,18 @@ func parseStructLiteral() AST {
  * properties =  property { ","  property } [ "," ] ;
  */
 func parseProperties() AST {
+	//fmt.Println("In properties with:", peek())
 	ast := AST{label: "properties"}
 	ast.AddChildren(parseProperty())
-	for checkValue(",") {
-		consume()
-		ast.AddChildren(parseProperty())
-		if !checkKindAhead(lexer.ID, 1) { // support for trailing comma
-			consume()
+	for !checkValue("}") && !checkKind(lexer.EOF) {
+		if !checkKindAhead(lexer.ID, 1) {
 			break
 		}
+		expectValue(",")
+		ast.AddChildren(parseProperty())
+	}
+	if checkValue(",") {
+		consume()
 	}
 	return ast
 }
@@ -984,9 +1014,9 @@ func parseProperties() AST {
  * property = identifier ":" expression ;
  */
 func parseProperty() AST {
+	//fmt.Println("In property with:", peek())
 	ast := AST{label: "property"}
-	id := expectKind(lexer.ID)
-	ast.AddChildToken(id)
+	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue(":")
 	ast.AddChildren(parseExpression())
 	return ast
@@ -1021,14 +1051,13 @@ func parseModifiers() AST {
  * member = ( identifier | string_literal ) { "." identifier } ;
  */
 func parseMember() AST {
-	//fmt.Println("In member with token: ", peek())
+	fmt.Println("In member with token: ", peek())
 	ast := AST{token: consume()}
-	if checkValue(".") {
+	for checkValue(".") {
 		lhs := ast
 		ast = AST{label: "dot"}
-		consume()
-		token := expectKind(lexer.ID)
-		ast.AddChildren(lhs, AST{token: token})
+		consume() // skip over the dot
+		ast.AddChildren(lhs, AST{token: expectKind(lexer.ID)})
 	}
 	return ast
 }
@@ -1037,7 +1066,7 @@ func parseMember() AST {
  * call = member "(" [  expression { "," expression } ]")" ;
  */
 func parseCall() AST {
-	//fmt.Println("In parseCall with: ", peek())
+	//fmt.Println("In parseCall with:", peek())
 	ast := AST{label: "call"}
 	ast.AddChildren(parseMember())
 	expectValue("(")
