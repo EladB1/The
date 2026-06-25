@@ -15,6 +15,7 @@ func synchronize() {
 			depth++
 		} else if checkValue("}") {
 			if depth == 0 {
+				consume()
 				return
 			}
 			depth--

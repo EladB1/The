@@ -1,18 +1,27 @@
+/* Top-level errors */
 while (true) {
     break;
 }
+for (int i in 0 .. 10) {
+    break;
+}
 
-fn main() -> int {
-    for {
+fn whileConditionErrors() {
+    while (true {}
+    while true) {}
+    while () {}
+    while (1 == 1)
+    while (for (int i in 0..10) {}) {}
+    while {}
+    while(();
+    while(4*) {}
+}
 
-    }
-    for() {
-
-    }
-    while {
-
-    }
-    while() {
-
-    }
+fn forConditionErrors() {
+    for;
+    for() {}
+    for(true) {}
+    for (while (i < 5) {}) {}
+    for (int i = 0; i < 5;){}
+    for (int i = 0; interface A {}; i++) {}
 }

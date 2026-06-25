@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/lexer"
@@ -148,6 +149,10 @@ func checkVariableDeclaration() bool {
 	return !checkKind(lexer.EOF) && (((checkKind(lexer.KW_TYPE) || checkKind(lexer.ID)) && checkKindAhead(lexer.ID, 1)) ||
 		(checkKind(lexer.KW_MODIFIER) && (!checkValueAhead("fn", 1) && !checkValueAhead("{", 1))) ||
 		(checkKind(lexer.KW_MODIFIER) && checkKindAhead(lexer.KW_MODIFIER, 1) && !checkValueAhead("fn", 2)))
+}
+
+func checkExpressionStart() bool {
+	return isLiteral() || checkKind(lexer.OPERATOR_UNARY) || checkKind(lexer.ID) || checkValue("(")
 }
 
 /*
@@ -497,8 +502,14 @@ func parseWhile() AST {
 	ast := AST{label: "while"}
 	consume()
 	expectValue("(")
-	ast.AddChildren(parseExpression())
-	expectValue(")")
+	fmt.Println(checkExpressionStart(), peek())
+	if !checkExpressionStart() {
+		state.addError(fmt.Sprintf("Expected expression but got '%s'", peek().GetValueString()))
+		synchronize()
+	} else {
+		ast.AddChildren(parseExpression())
+		expectValue(")")
+	}
 	ast.AddChildren(parseBlock("loop-body"))
 	return ast
 }
@@ -507,7 +518,7 @@ func parseWhile() AST {
  * for = "for" "(" for_conditions ")" block ;
  */
 func parseFor() AST {
-	//fmt.Println("In for with:", peek())
+	fmt.Println("In for with:", peek())
 	ast := AST{label: "for"}
 	consume()
 	expectValue("(")
@@ -538,12 +549,21 @@ func parseForConditions() AST {
 			ast.AddChildToken(expectValue("in"))
 			ast.AddChildren(parseRange())
 		}
-	} else {
+	} else if checkKind(lexer.ID) {
 		ast.AddChildren(parseAssignment())
 		ast.AddChildToken(expectValue(";"))
 		ast.AddChildren(parseExpression())
 		ast.AddChildToken(expectValue(";"))
 		ast.AddChildren(parseExpression())
+	} else {
+		loopForms := strings.Join([]string{
+			"for ([ modifier ] type identifier = expression; condition; increment) {}",
+			"for (identifier = expression; condition; increment) {}",
+			"for (type identifier[ , type identifier ] in range-expression) {}",
+		}, "\n\t")
+		state.addError("Invalid for loop syntax")
+		state.messages = state.messages.ProvideInfo(fmt.Sprintf("Valid loop forms:\n\t%s", loopForms))
+		synchronize()
 	}
 	return ast
 }
@@ -581,6 +601,10 @@ func parseAssignment() AST {
  */
 func parseExpression() AST {
 	//fmt.Println("In expression with:", peek())
+	if !checkExpressionStart() {
+		state.addError(fmt.Sprintf("Expected expression but got '%s'", peek().GetValueString()))
+		synchronize()
+	}
 	return parseLogicalOr()
 }
 
@@ -843,7 +867,7 @@ func parseTerm() AST {
 		expectValue(")")
 		return expr
 	}
-	state.addError(fmt.Sprintf("Expected operand but got %s", peek().GetValueString()))
+	state.addError(fmt.Sprintf("Expected expression but got %s", peek().GetValueString()))
 	return AST{token: lexer.Token{
 		Kind:    lexer.Virtual,
 		Value:   "term",
