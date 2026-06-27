@@ -1,0 +1,7 @@
+y = 5;
+
+fn test() -> {
+    // make sure semantic analyzer doesn't run with line below
+    bool valid = i == 0;
+    int x = ^
+    int y + 1 = float;

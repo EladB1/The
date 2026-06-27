@@ -26,3 +26,22 @@ func synchronize() {
 		consume()
 	}
 }
+
+func synchronizeInParens() {
+	depth := 0
+	for !checkKind(lexer.EOF) {
+		if checkValue("(") {
+			depth++
+		} else if checkValue(")") {
+			if depth == 0 {
+				//consume()
+				return
+			}
+			depth--
+		} else if checkValue(";") && depth == 0 {
+			consume()
+			return
+		}
+		consume()
+	}
+}

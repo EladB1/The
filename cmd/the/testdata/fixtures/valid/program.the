@@ -12,7 +12,7 @@ struct ErrorLogger impl Logger {
     }
 }
 
-fn main() -> {
+fn main() -> int {
     Logger logger = ErrorLogger{};
     uint32 i = SOME_CONST ** 2;
     if (i > UINT32_MAX) {

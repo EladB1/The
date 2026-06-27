@@ -60,7 +60,10 @@ func TestInvalidPrograms(t *testing.T) {
 		snaps.Dir("testdata/"),
 		snaps.Filename("invalid"),
 	)
-	t.Run("should try to compile syntax_errors.the and report syntax_errors", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "testdata/fixtures/invalid/syntax_errors.the")
+	t.Run("should try to compile lexer_errors.the and report lexer errors", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "testdata/fixtures/invalid/lexer_errors.the")
+	})
+	t.Run("should try to compile parser_errors.the and report parser errors", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "testdata/fixtures/invalid/parser_errors.the")
 	})
 }

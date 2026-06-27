@@ -396,7 +396,7 @@ children: [
     "SyntaxError: Expected declaration but found '2' at line: 1, column: 1",
     "SyntaxError: Invalid variable modifiers: private private at line: 2, column: 9",
     "SyntaxError: Invalid variable modifiers: mut mut at line: 3, column: 5",
-    "SyntaxError: Expected type but got 'modifier keyword' at line: 4, column: 13",
+    "SyntaxError: Expected type but got 'private' at line: 4, column: 13",
     "SyntaxError: Expected ';' but got 'mut' at line: 6, column: 1",
     "SyntaxError: Expected 'identifier' but got 'assign operator' at line: 6, column: 7",
     "SyntaxError: Expected ';' but got 'int' at line: 7, column: 1",
@@ -410,7 +410,7 @@ children: [
     "SyntaxError: Expected expression but got double at line: 11, column: 1",
     "SyntaxError: Expected ';' but got 'double' at line: 11, column: 1",
     "SyntaxError: Expected expression but got ; at line: 11, column: 27",
-    "SyntaxError: Expected type but got 'int literal' at line: 12, column: 15",
+    "SyntaxError: Expected type but got '1' at line: 12, column: 15",
     "SyntaxError: Expected ';' but got '1' at line: 12, column: 15",
     "SyntaxError: Expected declaration but found '1' at line: 12, column: 15"
 ]
@@ -543,8 +543,38 @@ children: [
         Node: { Token: {Value: , Type: identifier, Missing: true, Line: 4, Column: 3} },
         Node: { Label: "params"
         children: [
-            Node: { Label: "param" }
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: none, Type: Virtual, Missing: true, Line: 4, Column: 3} },
+                Node: { Token: {Value: , Type: identifier, Missing: true, Line: 4, Column: 3} }
+            ] }
         ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: , Type: identifier, Missing: true, Line: 4, Column: 5} }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: Test, Type: identifier, Line: 5, Column: 3} },
+        Node: { Label: "fn-body" }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: test, Type: identifier, Line: 24, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 24, Column: 8} },
+                Node: { Token: {Value: a, Type: identifier, Line: 24, Column: 12} }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 24, Column: 14} },
+        Node: { Token: {Value: b, Type: identifier, Line: 24, Column: 18} }
     ] }
 ] }
 , Compiler messages:
@@ -552,18 +582,23 @@ children: [
     "SyntaxError: Expected 'identifier' but got 'separator' at line: 1, column: 3",
     "SyntaxError: Expected 'identifier' but got 'separator' at line: 2, column: 4",
     "SyntaxError: Expected ';' but got 'fn' at line: 4, column: 1",
-    "SyntaxError: Expected type but got 'int literal' at line: 4, column: 14",
+    "SyntaxError: Expected type but got '1' at line: 4, column: 14",
     "SyntaxError: Expected ';' but got '1' at line: 4, column: 14",
     "SyntaxError: Expected declaration but found '1' at line: 4, column: 14",
     "SyntaxError: Expected 'identifier' but got 'structure keyword' at line: 5, column: 4",
     "SyntaxError: Expected '(' but got 'fn' at line: 5, column: 4",
-    "SyntaxError: Expected type but got fn at line: 5, column: 6",
-    "SyntaxError: Expected ')' but got '(' at line: 5, column: 6",
-    "SyntaxError: Expected ';' but got '(' at line: 5, column: 6",
-    "SyntaxError: Expected declaration but found '(' at line: 5, column: 6",
+    "SyntaxError: Expected type but got 'fn' at line: 5, column: 4",
+    "SyntaxError: Expected 'identifier' but got 'structure keyword' at line: 5, column: 4",
+    "SyntaxError: Expected ')' but got 'fn' at line: 5, column: 4",
+    "SyntaxError: Expected ';' but got 'fn' at line: 5, column: 4",
+    "SyntaxError: Expected 'identifier' but got 'separator' at line: 5, column: 6",
     "SyntaxError: Declaration struct not valid in block at line: 7, column: 5",
     "SyntaxError: Declaration fn not valid in block at line: 12, column: 1",
-    "SyntaxError: Expected '}' but got EOF at line: 25, column: 1"
+    "SyntaxError: Declaration fn not valid in block at line: 22, column: 1",
+    "SyntaxError: Expected ')' but got 'int' at line: 25, column: 15",
+    "SyntaxError: Expected ';' but got 'int' at line: 25, column: 15",
+    "SyntaxError: Expected ';' but got ',' at line: 25, column: 20",
+    "SyntaxError: Expected declaration but found ',' at line: 25, column: 20"
 ]
 
 ---
@@ -1563,13 +1598,13 @@ children: [
     "SyntaxError: Expected declaration but found 'while' at line: 2, column: 1",
     "SyntaxError: Expected ';' but got 'in' at line: 5, column: 12",
     "SyntaxError: Expected declaration but found 'in' at line: 5, column: 12",
-    "SyntaxError: Expected ')' but got '{' at line: 10, column: 17",
-    "SyntaxError: Expected '(' but got 'true' at line: 11, column: 11",
-    "SyntaxError: Expected expression but got ')' at line: 12, column: 12",
-    "SyntaxError: Expected '{' but got 'while' at line: 17, column: 5",
-    "SyntaxError: Expected expression but got ) at line: 17, column: 13",
-    "SyntaxError: Declaration fn not valid in block at line: 20, column: 1",
-    "SyntaxError: Expected '}' but got EOF at line: 28, column: 2"
+    "SyntaxError: Expected ')' but got '{' at line: 17, column: 17",
+    "SyntaxError: Expected '(' but got 'true' at line: 18, column: 11",
+    "SyntaxError: Expected expression but got ')' at line: 19, column: 12",
+    "SyntaxError: Expected '{' but got 'while' at line: 24, column: 5",
+    "SyntaxError: Expected expression but got ) at line: 24, column: 13",
+    "SyntaxError: Declaration fn not valid in block at line: 27, column: 1",
+    "SyntaxError: Expected '}' but got EOF at line: 50, column: 2"
 ]
 
 ---

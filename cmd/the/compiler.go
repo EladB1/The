@@ -74,7 +74,9 @@ func reportStatus(messages diagnostic.PhaseDiagnostics) (int, int) {
 				fmt.Println(message)
 			}
 		} else {
-			errorCnt++
+			if message.Level != diagnostic.Info {
+				errorCnt++
+			}
 			fmt.Fprintln(os.Stderr, message)
 		}
 	}
