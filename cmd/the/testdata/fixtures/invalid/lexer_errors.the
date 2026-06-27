@@ -1,0 +1,27 @@
+int y = $
+#
+*/
+
+0x.ff
+0xp1
+1.1.12
+"hello
+world"
+"\"
+'\\\'
+'d
+d'
+1g
+'❌'
+"""
+'''
+
+/* 
+As of now compiler will stop between lexing and parsing if there are errors
+so including this line below to make sure the parser doesn't run anything
+*/
+func for(it 9q) -> while {;
+
+/*
+
+Forgot to close this

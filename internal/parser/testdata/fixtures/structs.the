@@ -1,0 +1,68 @@
+struct A {
+    mut double h;
+    int i;
+    private int j;
+    private {
+        int k;
+        fn sum4(int i) -> int {
+            return this.i + j + k + i;
+        }
+    }
+    fn b() {}
+}
+
+struct Empty {}
+
+interface Test {
+    fn test(A a, int num, int expected) -> bool {
+        return a.sum4(num) == expected;
+    }
+    fn report(string message);
+}
+
+interface Logger {
+    fn log() -> String;
+}
+
+interface Empty {}
+
+struct ATester impl Test, Logger {
+    Test {
+        fn report(string message) {
+            println(message);
+        }
+    }
+    Logger {
+        fn log() -> String {
+            return "Something";
+        }
+    }
+}
+
+struct Nested {
+    A inner;
+}
+
+fn main() -> int {
+    A a = A {
+        h: 0,
+        i: 1,
+        j: 10,
+        k: 200
+    };
+    ATester tester = ATester{};
+    tester.test(a, 15, 226);
+    a.h = 6.62607015 * 10 ** -32;
+
+    Nested nest = Nested {
+        inner: A {
+            h: 2.718,
+            i: 7,
+            j: 1,
+            k: 13,
+        }
+    };
+    double value = nest.inner.h;
+    nest.inner.b();
+    return 0;
+}

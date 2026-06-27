@@ -11,13 +11,14 @@ import (
 type (
 	TokenType string
 	Token     struct {
-		tokenType TokenType
-		line      int
-		column    int
-		value     string // use for non-literals
+		Kind    TokenType
+		Missing bool
+		Line    int
+		Column  int
+		Value   string // use for non-literals
 		// use for literals
 		CharVal  rune
-		IntVal   uint64
+		IntVal   int64
 		IsSigned bool
 		FloatVal float64
 		StrIndex int
@@ -25,6 +26,8 @@ type (
 )
 
 const (
+	EOF       TokenType = "EOF"
+	Virtual   TokenType = "Virtual"
 	ID        TokenType = "identifier"
 	SEPARATOR TokenType = "separator"
 	// literals
@@ -36,6 +39,7 @@ const (
 	// keywords
 	KW_TYPE      TokenType = "type keyword"
 	KW_STRUCTURE TokenType = "structure keyword"
+	KW_BRANCH    TokenType = "branch keyword"
 	KW_FLOW      TokenType = "flow keyword"
 	KW_OPERATOR  TokenType = "operator keyword"
 	KW_MODIFIER  TokenType = "modifier keyword"
@@ -44,6 +48,7 @@ const (
 	OPERATOR         TokenType = "operator"
 	OPERATOR_ADD     TokenType = "add operator"
 	OPERATOR_MULT    TokenType = "multiply operator"
+	OPERATOR_BS      TokenType = "bitshift operator"
 	OPERATOR_BW      TokenType = "bitwise operator"
 	OPERATOR_COMPARE TokenType = "compare operator"
 	OPERATOR_ASSIGN  TokenType = "assign operator"
@@ -51,29 +56,39 @@ const (
 	OPERATOR_UNARY   TokenType = "unary operator"
 )
 
-func (token Token) String() string {
-	value := fmt.Sprintf("Value: %s", token.value)
-	switch token.tokenType {
+func (token Token) GetValueString() string {
+	value := token.Value
+	switch token.Kind {
 	case LIT_INT:
-		value = fmt.Sprintf("Value: %d", token.IntVal)
+		value = fmt.Sprintf("%d", token.IntVal)
 	case LIT_HEX:
-		value = fmt.Sprintf("Value: %#x", token.IntVal)
+		value = fmt.Sprintf("%#x", token.IntVal)
 	case LIT_FLOAT:
-		value = fmt.Sprintf("Value: %g", token.FloatVal)
+		value = fmt.Sprintf("%g", token.FloatVal)
 	case LIT_STRING:
-		value = fmt.Sprintf("Value: %s", strconv.Quote(string(ds.LiteralStorage[token.StrIndex])))
+		value = strconv.Quote(string(ds.LiteralStorage[token.StrIndex]))
 	case LIT_CHAR:
 		if token.CharVal == 0 {
-			value = "Value: ''"
+			value = "''"
 		} else {
-			value = fmt.Sprintf("Value: %q", token.CharVal)
+			value = fmt.Sprintf("%q", token.CharVal)
 		}
+	case EOF:
+		value = "EOF"
 	}
-	return fmt.Sprintf("{%s, Type: %s, Line: %d, Column: %d}", value, token.tokenType, token.line, token.column)
+	return value
+}
+
+func (token Token) String() string {
+	missing := ""
+	if token.Missing {
+		missing = " Missing: true,"
+	}
+	return fmt.Sprintf("{Value: %s, Type: %s,%s Line: %d, Column: %d}", token.GetValueString(), token.Kind, missing, token.Line, token.Column)
 }
 
 func (token Token) HasValue(value string) bool {
-	return token.value == value
+	return token.Value == value
 }
 
 func PrintTokens(tokens []Token) {
@@ -96,6 +111,8 @@ var (
 		"|",
 		"&",
 		"^",
+	)
+	bitshift_operators ds.HashSet = ds.BuildHashSet(
 		"<<",
 		">>",
 	)
@@ -145,6 +162,8 @@ var (
 		"fn",
 		"struct",
 		"interface",
+	)
+	branch_keywords ds.HashSet = ds.BuildHashSet(
 		"for",
 		"while",
 		"if",
@@ -188,6 +207,8 @@ func getTokenTypeForWord(sequence strings.Builder) TokenType {
 		return KW_STRUCTURE
 	} else if _, ok := type_keywords[word]; ok {
 		return KW_TYPE
+	} else if _, ok := branch_keywords[word]; ok {
+		return KW_BRANCH
 	} else if _, ok := bool_keywords[word]; ok {
 		return KW_BOOLVALUE
 	} else if _, ok := flow_keywords[word]; ok {
@@ -211,8 +232,12 @@ func getTokenTypeForOperator(sequence strings.Builder) TokenType {
 		return OPERATOR_MULT
 	} else if _, ok := unary_operators[operator]; ok {
 		return OPERATOR_UNARY
+	} else if _, ok := compare_operators[operator]; ok {
+		return OPERATOR_COMPARE
 	} else if _, ok := bitwise_operators[operator]; ok {
 		return OPERATOR_BW
+	} else if _, ok := bitshift_operators[operator]; ok {
+		return OPERATOR_BS
 	} else if _, ok := unary_operators[operator]; ok {
 		return OPERATOR_UNARY
 	} else if _, ok := range_operators[operator]; ok {

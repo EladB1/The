@@ -11,6 +11,7 @@ import (
 type Severity string
 
 const (
+	Info        Severity = "Info"
 	Warning     Severity = "Warning"
 	Error       Severity = "Error"
 	SyntaxError Severity = "SyntaxError"
@@ -48,6 +49,16 @@ func (diagnostics PhaseDiagnostics) ComplainPositionless(level Severity, message
 	return diagnostics.Complain(level, message, -1, -1)
 }
 
+func (diagnostics PhaseDiagnostics) ProvideInfo(message string) PhaseDiagnostics {
+	diagnostic := Diagnostic{
+		Level:   Info,
+		Message: message,
+		Line:    -1,
+		Column:  -1,
+	}
+	return append(diagnostics, diagnostic)
+}
+
 func (diagnostics PhaseDiagnostics) Warn(message string, line int, column int) PhaseDiagnostics {
 	return diagnostics.Complain(Warning, message, line, column)
 }
@@ -75,6 +86,9 @@ var (
 )
 
 func (diagnostic Diagnostic) String() string {
+	if diagnostic.Level == Info {
+		return diagnostic.Message
+	}
 	var prefix string
 	if diagnostic.Level == Warning {
 		prefix = BoldYellow(diagnostic.Level)

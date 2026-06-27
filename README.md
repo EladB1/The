@@ -697,8 +697,8 @@ Memory will be managed using Automatic Reference Counting (ARC). After the MVP o
 
 Phases:
 
-    1. Lexical Analysis <- WIP
-    2. Parsing
+    1. Lexical Analysis
+    2. Parsing <- WIP
     3. Semantic Analysis
     4. IR Generation
     5. Code Generation (WAT)
@@ -716,10 +716,24 @@ Phases:
 
 ### Testing
 
-There are two main types of testing being used: unit and integration. Both rely heavily on snapshot testing using [go-snaps](https://github.com/gkampitakis/go-snaps). Unit tests are for the individual compiler phases (lexer, parsers, etc.) and integration tests are for testing the compiler end-to-end.
+Testing strategy:
+
+1. Compiler phase unit tests: Use snapshot testing to confirm valid, warnings, and errors for each phase
+2. Integration tests: Use snapshot testing to confirm the inter-phase behavior of the compiler
+3. Fuzzing: Make sure each phase doesn't have unexpected crashes, infinite loops, or unrecoverable panics
+4. Execution test: Make sure the generated code is valid and produces expected results
+
+As you move down the test types, the number of tests decreases but the complexity of each test increases.
+
+Snapshot testing using [go-snaps](https://github.com/gkampitakis/go-snaps). When changing snapshots, you **must** review them to verify their correctness.
 
 The [Makefile](Makefile) has options for updating snapshots, getting coverage information, and running the different types of tests.
 
-When changing snapshots, you **must** review them to verify their correctness.
-
 High test coverage is the goal (not enforced yet). Aim for at least 85%-90% coverage of unit tests.
+
+
+### Parser Error Recovery
+
+The parser uses several strategies to recover from errors. It will insert fake tokens into the AST if a simple expected token is missing. For syntax errors that could span several tokens, the parser will look for a synchronization token to reduce the amount of noise generated; anything between the current token and synchronization token will be discarded. 
+
+Since the compiler will fail if the parser produces any errors, it's not super important to have an accurate AST generated for errors, but being as close to accurate as possible will help with debugging certain issues in the compiler.

@@ -5,182 +5,564 @@ Exit code: 0
 
 Output:
 
-{Value: uint32, Type: type keyword, Line: 1, Column: 1}
-{Value: SOME_CONST, Type: identifier, Line: 1, Column: 8}
-{Value: =, Type: assign operator, Line: 1, Column: 19}
-{Value: 50000, Type: int literal, Line: 1, Column: 21}
-{Value: ;, Type: separator, Line: 1, Column: 26}
-{Value: interface, Type: structure keyword, Line: 3, Column: 1}
-{Value: Logger, Type: identifier, Line: 3, Column: 11}
-{Value: {, Type: separator, Line: 3, Column: 18}
-{Value: fn, Type: structure keyword, Line: 4, Column: 5}
-{Value: log, Type: identifier, Line: 4, Column: 8}
-{Value: (, Type: separator, Line: 4, Column: 11}
-{Value: String, Type: type keyword, Line: 4, Column: 12}
-{Value: message, Type: identifier, Line: 4, Column: 19}
-{Value: ), Type: separator, Line: 4, Column: 26}
-{Value: ;, Type: separator, Line: 4, Column: 27}
-{Value: }, Type: separator, Line: 5, Column: 1}
-{Value: struct, Type: structure keyword, Line: 7, Column: 1}
-{Value: ErrorLogger, Type: identifier, Line: 7, Column: 8}
-{Value: impl, Type: modifier keyword, Line: 7, Column: 20}
-{Value: Logger, Type: identifier, Line: 7, Column: 25}
-{Value: {, Type: separator, Line: 7, Column: 32}
-{Value: Logger, Type: identifier, Line: 8, Column: 5}
-{Value: {, Type: separator, Line: 8, Column: 12}
-{Value: fn, Type: structure keyword, Line: 9, Column: 9}
-{Value: log, Type: identifier, Line: 9, Column: 12}
-{Value: (, Type: separator, Line: 9, Column: 15}
-{Value: String, Type: type keyword, Line: 9, Column: 16}
-{Value: error, Type: identifier, Line: 9, Column: 23}
-{Value: ), Type: separator, Line: 9, Column: 28}
-{Value: {, Type: separator, Line: 9, Column: 30}
-{Value: println, Type: identifier, Line: 10, Column: 13}
-{Value: (, Type: separator, Line: 10, Column: 20}
-{Value: "Error: ", Type: string literal, Line: 10, Column: 21}
-{Value: +, Type: add operator, Line: 10, Column: 31}
-{Value: error, Type: identifier, Line: 10, Column: 33}
-{Value: ), Type: separator, Line: 10, Column: 38}
-{Value: ;, Type: separator, Line: 10, Column: 39}
-{Value: }, Type: separator, Line: 11, Column: 9}
-{Value: }, Type: separator, Line: 12, Column: 5}
-{Value: }, Type: separator, Line: 13, Column: 1}
-{Value: fn, Type: structure keyword, Line: 15, Column: 1}
-{Value: main, Type: identifier, Line: 15, Column: 4}
-{Value: (, Type: separator, Line: 15, Column: 8}
-{Value: ), Type: separator, Line: 15, Column: 9}
-{Value: ->, Type: separator, Line: 15, Column: 11}
-{Value: {, Type: separator, Line: 15, Column: 14}
-{Value: Logger, Type: identifier, Line: 16, Column: 5}
-{Value: logger, Type: identifier, Line: 16, Column: 12}
-{Value: =, Type: assign operator, Line: 16, Column: 19}
-{Value: ErrorLogger, Type: identifier, Line: 16, Column: 21}
-{Value: {, Type: separator, Line: 16, Column: 32}
-{Value: }, Type: separator, Line: 16, Column: 33}
-{Value: ;, Type: separator, Line: 16, Column: 34}
-{Value: uint32, Type: type keyword, Line: 17, Column: 5}
-{Value: i, Type: identifier, Line: 17, Column: 12}
-{Value: =, Type: assign operator, Line: 17, Column: 14}
-{Value: SOME_CONST, Type: identifier, Line: 17, Column: 16}
-{Value: **, Type: operator, Line: 17, Column: 27}
-{Value: 2, Type: int literal, Line: 17, Column: 30}
-{Value: ;, Type: separator, Line: 17, Column: 31}
-{Value: if, Type: structure keyword, Line: 18, Column: 5}
-{Value: (, Type: separator, Line: 18, Column: 8}
-{Value: i, Type: identifier, Line: 18, Column: 9}
-{Value: >, Type: compare operator, Line: 18, Column: 11}
-{Value: UINT32_MAX, Type: identifier, Line: 18, Column: 13}
-{Value: ), Type: separator, Line: 18, Column: 23}
-{Value: {, Type: separator, Line: 18, Column: 25}
-{Value: logger, Type: identifier, Line: 19, Column: 9}
-{Value: ., Type: operator, Line: 19, Column: 15}
-{Value: log, Type: identifier, Line: 19, Column: 16}
-{Value: (, Type: separator, Line: 19, Column: 19}
-{Value: "This number is too big!", Type: string literal, Line: 19, Column: 20}
-{Value: ), Type: separator, Line: 19, Column: 45}
-{Value: ;, Type: separator, Line: 19, Column: 46}
-{Value: return, Type: flow keyword, Line: 20, Column: 9}
-{Value: 1, Type: int literal, Line: 20, Column: 16}
-{Value: ;, Type: separator, Line: 20, Column: 17}
-{Value: }, Type: separator, Line: 21, Column: 5}
-{Value: else, Type: structure keyword, Line: 22, Column: 5}
-{Value: if, Type: structure keyword, Line: 22, Column: 10}
-{Value: (, Type: separator, Line: 22, Column: 13}
-{Value: i, Type: identifier, Line: 22, Column: 14}
-{Value: %, Type: multiply operator, Line: 22, Column: 16}
-{Value: 2, Type: int literal, Line: 22, Column: 18}
-{Value: ==, Type: compare operator, Line: 22, Column: 20}
-{Value: 0, Type: int literal, Line: 22, Column: 23}
-{Value: ), Type: separator, Line: 22, Column: 24}
-{Value: logger, Type: identifier, Line: 23, Column: 9}
-{Value: ., Type: operator, Line: 23, Column: 15}
-{Value: log, Type: identifier, Line: 23, Column: 16}
-{Value: (, Type: separator, Line: 23, Column: 19}
-{Value: "Number is even", Type: string literal, Line: 23, Column: 20}
-{Value: ), Type: separator, Line: 23, Column: 36}
-{Value: ;, Type: separator, Line: 23, Column: 37}
-{Value: else, Type: structure keyword, Line: 24, Column: 5}
-{Value: logger, Type: identifier, Line: 25, Column: 9}
-{Value: ., Type: operator, Line: 25, Column: 15}
-{Value: log, Type: identifier, Line: 25, Column: 16}
-{Value: (, Type: separator, Line: 25, Column: 19}
-{Value: "Number is odd", Type: string literal, Line: 25, Column: 20}
-{Value: ), Type: separator, Line: 25, Column: 35}
-{Value: ;, Type: separator, Line: 25, Column: 36}
-{Value: String, Type: type keyword, Line: 26, Column: 5}
-{Value: str, Type: identifier, Line: 26, Column: 12}
-{Value: =, Type: assign operator, Line: 26, Column: 16}
-{Value: "hello", Type: string literal, Line: 26, Column: 18}
-{Value: ;, Type: separator, Line: 26, Column: 25}
-{Value: for, Type: structure keyword, Line: 27, Column: 5}
-{Value: (, Type: separator, Line: 27, Column: 9}
-{Value: int, Type: type keyword, Line: 27, Column: 10}
-{Value: k, Type: identifier, Line: 27, Column: 14}
-{Value: ,, Type: separator, Line: 27, Column: 15}
-{Value: char, Type: type keyword, Line: 27, Column: 17}
-{Value: c, Type: identifier, Line: 27, Column: 22}
-{Value: in, Type: operator keyword, Line: 27, Column: 24}
+{Value: uint32, Type: type keyword, Line: 0, Column: 0}
+{Value: SOME_CONST, Type: identifier, Line: 0, Column: 7}
+{Value: =, Type: assign operator, Line: 0, Column: 18}
+{Value: 50000, Type: int literal, Line: 0, Column: 20}
+{Value: ;, Type: separator, Line: 0, Column: 25}
+{Value: interface, Type: structure keyword, Line: 2, Column: 0}
+{Value: Logger, Type: identifier, Line: 2, Column: 10}
+{Value: {, Type: separator, Line: 2, Column: 17}
+{Value: fn, Type: structure keyword, Line: 3, Column: 4}
+{Value: log, Type: identifier, Line: 3, Column: 7}
+{Value: (, Type: separator, Line: 3, Column: 10}
+{Value: String, Type: type keyword, Line: 3, Column: 11}
+{Value: message, Type: identifier, Line: 3, Column: 18}
+{Value: ), Type: separator, Line: 3, Column: 25}
+{Value: ;, Type: separator, Line: 3, Column: 26}
+{Value: }, Type: separator, Line: 4, Column: 0}
+{Value: struct, Type: structure keyword, Line: 6, Column: 0}
+{Value: ErrorLogger, Type: identifier, Line: 6, Column: 7}
+{Value: impl, Type: modifier keyword, Line: 6, Column: 19}
+{Value: Logger, Type: identifier, Line: 6, Column: 24}
+{Value: {, Type: separator, Line: 6, Column: 31}
+{Value: Logger, Type: identifier, Line: 7, Column: 4}
+{Value: {, Type: separator, Line: 7, Column: 11}
+{Value: fn, Type: structure keyword, Line: 8, Column: 8}
+{Value: log, Type: identifier, Line: 8, Column: 11}
+{Value: (, Type: separator, Line: 8, Column: 14}
+{Value: String, Type: type keyword, Line: 8, Column: 15}
+{Value: error, Type: identifier, Line: 8, Column: 22}
+{Value: ), Type: separator, Line: 8, Column: 27}
+{Value: {, Type: separator, Line: 8, Column: 29}
+{Value: println, Type: identifier, Line: 9, Column: 12}
+{Value: (, Type: separator, Line: 9, Column: 19}
+{Value: "Error: ", Type: string literal, Line: 9, Column: 20}
+{Value: +, Type: add operator, Line: 9, Column: 30}
+{Value: error, Type: identifier, Line: 9, Column: 32}
+{Value: ), Type: separator, Line: 9, Column: 37}
+{Value: ;, Type: separator, Line: 9, Column: 38}
+{Value: }, Type: separator, Line: 10, Column: 8}
+{Value: }, Type: separator, Line: 11, Column: 4}
+{Value: }, Type: separator, Line: 12, Column: 0}
+{Value: fn, Type: structure keyword, Line: 14, Column: 0}
+{Value: main, Type: identifier, Line: 14, Column: 3}
+{Value: (, Type: separator, Line: 14, Column: 7}
+{Value: ), Type: separator, Line: 14, Column: 8}
+{Value: ->, Type: separator, Line: 14, Column: 10}
+{Value: int, Type: type keyword, Line: 14, Column: 13}
+{Value: {, Type: separator, Line: 14, Column: 17}
+{Value: Logger, Type: identifier, Line: 15, Column: 4}
+{Value: logger, Type: identifier, Line: 15, Column: 11}
+{Value: =, Type: assign operator, Line: 15, Column: 18}
+{Value: ErrorLogger, Type: identifier, Line: 15, Column: 20}
+{Value: {, Type: separator, Line: 15, Column: 31}
+{Value: }, Type: separator, Line: 15, Column: 32}
+{Value: ;, Type: separator, Line: 15, Column: 33}
+{Value: uint32, Type: type keyword, Line: 16, Column: 4}
+{Value: i, Type: identifier, Line: 16, Column: 11}
+{Value: =, Type: assign operator, Line: 16, Column: 13}
+{Value: SOME_CONST, Type: identifier, Line: 16, Column: 15}
+{Value: **, Type: operator, Line: 16, Column: 26}
+{Value: 2, Type: int literal, Line: 16, Column: 29}
+{Value: ;, Type: separator, Line: 16, Column: 30}
+{Value: if, Type: branch keyword, Line: 17, Column: 4}
+{Value: (, Type: separator, Line: 17, Column: 7}
+{Value: i, Type: identifier, Line: 17, Column: 8}
+{Value: >, Type: compare operator, Line: 17, Column: 10}
+{Value: UINT32_MAX, Type: identifier, Line: 17, Column: 12}
+{Value: ), Type: separator, Line: 17, Column: 22}
+{Value: {, Type: separator, Line: 17, Column: 24}
+{Value: logger, Type: identifier, Line: 18, Column: 8}
+{Value: ., Type: operator, Line: 18, Column: 14}
+{Value: log, Type: identifier, Line: 18, Column: 15}
+{Value: (, Type: separator, Line: 18, Column: 18}
+{Value: "This number is too big!", Type: string literal, Line: 18, Column: 19}
+{Value: ), Type: separator, Line: 18, Column: 44}
+{Value: ;, Type: separator, Line: 18, Column: 45}
+{Value: return, Type: flow keyword, Line: 19, Column: 8}
+{Value: 1, Type: int literal, Line: 19, Column: 15}
+{Value: ;, Type: separator, Line: 19, Column: 16}
+{Value: }, Type: separator, Line: 20, Column: 4}
+{Value: else, Type: branch keyword, Line: 21, Column: 4}
+{Value: if, Type: branch keyword, Line: 21, Column: 9}
+{Value: (, Type: separator, Line: 21, Column: 12}
+{Value: i, Type: identifier, Line: 21, Column: 13}
+{Value: %, Type: multiply operator, Line: 21, Column: 15}
+{Value: 2, Type: int literal, Line: 21, Column: 17}
+{Value: ==, Type: compare operator, Line: 21, Column: 19}
+{Value: 0, Type: int literal, Line: 21, Column: 22}
+{Value: ), Type: separator, Line: 21, Column: 23}
+{Value: logger, Type: identifier, Line: 22, Column: 8}
+{Value: ., Type: operator, Line: 22, Column: 14}
+{Value: log, Type: identifier, Line: 22, Column: 15}
+{Value: (, Type: separator, Line: 22, Column: 18}
+{Value: "Number is even", Type: string literal, Line: 22, Column: 19}
+{Value: ), Type: separator, Line: 22, Column: 35}
+{Value: ;, Type: separator, Line: 22, Column: 36}
+{Value: else, Type: branch keyword, Line: 23, Column: 4}
+{Value: logger, Type: identifier, Line: 24, Column: 8}
+{Value: ., Type: operator, Line: 24, Column: 14}
+{Value: log, Type: identifier, Line: 24, Column: 15}
+{Value: (, Type: separator, Line: 24, Column: 18}
+{Value: "Number is odd", Type: string literal, Line: 24, Column: 19}
+{Value: ), Type: separator, Line: 24, Column: 34}
+{Value: ;, Type: separator, Line: 24, Column: 35}
+{Value: String, Type: type keyword, Line: 25, Column: 4}
+{Value: str, Type: identifier, Line: 25, Column: 11}
+{Value: =, Type: assign operator, Line: 25, Column: 15}
+{Value: "hello", Type: string literal, Line: 25, Column: 17}
+{Value: ;, Type: separator, Line: 25, Column: 24}
+{Value: for, Type: branch keyword, Line: 26, Column: 4}
+{Value: (, Type: separator, Line: 26, Column: 8}
+{Value: int, Type: type keyword, Line: 26, Column: 9}
+{Value: k, Type: identifier, Line: 26, Column: 13}
+{Value: ,, Type: separator, Line: 26, Column: 14}
+{Value: char, Type: type keyword, Line: 26, Column: 16}
+{Value: c, Type: identifier, Line: 26, Column: 21}
+{Value: in, Type: operator keyword, Line: 26, Column: 23}
+{Value: str, Type: identifier, Line: 26, Column: 26}
+{Value: ), Type: separator, Line: 26, Column: 29}
+{Value: {, Type: separator, Line: 26, Column: 31}
+{Value: if, Type: branch keyword, Line: 27, Column: 8}
+{Value: (, Type: separator, Line: 27, Column: 11}
+{Value: k, Type: identifier, Line: 27, Column: 12}
+{Value: ==, Type: compare operator, Line: 27, Column: 14}
+{Value: 0, Type: int literal, Line: 27, Column: 17}
+{Value: ||, Type: operator, Line: 27, Column: 19}
+{Value: k, Type: identifier, Line: 27, Column: 22}
+{Value: ==, Type: compare operator, Line: 27, Column: 24}
 {Value: str, Type: identifier, Line: 27, Column: 27}
-{Value: ), Type: separator, Line: 27, Column: 30}
-{Value: {, Type: separator, Line: 27, Column: 32}
-{Value: if, Type: structure keyword, Line: 28, Column: 9}
-{Value: (, Type: separator, Line: 28, Column: 12}
-{Value: k, Type: identifier, Line: 28, Column: 13}
-{Value: ==, Type: compare operator, Line: 28, Column: 15}
-{Value: 0, Type: int literal, Line: 28, Column: 18}
-{Value: ||, Type: operator, Line: 28, Column: 20}
-{Value: k, Type: identifier, Line: 28, Column: 23}
-{Value: ==, Type: compare operator, Line: 28, Column: 25}
-{Value: str, Type: identifier, Line: 28, Column: 28}
-{Value: ., Type: operator, Line: 28, Column: 31}
-{Value: length, Type: identifier, Line: 28, Column: 32}
-{Value: -, Type: add operator, Line: 28, Column: 39}
-{Value: 1, Type: int literal, Line: 28, Column: 41}
-{Value: ), Type: separator, Line: 28, Column: 42}
-{Value: continue, Type: flow keyword, Line: 29, Column: 13}
-{Value: ;, Type: separator, Line: 29, Column: 21}
-{Value: println, Type: identifier, Line: 30, Column: 9}
-{Value: (, Type: separator, Line: 30, Column: 16}
-{Value: c, Type: identifier, Line: 30, Column: 17}
-{Value: ), Type: separator, Line: 30, Column: 18}
-{Value: ;, Type: separator, Line: 30, Column: 19}
-{Value: }, Type: separator, Line: 31, Column: 5}
-{Value: int, Type: type keyword, Line: 32, Column: 5}
-{Value: indx, Type: identifier, Line: 32, Column: 9}
-{Value: =, Type: assign operator, Line: 32, Column: 14}
-{Value: 0, Type: int literal, Line: 32, Column: 16}
-{Value: ;, Type: separator, Line: 32, Column: 17}
-{Value: while, Type: structure keyword, Line: 33, Column: 5}
+{Value: ., Type: operator, Line: 27, Column: 30}
+{Value: length, Type: identifier, Line: 27, Column: 31}
+{Value: -, Type: add operator, Line: 27, Column: 38}
+{Value: 1, Type: int literal, Line: 27, Column: 40}
+{Value: ), Type: separator, Line: 27, Column: 41}
+{Value: continue, Type: flow keyword, Line: 28, Column: 12}
+{Value: ;, Type: separator, Line: 28, Column: 20}
+{Value: println, Type: identifier, Line: 29, Column: 8}
+{Value: (, Type: separator, Line: 29, Column: 15}
+{Value: c, Type: identifier, Line: 29, Column: 16}
+{Value: ), Type: separator, Line: 29, Column: 17}
+{Value: ;, Type: separator, Line: 29, Column: 18}
+{Value: }, Type: separator, Line: 30, Column: 4}
+{Value: int, Type: type keyword, Line: 31, Column: 4}
+{Value: indx, Type: identifier, Line: 31, Column: 8}
+{Value: =, Type: assign operator, Line: 31, Column: 13}
+{Value: 0, Type: int literal, Line: 31, Column: 15}
+{Value: ;, Type: separator, Line: 31, Column: 16}
+{Value: while, Type: branch keyword, Line: 32, Column: 4}
+{Value: (, Type: separator, Line: 32, Column: 10}
+{Value: indx, Type: identifier, Line: 32, Column: 11}
+{Value: <, Type: compare operator, Line: 32, Column: 16}
+{Value: str, Type: identifier, Line: 32, Column: 18}
+{Value: ., Type: operator, Line: 32, Column: 21}
+{Value: length, Type: identifier, Line: 32, Column: 22}
+{Value: ), Type: separator, Line: 32, Column: 28}
+{Value: {, Type: separator, Line: 32, Column: 30}
+{Value: if, Type: branch keyword, Line: 33, Column: 8}
 {Value: (, Type: separator, Line: 33, Column: 11}
 {Value: indx, Type: identifier, Line: 33, Column: 12}
-{Value: <, Type: compare operator, Line: 33, Column: 17}
-{Value: str, Type: identifier, Line: 33, Column: 19}
-{Value: ., Type: operator, Line: 33, Column: 22}
-{Value: length, Type: identifier, Line: 33, Column: 23}
-{Value: ), Type: separator, Line: 33, Column: 29}
-{Value: {, Type: separator, Line: 33, Column: 31}
-{Value: if, Type: structure keyword, Line: 34, Column: 9}
-{Value: (, Type: separator, Line: 34, Column: 12}
-{Value: indx, Type: identifier, Line: 34, Column: 13}
-{Value: !=, Type: compare operator, Line: 34, Column: 18}
-{Value: 0, Type: int literal, Line: 34, Column: 21}
-{Value: &&, Type: operator, Line: 34, Column: 23}
-{Value: indx, Type: identifier, Line: 34, Column: 26}
-{Value: %, Type: multiply operator, Line: 34, Column: 31}
-{Value: 7, Type: int literal, Line: 34, Column: 33}
-{Value: ==, Type: compare operator, Line: 34, Column: 35}
-{Value: 0, Type: int literal, Line: 34, Column: 38}
-{Value: ), Type: separator, Line: 34, Column: 39}
-{Value: break, Type: flow keyword, Line: 35, Column: 13}
-{Value: ;, Type: separator, Line: 35, Column: 18}
-{Value: indx, Type: identifier, Line: 36, Column: 9}
-{Value: ++, Type: unary operator, Line: 36, Column: 13}
-{Value: ;, Type: separator, Line: 36, Column: 15}
-{Value: }, Type: separator, Line: 37, Column: 5}
-{Value: return, Type: flow keyword, Line: 38, Column: 5}
-{Value: 0, Type: int literal, Line: 38, Column: 12}
-{Value: ;, Type: separator, Line: 38, Column: 13}
-{Value: }, Type: separator, Line: 39, Column: 1}
+{Value: !=, Type: compare operator, Line: 33, Column: 17}
+{Value: 0, Type: int literal, Line: 33, Column: 20}
+{Value: &&, Type: operator, Line: 33, Column: 22}
+{Value: indx, Type: identifier, Line: 33, Column: 25}
+{Value: %, Type: multiply operator, Line: 33, Column: 30}
+{Value: 7, Type: int literal, Line: 33, Column: 32}
+{Value: ==, Type: compare operator, Line: 33, Column: 34}
+{Value: 0, Type: int literal, Line: 33, Column: 37}
+{Value: ), Type: separator, Line: 33, Column: 38}
+{Value: break, Type: flow keyword, Line: 34, Column: 12}
+{Value: ;, Type: separator, Line: 34, Column: 17}
+{Value: indx, Type: identifier, Line: 35, Column: 8}
+{Value: ++, Type: unary operator, Line: 35, Column: 12}
+{Value: ;, Type: separator, Line: 35, Column: 14}
+{Value: }, Type: separator, Line: 36, Column: 4}
+{Value: return, Type: flow keyword, Line: 37, Column: 4}
+{Value: 0, Type: int literal, Line: 37, Column: 11}
+{Value: ;, Type: separator, Line: 37, Column: 12}
+{Value: }, Type: separator, Line: 38, Column: 0}
+{Value: EOF, Type: EOF, Line: 39, Column: 1}
+In variable with: {Value: uint32, Type: type keyword, Line: 0, Column: 0}
+{Value: SOME_CONST, Type: identifier, Line: 0, Column: 7}
+In expression with: {Value: 50000, Type: int literal, Line: 0, Column: 20}
+In term with: {Value: 50000, Type: int literal, Line: 0, Column: 20}
+In expression with: {Value: println, Type: identifier, Line: 9, Column: 12}
+In term with: {Value: println, Type: identifier, Line: 9, Column: 12}
+In expression with: {Value: "Error: ", Type: string literal, Line: 9, Column: 20}
+In term with: {Value: "Error: ", Type: string literal, Line: 9, Column: 20}
+In term with: {Value: error, Type: identifier, Line: 9, Column: 32}
+In variable with: {Value: Logger, Type: identifier, Line: 15, Column: 4}
+{Value: logger, Type: identifier, Line: 15, Column: 11}
+In expression with: {Value: ErrorLogger, Type: identifier, Line: 15, Column: 20}
+In term with: {Value: ErrorLogger, Type: identifier, Line: 15, Column: 20}
+In variable with: {Value: uint32, Type: type keyword, Line: 16, Column: 4}
+{Value: i, Type: identifier, Line: 16, Column: 11}
+In expression with: {Value: SOME_CONST, Type: identifier, Line: 16, Column: 15}
+In term with: {Value: SOME_CONST, Type: identifier, Line: 16, Column: 15}
+In term with: {Value: 2, Type: int literal, Line: 16, Column: 29}
+In expression with: {Value: i, Type: identifier, Line: 17, Column: 8}
+In term with: {Value: i, Type: identifier, Line: 17, Column: 8}
+In term with: {Value: UINT32_MAX, Type: identifier, Line: 17, Column: 12}
+In expression with: {Value: logger, Type: identifier, Line: 18, Column: 8}
+In term with: {Value: logger, Type: identifier, Line: 18, Column: 8}
+In expression with: {Value: "This number is too big!", Type: string literal, Line: 18, Column: 19}
+In term with: {Value: "This number is too big!", Type: string literal, Line: 18, Column: 19}
+In expression with: {Value: 1, Type: int literal, Line: 19, Column: 15}
+In term with: {Value: 1, Type: int literal, Line: 19, Column: 15}
+In expression with: {Value: i, Type: identifier, Line: 21, Column: 13}
+In term with: {Value: i, Type: identifier, Line: 21, Column: 13}
+In term with: {Value: 2, Type: int literal, Line: 21, Column: 17}
+In term with: {Value: 0, Type: int literal, Line: 21, Column: 22}
+In expression with: {Value: logger, Type: identifier, Line: 22, Column: 8}
+In term with: {Value: logger, Type: identifier, Line: 22, Column: 8}
+In expression with: {Value: "Number is even", Type: string literal, Line: 22, Column: 19}
+In term with: {Value: "Number is even", Type: string literal, Line: 22, Column: 19}
+In expression with: {Value: logger, Type: identifier, Line: 24, Column: 8}
+In term with: {Value: logger, Type: identifier, Line: 24, Column: 8}
+In expression with: {Value: "Number is odd", Type: string literal, Line: 24, Column: 19}
+In term with: {Value: "Number is odd", Type: string literal, Line: 24, Column: 19}
+In variable with: {Value: String, Type: type keyword, Line: 25, Column: 4}
+{Value: str, Type: identifier, Line: 25, Column: 11}
+In expression with: {Value: "hello", Type: string literal, Line: 25, Column: 17}
+In term with: {Value: "hello", Type: string literal, Line: 25, Column: 17}
+In variable with: {Value: int, Type: type keyword, Line: 26, Column: 9}
+{Value: k, Type: identifier, Line: 26, Column: 13}
+In variable with: {Value: char, Type: type keyword, Line: 26, Column: 16}
+{Value: c, Type: identifier, Line: 26, Column: 21}
+In expression with: {Value: str, Type: identifier, Line: 26, Column: 26}
+In term with: {Value: str, Type: identifier, Line: 26, Column: 26}
+In expression with: {Value: k, Type: identifier, Line: 27, Column: 12}
+In term with: {Value: k, Type: identifier, Line: 27, Column: 12}
+In term with: {Value: 0, Type: int literal, Line: 27, Column: 17}
+In term with: {Value: k, Type: identifier, Line: 27, Column: 22}
+In term with: {Value: str, Type: identifier, Line: 27, Column: 27}
+In term with: {Value: 1, Type: int literal, Line: 27, Column: 40}
+In expression with: {Value: println, Type: identifier, Line: 29, Column: 8}
+In term with: {Value: println, Type: identifier, Line: 29, Column: 8}
+In expression with: {Value: c, Type: identifier, Line: 29, Column: 16}
+In term with: {Value: c, Type: identifier, Line: 29, Column: 16}
+In variable with: {Value: int, Type: type keyword, Line: 31, Column: 4}
+{Value: indx, Type: identifier, Line: 31, Column: 8}
+In expression with: {Value: 0, Type: int literal, Line: 31, Column: 15}
+In term with: {Value: 0, Type: int literal, Line: 31, Column: 15}
+true {Value: indx, Type: identifier, Line: 32, Column: 11}
+In expression with: {Value: indx, Type: identifier, Line: 32, Column: 11}
+In term with: {Value: indx, Type: identifier, Line: 32, Column: 11}
+In term with: {Value: str, Type: identifier, Line: 32, Column: 18}
+In expression with: {Value: indx, Type: identifier, Line: 33, Column: 12}
+In term with: {Value: indx, Type: identifier, Line: 33, Column: 12}
+In term with: {Value: 0, Type: int literal, Line: 33, Column: 20}
+In term with: {Value: indx, Type: identifier, Line: 33, Column: 25}
+In term with: {Value: 7, Type: int literal, Line: 33, Column: 32}
+In term with: {Value: 0, Type: int literal, Line: 33, Column: 37}
+In expression with: {Value: indx, Type: identifier, Line: 35, Column: 8}
+In term with: {Value: indx, Type: identifier, Line: 35, Column: 8}
+In expression with: {Value: 0, Type: int literal, Line: 37, Column: 11}
+In term with: {Value: 0, Type: int literal, Line: 37, Column: 11}
+Node: { Label: "program"
+children: [
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: uint32, Type: type keyword, Line: 0, Column: 0} },
+        Node: { Token: {Value: SOME_CONST, Type: identifier, Line: 0, Column: 7} },
+        Node: { Token: {Value: 50000, Type: int literal, Line: 0, Column: 20} }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: Logger, Type: identifier, Line: 2, Column: 10} },
+        Node: { Label: "fn"
+        children: [
+            Node: { Token: {Value: log, Type: identifier, Line: 3, Column: 7} },
+            Node: { Label: "params"
+            children: [
+                Node: { Label: "param"
+                children: [
+                    Node: { Token: {Value: String, Type: type keyword, Line: 3, Column: 11} },
+                    Node: { Token: {Value: message, Type: identifier, Line: 3, Column: 18} }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 6, Column: 0}
+    children: [
+        Node: { Token: {Value: ErrorLogger, Type: identifier, Line: 6, Column: 7} },
+        Node: { Label: "interface_list"
+        children: [
+            Node: { Token: {Value: Logger, Type: identifier, Line: 6, Column: 24} }
+        ] },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "named-block"
+            children: [
+                Node: { Token: {Value: Logger, Type: identifier, Line: 7, Column: 4} },
+                Node: { Label: "named-block-body"
+                children: [
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: log, Type: identifier, Line: 8, Column: 11} },
+                        Node: { Label: "params"
+                        children: [
+                            Node: { Label: "param"
+                            children: [
+                                Node: { Token: {Value: String, Type: type keyword, Line: 8, Column: 15} },
+                                Node: { Token: {Value: error, Type: identifier, Line: 8, Column: 22} }
+                            ] }
+                        ] },
+                        Node: { Label: "fn-body"
+                        children: [
+                            Node: { Label: "call"
+                            children: [
+                                Node: { Token: {Value: println, Type: identifier, Line: 9, Column: 12} },
+                                Node: { Label: "params"
+                                children: [
+                                    Node: { Token: {Value: +, Type: add operator, Line: 9, Column: 30}
+                                    children: [
+                                        Node: { Token: {Value: "Error: ", Type: string literal, Line: 9, Column: 20} },
+                                        Node: { Token: {Value: error, Type: identifier, Line: 9, Column: 32} }
+                                    ] }
+                                ] }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: main, Type: identifier, Line: 14, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 14, Column: 13} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: Logger, Type: identifier, Line: 15, Column: 4} },
+                Node: { Token: {Value: logger, Type: identifier, Line: 15, Column: 11} },
+                Node: { Label: "struct_literal"
+                children: [
+                    Node: { Token: {Value: ErrorLogger, Type: identifier, Line: 15, Column: 20} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 16, Column: 4} },
+                Node: { Token: {Value: i, Type: identifier, Line: 16, Column: 11} },
+                Node: { Token: {Value: **, Type: operator, Line: 16, Column: 26}
+                children: [
+                    Node: { Token: {Value: SOME_CONST, Type: identifier, Line: 16, Column: 15} },
+                    Node: { Token: {Value: 2, Type: int literal, Line: 16, Column: 29} }
+                ] }
+            ] },
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: >, Type: compare operator, Line: 17, Column: 10}
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 17, Column: 8} },
+                        Node: { Token: {Value: UINT32_MAX, Type: identifier, Line: 17, Column: 12} }
+                    ] },
+                    Node: { Label: "conditional_body"
+                    children: [
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Label: "dot"
+                            children: [
+                                Node: { Token: {Value: logger, Type: identifier, Line: 18, Column: 8} },
+                                Node: { Token: {Value: log, Type: identifier, Line: 18, Column: 15} }
+                            ] },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: "This number is too big!", Type: string literal, Line: 18, Column: 19} }
+                            ] }
+                        ] },
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 19, Column: 8} },
+                            Node: { Token: {Value: 1, Type: int literal, Line: 19, Column: 15} }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else if"
+                children: [
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 21, Column: 19}
+                    children: [
+                        Node: { Token: {Value: %, Type: multiply operator, Line: 21, Column: 15}
+                        children: [
+                            Node: { Token: {Value: i, Type: identifier, Line: 21, Column: 13} },
+                            Node: { Token: {Value: 2, Type: int literal, Line: 21, Column: 17} }
+                        ] },
+                        Node: { Token: {Value: 0, Type: int literal, Line: 21, Column: 22} }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Label: "dot"
+                            children: [
+                                Node: { Token: {Value: logger, Type: identifier, Line: 22, Column: 8} },
+                                Node: { Token: {Value: log, Type: identifier, Line: 22, Column: 15} }
+                            ] },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: "Number is even", Type: string literal, Line: 22, Column: 19} }
+                            ] }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else"
+                children: [
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Label: "dot"
+                            children: [
+                                Node: { Token: {Value: logger, Type: identifier, Line: 24, Column: 8} },
+                                Node: { Token: {Value: log, Type: identifier, Line: 24, Column: 15} }
+                            ] },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: "Number is odd", Type: string literal, Line: 24, Column: 19} }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: String, Type: type keyword, Line: 25, Column: 4} },
+                Node: { Token: {Value: str, Type: identifier, Line: 25, Column: 11} },
+                Node: { Token: {Value: "hello", Type: string literal, Line: 25, Column: 17} }
+            ] },
+            Node: { Label: "for"
+            children: [
+                Node: { Label: "loop-condition"
+                children: [
+                    Node: { Label: "Variable"
+                    children: [
+                        Node: { Token: {Value: int, Type: type keyword, Line: 26, Column: 9} },
+                        Node: { Token: {Value: k, Type: identifier, Line: 26, Column: 13} }
+                    ] },
+                    Node: { Label: "Variable"
+                    children: [
+                        Node: { Token: {Value: char, Type: type keyword, Line: 26, Column: 16} },
+                        Node: { Token: {Value: c, Type: identifier, Line: 26, Column: 21} }
+                    ] },
+                    Node: { Token: {Value: in, Type: operator keyword, Line: 26, Column: 23} },
+                    Node: { Token: {Value: str, Type: identifier, Line: 26, Column: 26} }
+                ] },
+                Node: { Label: "loop-body"
+                children: [
+                    Node: { Label: "if-block"
+                    children: [
+                        Node: { Label: "if"
+                        children: [
+                            Node: { Token: {Value: ||, Type: operator, Line: 27, Column: 19}
+                            children: [
+                                Node: { Token: {Value: ==, Type: compare operator, Line: 27, Column: 14}
+                                children: [
+                                    Node: { Token: {Value: k, Type: identifier, Line: 27, Column: 12} },
+                                    Node: { Token: {Value: 0, Type: int literal, Line: 27, Column: 17} }
+                                ] },
+                                Node: { Token: {Value: ==, Type: compare operator, Line: 27, Column: 24}
+                                children: [
+                                    Node: { Token: {Value: k, Type: identifier, Line: 27, Column: 22} },
+                                    Node: { Token: {Value: -, Type: add operator, Line: 27, Column: 38}
+                                    children: [
+                                        Node: { Label: "dot"
+                                        children: [
+                                            Node: { Token: {Value: str, Type: identifier, Line: 27, Column: 27} },
+                                            Node: { Token: {Value: length, Type: identifier, Line: 27, Column: 31} }
+                                        ] },
+                                        Node: { Token: {Value: 1, Type: int literal, Line: 27, Column: 40} }
+                                    ] }
+                                ] }
+                            ] },
+                            Node: { Label: "conditional-body"
+                            children: [
+                                Node: { Label: "control-flow"
+                                children: [
+                                    Node: { Token: {Value: continue, Type: flow keyword, Line: 28, Column: 12} }
+                                ] }
+                            ] }
+                        ] }
+                    ] },
+                    Node: { Label: "call"
+                    children: [
+                        Node: { Token: {Value: println, Type: identifier, Line: 29, Column: 8} },
+                        Node: { Label: "params"
+                        children: [
+                            Node: { Token: {Value: c, Type: identifier, Line: 29, Column: 16} }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 31, Column: 4} },
+                Node: { Token: {Value: indx, Type: identifier, Line: 31, Column: 8} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 31, Column: 15} }
+            ] },
+            Node: { Label: "while"
+            children: [
+                Node: { Token: {Value: <, Type: compare operator, Line: 32, Column: 16}
+                children: [
+                    Node: { Token: {Value: indx, Type: identifier, Line: 32, Column: 11} },
+                    Node: { Label: "dot"
+                    children: [
+                        Node: { Token: {Value: str, Type: identifier, Line: 32, Column: 18} },
+                        Node: { Token: {Value: length, Type: identifier, Line: 32, Column: 22} }
+                    ] }
+                ] },
+                Node: { Label: "loop-body"
+                children: [
+                    Node: { Label: "if-block"
+                    children: [
+                        Node: { Label: "if"
+                        children: [
+                            Node: { Token: {Value: &&, Type: operator, Line: 33, Column: 22}
+                            children: [
+                                Node: { Token: {Value: !=, Type: compare operator, Line: 33, Column: 17}
+                                children: [
+                                    Node: { Token: {Value: indx, Type: identifier, Line: 33, Column: 12} },
+                                    Node: { Token: {Value: 0, Type: int literal, Line: 33, Column: 20} }
+                                ] },
+                                Node: { Token: {Value: ==, Type: compare operator, Line: 33, Column: 34}
+                                children: [
+                                    Node: { Token: {Value: %, Type: multiply operator, Line: 33, Column: 30}
+                                    children: [
+                                        Node: { Token: {Value: indx, Type: identifier, Line: 33, Column: 25} },
+                                        Node: { Token: {Value: 7, Type: int literal, Line: 33, Column: 32} }
+                                    ] },
+                                    Node: { Token: {Value: 0, Type: int literal, Line: 33, Column: 37} }
+                                ] }
+                            ] },
+                            Node: { Label: "conditional-body"
+                            children: [
+                                Node: { Label: "control-flow"
+                                children: [
+                                    Node: { Token: {Value: break, Type: flow keyword, Line: 34, Column: 12} }
+                                ] }
+                            ] }
+                        ] }
+                    ] },
+                    Node: { Label: "Unary"
+                    children: [
+                        Node: { Token: {Value: indx, Type: identifier, Line: 35, Column: 8} },
+                        Node: { Token: {Value: ++, Type: unary operator, Line: 35, Column: 12} }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 37, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 37, Column: 11} }
+            ] }
+        ] }
+    ] }
+] }
 
 
 ---

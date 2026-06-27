@@ -64,8 +64,8 @@ func TestLexer(t *testing.T) {
 	})
 	t.Run("token.HasValue() should return true when given matching value", func(t *testing.T) {
 		token := Token{
-			tokenType: ID,
-			value:     "name",
+			Kind:  ID,
+			Value: "name",
 		}
 		if !token.HasValue("name") {
 			t.Errorf("Token %v should have matched value %s\n", token, "name")
@@ -73,8 +73,8 @@ func TestLexer(t *testing.T) {
 	})
 	t.Run("token.HasValue() should return false when given non-matching value", func(t *testing.T) {
 		token := Token{
-			tokenType: ID,
-			value:     "name",
+			Kind:  ID,
+			Value: "name",
 		}
 		if token.HasValue("x") {
 			t.Errorf("Token %v should not have matched value %s\n", token, "x")
