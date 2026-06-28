@@ -86,15 +86,6 @@ Output:
 {Value: float, Type: type keyword, Line: 6, Column: 16}
 {Value: ;, Type: separator, Line: 6, Column: 21}
 {Value: EOF, Type: EOF, Line: 8, Column: 0}
-In variable with: {Value: bool, Type: type keyword, Line: 4, Column: 4}
-{Value: valid, Type: identifier, Line: 4, Column: 9}
-In expression with: {Value: i, Type: identifier, Line: 4, Column: 17}
-In term with: {Value: i, Type: identifier, Line: 4, Column: 17}
-In term with: {Value: 0, Type: int literal, Line: 4, Column: 22}
-In variable with: {Value: int, Type: type keyword, Line: 5, Column: 4}
-{Value: x, Type: identifier, Line: 5, Column: 8}
-In expression with: {Value: ^, Type: bitwise operator, Line: 5, Column: 12}
-In term with: {Value: EOF, Type: EOF, Line: 8, Column: 0}
 Node: { Label: "program" }
 SyntaxError: Expected declaration but found 'y' at line: 1, column: 1
 SyntaxError: Expected type but got '{' at line: 3, column: 14

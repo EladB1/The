@@ -734,6 +734,8 @@ High test coverage is the goal (not enforced yet). Aim for at least 85%-90% cove
 
 ### Parser Error Recovery
 
-The parser uses several strategies to recover from errors. It will insert fake tokens into the AST if a simple expected token is missing. For syntax errors that could span several tokens, the parser will look for a synchronization token to reduce the amount of noise generated; anything between the current token and synchronization token will be discarded. 
+The parser uses several strategies to recover from errors. It will insert virtual tokens into the AST if a simple expected token is missing. For syntax errors that could span several tokens, the parser will look for a synchronization point (i.e. `;`, `}`, `)`, `fn`, `struct`, `interface`) to reduce the amount of noise generated; anything between the current token and synchronization token will be discarded. 
 
-Since the compiler will fail if the parser produces any errors, it's not super important to have an accurate AST generated for errors, but being as close to accurate as possible will help with debugging certain issues in the compiler.
+Since the compiler will stop if the parser produces any errors, it's less critical to have an accurate AST generated for errors than for valid code, but being as close to accurate as possible will help with debugging certain issues in the compiler.
+
+> **NOTE:** Parser error handling is not entirely complete yet. Known limitations include cascading errors, misinterpretation of developer intent, and improper reading of nested structures. This will be an improvement after the completion of the compiler MVP.

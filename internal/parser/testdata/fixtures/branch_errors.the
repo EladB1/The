@@ -18,7 +18,7 @@ fn whileConditionErrors() {
     while true) {}
     while () {}
     while (1 == 1)
-    //while (for (int i in 0..10) {}) {}
+    while (for (int i in 0..10) {}) {}
     while {}
     while(();
     while(4*) {}

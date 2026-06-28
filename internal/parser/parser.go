@@ -51,9 +51,6 @@ func expectKind(kind lexer.TokenType) lexer.Token {
 		panic(err)
 	}
 	token := peek()
-	/*if errorCtx == "fn" {
-		errorRecoveryFunctionDefintion()
-	}*/
 	state.addError(fmt.Sprintf("Expected '%s' but got '%s'", kind, token.Kind))
 	return lexer.Token{
 		Kind:    kind,
@@ -77,9 +74,6 @@ func expectValue(value string) lexer.Token {
 		panic(err)
 	}
 	token := peek()
-	/*if errorCtx == "fn" {
-		errorRecoveryFunctionDefintion()
-	}*/
 	state.addError(fmt.Sprintf("Expected '%s' but got '%s'", value, token.GetValueString()))
 	return lexer.Token{
 		Kind:    lexer.Virtual,
@@ -174,7 +168,7 @@ func Parse(lexerTokens []lexer.Token) (AST, diagnostic.PhaseDiagnostics) {
 				root.AddChildren(parseDeclaration())
 			} else {
 				state.addError(fmt.Sprintf("Expected declaration but found '%s'", peek().GetValueString()))
-				errorRecoveryTopLevel()
+				sync(topLevelCtx)
 				//consume()
 			}
 		}()
@@ -268,7 +262,7 @@ func parseBlock(label string) AST {
 			ast.AddChildren(parseBranch())
 		} else if checkNonVariableDeclaration() {
 			state.addError(fmt.Sprintf("Declaration %s not valid in block", peek().GetValueString()))
-			synchronize()
+			sync(blockCtx)
 		} else {
 			ast.AddChildren(parseStatement())
 		}
@@ -378,7 +372,7 @@ func parseStructBody() AST {
 			ast.AddChildren(parseFunction())
 		} else {
 			state.addError(fmt.Sprintf("Only variables, functions, and named blocks supported in struct definition, found %s", peek().GetValueString()))
-			synchronize()
+			sync(structBodyCtx)
 			//consume()
 		}
 	}
@@ -407,7 +401,7 @@ func parseNamedBlock() AST {
 			body.AddChildren(parseFunction())
 		} else {
 			state.addError(fmt.Sprintf("Only functions and variable definitions supported in named blocks, found %s", peek().GetValueString()))
-			synchronize()
+			sync(blockCtx)
 		}
 	}
 	expectValue("}")
@@ -429,7 +423,7 @@ func parseInterface() AST {
 			ast.AddChildren(parseFunction())
 		} else {
 			state.addError(fmt.Sprintf("Only function definitions supported within interface body. Found %s", consume().GetValueString()))
-			synchronize()
+			sync(interfaceCtx)
 		}
 	}
 	expectValue("}")
@@ -517,17 +511,29 @@ func parseConditionalBody() AST {
 func parseWhile() AST {
 	// fmt.Println("In while with: ", peek())
 	ast := AST{label: "while"}
-	consume()
+	loop := consume()
 	expectValue("(")
 	//fmt.Println(checkExpressionStart(), peek())
 	if !checkExpressionStart() {
 		state.addError(fmt.Sprintf("Expected expression but got '%s'", peek().GetValueString()))
-		synchronize()
+		sync(whileSignatureCtx)
 	} else {
 		ast.AddChildren(parseExpression())
-		expectValue(")")
+
 	}
-	ast.AddChildren(parseBlock("loop-body"))
+	expectValue(")")
+	if !checkValue("{") {
+		state.addError("Expected block")
+		ast.AddChildToken(lexer.Token{
+			Kind:    lexer.Virtual,
+			Value:   "Block",
+			Missing: true,
+			Line:    loop.Line,
+			Column:  peek().Column,
+		})
+	} else {
+		ast.AddChildren(parseBlock("loop-body"))
+	}
 	return ast
 }
 
@@ -537,14 +543,22 @@ func parseWhile() AST {
 func parseFor() AST {
 	//fmt.Println("In for with:", peek())
 	ast := AST{label: "for"}
-	consume()
+	loop := consume()
 	expectValue("(")
 	ast.AddChildren(parseForConditions())
 	expectValue(")")
 	if !checkValue("{") {
-		// TODO
+		state.addError("Expected block")
+		ast.AddChildToken(lexer.Token{
+			Kind:    lexer.Virtual,
+			Value:   "Block",
+			Missing: true,
+			Line:    loop.Line,
+			Column:  peek().Column,
+		})
+	} else {
+		ast.AddChildren(parseBlock("loop-body"))
 	}
-	ast.AddChildren(parseBlock("loop-body"))
 	return ast
 }
 
@@ -583,7 +597,7 @@ func parseForConditions() AST {
 		}, "\n\t")
 		state.addError("Invalid for loop syntax")
 		state.messages = state.messages.ProvideInfo(fmt.Sprintf("Valid loop forms:\n\t%s", loopForms))
-		synchronizeInParens()
+		sync(forSignatureCtx)
 	}
 	return ast
 }
@@ -623,7 +637,7 @@ func parseExpression() AST {
 	//fmt.Println("In expression with:", peek())
 	if !checkExpressionStart() {
 		state.addError(fmt.Sprintf("Expected expression but got '%s'", peek().GetValueString()))
-		synchronize()
+		sync(expressionCtx)
 	}
 	return parseLogicalOr()
 }
@@ -1097,10 +1111,6 @@ func parseModifiers() AST {
 		} else {
 			ast.AddChildToken(consume())
 		}
-		/*if checkKind(lexer.KW_MODIFIER) {
-			state.addError("Too many variable modifiers")
-			consume()
-		}*/
 	}
 	return ast
 }
