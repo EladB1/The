@@ -10,6 +10,7 @@ import (
 	"github.com/EladB1/The/internal/filehandler"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
+	"github.com/EladB1/The/internal/semantic"
 	"github.com/fatih/color"
 )
 
@@ -39,7 +40,7 @@ func init() {
 func compile(source []string) {
 	tokens, lexerDiagnostics := lexer.Lex(source, false)
 	compilerDiagnostics = append(compilerDiagnostics, lexerDiagnostics...)
-	lexer.PrintTokens(tokens)
+	//lexer.PrintTokens(tokens)
 	//ds.LiteralStorage.Show()
 	if lexerDiagnostics.HasError() {
 		reportStatus(compilerDiagnostics)
@@ -47,8 +48,15 @@ func compile(source []string) {
 	}
 	ast, parserDiagnostics := parser.Parse(tokens)
 	compilerDiagnostics = append(compilerDiagnostics, parserDiagnostics...)
-	fmt.Println(ast)
+	//fmt.Println(ast)
 	if parserDiagnostics.HasError() {
+		reportStatus(compilerDiagnostics)
+		os.Exit(1)
+	}
+	_, semanticDiagnostics := semantic.Analyze(ast)
+	compilerDiagnostics = append(compilerDiagnostics, semanticDiagnostics...)
+	//fmt.Println(annotatedAst)
+	if semanticDiagnostics.HasError() {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}

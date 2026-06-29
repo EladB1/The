@@ -739,3 +739,69 @@ The parser uses several strategies to recover from errors. It will insert virtua
 Since the compiler will stop if the parser produces any errors, it's less critical to have an accurate AST generated for errors than for valid code, but being as close to accurate as possible will help with debugging certain issues in the compiler.
 
 > **NOTE:** Parser error handling is not entirely complete yet. Known limitations include cascading errors, misinterpretation of developer intent, and improper reading of nested structures. This will be an improvement after the completion of the compiler MVP.
+
+### Semantic Analysis Design
+
+Semantic analysis will run in multiple passes over the AST.
+
+The passes will be:
+
+1. Custom type names: Get interface and struct names; error on any duplicates
+2. Analyze interface definitions
+3. Analyze struct definitions
+4. Collect function signatures
+5. Analyze function bodies and global variables: Check types, variable mutability, unreachable code, etc.
+
+Scopes will be a tree of scope where each node contains the following:
+    
+    - interface symbol table
+    - struct symbol table
+    - function symbol table
+    - variable symbol table
+
+The top two levels of the scope tree are the built-in scope and the global scope; interfaces and structs are only valid on those two levels. The built-in scope will contain anything that's part of the language standard library. The global scope will contain any top level declarations (interfaces, structs, functions, global variables). 
+
+Any nested blocks of code will create a child scope. For example this code
+
+```
+fn main() -> int {
+    mut int x;
+    while (true) {
+        if (x >= 5) {
+            mut int y = -x;
+        }
+    }
+    return 0;
+}
+```
+
+Will produce this scope tree:
+
+```
+    ------------
+    | built-in |
+    |   ...    |
+    ------------
+         |
+    ------------
+    |  global  |
+    | fn: main |
+    ------------
+         |
+    ------------
+    |   main   |
+    |  var: x  |
+    ------------
+         |
+    ------------
+    |  while#0 |
+    |   ...    |
+    ------------
+         |
+    ------------
+    |   if#0   |
+    |  var: y  |
+    ------------
+```
+
+> The `while#0` and `if#0` are internal scope names used by the compiler to different various scopes which could have the same name

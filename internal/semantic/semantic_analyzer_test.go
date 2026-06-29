@@ -65,5 +65,10 @@ func snapshotTestSemanticAnalyzer(t *testing.T, filename string) {
 }
 
 func TestSemanticAnalyzer(t *testing.T) {
-
+	t.Run("should run pass1.the and have no errors", func(t *testing.T) {
+		snapshotTestSemanticAnalyzer(t, "pass1.json")
+	})
+	t.Run("should run pass1_errors.the and have errors", func(t *testing.T) {
+		snapshotTestSemanticAnalyzer(t, "pass1_errors.json")
+	})
 }

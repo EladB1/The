@@ -79,7 +79,7 @@ func TestParser(t *testing.T) {
 			t.Errorf("Expected no warnings or errors but got %v\n", messages)
 			os.Exit(1)
 		}
-		emptyAST := AST{label: "program"}
+		emptyAST := AST{Label: "program"}
 		if !reflect.DeepEqual(ast, emptyAST) {
 			t.Errorf("Expected empty AST but got %v\n", ast)
 			os.Exit(1)

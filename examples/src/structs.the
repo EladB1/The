@@ -1,7 +1,7 @@
 interface Thing { // interface methods must be public
     fn greet();
     fn defaultFunc() -> int { // includes function body so this is a default implementation
-        return 0
+        return 0;
     }
     // async function format: async fn name();
 }
@@ -31,7 +31,7 @@ struct Person impl Thing {
         it is optional here but if included, 
         it will override the interface definition
         */
-        fn defaultFunc() -> {
+        fn defaultFunc() -> int {
             return 1;
         }
     }

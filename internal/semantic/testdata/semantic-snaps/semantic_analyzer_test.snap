@@ -1,0 +1,72 @@
+
+[TestSemanticAnalyzer/should_run_pass1.the_and_have_no_errors - 1]
+AST:
+Node: { Label: "program"
+children: [
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: A, Type: identifier, Line: 0, Column: 10} }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: B, Type: identifier, Line: 2, Column: 10} }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 4, Column: 0}
+    children: [
+        Node: { Token: {Value: One, Type: identifier, Line: 4, Column: 7} },
+        Node: { Label: "struct-body" }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 6, Column: 0}
+    children: [
+        Node: { Token: {Value: Two, Type: identifier, Line: 6, Column: 7} },
+        Node: { Label: "interface_list"
+        children: [
+            Node: { Token: {Value: A, Type: identifier, Line: 6, Column: 16} },
+            Node: { Token: {Value: B, Type: identifier, Line: 6, Column: 19} }
+        ] },
+        Node: { Label: "struct-body" }
+    ] }
+] }
+, Compiler messages:
+[]
+
+---
+
+[TestSemanticAnalyzer/should_run_pass1_errors.the_and_have_errors - 1]
+AST:
+Node: { Label: "program"
+children: [
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: A, Type: identifier, Line: 0, Column: 10} }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: A, Type: identifier, Line: 1, Column: 10} }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 2, Column: 0}
+    children: [
+        Node: { Token: {Value: A, Type: identifier, Line: 2, Column: 7} },
+        Node: { Label: "struct-body" }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 3, Column: 0}
+    children: [
+        Node: { Token: {Value: B, Type: identifier, Line: 3, Column: 7} },
+        Node: { Label: "struct-body" }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 4, Column: 0}
+    children: [
+        Node: { Token: {Value: B, Type: identifier, Line: 4, Column: 7} },
+        Node: { Label: "struct-body" }
+    ] }
+] }
+, Compiler messages:
+[
+    "NameError: Name 'A' already in use at line: 1, column: 11",
+    "NameError: Name 'A' already in use at line: 2, column: 11",
+    "NameError: Name 'A' already in use at line: 3, column: 8",
+    "NameError: Name 'B' already in use at line: 4, column: 8",
+    "NameError: Name 'B' already in use at line: 5, column: 8"
+]
+
+---

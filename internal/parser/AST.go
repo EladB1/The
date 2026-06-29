@@ -10,10 +10,10 @@ import (
 
 type (
 	AST struct {
-		label    string
-		token    lexer.Token
+		Label    string
+		Token    lexer.Token
 		Type     datatypes.DataType
-		children []AST
+		Children []AST
 	}
 )
 
@@ -26,17 +26,17 @@ func (ast AST) to_string(indentLevel int) string {
 	builder := strings.Builder{}
 	builder.WriteString(prefix)
 	builder.WriteString("Node: { ")
-	if ast.label != "" {
-		builder.WriteString(fmt.Sprintf("Label: \"%s\"", ast.label))
+	if ast.Label != "" {
+		builder.WriteString(fmt.Sprintf("Label: \"%s\"", ast.Label))
 	} else {
-		builder.WriteString(fmt.Sprintf("Token: %v", ast.token))
+		builder.WriteString(fmt.Sprintf("Token: %v", ast.Token))
 	}
-	childCount := len(ast.children)
+	childCount := len(ast.Children)
 	if childCount > 0 {
 		builder.WriteString("\n")
 		builder.WriteString(prefix)
 		builder.WriteString("children: [\n")
-		for i, child := range ast.children {
+		for i, child := range ast.Children {
 			builder.WriteString(child.to_string(indentLevel + 1))
 			if i != childCount-1 {
 				builder.WriteString(",\n")
@@ -51,9 +51,9 @@ func (ast AST) to_string(indentLevel int) string {
 }
 
 func (ast *AST) AddChildren(nodes ...AST) {
-	ast.children = append(ast.children, nodes...)
+	ast.Children = append(ast.Children, nodes...)
 }
 
 func (ast *AST) AddChildToken(token lexer.Token) {
-	ast.AddChildren(AST{token: token})
+	ast.AddChildren(AST{Token: token})
 }

@@ -13,4 +13,5 @@ const (
 	Char   DataType = "char"
 	String DataType = "String"
 	None   DataType = ""
+	Any    DataType = "any"
 )

@@ -1,0 +1,5 @@
+interface A {}
+interface A {}
+struct A {}
+struct B {}
+struct B {}

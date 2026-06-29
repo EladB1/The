@@ -155,7 +155,7 @@ func checkExpressionStart() bool {
 func Parse(lexerTokens []lexer.Token) (AST, diagnostic.PhaseDiagnostics) {
 	state = initState(lexerTokens)
 	root := AST{
-		label: "program",
+		Label: "program",
 	}
 	for !checkKind(lexer.EOF) {
 		func() {
@@ -204,7 +204,7 @@ func parseDeclaration() AST {
 func parseFunction() AST {
 	//fmt.Println("In function with:", peek())
 	ast := AST{
-		label: "fn",
+		Label: "fn",
 	}
 	expectValue("fn")
 	ast.AddChildToken(expectKind(lexer.ID))
@@ -230,7 +230,7 @@ func parseFunction() AST {
  */
 func parseParameters() AST {
 	//fmt.Println("In parameters with:", peek())
-	ast := AST{label: "params"}
+	ast := AST{Label: "params"}
 	ast.AddChildren(parseParameter())
 	for checkValue(",") {
 		consume()
@@ -244,7 +244,7 @@ func parseParameters() AST {
  */
 func parseParameter() AST {
 	//fmt.Println("In parameter with:", peek())
-	ast := AST{label: "param"}
+	ast := AST{Label: "param"}
 	ast.AddChildToken(expectType())
 	ast.AddChildToken(expectKind(lexer.ID))
 	return ast
@@ -255,7 +255,7 @@ func parseParameter() AST {
  */
 func parseBlock(label string) AST {
 	//fmt.Println("In block with:", peek())
-	ast := AST{label: label}
+	ast := AST{Label: label}
 	expectValue("{")
 	for !checkValue("}") && !checkKind(lexer.EOF) {
 		if checkKind(lexer.KW_BRANCH) {
@@ -300,7 +300,7 @@ func parseStatement() AST {
 		ast = parseExpression()
 	} else {
 		state.addError(fmt.Sprintf("Expected statement but got %s", peek().GetValueString()))
-		ast = AST{token: lexer.Token{
+		ast = AST{Token: lexer.Token{
 			Kind:    lexer.Virtual,
 			Value:   "statement",
 			Missing: true,
@@ -331,7 +331,7 @@ func parseBranch() AST {
  */
 func parseStruct() AST {
 	//fmt.Println("In struct with:", peek())
-	ast := AST{token: expectValue("struct")}
+	ast := AST{Token: expectValue("struct")}
 	ast.AddChildToken(expectKind(lexer.ID))
 	if checkValue("impl") {
 		consume()
@@ -346,7 +346,7 @@ func parseStruct() AST {
  */
 func parseInterfaceList() AST {
 	//fmt.Println("In interface list with:", peek())
-	ast := AST{label: "interface_list"}
+	ast := AST{Label: "interface_list"}
 	ast.AddChildToken(expectKind(lexer.ID))
 	for checkValue(",") {
 		consume()
@@ -360,7 +360,7 @@ func parseInterfaceList() AST {
  */
 func parseStructBody() AST {
 	//fmt.Println("In struct body with:", peek())
-	ast := AST{label: "struct-body"}
+	ast := AST{Label: "struct-body"}
 	expectValue("{")
 	for !checkValue("}") && !checkKind(lexer.EOF) {
 		if checkVariableDeclaration() {
@@ -385,13 +385,13 @@ func parseStructBody() AST {
  */
 func parseNamedBlock() AST {
 	//fmt.Println("In named block with:", peek())
-	ast := AST{label: "named-block"}
+	ast := AST{Label: "named-block"}
 	if checkValue("private") {
 		ast.AddChildToken(consume())
 	} else {
 		ast.AddChildToken(expectKind(lexer.ID))
 	}
-	body := AST{label: "named-block-body"}
+	body := AST{Label: "named-block-body"}
 	expectValue("{")
 	for !checkValue("}") && !checkKind(lexer.EOF) {
 		if checkVariableDeclaration() {
@@ -414,7 +414,7 @@ func parseNamedBlock() AST {
  */
 func parseInterface() AST {
 	//fmt.Println("In interface: ", peek())
-	ast := AST{label: "interface"}
+	ast := AST{Label: "interface"}
 	consume() // interface keyword
 	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue("{")
@@ -435,7 +435,7 @@ func parseInterface() AST {
  */
 func parseVariable() AST {
 	//fmt.Println("In variable with:", peek())
-	ast := AST{label: "Variable"}
+	ast := AST{Label: "Variable"}
 	if checkKind(lexer.KW_MODIFIER) {
 		ast.AddChildren(parseModifiers())
 	}
@@ -444,7 +444,7 @@ func parseVariable() AST {
 		consume()
 		varType = expectType()
 	}
-	ast.AddChildren(AST{token: varType}, AST{token: expectKind(lexer.ID)})
+	ast.AddChildren(AST{Token: varType}, AST{Token: expectKind(lexer.ID)})
 	if checkValue("=") {
 		consume()
 		ast.AddChildren(parseExpression())
@@ -457,13 +457,13 @@ func parseVariable() AST {
  */
 func parseIfBlock() AST {
 	//fmt.Println("In ifBlock with:", peek())
-	ast := AST{label: "if-block"}
+	ast := AST{Label: "if-block"}
 	ast.AddChildren(parseIf(false))
 	for checkValue("else") && checkValueAhead("if", 1) {
 		ast.AddChildren(parseIf(true))
 	}
 	if checkValue("else") {
-		node := AST{label: "else"}
+		node := AST{Label: "else"}
 		consume()
 		node.AddChildren(parseConditionalBody())
 		ast.AddChildren(node)
@@ -478,10 +478,10 @@ func parseIf(elseIf bool) AST {
 	//fmt.Println("In if with:", peek())
 	var ast AST
 	if elseIf {
-		ast = AST{label: "else if"}
+		ast = AST{Label: "else if"}
 		expectValue("else")
 	} else {
-		ast = AST{label: "if"}
+		ast = AST{Label: "if"}
 	}
 	expectValue("if")
 	expectValue("(")
@@ -496,7 +496,7 @@ func parseIf(elseIf bool) AST {
  */
 func parseConditionalBody() AST {
 	//fmt.Println("In conditional body with:", peek())
-	ast := AST{label: "conditional-body"}
+	ast := AST{Label: "conditional-body"}
 	if checkValue("{") {
 		return parseBlock("conditional_body")
 	} else {
@@ -510,7 +510,7 @@ func parseConditionalBody() AST {
  */
 func parseWhile() AST {
 	// fmt.Println("In while with: ", peek())
-	ast := AST{label: "while"}
+	ast := AST{Label: "while"}
 	loop := consume()
 	expectValue("(")
 	//fmt.Println(checkExpressionStart(), peek())
@@ -542,7 +542,7 @@ func parseWhile() AST {
  */
 func parseFor() AST {
 	//fmt.Println("In for with:", peek())
-	ast := AST{label: "for"}
+	ast := AST{Label: "for"}
 	loop := consume()
 	expectValue("(")
 	ast.AddChildren(parseForConditions())
@@ -567,7 +567,7 @@ func parseFor() AST {
  */
 func parseForConditions() AST {
 	//fmt.Println("In for condition with:", peek())
-	ast := AST{label: "loop-condition"}
+	ast := AST{Label: "loop-condition"}
 	if checkVariableDeclaration() {
 		ast.AddChildren(parseVariable())
 		if checkValue(";") {
@@ -607,14 +607,14 @@ func parseForConditions() AST {
  */
 func parseRange() AST {
 	//fmt.Println("In range with:", peek())
-	ast := AST{label: "range"}
+	ast := AST{Label: "range"}
 	expr := parseExpression()
 	if !checkKind(lexer.OPERATOR_RANGE) {
 		return expr
 	}
-	ast.AddChildren(expr, AST{token: consume()}, parseExpression())
+	ast.AddChildren(expr, AST{Token: consume()}, parseExpression())
 	if checkValue("..") {
-		ast.AddChildren(AST{token: consume()}, parseExpression())
+		ast.AddChildren(AST{Token: consume()}, parseExpression())
 	}
 	return ast
 }
@@ -625,7 +625,7 @@ func parseRange() AST {
 func parseAssignment() AST {
 	//fmt.Println("In assignment: ", peek())
 	member := parseMember()
-	ast := AST{token: expectKind(lexer.OPERATOR_ASSIGN)}
+	ast := AST{Token: expectKind(lexer.OPERATOR_ASSIGN)}
 	ast.AddChildren(member, parseExpression())
 	return ast
 }
@@ -651,7 +651,7 @@ func parseLogicalOr() AST {
 	ast := parseLogicalAnd()
 	for checkValue("||") {
 		operand = ast
-		ast = AST{token: consume()}
+		ast = AST{Token: consume()}
 		ast.AddChildren(operand, parseLogicalAnd())
 	}
 	if checkValue("||") {
@@ -669,7 +669,7 @@ func parseLogicalAnd() AST {
 	ast := parseLogicalNot()
 	for checkValue("&&") {
 		operand = ast
-		ast = AST{token: consume()}
+		ast = AST{Token: consume()}
 		ast.AddChildren(operand, parseLogicalNot())
 	}
 	if checkValue("&&") {
@@ -686,7 +686,7 @@ func parseLogicalNot() AST {
 	ast := AST{}
 	hasNot := false
 	if checkValue("!") {
-		ast = AST{token: consume()}
+		ast = AST{Token: consume()}
 		hasNot = true
 	}
 	compare := parseComparison()
@@ -706,7 +706,7 @@ func parseComparison() AST {
 	if !checkKind(lexer.OPERATOR_COMPARE) {
 		return bw
 	}
-	ast := AST{token: consume()} // operator is the root of the tree
+	ast := AST{Token: consume()} // operator is the root of the tree
 	ast.AddChildren(bw)
 	ast.AddChildren(parseBitshift())
 	return ast
@@ -721,7 +721,7 @@ func parseBitshift() AST {
 	ast := parseBitwise()
 	for checkKind(lexer.OPERATOR_BS) {
 		operand = ast
-		ast = AST{token: consume()}
+		ast = AST{Token: consume()}
 		ast.AddChildren(operand, parseBitwise())
 	}
 	if checkKind(lexer.OPERATOR_BS) {
@@ -739,7 +739,7 @@ func parseBitwise() AST {
 	ast := parseAdd()
 	for checkKind(lexer.OPERATOR_BW) {
 		operand = ast
-		ast = AST{token: consume()}
+		ast = AST{Token: consume()}
 		ast.AddChildren(operand, parseAdd())
 	}
 	if checkKind(lexer.OPERATOR_BW) {
@@ -758,7 +758,7 @@ func parseAdd() AST {
 	ast := parseMult()
 	for checkKind(lexer.OPERATOR_ADD) {
 		operand = ast
-		ast = AST{token: consume()}
+		ast = AST{Token: consume()}
 		ast.AddChildren(operand)
 		ast.AddChildren(parseMult())
 	}
@@ -777,7 +777,7 @@ func parseMult() AST {
 	ast := parseExpo()
 	for checkKind(lexer.OPERATOR_MULT) {
 		operand = ast
-		ast = AST{token: consume()}
+		ast = AST{Token: consume()}
 		ast.AddChildren(operand)
 		ast.AddChildren(parseExpo())
 	}
@@ -796,7 +796,7 @@ func parseExpo() AST {
 	ast := parseUnary()
 	for checkValue("**") {
 		operand = ast
-		ast = AST{token: consume()}
+		ast = AST{Token: consume()}
 		ast.AddChildren(operand)
 		ast.AddChildren(parseExpo())
 	}
@@ -821,7 +821,7 @@ func parseUnary() AST {
  */
 func parseLeftUnary() AST {
 	//fmt.Println("In left unary with:", peek())
-	ast := AST{label: "Unary"}
+	ast := AST{Label: "Unary"}
 	ast.AddChildToken(consume())
 	ast.AddChildren(parseTypecast())
 	return ast
@@ -832,7 +832,7 @@ func parseLeftUnary() AST {
  */
 func parseRightUnary() AST {
 	//fmt.Println("In right unary with:", peek())
-	ast := AST{label: "Unary"}
+	ast := AST{Label: "Unary"}
 	typecast := parseTypecast()
 	if !checkKind(lexer.OPERATOR_UNARY) {
 		return typecast
@@ -847,7 +847,7 @@ func parseRightUnary() AST {
  */
 func parseTypecast() AST {
 	//fmt.Println("In typecast with:", peek())
-	ast := AST{label: "typecast"}
+	ast := AST{Label: "typecast"}
 	index := parseIndex()
 	if !checkValue("as") {
 		return index
@@ -864,7 +864,7 @@ func parseTypecast() AST {
 func parseIndex() AST {
 	//fmt.Println("In index with:", peek())
 	var operand AST
-	ast := AST{label: "index"}
+	ast := AST{Label: "index"}
 	operand = parseTerm()
 	if !checkValue("[") {
 		return operand
@@ -873,7 +873,7 @@ func parseIndex() AST {
 	for checkValue("[") {
 		consume()
 		operand = ast
-		ast = AST{label: "index"}
+		ast = AST{Label: "index"}
 		ast.AddChildren(operand, parseIndexValue())
 		expectValue("]")
 	}
@@ -913,7 +913,7 @@ func parseTerm() AST {
 		return expr
 	}
 	state.addError(fmt.Sprintf("Expected expression but got %s", peek().GetValueString()))
-	return AST{token: lexer.Token{
+	return AST{Token: lexer.Token{
 		Kind:    lexer.Virtual,
 		Value:   "term",
 		Missing: true,
@@ -964,9 +964,9 @@ func isSlice() bool {
  */
 func parseSlice() AST {
 	//fmt.Println("In slice with:", peek())
-	ast := AST{label: "slice"}
+	ast := AST{Label: "slice"}
 	if checkKind(lexer.OPERATOR_RANGE) {
-		rangeOp := AST{token: consume()}
+		rangeOp := AST{Token: consume()}
 		if peek().Value == "]" {
 			ast.AddChildren(rangeOp)
 			return ast
@@ -1000,7 +1000,7 @@ func parseSlice() AST {
  */
 func parseArrayEnd() AST {
 	//fmt.Println("In array_end with:", peek())
-	ast := AST{label: "ARR-END"}
+	ast := AST{Label: "ARR-END"}
 	ast.AddChildToken(consume())
 	ast.AddChildren(parseExpression())
 	return ast
@@ -1011,7 +1011,7 @@ func parseArrayEnd() AST {
  */
 func parseLiteral() AST {
 	if checkKind(lexer.LIT_CHAR) || checkKind(lexer.LIT_STRING) || checkKind(lexer.KW_BOOLVALUE) {
-		return AST{token: consume()}
+		return AST{Token: consume()}
 	} else if checkKind(lexer.LIT_INT) || checkKind(lexer.LIT_HEX) || checkKind(lexer.LIT_FLOAT) || checkValue("+") || checkValue("-") {
 		return parseNumLiteral()
 	} else {
@@ -1043,7 +1043,7 @@ func parseNumLiteral() AST {
 			token.FloatVal = -token.FloatVal
 		}
 	}
-	return AST{token: token}
+	return AST{Token: token}
 }
 
 /*
@@ -1051,7 +1051,7 @@ func parseNumLiteral() AST {
  */
 func parseStructLiteral() AST {
 	//fmt.Println("In struct_literal with:", peek())
-	ast := AST{label: "struct_literal"}
+	ast := AST{Label: "struct_literal"}
 	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue("{")
 	if !checkValue("}") {
@@ -1066,7 +1066,7 @@ func parseStructLiteral() AST {
  */
 func parseProperties() AST {
 	//fmt.Println("In properties with:", peek())
-	ast := AST{label: "properties"}
+	ast := AST{Label: "properties"}
 	ast.AddChildren(parseProperty())
 	for !checkValue("}") && !checkKind(lexer.EOF) {
 		if !checkKindAhead(lexer.ID, 1) {
@@ -1086,7 +1086,7 @@ func parseProperties() AST {
  */
 func parseProperty() AST {
 	//fmt.Println("In property with:", peek())
-	ast := AST{label: "property"}
+	ast := AST{Label: "property"}
 	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue(":")
 	ast.AddChildren(parseExpression())
@@ -1099,7 +1099,7 @@ func parseProperty() AST {
 func parseModifiers() AST {
 	//fmt.Println("In modifiers with:", peek())
 	ast := AST{
-		label: "modifiers",
+		Label: "modifiers",
 	}
 	modifier := consume()
 	ast.AddChildToken(modifier)
@@ -1120,12 +1120,12 @@ func parseModifiers() AST {
  */
 func parseMember() AST {
 	//fmt.Println("In member with:", peek())
-	ast := AST{token: consume()}
+	ast := AST{Token: consume()}
 	for checkValue(".") {
 		lhs := ast
-		ast = AST{label: "dot"}
+		ast = AST{Label: "dot"}
 		consume() // skip over the dot
-		ast.AddChildren(lhs, AST{token: expectKind(lexer.ID)})
+		ast.AddChildren(lhs, AST{Token: expectKind(lexer.ID)})
 	}
 	return ast
 }
@@ -1135,14 +1135,14 @@ func parseMember() AST {
  */
 func parseCall() AST {
 	//fmt.Println("In call with:", peek())
-	ast := AST{label: "call"}
+	ast := AST{Label: "call"}
 	ast.AddChildren(parseMember())
 	expectValue("(")
 	if checkValue(")") {
 		consume()
 		return ast
 	}
-	params := AST{label: "params"}
+	params := AST{Label: "params"}
 	params.AddChildren(parseExpression())
 	for checkValue(",") {
 		consume()
@@ -1159,7 +1159,7 @@ func parseCall() AST {
 func parseControlFlow() AST {
 	//fmt.Println("In control_flow with:", peek())
 	ast := AST{
-		label: "control-flow",
+		Label: "control-flow",
 	}
 	if checkValue("continue") || checkValue("break") {
 		ast.AddChildToken(consume())
