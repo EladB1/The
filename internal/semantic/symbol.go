@@ -1,19 +1,22 @@
 package semantic
 
+import "github.com/EladB1/The/internal/datatypes"
+
 type (
 	FunctionSymbol struct {
 		name                     string
-		parameters               []string
-		returnType               string
+		parameters               []datatypes.DataType
+		returnType               datatypes.DataType
 		isPrivate                bool
 		hasDefaultImplementation bool
 		// overrides?
 	}
 	VariableSymbol struct {
 		name      string
-		Type      string // TODO: change?
+		Type      datatypes.DataType
 		isPrivate bool
 		isMutable bool
+		size      int
 	}
 	InterfaceSymbol struct {
 		name string

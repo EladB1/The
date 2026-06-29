@@ -698,8 +698,8 @@ Memory will be managed using Automatic Reference Counting (ARC). After the MVP o
 Phases:
 
     1. Lexical Analysis
-    2. Parsing <- WIP
-    3. Semantic Analysis
+    2. Parsing
+    3. Semantic Analysis <- WIP
     4. IR Generation
     5. Code Generation (WAT)
     6. Execution via wasmtime

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/lexer"
 )
 
@@ -11,6 +12,7 @@ type (
 	AST struct {
 		label    string
 		token    lexer.Token
+		Type     datatypes.DataType
 		children []AST
 	}
 )

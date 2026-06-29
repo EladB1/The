@@ -15,6 +15,9 @@ const (
 	Warning     Severity = "Warning"
 	Error       Severity = "Error"
 	SyntaxError Severity = "SyntaxError"
+	NameError   Severity = "NameError"
+	TypeError   Severity = "TypeError"
+	AccessError Severity = "AccessError"
 )
 
 type Diagnostic struct {

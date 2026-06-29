@@ -11,11 +11,11 @@ import (
 
 	"github.com/gkampitakis/go-snaps/snaps"
 
-	"github.com/EladB1/The/internal/filehandler"
 	"github.com/EladB1/The/internal/lexer"
+	"github.com/EladB1/The/internal/testutils"
 )
 
-var dir string = "testdata/fixtures/"
+var dir string = "./testdata/fixtures/"
 
 func snapshotTestParser(t *testing.T, filename string, debug bool) {
 	snapshots := snaps.WithConfig(
@@ -60,34 +60,10 @@ func TestGenerateFixtures(t *testing.T) {
 	if os.Getenv("UPDATE_FIXTURES") != "true" {
 		t.Skip()
 	}
-	files, err := os.ReadDir(dir)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to read directory\n", err)
-		os.Exit(1)
-	}
-	for _, file := range files {
-		if strings.HasSuffix(file.Name(), ".the") {
-			fmt.Printf("Updating fixture for '%s'... ", file.Name())
-			path := filepath.Join(dir, file.Name())
-			src, err := filehandler.GetSourceCode(path)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, "Failed to read source file\n", err)
-				os.Exit(1)
-			}
-			tokens, _ := lexer.Lex(src, false)
-			result, err := json.Marshal(tokens)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, "Failed to marshal json\n", err)
-				os.Exit(1)
-			}
-			path = filepath.Join(dir, strings.ReplaceAll(file.Name(), ".the", ".json"))
-			err = os.WriteFile(path, result, 0664)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, "Failed to write file\n", err)
-				os.Exit(1)
-			}
-			fmt.Println("Fixture updated")
-		}
+	fixtures := testutils.GetSourceFromDirectory(t, dir)
+	for _, fixture := range fixtures {
+		tokens, _ := lexer.Lex(fixture.Source, false)
+		testutils.WriteResultToFile(tokens, dir, fixture.File)
 	}
 }
 
