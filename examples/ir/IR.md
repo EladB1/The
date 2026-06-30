@@ -53,7 +53,7 @@ fn main -> i32 {
     t7: f64 = GET local.value
     t8: f64 = f64.sub t7 t6
     STORE local.value: f64 t8
-    STORE local.db: ptr STR_CONST("mariadb")
+    STORE local.db: ptr STR_CONST(0)
     STORE local.isOpen: i32 i32(1) // under the hood, treat bools as i32
     return i32(0)
 }
