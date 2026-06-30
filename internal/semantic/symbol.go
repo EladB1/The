@@ -18,7 +18,7 @@ type (
 		returnType               datatypes.DataType
 		isPrivate                bool
 		hasDefaultImplementation bool
-		bodyStart                *parser.AST
+		funcDef                  *parser.AST
 		innerScope               *Scope
 	}
 	VariableSymbol struct {
@@ -28,15 +28,15 @@ type (
 		isMutable bool
 	}
 	InterfaceSymbol struct {
-		name       string
-		bodyStart  *parser.AST
-		innerScope *Scope
+		name         string
+		interfaceDef *parser.AST
+		innerScope   *Scope
 	}
 	StructSymbol struct {
 		name        string
 		implements  []string
 		sizeInBytes int
-		bodyStart   *parser.AST
+		structDef   *parser.AST
 		innerScope  *Scope
 	}
 	NamedBlockSymbol struct {
@@ -95,9 +95,9 @@ func (scope *Scope) lookup(name string) Symbol {
 func (fn FunctionSymbol) getSignature() string {
 	builder := strings.Builder{}
 	builder.WriteString("fn")
-	builder.WriteString(fmt.Sprintf("%s(", fn.name))
+	builder.WriteString(fmt.Sprintf(" %s(", fn.name))
 	for i, param := range fn.parameters {
-		builder.WriteString(string(param))
+		builder.WriteString(string(param.String()))
 		if i < len(fn.parameters)-1 {
 			builder.WriteByte(',')
 		}
@@ -107,4 +107,28 @@ func (fn FunctionSymbol) getSignature() string {
 		builder.WriteString(fmt.Sprintf("->%s", fn.returnType))
 	}
 	return builder.String()
+}
+
+func (intf InterfaceSymbol) String() string {
+	return fmt.Sprintf("{name: %s}", intf.name)
+}
+
+func (str StructSymbol) String() string {
+	impl := strings.Builder{}
+	if len(str.implements) != 0 {
+		impl.WriteString(", implements: [")
+		for i, intf := range str.implements {
+			impl.WriteString(intf)
+			if i != len(str.implements)-1 {
+				impl.WriteString(", ")
+			}
+		}
+		impl.WriteRune(']')
+	}
+	return fmt.Sprintf("{name: %s, size: %d%s}", str.name, str.sizeInBytes, impl.String())
+}
+
+func (fn FunctionSymbol) String() string {
+	sig := fn.getSignature()
+	return fmt.Sprintf("{Signature: %s, isPrivate: %v}", sig, fn.isPrivate)
 }

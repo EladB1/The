@@ -1,5 +1,10 @@
 package semantic
 
+import (
+	"fmt"
+	"strings"
+)
+
 type Scope struct {
 	id          string
 	parent      *Scope
@@ -23,4 +28,47 @@ func (scope *Scope) addChild(id string) Scope {
 	}
 	scope.children = append(scope.children, &newScope)
 	return newScope
+}
+
+func (scope *Scope) String() string {
+	return scope.to_string(0)
+}
+
+func (scope *Scope) to_string(indentLevel int) string {
+	prefix := strings.Repeat("\t", indentLevel)
+	builder := strings.Builder{}
+	builder.WriteString(prefix)
+	builder.WriteString("Scope: { id: ")
+	builder.WriteString(scope.id)
+	if scope.parent != nil {
+		builder.WriteString(", parent: ")
+		builder.WriteString(scope.parent.id)
+	}
+	if len(scope.interfaces) != 0 {
+		builder.WriteString(fmt.Sprintf(", interfaces: %v", scope.interfaces))
+	}
+	if len(scope.structs) != 0 {
+		builder.WriteString(fmt.Sprintf(", structs: %v", scope.structs))
+	}
+	if len(scope.namedBlocks) != 0 {
+		builder.WriteString(fmt.Sprintf(", namedBlocks: %v", scope.namedBlocks))
+	}
+	if len(scope.functions) != 0 {
+		builder.WriteString(fmt.Sprintf(", functions: %v", scope.functions))
+	}
+	if len(scope.variables) != 0 {
+		builder.WriteString(fmt.Sprintf(", variables: %v", scope.variables))
+	}
+	if len(scope.children) != 0 {
+		builder.WriteString(", children: [\n")
+		for i, child := range scope.children {
+			builder.WriteString(child.to_string(indentLevel + 1))
+			if i != len(scope.children)-1 {
+				builder.WriteString(",\n")
+			}
+		}
+		builder.WriteString(fmt.Sprintf("\n%s]", prefix))
+	}
+	builder.WriteString(" }")
+	return builder.String()
 }

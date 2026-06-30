@@ -1,0 +1,22 @@
+interface Empty {}
+
+interface A {
+    fn a();
+    fn b() -> int;
+    fn c(int i);
+    fn d(uint64 u) -> bool;
+}
+
+interface B {
+    fn a();
+    fn b() {
+        println("Here");
+    }
+    fn c(uint32 a, uint64 b);
+    fn d(bool isOpen, int x) {
+        return;
+    }
+    fn e(A something, A otherthing) -> bool {
+        return something == otherthing;
+    }
+}
