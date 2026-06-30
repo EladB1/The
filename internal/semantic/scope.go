@@ -11,7 +11,7 @@ type Scope struct {
 	namedBlocks NamedBlockSymbolTable
 }
 
-func (scope *Scope) addChild(id string) {
+func (scope *Scope) addChild(id string) Scope {
 	newScope := Scope{
 		id:          id,
 		parent:      scope,
@@ -22,4 +22,5 @@ func (scope *Scope) addChild(id string) {
 		namedBlocks: NamedBlockSymbolTable{},
 	}
 	scope.children = append(scope.children, &newScope)
+	return newScope
 }

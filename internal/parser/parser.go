@@ -418,15 +418,17 @@ func parseInterface() AST {
 	consume() // interface keyword
 	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue("{")
+	body := AST{Label: "interface-body"}
 	for !checkValue("}") {
 		if checkValue("fn") {
-			ast.AddChildren(parseFunction())
+			body.AddChildren(parseFunction())
 		} else {
 			state.addError(fmt.Sprintf("Only function definitions supported within interface body. Found %s", consume().GetValueString()))
 			sync(interfaceCtx)
 		}
 	}
 	expectValue("}")
+	ast.AddChildren(body)
 	return ast
 }
 

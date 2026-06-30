@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/EladB1/The/internal/datatypes"
+	"github.com/EladB1/The/internal/parser"
 )
 
 type (
@@ -17,7 +18,8 @@ type (
 		returnType               datatypes.DataType
 		isPrivate                bool
 		hasDefaultImplementation bool
-		// overrides?
+		bodyStart                *parser.AST
+		innerScope               *Scope
 	}
 	VariableSymbol struct {
 		name      string
@@ -26,16 +28,22 @@ type (
 		isMutable bool
 	}
 	InterfaceSymbol struct {
-		name string
+		name       string
+		bodyStart  *parser.AST
+		innerScope *Scope
 	}
 	StructSymbol struct {
 		name        string
 		implements  []string
 		sizeInBytes int
+		bodyStart   *parser.AST
+		innerScope  *Scope
 	}
 	NamedBlockSymbol struct {
 		name           string
 		isSpecialBlock bool
+		bodyStart      *parser.AST
+		innerScope     *Scope
 	}
 
 	FunctionSymbolTable   map[string]FunctionSymbol

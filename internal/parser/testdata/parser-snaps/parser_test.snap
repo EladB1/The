@@ -698,61 +698,64 @@ children: [
     Node: { Label: "interface"
     children: [
         Node: { Token: {Value: Test, Type: identifier, Line: 15, Column: 10} },
-        Node: { Label: "fn"
+        Node: { Label: "interface-body"
         children: [
-            Node: { Token: {Value: test, Type: identifier, Line: 16, Column: 7} },
-            Node: { Label: "params"
+            Node: { Label: "fn"
             children: [
-                Node: { Label: "param"
+                Node: { Token: {Value: test, Type: identifier, Line: 16, Column: 7} },
+                Node: { Label: "params"
                 children: [
-                    Node: { Token: {Value: A, Type: identifier, Line: 16, Column: 12} },
-                    Node: { Token: {Value: a, Type: identifier, Line: 16, Column: 14} }
-                ] },
-                Node: { Label: "param"
-                children: [
-                    Node: { Token: {Value: int, Type: type keyword, Line: 16, Column: 17} },
-                    Node: { Token: {Value: num, Type: identifier, Line: 16, Column: 21} }
-                ] },
-                Node: { Label: "param"
-                children: [
-                    Node: { Token: {Value: int, Type: type keyword, Line: 16, Column: 26} },
-                    Node: { Token: {Value: expected, Type: identifier, Line: 16, Column: 30} }
-                ] }
-            ] },
-            Node: { Token: {Value: bool, Type: type keyword, Line: 16, Column: 43} },
-            Node: { Label: "fn-body"
-            children: [
-                Node: { Label: "control-flow"
-                children: [
-                    Node: { Token: {Value: return, Type: flow keyword, Line: 17, Column: 8} },
-                    Node: { Token: {Value: ==, Type: compare operator, Line: 17, Column: 27}
+                    Node: { Label: "param"
                     children: [
-                        Node: { Label: "call"
+                        Node: { Token: {Value: A, Type: identifier, Line: 16, Column: 12} },
+                        Node: { Token: {Value: a, Type: identifier, Line: 16, Column: 14} }
+                    ] },
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: int, Type: type keyword, Line: 16, Column: 17} },
+                        Node: { Token: {Value: num, Type: identifier, Line: 16, Column: 21} }
+                    ] },
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: int, Type: type keyword, Line: 16, Column: 26} },
+                        Node: { Token: {Value: expected, Type: identifier, Line: 16, Column: 30} }
+                    ] }
+                ] },
+                Node: { Token: {Value: bool, Type: type keyword, Line: 16, Column: 43} },
+                Node: { Label: "fn-body"
+                children: [
+                    Node: { Label: "control-flow"
+                    children: [
+                        Node: { Token: {Value: return, Type: flow keyword, Line: 17, Column: 8} },
+                        Node: { Token: {Value: ==, Type: compare operator, Line: 17, Column: 27}
                         children: [
-                            Node: { Label: "dot"
+                            Node: { Label: "call"
                             children: [
-                                Node: { Token: {Value: a, Type: identifier, Line: 17, Column: 15} },
-                                Node: { Token: {Value: sum4, Type: identifier, Line: 17, Column: 17} }
+                                Node: { Label: "dot"
+                                children: [
+                                    Node: { Token: {Value: a, Type: identifier, Line: 17, Column: 15} },
+                                    Node: { Token: {Value: sum4, Type: identifier, Line: 17, Column: 17} }
+                                ] },
+                                Node: { Label: "params"
+                                children: [
+                                    Node: { Token: {Value: num, Type: identifier, Line: 17, Column: 22} }
+                                ] }
                             ] },
-                            Node: { Label: "params"
-                            children: [
-                                Node: { Token: {Value: num, Type: identifier, Line: 17, Column: 22} }
-                            ] }
-                        ] },
-                        Node: { Token: {Value: expected, Type: identifier, Line: 17, Column: 30} }
+                            Node: { Token: {Value: expected, Type: identifier, Line: 17, Column: 30} }
+                        ] }
                     ] }
                 ] }
-            ] }
-        ] },
-        Node: { Label: "fn"
-        children: [
-            Node: { Token: {Value: report, Type: identifier, Line: 19, Column: 7} },
-            Node: { Label: "params"
+            ] },
+            Node: { Label: "fn"
             children: [
-                Node: { Label: "param"
+                Node: { Token: {Value: report, Type: identifier, Line: 19, Column: 7} },
+                Node: { Label: "params"
                 children: [
-                    Node: { Token: {Value: string, Type: identifier, Line: 19, Column: 14} },
-                    Node: { Token: {Value: message, Type: identifier, Line: 19, Column: 21} }
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: string, Type: identifier, Line: 19, Column: 14} },
+                        Node: { Token: {Value: message, Type: identifier, Line: 19, Column: 21} }
+                    ] }
                 ] }
             ] }
         ] }
@@ -760,15 +763,19 @@ children: [
     Node: { Label: "interface"
     children: [
         Node: { Token: {Value: Logger, Type: identifier, Line: 22, Column: 10} },
-        Node: { Label: "fn"
+        Node: { Label: "interface-body"
         children: [
-            Node: { Token: {Value: log, Type: identifier, Line: 23, Column: 7} },
-            Node: { Token: {Value: String, Type: type keyword, Line: 23, Column: 16} }
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: log, Type: identifier, Line: 23, Column: 7} },
+                Node: { Token: {Value: String, Type: type keyword, Line: 23, Column: 16} }
+            ] }
         ] }
     ] },
     Node: { Label: "interface"
     children: [
-        Node: { Token: {Value: Empty, Type: identifier, Line: 26, Column: 10} }
+        Node: { Token: {Value: Empty, Type: identifier, Line: 26, Column: 10} },
+        Node: { Label: "interface-body" }
     ] },
     Node: { Token: {Value: struct, Type: structure keyword, Line: 28, Column: 0}
     children: [
@@ -1014,7 +1021,8 @@ Node: { Label: "program"
 children: [
     Node: { Label: "interface"
     children: [
-        Node: { Token: {Value: Test, Type: identifier, Line: 0, Column: 10} }
+        Node: { Token: {Value: Test, Type: identifier, Line: 0, Column: 10} },
+        Node: { Label: "interface-body" }
     ] }
 ] }
 , Compiler messages:

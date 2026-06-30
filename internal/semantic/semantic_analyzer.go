@@ -29,23 +29,27 @@ func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
 // Pass one
 func collectTypeNames(ast parser.AST) {
 	for _, node := range ast.Children {
+		if node.Label != "interface" && node.Token.Value != "struct" {
+			continue
+		}
+		name := node.Children[0].Token
+		result := globalScope.lookup(name.GetValueString())
+		if result != nil && (result.getSymbolType() == "interface" || result.getSymbolType() == "struct") {
+			messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name '%s' already in use", name.GetValueString()), name.Line, name.Column)
+			continue
+		}
+		childScope := globalScope.addChild(name.GetValueString())
 		if node.Label == "interface" {
-			name := node.Children[0].Token
-			if globalScope.lookup(name.GetValueString()) != nil {
-				messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name '%s' already in use", name.GetValueString()), name.Line, name.Column)
-			} else {
-				globalScope.interfaces[name.GetValueString()] = InterfaceSymbol{
-					name: name.GetValueString(),
-				}
+			globalScope.interfaces[name.GetValueString()] = InterfaceSymbol{
+				name:       name.GetValueString(),
+				innerScope: &childScope,
+				bodyStart:  &ast.Children[1],
 			}
 		} else if node.Token.Value == "struct" {
-			name := node.Children[0].Token
-			if globalScope.lookup(name.GetValueString()) != nil {
-				messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name '%s' already in use", name.GetValueString()), name.Line, name.Column)
-			} else {
-				globalScope.structs[name.GetValueString()] = StructSymbol{
-					name: name.GetValueString(),
-				}
+			globalScope.structs[name.GetValueString()] = StructSymbol{
+				name:       name.GetValueString(),
+				innerScope: &childScope,
+				bodyStart:  &ast.Children[len(ast.Children)-1],
 			}
 		}
 	}
@@ -53,7 +57,11 @@ func collectTypeNames(ast parser.AST) {
 
 // Pass two
 func analyzeInterfaces(ast parser.AST) {
+	for _, node := range ast.Children {
+		if node.Label == "interface" {
 
+		}
+	}
 }
 
 // Pass three
