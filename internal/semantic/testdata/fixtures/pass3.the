@@ -35,12 +35,12 @@ struct E impl D {
 struct F {
     int x;
     int y;
-
     private {
         int z;
         fn action() {
             println(z);
         }
+        private float f;
     }
     cast {
         fn toString() -> String {

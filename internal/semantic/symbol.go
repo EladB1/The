@@ -19,7 +19,7 @@ type (
 		returnType               datatypes.DataType
 		isPrivate                bool
 		hasDefaultImplementation bool
-		funcDef                  *parser.AST
+		Def                      *parser.AST
 		innerScope               *Scope
 	}
 	VariableSymbol struct {
@@ -27,23 +27,24 @@ type (
 		Type      datatypes.DataType
 		isPrivate bool
 		isMutable bool
+		Def       *parser.AST
 	}
 	InterfaceSymbol struct {
-		name         string
-		interfaceDef *parser.AST
-		innerScope   *Scope
+		name       string
+		Def        *parser.AST
+		innerScope *Scope
 	}
 	StructSymbol struct {
 		name        string
 		implements  []string
 		sizeInBytes int
-		structDef   *parser.AST
+		Def         *parser.AST
 		innerScope  *Scope
 	}
 	NamedBlockSymbol struct {
 		name           string
 		isSpecialBlock bool
-		def            *parser.AST
+		Def            *parser.AST
 		innerScope     *Scope
 	}
 
@@ -160,4 +161,20 @@ func (fn FunctionSymbol) String() string {
 		priv = ", isPrivate: true"
 	}
 	return fmt.Sprintf("{Signature: %s%s, hasImplementation: %v}", sig, priv, fn.hasDefaultImplementation)
+}
+
+func (variable VariableSymbol) String() string {
+	priv := ""
+	mut := ""
+	if variable.isPrivate {
+		priv = ", isPrivate: true"
+	}
+	if variable.isMutable {
+		mut = ", isMutable: true"
+	}
+	return fmt.Sprintf("{name: %s, Type: %s%s%s}", variable.name, variable.Type, priv, mut)
+}
+
+func (nb NamedBlockSymbol) String() string {
+	return fmt.Sprintf("{name: %s}", nb.name)
 }

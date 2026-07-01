@@ -49,15 +49,15 @@ func collectTypeNames(ast parser.AST) {
 		childScope := globalScope.addChild(name.GetValueString())
 		if node.Label == "interface" {
 			globalScope.interfaces[name.GetValueString()] = InterfaceSymbol{
-				name:         name.GetValueString(),
-				innerScope:   childScope,
-				interfaceDef: &node,
+				name:       name.GetValueString(),
+				innerScope: childScope,
+				Def:        &node,
 			}
 		} else if node.Token.Value == "struct" {
 			globalScope.structs[name.GetValueString()] = StructSymbol{
 				name:       name.GetValueString(),
 				innerScope: childScope,
-				structDef:  &node,
+				Def:        &node,
 			}
 		}
 	}
@@ -67,7 +67,7 @@ func collectTypeNames(ast parser.AST) {
 func analyzeInterfaceFnSignatures() {
 	for _, intf := range globalScope.interfaces {
 		currentScope = intf.innerScope
-		for _, node := range intf.interfaceDef.Children[1].Children {
+		for _, node := range intf.Def.Children[1].Children {
 			symbol := processFunctionSignature(node)
 			currentScope.functions[symbol.getSignature()] = symbol
 		}
@@ -80,7 +80,7 @@ func analyzeStructFnSignatures() {
 	for _, str := range globalScope.structs {
 		currentScope = str.innerScope
 		// collect impl values
-		def := str.structDef.Children
+		def := str.Def.Children
 		body := def[1]
 		impl := []string{}
 		if def[1].Label == "interface_list" {
@@ -94,7 +94,6 @@ func analyzeStructFnSignatures() {
 			}
 		}
 		for _, node := range body.Children {
-			// TODO: handle variables
 			switch node.Label {
 			case "fn":
 				symbol := processFunctionSignature(node)
@@ -105,10 +104,12 @@ func analyzeStructFnSignatures() {
 					currentScope.namedBlocks[symbol.name] = *symbol
 				}
 			default:
-				// TODO variable
+				symbol := analyzeVariable(node)
+				if symbol != nil {
+					currentScope.variables[symbol.name] = *symbol
+				}
 			}
 		}
-		// read through the functions, properties, named blocks
 	}
 	currentScope = globalScope // reset the current scope
 }
@@ -195,7 +196,7 @@ func processFunctionSignature(fnNode parser.AST) FunctionSymbol {
 		parameters:               paramTypes,
 		returnType:               returnType,
 		hasDefaultImplementation: bodyNode == nil,
-		funcDef:                  &fnNode,
+		Def:                      &fnNode,
 		innerScope:               newScope,
 	}
 	return symbol
@@ -209,7 +210,6 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 	details := nbNode.Children
 	name := details[0].Token.Value
 	if !slices.Contains(specialBlocks, name) && !slices.Contains(impl, name) {
-		fmt.Println(nbNode)
 		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Block '%s' not supported", name), details[0].Token.Line, details[0].Token.Column)
 		return nil
 	}
@@ -236,14 +236,19 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 					messages = messages.Complain(diagnostic.NamedBlockError, "Functions in cast block must take no parameters and return a different type", node.Children[0].Token.Line, node.Children[1].Token.Column)
 				}
 			case "private":
-				// TODO: set functions to private
+				symbol.isPrivate = true
 			}
 			currentScope.functions[symbol.getSignature()] = symbol
 		case "Variable":
 			if name != "private" {
 				messages = messages.Complain(diagnostic.IllegalStatementError, "Variable declaration only allowed in struct or private block", node.Token.Line, node.Token.Column)
 			} else {
-				// TODO: set variable to private
+				symbol := analyzeVariable(node)
+				if symbol.isPrivate {
+					messages = messages.Complain(diagnostic.Warning, "Redundant use of private in private block", node.Children[1].Token.Line, node.Children[1].Token.Column)
+				}
+				currentScope.variables[symbol.name] = *symbol
+
 			}
 		}
 	}
@@ -251,8 +256,40 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 	return &NamedBlockSymbol{
 		name:           name,
 		isSpecialBlock: slices.Contains(specialBlocks, name),
-		def:            &nbNode,
+		Def:            &nbNode,
 		innerScope:     newScope,
+	}
+}
+
+func analyzeVariable(varNode parser.AST) *VariableSymbol {
+	details := varNode.Children
+	typeNode := details[0]
+	name := details[1].Token
+	isPrivate := false
+	isMutable := false
+	if details[0].Label == "modifiers" {
+		typeNode = details[1]
+		name = details[2].Token
+		for _, modifier := range details[0].Children {
+			if modifier.Token.Value == "private" {
+				isPrivate = true
+			}
+			if modifier.Token.Value == "mut" {
+				isMutable = true
+			}
+		}
+	}
+	varType := nodeToType(typeNode)
+	if currentScope.lookup(name.Value, Variable) != nil {
+		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name: '%s' already defined", name.Value), name.Line, name.Column)
+		return nil
+	}
+	return &VariableSymbol{
+		name:      name.Value,
+		Type:      varType,
+		isPrivate: isPrivate,
+		isMutable: isMutable,
+		Def:       &varNode,
 	}
 }
 
