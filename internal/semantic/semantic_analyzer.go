@@ -87,7 +87,8 @@ func analyzeStructFnSignatures() {
 			body = def[2]
 			for _, node := range def[1].Children {
 				if globalScope.lookup(node.Token.Value, Interface) == nil {
-					messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Could not find interface name: '%s'", node.Token.Value), node.Token.Line, node.Token.Column)
+					line, col := node.EstimateSourcePosition()
+					messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Could not find interface name: '%s'", node.Token.Value), line, col)
 				} else {
 					impl = append(impl, node.Token.Value)
 				}
@@ -210,7 +211,8 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 	details := nbNode.Children
 	name := details[0].Token.Value
 	if !slices.Contains(specialBlocks, name) && !slices.Contains(impl, name) {
-		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Block '%s' not supported", name), details[0].Token.Line, details[0].Token.Column)
+		line, col := nbNode.EstimateSourcePosition()
+		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Block '%s' not supported", name), line, col)
 		return nil
 	}
 	body := details[1].Children
@@ -229,11 +231,13 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 					fmt.Sprintf("fn greaterThan(%s)->bool", structName),
 				}
 				if !slices.Contains(supported, symbol.getSignature()) {
-					messages = messages.Complain(diagnostic.NamedBlockError, fmt.Sprintf("Function signature '%s' not supported; only '%s' supported", symbol.getSignature(), strings.Join(supported, ",")), node.Children[0].Token.Line, node.Children[0].Token.Column)
+					line, col := node.EstimateSourcePosition()
+					messages = messages.Complain(diagnostic.NamedBlockError, fmt.Sprintf("Function signature '%s' not supported; only '%s' supported", symbol.getSignature(), strings.Join(supported, ",")), line, col)
 				}
 			case "cast":
 				if len(symbol.parameters) > 0 || symbol.returnType == datatypes.None || symbol.returnType == datatypes.DynamicType(structName) {
-					messages = messages.Complain(diagnostic.NamedBlockError, "Functions in cast block must take no parameters and return a different type", node.Children[0].Token.Line, node.Children[1].Token.Column)
+					line, col := node.EstimateSourcePosition()
+					messages = messages.Complain(diagnostic.NamedBlockError, "Functions in cast block must take no parameters and return a different type", line, col)
 				}
 			case "private":
 				symbol.isPrivate = true
@@ -241,11 +245,13 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 			currentScope.functions[symbol.getSignature()] = symbol
 		case "Variable":
 			if name != "private" {
-				messages = messages.Complain(diagnostic.IllegalStatementError, "Variable declaration only allowed in struct or private block", node.Token.Line, node.Token.Column)
+				line, col := node.EstimateSourcePosition()
+				messages = messages.Complain(diagnostic.IllegalStatementError, "Variable declaration only allowed in struct or private block", line, col)
 			} else {
 				symbol := analyzeVariable(node)
 				if symbol.isPrivate {
-					messages = messages.Complain(diagnostic.Warning, "Redundant use of private in private block", node.Children[1].Token.Line, node.Children[1].Token.Column)
+					line, col := node.EstimateSourcePosition()
+					messages = messages.Complain(diagnostic.Warning, "Redundant use of private in private block", line, col)
 				}
 				currentScope.variables[symbol.name] = *symbol
 
@@ -297,7 +303,8 @@ func nodeToType(node parser.AST) datatypes.DataType {
 	if node.Token.Kind == lexer.ID {
 		symbol := globalScope.lookup(node.Token.Value, TYPE)
 		if symbol == nil || (symbol.getSymbolType() != "interface" && symbol.getSymbolType() != "struct") {
-			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Invalid type '%s' provided", node.Token.Value), node.Token.Line, node.Token.Column)
+			line, col := node.EstimateSourcePosition()
+			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Invalid type '%s' provided", node.Token.Value), line, col)
 			return datatypes.None
 		}
 		return datatypes.DynamicType(node.Token.Value)

@@ -57,3 +57,14 @@ func (ast *AST) AddChildren(nodes ...AST) {
 func (ast *AST) AddChildToken(token lexer.Token) {
 	ast.AddChildren(AST{Token: token})
 }
+
+func (ast AST) EstimateSourcePosition() (int, int) {
+	curr := ast
+	for curr.Label != "" {
+		if len(curr.Children) > 0 {
+			curr = curr.Children[0]
+		}
+
+	}
+	return curr.Token.Line, curr.Token.Column
+}
