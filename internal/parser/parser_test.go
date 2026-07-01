@@ -70,9 +70,11 @@ func TestGenerateFixtures(t *testing.T) {
 func TestParser(t *testing.T) {
 	t.Run("should run on empty file with no errors", func(t *testing.T) {
 		token := lexer.Token{
-			Kind:   lexer.EOF,
-			Line:   0,
-			Column: 0,
+			Kind: lexer.EOF,
+			Location: lexer.SourceLocation{
+				Line:   0,
+				Column: 0,
+			},
 		}
 		ast, messages := Parse([]lexer.Token{token})
 		if len(messages) != 0 {

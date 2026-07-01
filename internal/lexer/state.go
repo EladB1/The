@@ -74,8 +74,10 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 		token = Token{
 			Kind:    tokenType,
 			CharVal: char,
-			Line:    stateMchn.lineNum,
-			Column:  column,
+			Location: SourceLocation{
+				Line:   stateMchn.lineNum,
+				Column: column,
+			},
 		}
 	case LIT_STRING:
 		str, err := strconv.Unquote(stateMchn.sequence.String())
@@ -89,8 +91,10 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 		token = Token{
 			Kind:     tokenType,
 			StrIndex: index,
-			Line:     stateMchn.lineNum,
-			Column:   column,
+			Location: SourceLocation{
+				Line:   stateMchn.lineNum,
+				Column: column,
+			},
 		}
 	case LIT_FLOAT:
 		val, err := strconv.ParseFloat(stateMchn.sequence.String(), 64)
@@ -101,8 +105,10 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 		token = Token{
 			Kind:     tokenType,
 			FloatVal: val,
-			Line:     stateMchn.lineNum,
-			Column:   column,
+			Location: SourceLocation{
+				Line:   stateMchn.lineNum,
+				Column: column,
+			},
 		}
 	case LIT_INT:
 		val, err := strconv.ParseInt(stateMchn.sequence.String(), 10, 64)
@@ -113,8 +119,10 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 		token = Token{
 			Kind:   tokenType,
 			IntVal: int64(val),
-			Line:   stateMchn.lineNum,
-			Column: column,
+			Location: SourceLocation{
+				Line:   stateMchn.lineNum,
+				Column: column,
+			},
 		}
 	case LIT_HEX:
 		val, err := strconv.ParseInt(stateMchn.sequence.String(), 0, 64)
@@ -125,15 +133,19 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 		token = Token{
 			Kind:   tokenType,
 			IntVal: int64(val),
-			Line:   stateMchn.lineNum,
-			Column: column,
+			Location: SourceLocation{
+				Line:   stateMchn.lineNum,
+				Column: column,
+			},
 		}
 	default:
 		token = Token{
-			Kind:   tokenType,
-			Value:  stateMchn.sequence.String(),
-			Line:   stateMchn.lineNum,
-			Column: column,
+			Kind:  tokenType,
+			Value: stateMchn.sequence.String(),
+			Location: SourceLocation{
+				Line:   stateMchn.lineNum,
+				Column: column,
+			},
 		}
 	}
 	stateMchn.tokens = append(stateMchn.tokens, token)
@@ -142,10 +154,12 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 
 func (stateMchn *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, char byte) {
 	stateMchn.tokens = append(stateMchn.tokens, Token{
-		Kind:   tokenType,
-		Value:  string(char),
-		Line:   stateMchn.lineNum,
-		Column: stateMchn.lineIndex,
+		Kind:  tokenType,
+		Value: string(char),
+		Location: SourceLocation{
+			Line:   stateMchn.lineNum,
+			Column: stateMchn.lineIndex,
+		},
 	})
 	stateMchn.clearSequence()
 }

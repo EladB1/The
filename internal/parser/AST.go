@@ -12,6 +12,7 @@ type (
 	AST struct {
 		Label    string
 		Token    lexer.Token
+		Location lexer.SourceLocation
 		Type     datatypes.DataType
 		Children []AST
 	}
@@ -55,16 +56,9 @@ func (ast *AST) AddChildren(nodes ...AST) {
 }
 
 func (ast *AST) AddChildToken(token lexer.Token) {
-	ast.AddChildren(AST{Token: token})
+	ast.AddChildren(AST{Token: token, Location: token.Location})
 }
 
-func (ast AST) EstimateSourcePosition() (int, int) {
-	curr := ast
-	for curr.Label != "" {
-		if len(curr.Children) > 0 {
-			curr = curr.Children[0]
-		}
-
-	}
-	return curr.Token.Line, curr.Token.Column
+func nodeFromToken(token lexer.Token) AST {
+	return AST{Token: token, Location: token.Location}
 }

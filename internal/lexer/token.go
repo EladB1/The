@@ -9,13 +9,16 @@ import (
 )
 
 type (
-	TokenType string
-	Token     struct {
-		Kind    TokenType
-		Missing bool
-		Line    int
-		Column  int
-		Value   string // use for non-literals
+	TokenType      string
+	SourceLocation struct {
+		Line   int
+		Column int
+	}
+	Token struct {
+		Kind     TokenType
+		Missing  bool
+		Location SourceLocation
+		Value    string // use for non-literals
 		// use for literals
 		CharVal  rune
 		IntVal   int64
@@ -84,7 +87,7 @@ func (token Token) String() string {
 	if token.Missing {
 		missing = " Missing: true,"
 	}
-	return fmt.Sprintf("{Value: %s, Type: %s,%s Line: %d, Column: %d}", token.GetValueString(), token.Kind, missing, token.Line, token.Column)
+	return fmt.Sprintf("{Value: %s, Type: %s,%s Line: %d, Column: %d}", token.GetValueString(), token.Kind, missing, token.Location.Line, token.Location.Column)
 }
 
 func (token Token) HasValue(value string) bool {

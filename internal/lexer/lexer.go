@@ -29,9 +29,11 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 		state.messages = state.messages.ComplainPositionless(errLevel, "Reached EOF while scanning for */")
 	}
 	state.tokens = append(state.tokens, Token{
-		Kind:   EOF,
-		Line:   state.lineNum,
-		Column: state.lineIndex,
+		Kind: EOF,
+		Location: SourceLocation{
+			Line:   state.lineNum,
+			Column: state.lineIndex,
+		},
 	})
 	return state.tokens, state.messages
 }
