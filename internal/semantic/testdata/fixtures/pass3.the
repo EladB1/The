@@ -1,0 +1,65 @@
+struct A {
+    fn test() {
+
+    }
+}
+
+struct B {
+    fn test() {
+
+    }
+
+    fn test2() {
+
+    }
+}
+
+struct C {
+    fn test(int i) -> bool {
+        return i == 0;
+    }
+}
+
+interface D {
+    fn sample();
+}
+
+struct E impl D {
+    D {
+        fn sample() {
+            return;
+        }
+    }
+}
+
+struct F {
+    int x;
+    int y;
+
+    private {
+        int z;
+        fn action() {
+            println(z);
+        }
+    }
+    cast {
+        fn toString() -> String {
+            return (x as String) + ", " + (y as String);
+        }
+        // fn toSomething(int i) -> String {}
+        // fn toSame() -> F {}
+        // fn toNothing() {}
+    }
+    compare {
+        fn equals(F other) -> bool {
+            return x == other.x && y == other.y;
+        }
+        fn lessThan(F other) -> bool {
+            return x < other.x || y < other.y;
+        }
+        fn greaterThan(F other) -> bool {
+            return x > other.x || y > other.y;
+        }
+        //fn abc(int i) -> String {}
+    }
+}

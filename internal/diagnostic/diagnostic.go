@@ -11,13 +11,15 @@ import (
 type Severity string
 
 const (
-	Info        Severity = "Info"
-	Warning     Severity = "Warning"
-	Error       Severity = "Error"
-	SyntaxError Severity = "SyntaxError"
-	NameError   Severity = "NameError"
-	TypeError   Severity = "TypeError"
-	AccessError Severity = "AccessError"
+	Info                  Severity = "Info"
+	Warning               Severity = "Warning"
+	Error                 Severity = "Error"
+	SyntaxError           Severity = "SyntaxError"
+	NameError             Severity = "NameError"
+	TypeError             Severity = "TypeError"
+	AccessError           Severity = "AccessError"
+	IllegalStatementError Severity = "IllegalStatementError"
+	NamedBlockError       Severity = "NamedBlockError"
 )
 
 type Diagnostic struct {

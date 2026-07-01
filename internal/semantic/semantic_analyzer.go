@@ -2,12 +2,16 @@ package semantic
 
 import (
 	"fmt"
+	"slices"
+	"strings"
 
 	"github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
 )
+
+var specialBlocks []string = []string{"private", "cast", "compare"}
 
 var messages diagnostic.PhaseDiagnostics = diagnostic.PhaseDiagnostics{}
 
@@ -25,6 +29,7 @@ var globalScope *Scope = initScope()
 func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
 	collectTypeNames(ast)
 	analyzeInterfaceFnSignatures()
+	analyzeStructFnSignatures()
 	fmt.Println(globalScope)
 	return ast, messages
 }
@@ -71,8 +76,41 @@ func analyzeInterfaceFnSignatures() {
 }
 
 // Pass three
-func analyzeStructFnSignatures(ast parser.AST) {
-
+func analyzeStructFnSignatures() {
+	for _, str := range globalScope.structs {
+		currentScope = str.innerScope
+		// collect impl values
+		def := str.structDef.Children
+		body := def[1]
+		impl := []string{}
+		if def[1].Label == "interface_list" {
+			body = def[2]
+			for _, node := range def[1].Children {
+				if globalScope.lookup(node.Token.Value, Interface) == nil {
+					messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Could not find interface name: '%s'", node.Token.Value), node.Token.Line, node.Token.Column)
+				} else {
+					impl = append(impl, node.Token.Value)
+				}
+			}
+		}
+		for _, node := range body.Children {
+			// TODO: handle variables
+			switch node.Label {
+			case "fn":
+				symbol := processFunctionSignature(node)
+				currentScope.functions[symbol.getSignature()] = symbol
+			case "named-block":
+				symbol := analyzeNamedBlock(node, str.name, impl)
+				if symbol != nil {
+					currentScope.namedBlocks[symbol.name] = *symbol
+				}
+			default:
+				// TODO variable
+			}
+		}
+		// read through the functions, properties, named blocks
+	}
+	currentScope = globalScope // reset the current scope
 }
 
 // Pass four
@@ -165,6 +203,57 @@ func processFunctionSignature(fnNode parser.AST) FunctionSymbol {
 
 func analyzeFunctionBody(name string, returns datatypes.DataType, body *parser.AST) {
 	// TODO
+}
+
+func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *NamedBlockSymbol {
+	details := nbNode.Children
+	name := details[0].Token.Value
+	if !slices.Contains(specialBlocks, name) && !slices.Contains(impl, name) {
+		fmt.Println(nbNode)
+		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Block '%s' not supported", name), details[0].Token.Line, details[0].Token.Column)
+		return nil
+	}
+	body := details[1].Children
+	scope := currentScope
+	newScope := currentScope.addChild(fmt.Sprintf("%s@%s", name, currentScope.id))
+	currentScope = newScope
+	for _, node := range body {
+		switch node.Label {
+		case "fn":
+			symbol := processFunctionSignature(node)
+			switch name {
+			case "compare":
+				supported := []string{
+					fmt.Sprintf("fn equals(%s)->bool", structName),
+					fmt.Sprintf("fn lessThan(%s)->bool", structName),
+					fmt.Sprintf("fn greaterThan(%s)->bool", structName),
+				}
+				if !slices.Contains(supported, symbol.getSignature()) {
+					messages = messages.Complain(diagnostic.NamedBlockError, fmt.Sprintf("Function signature '%s' not supported; only '%s' supported", symbol.getSignature(), strings.Join(supported, ",")), node.Children[0].Token.Line, node.Children[0].Token.Column)
+				}
+			case "cast":
+				if len(symbol.parameters) > 0 || symbol.returnType == datatypes.None || symbol.returnType == datatypes.DynamicType(structName) {
+					messages = messages.Complain(diagnostic.NamedBlockError, "Functions in cast block must take no parameters and return a different type", node.Children[0].Token.Line, node.Children[1].Token.Column)
+				}
+			case "private":
+				// TODO: set functions to private
+			}
+			currentScope.functions[symbol.getSignature()] = symbol
+		case "Variable":
+			if name != "private" {
+				messages = messages.Complain(diagnostic.IllegalStatementError, "Variable declaration only allowed in struct or private block", node.Token.Line, node.Token.Column)
+			} else {
+				// TODO: set variable to private
+			}
+		}
+	}
+	currentScope = scope
+	return &NamedBlockSymbol{
+		name:           name,
+		isSpecialBlock: slices.Contains(specialBlocks, name),
+		def:            &nbNode,
+		innerScope:     newScope,
+	}
 }
 
 func nodeToType(node parser.AST) datatypes.DataType {

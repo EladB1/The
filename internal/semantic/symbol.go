@@ -43,7 +43,7 @@ type (
 	NamedBlockSymbol struct {
 		name           string
 		isSpecialBlock bool
-		bodyStart      *parser.AST
+		def            *parser.AST
 		innerScope     *Scope
 	}
 
