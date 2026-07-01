@@ -2,8 +2,6 @@ package semantic
 
 import (
 	"fmt"
-	"reflect"
-	"strings"
 
 	"github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
@@ -14,8 +12,8 @@ import (
 var messages diagnostic.PhaseDiagnostics = diagnostic.PhaseDiagnostics{}
 
 func initScope() *Scope {
-	builtinScope.addChild("@global")
-	return builtinScope.children[0]
+	globalScope := rootScope.addChild("@global")
+	return globalScope
 }
 
 /* moving scope pointer that starts at global scope */
@@ -47,13 +45,13 @@ func collectTypeNames(ast parser.AST) {
 		if node.Label == "interface" {
 			globalScope.interfaces[name.GetValueString()] = InterfaceSymbol{
 				name:         name.GetValueString(),
-				innerScope:   &childScope,
+				innerScope:   childScope,
 				interfaceDef: &node,
 			}
 		} else if node.Token.Value == "struct" {
 			globalScope.structs[name.GetValueString()] = StructSymbol{
 				name:       name.GetValueString(),
-				innerScope: &childScope,
+				innerScope: childScope,
 				structDef:  &node,
 			}
 		}
@@ -63,35 +61,13 @@ func collectTypeNames(ast parser.AST) {
 // Pass two
 func analyzeInterfaces() {
 	for _, intf := range globalScope.interfaces {
+		currentScope = intf.innerScope
 		for _, node := range intf.interfaceDef.Children[1].Children {
-			//fmt.Println(node)
-			name := node.Children[0].Token.GetValueString()
-			paramtypes, paramNames := getParams(node)
-			returnType := getReturnType(node)
-			signature := formFunctionSignature(name, paramtypes, returnType)
-			childScope := intf.innerScope.addChild(name)
-			if !reflect.DeepEqual(paramtypes, []datatypes.DataType{datatypes.None}) {
-				for i := range len(paramtypes) {
-					childScope.variables[paramNames[i]] = VariableSymbol{
-						name: paramNames[i],
-						Type: paramtypes[i],
-					}
-				}
-			}
-			intf.innerScope.functions[signature] = FunctionSymbol{
-				name:                     name,
-				parameters:               paramtypes,
-				returnType:               returnType,
-				hasDefaultImplementation: functionHasBody(node),
-				funcDef:                  &node,
-				innerScope:               &childScope,
-			}
-			fmt.Println(signature)
-			// intf.innerScope.functions[name] = FunctionSymbol{
-			// 	name: name,
-			// }
+			symbol := processFunction(node)
+			currentScope.functions[symbol.getSignature()] = symbol
 		}
 	}
+	currentScope = globalScope // reset the current scope
 }
 
 // Pass three
@@ -111,71 +87,89 @@ func analyzeFunctionsAndGlobalVariables(ast parser.AST) {
 
 // helpers
 
-func formFunctionSignature(name string, params []datatypes.DataType, returns datatypes.DataType) string {
-	// TODO: add function parent(s)
-	returnStr := ""
-	if returns != datatypes.None {
-		returnStr = fmt.Sprintf(" -> %s", returns.String())
-	}
-	paramStr := strings.Builder{}
-	for i, param := range params {
-		paramStr.WriteString(param.String())
-		if i != len(params)-1 {
-			paramStr.WriteRune(',')
+func processFunction(fnNode parser.AST) FunctionSymbol {
+	details := fnNode.Children
+	length := len(details)
+	name := details[0].Token.Value
+	var paramNode *parser.AST = nil
+	var returnTypeNode *parser.AST = nil
+	var bodyNode *parser.AST = nil
+	var newScope *Scope = nil
+	switch length {
+	case 2:
+		if details[1].Label == "params" { // fn name(type pname);
+			paramNode = &details[1]
+		} else if details[1].Token.Kind == lexer.ID || details[1].Token.Kind == lexer.KW_TYPE { // fn name() -> type;
+			returnTypeNode = &details[1]
+		} else { // fn name() {}
+			bodyNode = &details[1]
 		}
-	}
-	return fmt.Sprintf("fn %s(%s)%s", name, paramStr.String(), returnStr)
-}
-
-func getReturnType(fnNode parser.AST) datatypes.DataType {
-	if len(fnNode.Children) == 1 {
-		return datatypes.None
-	}
-	var typeIndex int
-	if functionHasBody(fnNode) && len(fnNode.Children) > 2 {
-		//fmt.Println(fnNode)
-		typeIndex = len(fnNode.Children) - 2
-	} else {
-		typeIndex = len(fnNode.Children) - 1
-	}
-	typeNode := fnNode.Children[typeIndex]
-
-	if typeNode.Label != "params" && (typeNode.Token.Kind == lexer.KW_TYPE || typeNode.Token.Kind == lexer.ID) {
-		return nodeToType(typeNode)
-	}
-	return datatypes.None
-}
-
-func functionHasBody(fnNode parser.AST) bool {
-	return fnNode.Children[len(fnNode.Children)-1].Label == "fn-body"
-}
-
-func getParams(fnNode parser.AST) ([]datatypes.DataType, []string) {
-	types := []datatypes.DataType{}
-	names := []string{}
-	var paramsIndex int
-	if functionHasBody(fnNode) {
-		if getReturnType(fnNode) == datatypes.None {
-			paramsIndex = len(fnNode.Children) - 2
+	case 3:
+		if details[1].Token.Kind == lexer.ID || details[1].Token.Kind == lexer.KW_TYPE { // fn name() -> type {}
+			returnTypeNode = &details[1]
+			bodyNode = &details[2]
 		} else {
-			paramsIndex = len(fnNode.Children) - 3
+			paramNode = &details[1]
+			if details[2].Token.Kind == lexer.ID || details[2].Token.Kind == lexer.KW_TYPE { // fn name(type pname) -> type;
+				returnTypeNode = &details[2]
+			} else { // fn name(type pname) {}
+				bodyNode = &details[2]
+			}
+
 		}
-	} else {
-		paramsIndex = len(fnNode.Children) - 1
+	case 4: // fn name(type pname) -> type {}
+		paramNode = &details[1]
+		returnTypeNode = &details[2]
+		bodyNode = &details[3]
 	}
-	if fnNode.Children[paramsIndex].Label != "params" {
-		types = append(types, datatypes.None)
-	} else {
-		for _, param := range fnNode.Children[paramsIndex].Children {
-			types = append(types, nodeToType(param.Children[0]))
-			names = append(names, param.Children[1].Token.Value)
+	var paramNames []string
+	var paramTypes []datatypes.DataType
+	var returnType datatypes.DataType = datatypes.None
+	if returnTypeNode != nil {
+		returnType = nodeToType(*returnTypeNode)
+	}
+	if paramNode != nil {
+		for _, param := range paramNode.Children {
+			paramTypes = append(paramTypes, nodeToType(param.Children[0]))
+			paramNames = append(paramNames, param.Children[1].Token.Value)
 		}
 	}
-	return types, names
+	if bodyNode != nil {
+		newScope = currentScope.addChild(fmt.Sprintf("fn@%s", name))
+		for i := range len(paramNames) {
+			newScope.variables[paramNames[i]] = VariableSymbol{
+				name: paramNames[i],
+				Type: paramTypes[i],
+			}
+		}
+		scope := currentScope
+		currentScope = newScope
+		// TODO: handle body
+		analyzeFunctionBody(name, returnType, bodyNode)
+		currentScope = scope // move backout to the parent scope
+	}
+	symbol := FunctionSymbol{
+		name:                     name,
+		parameters:               paramTypes,
+		returnType:               returnType,
+		hasDefaultImplementation: bodyNode == nil,
+		funcDef:                  &fnNode,
+		innerScope:               newScope,
+	}
+	return symbol
+}
+
+func analyzeFunctionBody(name string, returns datatypes.DataType, body *parser.AST) {
+	// TODO
 }
 
 func nodeToType(node parser.AST) datatypes.DataType {
 	if node.Token.Kind == lexer.ID {
+		symbol := globalScope.lookup(node.Token.Value)
+		if symbol == nil || (symbol.getSymbolType() != "interface" && symbol.getSymbolType() != "struct") {
+			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Invalid type '%s' provided", node.Token.Value), node.Token.Line, node.Token.Column)
+			return datatypes.None
+		}
 		return datatypes.DynamicType(node.Token.Value)
 	}
 	switch node.Token.Value {

@@ -16,7 +16,7 @@ type Scope struct {
 	namedBlocks NamedBlockSymbolTable
 }
 
-func (scope *Scope) addChild(id string) Scope {
+func (scope *Scope) addChild(id string) *Scope {
 	newScope := Scope{
 		id:          id,
 		parent:      scope,
@@ -27,7 +27,7 @@ func (scope *Scope) addChild(id string) Scope {
 		namedBlocks: NamedBlockSymbolTable{},
 	}
 	scope.children = append(scope.children, &newScope)
-	return newScope
+	return &newScope
 }
 
 func (scope *Scope) String() string {
@@ -59,11 +59,12 @@ func (scope *Scope) to_string(indentLevel int) string {
 	if len(scope.variables) != 0 {
 		builder.WriteString(fmt.Sprintf(", variables: %v", scope.variables))
 	}
-	if len(scope.children) != 0 {
+	count := len(scope.children)
+	if count > 0 {
 		builder.WriteString(", children: [\n")
 		for i, child := range scope.children {
 			builder.WriteString(child.to_string(indentLevel + 1))
-			if i != len(scope.children)-1 {
+			if i != count-1 {
 				builder.WriteString(",\n")
 			}
 		}

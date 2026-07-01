@@ -2,7 +2,7 @@ package semantic
 
 import "github.com/EladB1/The/internal/datatypes"
 
-var builtinScope Scope = Scope{
+var rootScope Scope = Scope{
 	id:          "@built-in",
 	parent:      nil,
 	interfaces:  InterfaceSymbolTable{},
