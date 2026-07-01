@@ -9,7 +9,8 @@ import (
 )
 
 type (
-	Symbol interface {
+	LookupMode int
+	Symbol     interface {
 		getSymbolType() string
 	}
 	FunctionSymbol struct {
@@ -73,19 +74,43 @@ func (nb NamedBlockSymbol) getSymbolType() string {
 	return "named-block"
 }
 
-func (scope *Scope) lookup(name string) Symbol {
+const (
+	ANY LookupMode = iota
+	TYPE
+	Struct
+	Interface
+	Function
+	Variable
+	NB
+)
+
+func (scope *Scope) lookup(name string, mode LookupMode) Symbol {
 	curr := scope
 	for curr != nil {
-		if intf, ok := scope.interfaces[name]; ok {
-			return intf
-		} else if str, ok := scope.structs[name]; ok {
-			return str
-		} else if fn, ok := scope.functions[name]; ok {
-			return fn
-		} else if variable, ok := scope.variables[name]; ok {
-			return variable
-		} else if nb, ok := scope.namedBlocks[name]; ok {
-			return nb
+		if mode == ANY || mode == TYPE || mode == Interface {
+			if intf, ok := scope.interfaces[name]; ok {
+				return intf
+			}
+		}
+		if mode == ANY || mode == TYPE || mode == Struct {
+			if str, ok := scope.structs[name]; ok {
+				return str
+			}
+		}
+		if mode == ANY || mode == Function {
+			if fn, ok := scope.functions[name]; ok {
+				return fn
+			}
+		}
+		if mode == ANY || mode == Variable {
+			if variable, ok := scope.variables[name]; ok {
+				return variable
+			}
+		}
+		if mode == ANY || mode == NB {
+			if nb, ok := scope.namedBlocks[name]; ok {
+				return nb
+			}
 		}
 		curr = curr.parent
 	}
@@ -130,5 +155,9 @@ func (str StructSymbol) String() string {
 
 func (fn FunctionSymbol) String() string {
 	sig := fn.getSignature()
-	return fmt.Sprintf("{Signature: %s, isPrivate: %v}", sig, fn.isPrivate)
+	priv := ""
+	if fn.isPrivate {
+		priv = ", isPrivate: true"
+	}
+	return fmt.Sprintf("{Signature: %s%s, hasImplementation: %v}", sig, priv, fn.hasDefaultImplementation)
 }

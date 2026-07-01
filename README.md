@@ -747,10 +747,14 @@ Semantic analysis will run in multiple passes over the AST.
 The passes will be:
 
 1. Custom type names: Get interface and struct names; error on any duplicates
-2. Analyze interface definitions
-3. Analyze struct definitions
-4. Collect function signatures
-5. Analyze function bodies and global variables: Check types, variable mutability, unreachable code, etc.
+2. Analyze interface function signatures: Collect function signatures from each interface
+3. Analyze struct function signatures: Collect function signatures from each struct
+4. Analyze interface function bodies
+5. Analyze struct function bodies
+6. Analyze interface implementation: Make any structs that claim to implement an interface actually do
+7. Collect function signatures
+8. Analyze function bodies and global variables: Check types, variable mutability, unreachable code, etc.
+
 
 Scopes will be a tree of scope where each node contains the following:
     

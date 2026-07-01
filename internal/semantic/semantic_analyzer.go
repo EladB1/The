@@ -24,7 +24,7 @@ var globalScope *Scope = initScope()
 
 func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
 	collectTypeNames(ast)
-	analyzeInterfaces()
+	analyzeInterfaceFnSignatures()
 	fmt.Println(globalScope)
 	return ast, messages
 }
@@ -36,8 +36,8 @@ func collectTypeNames(ast parser.AST) {
 			continue
 		}
 		name := node.Children[0].Token
-		result := globalScope.lookup(name.GetValueString())
-		if result != nil && (result.getSymbolType() == "interface" || result.getSymbolType() == "struct") {
+		result := globalScope.lookup(name.GetValueString(), TYPE)
+		if result != nil {
 			messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name '%s' already in use", name.GetValueString()), name.Line, name.Column)
 			continue
 		}
@@ -59,11 +59,11 @@ func collectTypeNames(ast parser.AST) {
 }
 
 // Pass two
-func analyzeInterfaces() {
+func analyzeInterfaceFnSignatures() {
 	for _, intf := range globalScope.interfaces {
 		currentScope = intf.innerScope
 		for _, node := range intf.interfaceDef.Children[1].Children {
-			symbol := processFunction(node)
+			symbol := processFunctionSignature(node)
 			currentScope.functions[symbol.getSignature()] = symbol
 		}
 	}
@@ -71,23 +71,32 @@ func analyzeInterfaces() {
 }
 
 // Pass three
-func analyzeStructs(ast parser.AST) {
+func analyzeStructFnSignatures(ast parser.AST) {
 
 }
 
 // Pass four
+func analyzeInterfaceFnBodies() {}
+
+// Pass five
+func analyzeStructMethodBodies() {}
+
+// Pass six
+func analyzeInterfaceImplementation() {}
+
+// Pass seven
 func collectFunctionSignatures(ast parser.AST) {
 
 }
 
-// Pass five
+// Pass eight
 func analyzeFunctionsAndGlobalVariables(ast parser.AST) {
 
 }
 
 // helpers
 
-func processFunction(fnNode parser.AST) FunctionSymbol {
+func processFunctionSignature(fnNode parser.AST) FunctionSymbol {
 	details := fnNode.Children
 	length := len(details)
 	name := details[0].Token.Value
@@ -142,11 +151,6 @@ func processFunction(fnNode parser.AST) FunctionSymbol {
 				Type: paramTypes[i],
 			}
 		}
-		scope := currentScope
-		currentScope = newScope
-		// TODO: handle body
-		analyzeFunctionBody(name, returnType, bodyNode)
-		currentScope = scope // move backout to the parent scope
 	}
 	symbol := FunctionSymbol{
 		name:                     name,
@@ -165,7 +169,7 @@ func analyzeFunctionBody(name string, returns datatypes.DataType, body *parser.A
 
 func nodeToType(node parser.AST) datatypes.DataType {
 	if node.Token.Kind == lexer.ID {
-		symbol := globalScope.lookup(node.Token.Value)
+		symbol := globalScope.lookup(node.Token.Value, TYPE)
 		if symbol == nil || (symbol.getSymbolType() != "interface" && symbol.getSymbolType() != "struct") {
 			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Invalid type '%s' provided", node.Token.Value), node.Token.Line, node.Token.Column)
 			return datatypes.None
