@@ -10,7 +10,7 @@ import (
 
 type (
 	LookupMode int
-	Symbol     interface {
+	TypeSymbol interface {
 		getSymbolType() string
 	}
 	FunctionSymbol struct {
@@ -68,67 +68,77 @@ type (
 	NamedBlockSymbolTable map[string]NamedBlockSymbol
 )
 
-func (fn FunctionSymbol) getSymbolType() string {
-	return "function"
-}
-
-func (fn FnCreateSymbol) getSymbolType() string {
-	return "function"
-}
-
+/* TypeSymbol interface functions */
 func (intf InterfaceSymbol) getSymbolType() string {
 	return "interface"
 }
-
 func (str StructSymbol) getSymbolType() string {
 	return "struct"
 }
 
-func (variable VariableSymbol) getSymbolType() string {
-	return "variable"
-}
-
-func (nb NamedBlockSymbol) getSymbolType() string {
-	return "named-block"
-}
-
-const (
-	ANY LookupMode = iota
-	TYPE
-	Struct
-	Interface
-	Function
-	Variable
-	NB
-)
-
-func (scope *Scope) lookup(name string, mode LookupMode) Symbol {
+func (scope *Scope) lookupNamedBlock(name string) *NamedBlockSymbol {
 	curr := scope
 	for curr != nil {
-		if mode == ANY || mode == TYPE || mode == Interface {
-			if intf, ok := scope.interfaces[name]; ok {
-				return intf
-			}
+		if nb, ok := curr.namedBlocks[name]; ok {
+			return &nb
 		}
-		if mode == ANY || mode == TYPE || mode == Struct {
-			if str, ok := scope.structs[name]; ok {
-				return str
-			}
+		curr = curr.parent
+	}
+	return nil
+}
+
+func (scope *Scope) lookupInterface(name string) *InterfaceSymbol {
+	curr := scope
+	for curr != nil {
+		if intf, ok := curr.interfaces[name]; ok {
+			return &intf
 		}
-		if mode == ANY || mode == Function {
-			if fn, ok := scope.functions[name]; ok {
-				return fn
-			}
+		curr = curr.parent
+	}
+	return nil
+}
+
+func (scope *Scope) lookupStruct(name string) *StructSymbol {
+	curr := scope
+	for curr != nil {
+		if str, ok := curr.structs[name]; ok {
+			return &str
 		}
-		if mode == ANY || mode == Variable {
-			if variable, ok := scope.variables[name]; ok {
-				return variable
-			}
+		curr = curr.parent
+	}
+	return nil
+}
+
+func (scope *Scope) lookupVariable(name string) *VariableSymbol {
+	curr := scope
+	for curr != nil {
+		if variable, ok := curr.variables[name]; ok {
+			return &variable
 		}
-		if mode == ANY || mode == NB {
-			if nb, ok := scope.namedBlocks[name]; ok {
-				return nb
-			}
+		curr = curr.parent
+	}
+	return nil
+}
+
+func (scope *Scope) lookupFunction(name string) *FunctionSymbol {
+	curr := scope
+	for curr != nil {
+		if fn, ok := curr.functions[name]; ok {
+			return &fn
+		}
+		curr = curr.parent
+	}
+	return nil
+}
+
+func (scope *Scope) lookupType(name string) TypeSymbol {
+	curr := scope
+	for curr != nil {
+		if intf, ok := curr.interfaces[name]; ok {
+			return intf
+		}
+		if str, ok := curr.structs[name]; ok {
+			return str
 		}
 		curr = curr.parent
 	}
@@ -215,6 +225,9 @@ func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
 	fn, ok := table[symbol.name]
 	if ok {
 		if fn.returnType != symbol.returnType {
+			if fn.returnType == datatypes.None {
+				return fmt.Errorf("Function name '%s' already defined without a return type; cannot overload with return type %s", symbol.name, symbol.returnType)
+			}
 			return fmt.Errorf("Function name '%s' can only be overloaded with return type %s. Found: %s", symbol.name, fn.returnType, symbol.returnType)
 		}
 		params := symbol.stringifyParams()

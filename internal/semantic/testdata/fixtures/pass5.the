@@ -1,0 +1,13 @@
+int i = 0;
+double y = 0;
+mut int total;
+private String s;
+bool is = false;
+Object o = Object {i: 0, j: 1024};
+
+struct Object {
+    int i;
+    private {
+        uint64 j;
+    }
+}

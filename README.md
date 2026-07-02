@@ -220,7 +220,7 @@ mut double e; // Since it's mutable, a value can be set later so this is valid
 ```
 
 Any variables defined within a function (including parameters) are local and any properties within a `struct` are local to that.
-Any variables outside of a function or struct definition are global and global variables cannot be set as mutable.
+Any variables outside of a function or struct definition are global and global variables can be mutable but will produce a warning.
 Function parameters cannot be mutable.
 
 ### Functions

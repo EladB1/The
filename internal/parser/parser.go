@@ -989,8 +989,7 @@ func parseSlice() AST {
  */
 func parseArrayEnd() AST {
 	//fmt.Println("In array_end with:", peek())
-	ast := AST{Label: "ARR-END", Location: peek().Location}
-	ast.AddChildToken(consume())
+	ast := AST{Label: "ARR-END", Location: consume().Location}
 	ast.AddChildren(parseExpression())
 	return ast
 }

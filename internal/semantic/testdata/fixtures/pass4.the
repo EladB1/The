@@ -6,6 +6,12 @@ fn test(int i) {
     println("test" + (i as string));
 }
 
+fn test() {
+    println("here");
+}
+
+fn test(char c) -> bool {}
+
 interface A {
     fn test();
     fn test2() {

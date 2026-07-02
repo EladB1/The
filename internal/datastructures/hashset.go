@@ -9,3 +9,7 @@ func BuildHashSet(items ...string) HashSet {
 	}
 	return set
 }
+
+func (hs HashSet) Append(item string) {
+	hs[item] = struct{}{}
+}
