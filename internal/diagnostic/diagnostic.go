@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+
+	ds "github.com/EladB1/The/internal/datastructures"
 )
 
 type Severity string
@@ -23,10 +25,9 @@ const (
 )
 
 type Diagnostic struct {
-	Level   Severity
-	Message string
-	Line    int
-	Column  int
+	Level    Severity
+	Message  string
+	Position ds.SourceLocation
 }
 
 type PhaseDiagnostics []Diagnostic
@@ -40,36 +41,43 @@ func (diagnostics PhaseDiagnostics) HasError() bool {
 	return false
 }
 
-func (diagnostics PhaseDiagnostics) Complain(level Severity, message string, line int, column int) PhaseDiagnostics {
+func (diagnostics PhaseDiagnostics) Complain(level Severity, message string, pos ds.SourceLocation) PhaseDiagnostics {
 	diagnostic := Diagnostic{
-		Level:   level,
-		Message: message,
-		Line:    line,
-		Column:  column,
+		Level:    level,
+		Message:  message,
+		Position: pos,
 	}
 	return append(diagnostics, diagnostic)
 }
 
 func (diagnostics PhaseDiagnostics) ComplainPositionless(level Severity, message string) PhaseDiagnostics {
-	return diagnostics.Complain(level, message, -1, -1)
+	return diagnostics.Complain(level, message, ds.SourceLocation{
+		Line:   -1,
+		Column: -1,
+	})
 }
 
 func (diagnostics PhaseDiagnostics) ProvideInfo(message string) PhaseDiagnostics {
 	diagnostic := Diagnostic{
 		Level:   Info,
 		Message: message,
-		Line:    -1,
-		Column:  -1,
+		Position: ds.SourceLocation{
+			Line:   -1,
+			Column: -1,
+		},
 	}
 	return append(diagnostics, diagnostic)
 }
 
-func (diagnostics PhaseDiagnostics) Warn(message string, line int, column int) PhaseDiagnostics {
-	return diagnostics.Complain(Warning, message, line, column)
+func (diagnostics PhaseDiagnostics) Warn(message string, pos ds.SourceLocation) PhaseDiagnostics {
+	return diagnostics.Complain(Warning, message, pos)
 }
 
 func (diagnostics PhaseDiagnostics) WarnPositionless(message string) PhaseDiagnostics {
-	return diagnostics.Warn(message, -1, -1)
+	return diagnostics.Warn(message, ds.SourceLocation{
+		Line:   -1,
+		Column: -1,
+	})
 }
 
 // Use for errors outside of source code
@@ -77,8 +85,10 @@ func ReportFatal(message string, status int) {
 	fatal_err := Diagnostic{
 		Level:   Error,
 		Message: message,
-		Line:    -1,
-		Column:  -1,
+		Position: ds.SourceLocation{
+			Line:   -1,
+			Column: -1,
+		},
 	}
 	fmt.Fprintln(os.Stderr, fatal_err)
 	os.Exit(status)
@@ -101,8 +111,8 @@ func (diagnostic Diagnostic) String() string {
 		prefix = BoldRed(diagnostic.Level)
 	}
 	var position string = ""
-	if diagnostic.Line != -1 && diagnostic.Column != -1 {
-		position = fmt.Sprintf("at line: %d, column: %d", diagnostic.Line+1, diagnostic.Column+1)
+	if diagnostic.Position.Line != -1 && diagnostic.Position.Column != -1 {
+		position = fmt.Sprintf("at line: %d, column: %d", diagnostic.Position.Line+1, diagnostic.Position.Column+1)
 	}
 	return fmt.Sprintf("%s: %s %s", prefix, diagnostic.Message, position)
 }

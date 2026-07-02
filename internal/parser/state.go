@@ -27,5 +27,5 @@ func initState(tokens []lexer.Token) *parserState {
 
 func (stateMchn *parserState) addError(message string) {
 	token := stateMchn.tokens[stateMchn.ptr]
-	stateMchn.messages = stateMchn.messages.Complain(errLevel, message, token.Location.Line, token.Location.Column)
+	stateMchn.messages = stateMchn.messages.Complain(errLevel, message, token.Location)
 }

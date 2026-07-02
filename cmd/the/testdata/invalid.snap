@@ -5,31 +5,6 @@ Exit code: 1
 
 Output:
 
-{Value: int, Type: type keyword, Line: 0, Column: 0}
-{Value: y, Type: identifier, Line: 0, Column: 4}
-{Value: =, Type: assign operator, Line: 0, Column: 6}
-{Value: ., Type: operator, Line: 4, Column: 2}
-{Value: ff, Type: identifier, Line: 4, Column: 3}
-{Value: p1, Type: identifier, Line: 5, Column: 2}
-{Value: world, Type: identifier, Line: 8, Column: 0}
-{Value: d, Type: identifier, Line: 12, Column: 0}
-{Value: 1, Type: int literal, Line: 13, Column: 0}
-{Value: g, Type: identifier, Line: 13, Column: 1}
-{Value: '❌', Type: char literal, Line: 14, Column: 0}
-{Value: "", Type: string literal, Line: 15, Column: 0}
-{Value: '', Type: char literal, Line: 16, Column: 0}
-{Value: func, Type: identifier, Line: 22, Column: 0}
-{Value: for, Type: branch keyword, Line: 22, Column: 5}
-{Value: (, Type: separator, Line: 22, Column: 8}
-{Value: it, Type: identifier, Line: 22, Column: 9}
-{Value: 9, Type: int literal, Line: 22, Column: 12}
-{Value: q, Type: identifier, Line: 22, Column: 13}
-{Value: ), Type: separator, Line: 22, Column: 14}
-{Value: ->, Type: separator, Line: 22, Column: 16}
-{Value: while, Type: branch keyword, Line: 22, Column: 19}
-{Value: {, Type: separator, Line: 22, Column: 25}
-{Value: ;, Type: separator, Line: 22, Column: 26}
-{Value: EOF, Type: EOF, Line: 27, Column: 20}
 SyntaxError: Unrecognized character: '$' at line: 1, column: 9
 SyntaxError: Unrecognized character: '#' at line: 2, column: 1
 SyntaxError: Found multiline comment close but no open at line: 3, column: 1
@@ -57,36 +32,6 @@ Exit code: 1
 
 Output:
 
-{Value: y, Type: identifier, Line: 0, Column: 0}
-{Value: =, Type: assign operator, Line: 0, Column: 2}
-{Value: 5, Type: int literal, Line: 0, Column: 4}
-{Value: ;, Type: separator, Line: 0, Column: 5}
-{Value: fn, Type: structure keyword, Line: 2, Column: 0}
-{Value: test, Type: identifier, Line: 2, Column: 3}
-{Value: (, Type: separator, Line: 2, Column: 7}
-{Value: ), Type: separator, Line: 2, Column: 8}
-{Value: ->, Type: separator, Line: 2, Column: 10}
-{Value: {, Type: separator, Line: 2, Column: 13}
-{Value: bool, Type: type keyword, Line: 4, Column: 4}
-{Value: valid, Type: identifier, Line: 4, Column: 9}
-{Value: =, Type: assign operator, Line: 4, Column: 15}
-{Value: i, Type: identifier, Line: 4, Column: 17}
-{Value: ==, Type: compare operator, Line: 4, Column: 19}
-{Value: 0, Type: int literal, Line: 4, Column: 22}
-{Value: ;, Type: separator, Line: 4, Column: 23}
-{Value: int, Type: type keyword, Line: 5, Column: 4}
-{Value: x, Type: identifier, Line: 5, Column: 8}
-{Value: =, Type: assign operator, Line: 5, Column: 10}
-{Value: ^, Type: bitwise operator, Line: 5, Column: 12}
-{Value: int, Type: type keyword, Line: 6, Column: 4}
-{Value: y, Type: identifier, Line: 6, Column: 8}
-{Value: +, Type: add operator, Line: 6, Column: 10}
-{Value: 1, Type: int literal, Line: 6, Column: 12}
-{Value: =, Type: assign operator, Line: 6, Column: 14}
-{Value: float, Type: type keyword, Line: 6, Column: 16}
-{Value: ;, Type: separator, Line: 6, Column: 21}
-{Value: EOF, Type: EOF, Line: 8, Column: 0}
-Node: { Label: "program" }
 SyntaxError: Expected declaration but found 'y' at line: 1, column: 1
 SyntaxError: Expected type but got '{' at line: 3, column: 14
 SyntaxError: Expected expression but got '^' at line: 6, column: 13

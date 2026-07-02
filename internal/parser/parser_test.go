@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	ds "github.com/EladB1/The/internal/datastructures"
 	"github.com/gkampitakis/go-snaps/snaps"
 
 	"github.com/EladB1/The/internal/lexer"
@@ -71,7 +72,7 @@ func TestParser(t *testing.T) {
 	t.Run("should run on empty file with no errors", func(t *testing.T) {
 		token := lexer.Token{
 			Kind: lexer.EOF,
-			Location: lexer.SourceLocation{
+			Location: ds.SourceLocation{
 				Line:   0,
 				Column: 0,
 			},

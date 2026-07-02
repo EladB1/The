@@ -472,6 +472,7 @@ func parseIf(elseIf bool) AST {
 	var ast AST
 	if elseIf {
 		ast = AST{Label: "else if", Location: expectValue("else").Location}
+		consume() // if
 	} else {
 		ast = AST{Label: "if", Location: expectValue("if").Location}
 	}

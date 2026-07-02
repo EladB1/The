@@ -40,7 +40,11 @@ func (stateMchn *lexerState) addError(message string) {
 	if stateMchn.startPosition != stateMchn.lineIndex {
 		lineIndex = stateMchn.startPosition
 	}
-	stateMchn.messages = stateMchn.messages.Complain(errLevel, message, stateMchn.lineNum, lineIndex)
+	pos := ds.SourceLocation{
+		Line:   stateMchn.lineNum,
+		Column: lineIndex,
+	}
+	stateMchn.messages = stateMchn.messages.Complain(errLevel, message, pos)
 }
 
 func (stateMchn *lexerState) push(char byte) {
@@ -74,7 +78,7 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 		token = Token{
 			Kind:    tokenType,
 			CharVal: char,
-			Location: SourceLocation{
+			Location: ds.SourceLocation{
 				Line:   stateMchn.lineNum,
 				Column: column,
 			},
@@ -91,7 +95,7 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 		token = Token{
 			Kind:     tokenType,
 			StrIndex: index,
-			Location: SourceLocation{
+			Location: ds.SourceLocation{
 				Line:   stateMchn.lineNum,
 				Column: column,
 			},
@@ -105,7 +109,7 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 		token = Token{
 			Kind:     tokenType,
 			FloatVal: val,
-			Location: SourceLocation{
+			Location: ds.SourceLocation{
 				Line:   stateMchn.lineNum,
 				Column: column,
 			},
@@ -119,7 +123,7 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 		token = Token{
 			Kind:   tokenType,
 			IntVal: int64(val),
-			Location: SourceLocation{
+			Location: ds.SourceLocation{
 				Line:   stateMchn.lineNum,
 				Column: column,
 			},
@@ -133,7 +137,7 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 		token = Token{
 			Kind:   tokenType,
 			IntVal: int64(val),
-			Location: SourceLocation{
+			Location: ds.SourceLocation{
 				Line:   stateMchn.lineNum,
 				Column: column,
 			},
@@ -142,7 +146,7 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 		token = Token{
 			Kind:  tokenType,
 			Value: stateMchn.sequence.String(),
-			Location: SourceLocation{
+			Location: ds.SourceLocation{
 				Line:   stateMchn.lineNum,
 				Column: column,
 			},
@@ -156,7 +160,7 @@ func (stateMchn *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, ch
 	stateMchn.tokens = append(stateMchn.tokens, Token{
 		Kind:  tokenType,
 		Value: string(char),
-		Location: SourceLocation{
+		Location: ds.SourceLocation{
 			Line:   stateMchn.lineNum,
 			Column: stateMchn.lineIndex,
 		},

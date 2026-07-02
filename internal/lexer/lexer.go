@@ -5,6 +5,7 @@ import (
 	"strings"
 	"unicode"
 
+	ds "github.com/EladB1/The/internal/datastructures"
 	"github.com/EladB1/The/internal/diagnostic"
 )
 
@@ -30,7 +31,7 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 	}
 	state.tokens = append(state.tokens, Token{
 		Kind: EOF,
-		Location: SourceLocation{
+		Location: ds.SourceLocation{
 			Line:   state.lineNum,
 			Column: state.lineIndex,
 		},

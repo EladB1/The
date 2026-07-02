@@ -9,15 +9,11 @@ import (
 )
 
 type (
-	TokenType      string
-	SourceLocation struct {
-		Line   int
-		Column int
-	}
-	Token struct {
+	TokenType string
+	Token     struct {
 		Kind     TokenType
 		Missing  bool
-		Location SourceLocation
+		Location ds.SourceLocation
 		Value    string // use for non-literals
 		// use for literals
 		CharVal  rune

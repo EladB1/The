@@ -40,22 +40,23 @@ func collectTypeNames(ast parser.AST) {
 		if node.Label != "interface" && node.Token.Value != "struct" {
 			continue
 		}
-		name := node.Children[0].Token
-		result := globalScope.lookup(name.GetValueString(), TYPE)
+		nameNode := node.Children[0]
+		name := nameNode.Token.Value
+		result := globalScope.lookup(name, TYPE)
 		if result != nil {
-			messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name '%s' already in use", name.GetValueString()), name.Location.Line, name.Location.Column)
+			messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name '%s' already in use", name), nameNode.Location)
 			continue
 		}
-		childScope := globalScope.addChild(name.GetValueString())
+		childScope := globalScope.addChild(name)
 		if node.Label == "interface" {
-			globalScope.interfaces[name.GetValueString()] = InterfaceSymbol{
-				name:       name.GetValueString(),
+			globalScope.interfaces[name] = InterfaceSymbol{
+				name:       name,
 				innerScope: childScope,
 				Def:        &node,
 			}
 		} else if node.Token.Value == "struct" {
-			globalScope.structs[name.GetValueString()] = StructSymbol{
-				name:       name.GetValueString(),
+			globalScope.structs[name] = StructSymbol{
+				name:       name,
 				innerScope: childScope,
 				Def:        &node,
 			}
@@ -87,7 +88,7 @@ func analyzeStructFnSignatures() {
 			body = def[2]
 			for _, node := range def[1].Children {
 				if globalScope.lookup(node.Token.Value, Interface) == nil {
-					messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Could not find interface name: '%s'", node.Token.Value), node.Location.Line, node.Location.Column)
+					messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Could not find interface name: '%s'", node.Token.Value), node.Location)
 				} else {
 					impl = append(impl, node.Token.Value)
 				}
@@ -210,7 +211,7 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 	details := nbNode.Children
 	name := details[0].Token.Value
 	if !slices.Contains(specialBlocks, name) && !slices.Contains(impl, name) {
-		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Block '%s' not supported", name), nbNode.Location.Line, nbNode.Location.Column)
+		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Block '%s' not supported", name), nbNode.Location)
 		return nil
 	}
 	body := details[1].Children
@@ -229,11 +230,11 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 					fmt.Sprintf("fn greaterThan(%s)->bool", structName),
 				}
 				if !slices.Contains(supported, symbol.getSignature()) {
-					messages = messages.Complain(diagnostic.NamedBlockError, fmt.Sprintf("Function signature '%s' not supported; only '%s' supported", symbol.getSignature(), strings.Join(supported, ",")), node.Location.Line, node.Location.Column)
+					messages = messages.Complain(diagnostic.NamedBlockError, fmt.Sprintf("Function signature '%s' not supported; only '%s' supported", symbol.getSignature(), strings.Join(supported, ",")), node.Location)
 				}
 			case "cast":
 				if len(symbol.parameters) > 0 || symbol.returnType == datatypes.None || symbol.returnType == datatypes.DynamicType(structName) {
-					messages = messages.Complain(diagnostic.NamedBlockError, "Functions in cast block must take no parameters and return a different type", node.Location.Line, node.Location.Column)
+					messages = messages.Complain(diagnostic.NamedBlockError, "Functions in cast block must take no parameters and return a different type", node.Location)
 				}
 			case "private":
 				symbol.isPrivate = true
@@ -241,11 +242,11 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 			currentScope.functions[symbol.getSignature()] = symbol
 		case "Variable":
 			if name != "private" {
-				messages = messages.Complain(diagnostic.IllegalStatementError, "Variable declaration only allowed in struct or private block", node.Location.Line, node.Location.Column)
+				messages = messages.Complain(diagnostic.IllegalStatementError, "Variable declaration only allowed in struct or private block", node.Location)
 			} else {
 				symbol := analyzeVariable(node)
 				if symbol.isPrivate {
-					messages = messages.Complain(diagnostic.Warning, "Redundant use of private in private block", node.Location.Line, node.Location.Column)
+					messages = messages.Complain(diagnostic.Warning, "Redundant use of private in private block", node.Location)
 				}
 				currentScope.variables[symbol.name] = *symbol
 
@@ -281,7 +282,7 @@ func analyzeVariable(varNode parser.AST) *VariableSymbol {
 	}
 	varType := nodeToType(typeNode)
 	if currentScope.lookup(name.Value, Variable) != nil {
-		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name: '%s' already defined", name.Value), name.Location.Line, name.Location.Column)
+		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name: '%s' already defined", name.Value), name.Location)
 		return nil
 	}
 	return &VariableSymbol{
@@ -297,7 +298,7 @@ func nodeToType(node parser.AST) datatypes.DataType {
 	if node.Token.Kind == lexer.ID {
 		symbol := globalScope.lookup(node.Token.Value, TYPE)
 		if symbol == nil || (symbol.getSymbolType() != "interface" && symbol.getSymbolType() != "struct") {
-			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Invalid type '%s' provided", node.Token.Value), node.Location.Line, node.Location.Column)
+			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Invalid type '%s' provided", node.Token.Value), node.Location)
 			return datatypes.None
 		}
 		return datatypes.DynamicType(node.Token.Value)
