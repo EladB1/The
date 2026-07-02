@@ -749,12 +749,12 @@ The passes will be:
 1. Custom type names: Get interface and struct names; error on any duplicates
 2. Analyze interface function signatures: Collect function signatures from each interface
 3. Analyze struct function signatures: Collect function signatures from each struct
-4. Analyze interface function bodies
-5. Analyze struct function bodies
-6. Analyze interface implementation: Make any structs that claim to implement an interface actually do
-7. Collect function signatures
-8. Analyze function bodies and global variables: Check types, variable mutability, unreachable code, etc.
-
+4. Collect function signatures
+5. Analyze global variables
+6. Analyze interface function bodies
+7. Analyze struct function bodies
+8. Analyze interface implementation: Make any structs that claim to implement an interface actually do
+9. Analyze function bodies
 
 Scopes will be a tree of scope where each node contains the following:
     

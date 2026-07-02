@@ -14,20 +14,33 @@ type (
 		getSymbolType() string
 	}
 	FunctionSymbol struct {
-		name                     string
+		name       string
+		returnType datatypes.DataType
+		overloads  map[string]FnOverloadSymbol
+	}
+	FnOverloadSymbol struct {
 		parameters               []datatypes.DataType
-		returnType               datatypes.DataType
 		isPrivate                bool
 		hasDefaultImplementation bool
-		Def                      *parser.AST
+		Body                     *parser.AST
+		innerScope               *Scope
+	}
+	FnCreateSymbol struct {
+		name                     string
+		returnType               datatypes.DataType
+		parameters               []datatypes.DataType
+		isPrivate                bool
+		hasDefaultImplementation bool
+		Body                     *parser.AST
 		innerScope               *Scope
 	}
 	VariableSymbol struct {
-		name      string
-		Type      datatypes.DataType
-		isPrivate bool
-		isMutable bool
-		Def       *parser.AST
+		name        string
+		Type        datatypes.DataType
+		isPrivate   bool
+		isMutable   bool
+		Def         *parser.AST
+		Initialized bool
 	}
 	InterfaceSymbol struct {
 		name       string
@@ -56,6 +69,10 @@ type (
 )
 
 func (fn FunctionSymbol) getSymbolType() string {
+	return "function"
+}
+
+func (fn FnCreateSymbol) getSymbolType() string {
 	return "function"
 }
 
@@ -118,23 +135,6 @@ func (scope *Scope) lookup(name string, mode LookupMode) Symbol {
 	return nil
 }
 
-func (fn FunctionSymbol) getSignature() string {
-	builder := strings.Builder{}
-	builder.WriteString("fn")
-	builder.WriteString(fmt.Sprintf(" %s(", fn.name))
-	for i, param := range fn.parameters {
-		builder.WriteString(string(param.String()))
-		if i < len(fn.parameters)-1 {
-			builder.WriteByte(',')
-		}
-	}
-	builder.WriteByte(')')
-	if fn.returnType != datatypes.None {
-		builder.WriteString(fmt.Sprintf("->%s", fn.returnType))
-	}
-	return builder.String()
-}
-
 func (intf InterfaceSymbol) String() string {
 	return fmt.Sprintf("{name: %s}", intf.name)
 }
@@ -155,12 +155,15 @@ func (str StructSymbol) String() string {
 }
 
 func (fn FunctionSymbol) String() string {
-	sig := fn.getSignature()
-	priv := ""
-	if fn.isPrivate {
-		priv = ", isPrivate: true"
+	overloads := strings.Builder{}
+	for key, symbol := range fn.overloads {
+		priv := ""
+		if symbol.isPrivate {
+			priv = ", isPrivate: true"
+		}
+		overloads.WriteString(fmt.Sprintf("{parameters: (%s)%s, implemented: %v}", key, priv, symbol.hasDefaultImplementation))
 	}
-	return fmt.Sprintf("{Signature: %s%s, hasImplementation: %v}", sig, priv, fn.hasDefaultImplementation)
+	return fmt.Sprintf("{name: %s, returns: %s, overloads: [%s]}", fn.name, fn.returnType, overloads.String())
 }
 
 func (variable VariableSymbol) String() string {
@@ -172,9 +175,63 @@ func (variable VariableSymbol) String() string {
 	if variable.isMutable {
 		mut = ", isMutable: true"
 	}
-	return fmt.Sprintf("{name: %s, Type: %s%s%s}", variable.name, variable.Type, priv, mut)
+	return fmt.Sprintf("{name: %s, Type: %s%s%s, Initialized: %v}", variable.name, variable.Type, priv, mut, variable.Initialized)
 }
 
 func (nb NamedBlockSymbol) String() string {
 	return fmt.Sprintf("{name: %s}", nb.name)
+}
+
+func paramsToString(params []datatypes.DataType) string {
+	paramStr := strings.Builder{}
+	for i, param := range params {
+		paramStr.WriteString(param.String())
+		if i < len(params)-1 {
+			paramStr.WriteRune(',')
+		}
+	}
+	return paramStr.String()
+}
+
+func (symbol FnCreateSymbol) getSignature() string {
+	returns := ""
+	if symbol.returnType != datatypes.None {
+		returns = fmt.Sprintf("->%s", symbol.returnType)
+	}
+	return fmt.Sprintf("fn %s(%s)%s", symbol.name, paramsToString(symbol.parameters), returns)
+}
+
+func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
+	return FnOverloadSymbol{
+		parameters:               symbol.parameters,
+		hasDefaultImplementation: symbol.hasDefaultImplementation,
+		isPrivate:                symbol.isPrivate,
+		Body:                     symbol.Body,
+		innerScope:               symbol.innerScope,
+	}
+}
+
+func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
+	fn, ok := table[symbol.name]
+	if ok {
+		if fn.returnType != symbol.returnType {
+			return fmt.Errorf("Function name '%s' can only be overloaded with return type %s. Found: %s", symbol.name, fn.returnType, symbol.returnType)
+		}
+		params := paramsToString(symbol.parameters)
+		if _, ok := fn.overloads[params]; ok {
+			return fmt.Errorf("Function with signature '%s' cannot be redefined", symbol.getSignature())
+		} else {
+			fn.overloads[params] = symbol.toOverload()
+		}
+	} else {
+		params := paramsToString(symbol.parameters)
+		table[symbol.name] = FunctionSymbol{
+			name:       symbol.name,
+			returnType: symbol.returnType,
+			overloads: map[string]FnOverloadSymbol{
+				params: symbol.toOverload(),
+			},
+		}
+	}
+	return nil
 }

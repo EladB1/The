@@ -30,6 +30,7 @@ func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
 	collectTypeNames(ast)
 	analyzeInterfaceFnSignatures()
 	analyzeStructFnSignatures()
+	collectFunctionSignatures(ast)
 	fmt.Println(globalScope)
 	return ast, messages
 }
@@ -70,7 +71,7 @@ func analyzeInterfaceFnSignatures() {
 		currentScope = intf.innerScope
 		for _, node := range intf.Def.Children[1].Children {
 			symbol := processFunctionSignature(node)
-			currentScope.functions[symbol.getSignature()] = symbol
+			currentScope.functions.add(symbol)
 		}
 	}
 	currentScope = globalScope // reset the current scope
@@ -98,7 +99,9 @@ func analyzeStructFnSignatures() {
 			switch node.Label {
 			case "fn":
 				symbol := processFunctionSignature(node)
-				currentScope.functions[symbol.getSignature()] = symbol
+				if err := currentScope.functions.add(symbol); err != nil {
+					messages = messages.Complain(diagnostic.IllegalStatementError, err.Error(), node.Location)
+				}
 			case "named-block":
 				symbol := analyzeNamedBlock(node, str.name, impl)
 				if symbol != nil {
@@ -116,27 +119,46 @@ func analyzeStructFnSignatures() {
 }
 
 // Pass four
-func analyzeInterfaceFnBodies() {}
-
-// Pass five
-func analyzeStructMethodBodies() {}
-
-// Pass six
-func analyzeInterfaceImplementation() {}
-
-// Pass seven
 func collectFunctionSignatures(ast parser.AST) {
-
+	for _, node := range ast.Children {
+		if node.Label == "fn" {
+			symbol := processFunctionSignature(node)
+			if err := globalScope.functions.add(symbol); err != nil {
+				messages = messages.Complain(diagnostic.IllegalStatementError, err.Error(), node.Location)
+			}
+		}
+	}
 }
 
+// Pass five
+func analyzeGlobals() {}
+
+// Pass six
+func analyzeInterfaceFnBodies() {
+	for _, intf := range globalScope.interfaces {
+		for _, fn := range intf.innerScope.functions {
+			// if !fn.hasDefaultImplementation {
+			// 	continue
+			// }
+			analyzeFunctionBody(fn)
+		}
+	}
+}
+
+// Pass seven
+func analyzeStructMethodBodies() {}
+
 // Pass eight
-func analyzeFunctionsAndGlobalVariables(ast parser.AST) {
+func analyzeInterfaceImplementation() {}
+
+// Pass nine
+func analyzeFunctionsBodies(ast parser.AST) {
 
 }
 
 // helpers
 
-func processFunctionSignature(fnNode parser.AST) FunctionSymbol {
+func processFunctionSignature(fnNode parser.AST) FnCreateSymbol {
 	details := fnNode.Children
 	length := len(details)
 	name := details[0].Token.Value
@@ -184,7 +206,11 @@ func processFunctionSignature(fnNode parser.AST) FunctionSymbol {
 		}
 	}
 	if bodyNode != nil {
-		newScope = currentScope.addChild(fmt.Sprintf("fn@%s", name))
+		scopeId := fmt.Sprintf("@%s", name)
+		if currentScope.id != "@global" {
+			scopeId = fmt.Sprintf("%s@%s", name, currentScope.id)
+		}
+		newScope = currentScope.addChild(scopeId)
 		for i := range len(paramNames) {
 			newScope.variables[paramNames[i]] = VariableSymbol{
 				name: paramNames[i],
@@ -192,19 +218,29 @@ func processFunctionSignature(fnNode parser.AST) FunctionSymbol {
 			}
 		}
 	}
-	symbol := FunctionSymbol{
+	symbol := FnCreateSymbol{
 		name:                     name,
 		parameters:               paramTypes,
 		returnType:               returnType,
-		hasDefaultImplementation: bodyNode == nil,
-		Def:                      &fnNode,
+		hasDefaultImplementation: bodyNode != nil,
+		Body:                     bodyNode,
 		innerScope:               newScope,
 	}
 	return symbol
 }
 
-func analyzeFunctionBody(name string, returns datatypes.DataType, body *parser.AST) {
-	// TODO
+func analyzeFunctionBody(fn FunctionSymbol) {
+	// scope := currentScope
+	// currentScope = fn.innerScope
+	// for _, node := range fn.Body.Children {
+	// 	if node.Label == "Variable" {
+	// 		symbol := analyzeVariable(node)
+	// 		if symbol != nil {
+	// 			currentScope.variables[symbol.name] = *symbol
+	// 		}
+	// 	}
+	// }
+	// currentScope = scope
 }
 
 func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *NamedBlockSymbol {
@@ -239,7 +275,9 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 			case "private":
 				symbol.isPrivate = true
 			}
-			currentScope.functions[symbol.getSignature()] = symbol
+			if err := currentScope.functions.add(symbol); err != nil {
+				messages = messages.Complain(diagnostic.IllegalStatementError, err.Error(), node.Location)
+			}
 		case "Variable":
 			if name != "private" {
 				messages = messages.Complain(diagnostic.IllegalStatementError, "Variable declaration only allowed in struct or private block", node.Location)
@@ -268,6 +306,7 @@ func analyzeVariable(varNode parser.AST) *VariableSymbol {
 	name := details[1].Token
 	isPrivate := false
 	isMutable := false
+	var rhs *parser.AST = nil
 	if details[0].Label == "modifiers" {
 		typeNode = details[1]
 		name = details[2].Token
@@ -279,19 +318,56 @@ func analyzeVariable(varNode parser.AST) *VariableSymbol {
 				isMutable = true
 			}
 		}
+		// handle value
+		if len(details) == 4 {
+			rhs = &details[3]
+		}
+	} else {
+		if len(details) == 3 {
+			rhs = &details[2]
+		}
 	}
 	varType := nodeToType(typeNode)
 	if currentScope.lookup(name.Value, Variable) != nil {
 		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name: '%s' already defined", name.Value), name.Location)
 		return nil
 	}
-	return &VariableSymbol{
-		name:      name.Value,
-		Type:      varType,
-		isPrivate: isPrivate,
-		isMutable: isMutable,
-		Def:       &varNode,
+	if rhs != nil {
+		if evalType(rhs, varType) != varType {
+			// TODO
+			fmt.Println("HI")
+		}
 	}
+	return &VariableSymbol{
+		name:        name.Value,
+		Type:        varType,
+		isPrivate:   isPrivate,
+		isMutable:   isMutable,
+		Def:         &varNode,
+		Initialized: rhs != nil,
+	}
+}
+
+func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataType {
+	// TODO
+	switch ast.Token.Kind {
+	case lexer.LIT_CHAR:
+		ast.Type = datatypes.Char
+		return datatypes.Char
+	case lexer.LIT_STRING:
+		return datatypes.String
+	case lexer.LIT_FLOAT:
+		if expectedType == datatypes.Double {
+			return datatypes.Double
+		}
+		return datatypes.Float
+	case lexer.LIT_INT, lexer.LIT_HEX:
+		return datatypes.Int32
+	}
+	if ast.Label == "struct_literal" {
+		// TODO
+	}
+	return datatypes.None
 }
 
 func nodeToType(node parser.AST) datatypes.DataType {

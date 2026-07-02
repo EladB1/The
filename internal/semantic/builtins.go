@@ -10,18 +10,30 @@ var rootScope Scope = Scope{
 	namedBlocks: NamedBlockSymbolTable{},
 	functions: FunctionSymbolTable{
 		"print": FunctionSymbol{
-			name:       "print",
-			parameters: []datatypes.DataType{datatypes.Any},
+			name: "print",
+			overloads: map[string]FnOverloadSymbol{
+				datatypes.Any.String(): {
+					parameters: []datatypes.DataType{datatypes.Any},
+				},
+			},
 			returnType: datatypes.None,
 		},
 		"println": FunctionSymbol{
-			name:       "println",
-			parameters: []datatypes.DataType{datatypes.Any},
+			name: "println",
+			overloads: map[string]FnOverloadSymbol{
+				datatypes.Any.String(): {
+					parameters: []datatypes.DataType{datatypes.Any},
+				},
+			},
 			returnType: datatypes.None,
 		},
 		"printerr": FunctionSymbol{
-			name:       "printerr",
-			parameters: []datatypes.DataType{datatypes.Any},
+			name: "printerr",
+			overloads: map[string]FnOverloadSymbol{
+				datatypes.Any.String(): {
+					parameters: []datatypes.DataType{datatypes.Any},
+				},
+			},
 			returnType: datatypes.None,
 		},
 	},

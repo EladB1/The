@@ -1,0 +1,20 @@
+fn test() {
+    println("test");
+}
+
+fn test(int i) {
+    println("test" + (i as string));
+}
+
+interface A {
+    fn test();
+    fn test2() {
+        int x = 5;
+        uint32 y = 1;
+        return x - y;
+    }
+}
+
+fn abc(int i) -> float {
+    return i as float;
+}

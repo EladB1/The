@@ -55,7 +55,7 @@ func compile(source []string) {
 	}
 	_, semanticDiagnostics := semantic.Analyze(ast)
 	compilerDiagnostics = append(compilerDiagnostics, semanticDiagnostics...)
-	//fmt.Println(annotatedAst)
+	//fmt.Println(ast)
 	if semanticDiagnostics.HasError() {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
