@@ -182,11 +182,11 @@ func (nb NamedBlockSymbol) String() string {
 	return fmt.Sprintf("{name: %s}", nb.name)
 }
 
-func paramsToString(params []datatypes.DataType) string {
+func (symbol FnCreateSymbol) stringifyParams() string {
 	paramStr := strings.Builder{}
-	for i, param := range params {
+	for i, param := range symbol.parameters {
 		paramStr.WriteString(param.String())
-		if i < len(params)-1 {
+		if i < len(symbol.parameters)-1 {
 			paramStr.WriteRune(',')
 		}
 	}
@@ -198,7 +198,7 @@ func (symbol FnCreateSymbol) getSignature() string {
 	if symbol.returnType != datatypes.None {
 		returns = fmt.Sprintf("->%s", symbol.returnType)
 	}
-	return fmt.Sprintf("fn %s(%s)%s", symbol.name, paramsToString(symbol.parameters), returns)
+	return fmt.Sprintf("fn %s(%s)%s", symbol.name, symbol.stringifyParams(), returns)
 }
 
 func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
@@ -217,14 +217,14 @@ func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
 		if fn.returnType != symbol.returnType {
 			return fmt.Errorf("Function name '%s' can only be overloaded with return type %s. Found: %s", symbol.name, fn.returnType, symbol.returnType)
 		}
-		params := paramsToString(symbol.parameters)
+		params := symbol.stringifyParams()
 		if _, ok := fn.overloads[params]; ok {
 			return fmt.Errorf("Function with signature '%s' cannot be redefined", symbol.getSignature())
 		} else {
 			fn.overloads[params] = symbol.toOverload()
 		}
 	} else {
-		params := paramsToString(symbol.parameters)
+		params := symbol.stringifyParams()
 		table[symbol.name] = FunctionSymbol{
 			name:       symbol.name,
 			returnType: symbol.returnType,
