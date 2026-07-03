@@ -2,6 +2,7 @@ package datatypes
 
 type DataType interface {
 	String() string
+	IsPrimitive() bool
 }
 
 type PrimitiveType string
@@ -25,6 +26,14 @@ func (type_ PrimitiveType) String() string {
 	return string(type_)
 }
 
+func (type_ PrimitiveType) IsPrimitive() bool {
+	return true
+}
+
 func (type_ DynamicType) String() string {
 	return string(type_)
+}
+
+func (type_ DynamicType) IsPrimitive() bool {
+	return false
 }

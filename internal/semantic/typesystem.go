@@ -98,7 +98,50 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 		}
 
 	} else if ast.Label == "typecast" {
-		// TODO
+		lhs := evalType(&ast.Children[0], datatypes.None)
+		target := nodeToType(ast.Children[1])
+		if lhs != target && target != datatypes.String {
+			if lhs == datatypes.Uint64 {
+				if target == datatypes.Uint32 || target == datatypes.Float || target == datatypes.Int32 {
+					messages = messages.Warn(fmt.Sprintf("Lossy conversion from %s to %s", lhs, target), ast.Location)
+				} else if !slices.Contains(numericTypes, target) {
+					messages = messages.Complain(diagnostic.CastError, fmt.Sprintf("Typecasting from %s to %s not allowed", lhs, target), ast.Location)
+				}
+			} else if lhs == datatypes.Int64 {
+				if target == datatypes.Uint32 || target == datatypes.Float || target == datatypes.Int32 {
+					messages = messages.Warn(fmt.Sprintf("Lossy conversion from %s to %s", lhs, target), ast.Location)
+				} else if !slices.Contains(numericTypes, target) {
+					messages = messages.Complain(diagnostic.CastError, fmt.Sprintf("Typecasting from %s to %s not allowed", lhs, target), ast.Location)
+				}
+			} else if lhs == datatypes.String {
+				messages = messages.Complain(diagnostic.CastError, fmt.Sprintf("Typecasting from %s to %s not allowed", lhs, target), ast.Location)
+			} else if lhs == datatypes.Double {
+				if target == datatypes.Uint32 || target == datatypes.Float || target == datatypes.Int32 {
+					messages = messages.Warn(fmt.Sprintf("Lossy conversion from %s to %s", lhs, target), ast.Location)
+				} else if !slices.Contains(numericTypes, target) {
+					messages = messages.Complain(diagnostic.CastError, fmt.Sprintf("Typecasting from %s to %s not allowed", lhs, target), ast.Location)
+				}
+			} else if !lhs.IsPrimitive() {
+				// look for cast function
+				str := globalScope.lookupStruct(lhs.String())
+				if str == nil {
+					messages = messages.Complain(diagnostic.CastError, fmt.Sprintf("Cannot typecast %s to %s. Could not find definition of '%s'", lhs, target, lhs), ast.Location)
+				} else {
+					castBlock := str.innerScope.lookupNamedBlock("cast")
+					if castBlock == nil {
+						messages = messages.Complain(diagnostic.CastError, fmt.Sprintf("Cannot typecast %s to %s. To support typecasting add a cast block with a function returning the target type", lhs, target), ast.Location)
+					} else if !castBlock.HasReturnType(target) {
+						messages = messages.Complain(diagnostic.CastError, fmt.Sprintf("Cannot typecast %s to %s. To support this typecasting add a function returning target type to cast block", lhs, target), ast.Location)
+					}
+				}
+			} else if slices.Contains(numericTypes, lhs) && slices.Contains(numericTypes, target) {
+				return target
+			} else {
+				messages = messages.Complain(diagnostic.CastError, fmt.Sprintf("Typecasting from %s to %s not allowed", lhs, target), ast.Location)
+			}
+		}
+		return target
+
 	} else if ast.Label == "index" {
 
 	} else if ast.Label == "slice" {
@@ -153,6 +196,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 		} else {
 			nodeType = datatypes.Bool
 		}
+		// TODO: handle <, <=, >, >= for struct (check compare block)
 	} else if ast.Token.Value == "&&" || ast.Token.Value == "||" {
 		lhs := evalType(&ast.Children[0], datatypes.None)
 		rhs := evalType(&ast.Children[1], datatypes.None)

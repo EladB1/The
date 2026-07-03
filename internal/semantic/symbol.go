@@ -192,6 +192,15 @@ func (nb NamedBlockSymbol) String() string {
 	return fmt.Sprintf("{name: %s}", nb.name)
 }
 
+func (nb NamedBlockSymbol) HasReturnType(returnType datatypes.DataType) bool {
+	for _, fnSymbol := range nb.innerScope.functions {
+		if fnSymbol.returnType == returnType {
+			return true
+		}
+	}
+	return false
+}
+
 func (symbol FnCreateSymbol) stringifyParams() string {
 	paramStr := strings.Builder{}
 	for i, param := range symbol.parameters {

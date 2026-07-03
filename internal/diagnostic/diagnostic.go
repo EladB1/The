@@ -22,6 +22,7 @@ const (
 	AccessError           Severity = "AccessError"
 	IllegalStatementError Severity = "IllegalStatementError"
 	NamedBlockError       Severity = "NamedBlockError"
+	CastError             Severity = "CastError"
 )
 
 type Diagnostic struct {
