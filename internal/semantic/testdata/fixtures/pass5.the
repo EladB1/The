@@ -1,7 +1,7 @@
 int i = 0;
 double y = 0;
-mut int total;
-private String s;
+// mut int total;
+// private String s;
 bool is = false;
 Object o = Object {i: 0, j: 1024};
 
@@ -11,3 +11,6 @@ struct Object {
         uint64 j;
     }
 }
+
+int x = i + 1;
+double z = y - x;

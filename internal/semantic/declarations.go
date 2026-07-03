@@ -188,7 +188,7 @@ func analyzeVariable(varNode parser.AST) *VariableSymbol {
 	if rhs != nil {
 		if evalType(rhs, varType) != varType {
 			// TODO
-			fmt.Println("HI", name.Value)
+			fmt.Println("HI", name.Value, rhs.Type)
 		}
 	}
 	return &VariableSymbol{

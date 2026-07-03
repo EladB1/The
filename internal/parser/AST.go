@@ -63,3 +63,13 @@ func (ast *AST) AddChildToken(token lexer.Token) {
 func nodeFromToken(token lexer.Token) AST {
 	return AST{Token: token, Location: token.Location}
 }
+
+func (ast *AST) IsLiteral() bool {
+	return (ast.Label == "struct_literal" ||
+		ast.Token.Kind == lexer.LIT_CHAR ||
+		ast.Token.Kind == lexer.LIT_STRING ||
+		ast.Token.Kind == lexer.LIT_FLOAT ||
+		ast.Token.Kind == lexer.LIT_INT ||
+		ast.Token.Kind == lexer.LIT_HEX ||
+		ast.Token.Kind == lexer.KW_BOOLVALUE)
+}

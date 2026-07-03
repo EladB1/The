@@ -17,7 +17,7 @@ const (
 	Bool   PrimitiveType = "bool"
 	Char   PrimitiveType = "char"
 	String PrimitiveType = "String"
-	None   PrimitiveType = ""
+	None   PrimitiveType = "None"
 	Any    PrimitiveType = "any"
 )
 
