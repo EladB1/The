@@ -11,7 +11,10 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-var numericTypes []datatypes.DataType = []datatypes.DataType{datatypes.Int32, datatypes.Int64, datatypes.Uint32, datatypes.Uint64, datatypes.Float, datatypes.Double}
+var unsignedTypes []datatypes.DataType = []datatypes.DataType{datatypes.Uint32, datatypes.Uint64}
+var signedIntTypes []datatypes.DataType = []datatypes.DataType{datatypes.Int32, datatypes.Int64}
+var floatTypes []datatypes.DataType = []datatypes.DataType{datatypes.Float, datatypes.Double}
+var numericTypes []datatypes.DataType = slices.Concat(unsignedTypes, signedIntTypes, floatTypes)
 
 func evalLiteral(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataType {
 	if ast.Label == "struct_literal" {
@@ -76,6 +79,7 @@ func evalStructLiteral(ast *parser.AST) datatypes.DataType {
 
 func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataType {
 	var nodeType datatypes.DataType = datatypes.None
+	var err error = nil
 	if ast.IsLiteral() {
 		nodeType = evalLiteral(ast, expectedType)
 	} else if ast.Token.Kind == lexer.ID {
@@ -106,28 +110,15 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 	} else if ast.Token.Kind == lexer.OPERATOR_ADD {
 		lhs := evalType(&ast.Children[0], datatypes.None)
 		rhs := evalType(&ast.Children[1], datatypes.None)
-		fmt.Println(lhs, rhs)
-		// TODO: check compatibility
 		if (lhs == datatypes.String || lhs == datatypes.Char) && (rhs == datatypes.String || rhs == datatypes.Char) {
 			nodeType = datatypes.String
 		} else if slices.Contains(numericTypes, lhs) && slices.Contains(numericTypes, rhs) {
 			if lhs == rhs {
 				nodeType = lhs
 			} else {
-				if (lhs == datatypes.Uint32 || lhs == datatypes.Uint64) && (rhs == datatypes.Uint32 || rhs == datatypes.Uint64) {
-					nodeType = datatypes.Uint64
-				} else if (lhs == datatypes.Int32 || lhs == datatypes.Int64) && (rhs == datatypes.Int32 || rhs == datatypes.Int64) {
-					nodeType = datatypes.Int64
-				} else if (lhs == datatypes.Int32 || lhs == datatypes.Float) && (rhs == datatypes.Int32 || rhs == datatypes.Float) {
-					nodeType = datatypes.Float
-				} else if (lhs == datatypes.Int32 || lhs == datatypes.Double) && (rhs == datatypes.Int32 || rhs == datatypes.Double) {
-					nodeType = datatypes.Double
-				} else if (lhs == datatypes.Int64 || lhs == datatypes.Double) && (rhs == datatypes.Int64 || rhs == datatypes.Double) {
-					nodeType = datatypes.Double
-				} else if (lhs == datatypes.Float || lhs == datatypes.Double) && (rhs == datatypes.Float || rhs == datatypes.Double) {
-					nodeType = datatypes.Double
-				} else {
-					messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Cannot use operator '%s' between %s and %s", ast.Token.Value, lhs, rhs), ast.Location)
+				nodeType, err = decideNumberType(lhs, rhs, ast.Token.Value)
+				if err != nil {
+					messages = messages.Complain(diagnostic.TypeError, err.Error(), ast.Location)
 				}
 			}
 		} else {
@@ -139,32 +130,64 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 		fmt.Println(lhs, rhs)
 		if !slices.Contains(numericTypes, lhs) || !slices.Contains(numericTypes, rhs) {
 			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Cannot use operator '%s' between %s and %s", ast.Token.Value, lhs, rhs), ast.Location)
+		} else {
+			nodeType, err = decideNumberType(lhs, rhs, ast.Token.Value)
+			if err != nil {
+				messages = messages.Complain(diagnostic.TypeError, err.Error(), ast.Location)
+			}
 		}
-		// TODO: determine type of result
-	} else if ast.Token.Kind == lexer.OPERATOR_BS {
+	} else if ast.Token.Kind == lexer.OPERATOR_BS || ast.Token.Kind == lexer.OPERATOR_BW {
 		lhs := evalType(&ast.Children[0], datatypes.None)
 		rhs := evalType(&ast.Children[1], datatypes.None)
-		fmt.Println(lhs, rhs)
-		// TODO: check compatibility
-	} else if ast.Token.Kind == lexer.OPERATOR_BW {
-		lhs := evalType(&ast.Children[0], datatypes.None)
-		rhs := evalType(&ast.Children[1], datatypes.None)
-		fmt.Println(lhs, rhs)
-		// TODO: check compatibility
+		if (lhs == datatypes.Uint32 || lhs == datatypes.Uint64) && (rhs == datatypes.Uint32 || rhs == datatypes.Uint64) ||
+			(lhs == datatypes.Int32 || lhs == datatypes.Int64) && (rhs == datatypes.Int32 || rhs == datatypes.Int64) {
+			nodeType, _ = decideNumberType(lhs, rhs, ast.Token.Value)
+		} else {
+			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Cannot use operator '%s' between %s and %s", ast.Token.Value, lhs, rhs), ast.Location)
+		}
 	} else if ast.Token.Kind == lexer.OPERATOR_COMPARE {
 		lhs := evalType(&ast.Children[0], datatypes.None)
 		rhs := evalType(&ast.Children[1], datatypes.None)
-		fmt.Println(lhs, rhs)
-		// TODO: check compatibility
-		nodeType = datatypes.Bool
-	} else if ast.Token.Kind == lexer.OPERATOR {
+		if lhs != rhs && !comparableCheck(lhs, rhs) {
+			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Invalid comparison between %s and %s", lhs, rhs), ast.Location)
+		} else {
+			nodeType = datatypes.Bool
+		}
+	} else if ast.Token.Value == "&&" || ast.Token.Value == "||" {
 		lhs := evalType(&ast.Children[0], datatypes.None)
 		rhs := evalType(&ast.Children[1], datatypes.None)
-		fmt.Println(lhs, rhs)
-		// TODO: check compatibility
+		if lhs != datatypes.Bool || rhs != datatypes.Bool {
+			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Cannot use operator '%s' between %s and %s", ast.Token.Value, lhs, rhs), ast.Location)
+		} else {
+			nodeType = datatypes.Bool
+		}
 	}
 	ast.Type = nodeType
 	return nodeType
+}
+
+func comparableCheck(lhs datatypes.DataType, rhs datatypes.DataType) bool {
+	lhsUnsigned := slices.Contains(unsignedTypes, lhs)
+	rhsUnsigned := slices.Contains(unsignedTypes, rhs)
+	return lhsUnsigned == rhsUnsigned
+}
+
+func decideNumberType(lhs datatypes.DataType, rhs datatypes.DataType, operator string) (datatypes.DataType, error) {
+	if (lhs == datatypes.Uint32 || lhs == datatypes.Uint64) && (rhs == datatypes.Uint32 || rhs == datatypes.Uint64) {
+		return datatypes.Uint64, nil
+	} else if (lhs == datatypes.Int32 || lhs == datatypes.Int64) && (rhs == datatypes.Int32 || rhs == datatypes.Int64) {
+		return datatypes.Int64, nil
+	} else if (lhs == datatypes.Int32 || lhs == datatypes.Float) && (rhs == datatypes.Int32 || rhs == datatypes.Float) {
+		return datatypes.Float, nil
+	} else if (lhs == datatypes.Int32 || lhs == datatypes.Double) && (rhs == datatypes.Int32 || rhs == datatypes.Double) {
+		return datatypes.Double, nil
+	} else if (lhs == datatypes.Int64 || lhs == datatypes.Double) && (rhs == datatypes.Int64 || rhs == datatypes.Double) {
+		return datatypes.Double, nil
+	} else if (lhs == datatypes.Float || lhs == datatypes.Double) && (rhs == datatypes.Float || rhs == datatypes.Double) {
+		return datatypes.Double, nil
+	} else {
+		return datatypes.None, fmt.Errorf("Cannot use operator '%s' between %s and %s", operator, lhs, rhs)
+	}
 }
 
 func handleFunctionCall() datatypes.DataType {

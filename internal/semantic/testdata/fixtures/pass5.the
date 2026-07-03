@@ -13,4 +13,7 @@ struct Object {
 }
 
 int x = i + 1;
-double z = y - x;
+double z = y * x;
+uint32 u = 0x100;
+bool b = x == z;
+bool b2 = u < z;
