@@ -194,9 +194,31 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 		if lhs != rhs && !comparableCheck(lhs, rhs) {
 			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Invalid comparison between %s and %s", lhs, rhs), ast.Location)
 		} else {
+			if lhs == rhs && !lhs.IsPrimitive() && ast.Token.Value != "==" && ast.Token.Value != "!=" {
+				str := globalScope.lookupStruct(lhs.String())
+				if str == nil {
+					messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Cannot find struct definition for %s", lhs.String()), ast.Location)
+				} else {
+					operator := ast.Token.Value
+					compareBlock := str.innerScope.lookupNamedBlock("compare")
+					if compareBlock == nil {
+						messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Cannot compare %s using operator '%s'. To support this comparison add a compare block with the appropriate functions", lhs, operator), ast.Location)
+					} else {
+						switch operator {
+						case "<", "<=":
+							if symbol := compareBlock.innerScope.lookupFunction("lessThan"); symbol == nil || symbol.returnType != datatypes.Bool {
+								messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Unsupported comparison. To support operators '<' and '<=', add function 'fn lessThan(%s)->bool' to compare block in %s definition", lhs, lhs), ast.Location)
+							}
+						case ">", ">=":
+							if symbol := compareBlock.innerScope.lookupFunction("greaterThan"); symbol == nil || symbol.returnType != datatypes.Bool {
+								messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(%s)->bool' to compare block in %s definition", lhs, lhs), ast.Location)
+							}
+						}
+					}
+				}
+			}
 			nodeType = datatypes.Bool
 		}
-		// TODO: handle <, <=, >, >= for struct (check compare block)
 	} else if ast.Token.Value == "&&" || ast.Token.Value == "||" {
 		lhs := evalType(&ast.Children[0], datatypes.None)
 		rhs := evalType(&ast.Children[1], datatypes.None)

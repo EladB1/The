@@ -4,6 +4,9 @@ double y = 0;
 // private String s;
 bool is = false;
 Object o = Object {i: 0, j: 1024};
+Object o2 = Object{i: -1, j: 1023};
+bool less = o2 < o;
+bool greater = o2 > o;
 
 struct Object {
     int i;
@@ -13,6 +16,11 @@ struct Object {
     cast {
         fn toInt() -> int {
             return i+j;
+        }
+    }
+    compare {
+        fn lessThan(Object other) -> bool {
+            return i < other.i && j < other.j;
         }
     }
 }
