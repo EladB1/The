@@ -100,7 +100,7 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 	details := nbNode.Children
 	name := details[0].Token.Value
 	if !slices.Contains(specialBlocks, name) && !slices.Contains(impl, name) {
-		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Block '%s' not supported", name), nbNode.Location)
+		messages = messages.Complain(diagnostic.NameError, nbNode.Location, "Block '%s' not supported", name)
 		return nil
 	}
 	body := details[1].Children
@@ -119,25 +119,25 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 					fmt.Sprintf("fn greaterThan(%s)->bool", structName),
 				}
 				if !slices.Contains(supported, symbol.getSignature()) {
-					messages = messages.Complain(diagnostic.NamedBlockError, fmt.Sprintf("Function signature '%s' not supported; only '%s' supported", symbol.getSignature(), strings.Join(supported, ",")), node.Location)
+					messages = messages.Complain(diagnostic.NamedBlockError, node.Location, "Function signature '%s' not supported; only '%s' supported", symbol.getSignature(), strings.Join(supported, ","))
 				}
 			case "cast":
 				if len(symbol.parameters) > 0 || symbol.returnType == datatypes.None || symbol.returnType == datatypes.DynamicType(structName) {
-					messages = messages.Complain(diagnostic.NamedBlockError, "Functions in cast block must take no parameters and return a different type", node.Location)
+					messages = messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block must take no parameters and return a different type")
 				}
 			case "private":
 				symbol.isPrivate = true
 			}
 			if err := currentScope.functions.add(symbol); err != nil {
-				messages = messages.Complain(diagnostic.IllegalStatementError, err.Error(), node.Location)
+				messages = messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 			}
 		case "Variable":
 			if name != "private" {
-				messages = messages.Complain(diagnostic.IllegalStatementError, "Variable declaration only allowed in struct or private block", node.Location)
+				messages = messages.Complain(diagnostic.IllegalStatementError, node.Location, "Variable declaration only allowed in struct or private block")
 			} else {
 				symbol := analyzeVariable(node)
 				if symbol.isPrivate {
-					messages = messages.Complain(diagnostic.Warning, "Redundant use of private in private block", node.Location)
+					messages = messages.Complain(diagnostic.Warning, node.Location, "Redundant use of private in private block")
 				}
 				currentScope.variables[symbol.name] = *symbol
 
@@ -182,7 +182,7 @@ func analyzeVariable(varNode parser.AST) *VariableSymbol {
 	}
 	varType := nodeToType(typeNode)
 	if currentScope.lookupVariable(name.Value) != nil {
-		messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name: '%s' already defined", name.Value), name.Location)
+		messages = messages.Complain(diagnostic.NameError, name.Location, "Name: '%s' already defined", name.Value)
 		return nil
 	}
 	if rhs != nil {

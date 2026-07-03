@@ -134,7 +134,7 @@ func (state *lexerState) lexLine(line string) {
 					state.push(curr)
 					if !unicode.IsDigit(rune(next)) {
 						if err := validateFloatLiteral(state.sequence); err != nil {
-							state.addError(err.Error())
+							state.addError("%s", err.Error())
 						} else {
 							state.buildAndAppendToken(LIT_FLOAT)
 						}
@@ -189,7 +189,7 @@ func (state *lexerState) lexLine(line string) {
 			} else if _, ok := separators[string(curr)]; ok {
 				state.buildAndAppendTokenFromByte(SEPARATOR, curr)
 			} else {
-				state.addError(fmt.Sprintf("Unrecognized character: '%c'", curr))
+				state.addError("Unrecognized character: '%c'", curr)
 				state.clearSequence()
 			}
 		}
@@ -228,7 +228,7 @@ func (state *lexerState) tokenizeQuotes(line string) {
 			}
 		}
 	}
-	state.addError(fmt.Sprintf("Unterminated %s literal", literal))
+	state.addError("Unterminated %s literal", literal)
 	state.clearSequence()
 }
 
@@ -269,13 +269,12 @@ func (state *lexerState) tokenizeNumber(line string) {
 			if next == '.' {
 				if state.lineIndex == length-2 {
 					state.push(next)
-					err := fmt.Sprintf("Invalid float point literal: %s", state.sequence.String())
-					state.addError(err)
+					state.addError("Invalid float point literal: %s", state.sequence.String())
 				}
 				if state.lineIndex < length-2 && line[state.lineIndex+2] == '.' { // check for .. or ..= (range operators)
 					if in_float {
 						if err := validateFloatLiteral(state.sequence); err != nil {
-							state.addError(err.Error())
+							state.addError("%s", err.Error())
 						} else {
 							state.buildAndAppendToken(LIT_FLOAT)
 						}
@@ -293,7 +292,7 @@ func (state *lexerState) tokenizeNumber(line string) {
 				if in_float {
 					tokenType = LIT_FLOAT
 					if err := validateFloatLiteral(state.sequence); err != nil {
-						state.addError(err.Error())
+						state.addError("%s", err.Error())
 						return
 					}
 				}
@@ -316,7 +315,7 @@ func (state *lexerState) tokenizeHex(line string) {
 
 		if !isHexChar(next) {
 			if err := validateHexLiteral(state.sequence); err != nil {
-				state.addError(err.Error())
+				state.addError("%s", err.Error())
 				state.clearSequence()
 			} else {
 				state.buildAndAppendToken(LIT_HEX)

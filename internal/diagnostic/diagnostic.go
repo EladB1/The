@@ -42,43 +42,37 @@ func (diagnostics PhaseDiagnostics) HasError() bool {
 	return false
 }
 
-func (diagnostics PhaseDiagnostics) Complain(level Severity, message string, pos ds.SourceLocation) PhaseDiagnostics {
+func (diagnostics PhaseDiagnostics) Complain(level Severity, pos ds.SourceLocation, formatStr string, args ...any) PhaseDiagnostics {
 	diagnostic := Diagnostic{
 		Level:    level,
-		Message:  message,
+		Message:  fmt.Sprintf(formatStr, args...),
 		Position: pos,
 	}
 	return append(diagnostics, diagnostic)
 }
 
-func (diagnostics PhaseDiagnostics) ComplainPositionless(level Severity, message string) PhaseDiagnostics {
-	return diagnostics.Complain(level, message, ds.SourceLocation{
+func (diagnostics PhaseDiagnostics) ComplainPositionless(level Severity, message string, args ...any) PhaseDiagnostics {
+	pos := ds.SourceLocation{
 		Line:   -1,
 		Column: -1,
-	})
-}
-
-func (diagnostics PhaseDiagnostics) ProvideInfo(message string) PhaseDiagnostics {
-	diagnostic := Diagnostic{
-		Level:   Info,
-		Message: message,
-		Position: ds.SourceLocation{
-			Line:   -1,
-			Column: -1,
-		},
 	}
-	return append(diagnostics, diagnostic)
+	return diagnostics.Complain(level, pos, message, args...)
 }
 
-func (diagnostics PhaseDiagnostics) Warn(message string, pos ds.SourceLocation) PhaseDiagnostics {
-	return diagnostics.Complain(Warning, message, pos)
+func (diagnostics PhaseDiagnostics) ProvideInfo(message string, args ...any) PhaseDiagnostics {
+	return diagnostics.ComplainPositionless(Info, message, args...)
 }
 
-func (diagnostics PhaseDiagnostics) WarnPositionless(message string) PhaseDiagnostics {
-	return diagnostics.Warn(message, ds.SourceLocation{
+func (diagnostics PhaseDiagnostics) Warn(pos ds.SourceLocation, message string, args ...any) PhaseDiagnostics {
+	return diagnostics.Complain(Warning, pos, message, args...)
+}
+
+func (diagnostics PhaseDiagnostics) WarnPositionless(message string, args ...any) PhaseDiagnostics {
+	pos := ds.SourceLocation{
 		Line:   -1,
 		Column: -1,
-	})
+	}
+	return diagnostics.Warn(pos, message, args...)
 }
 
 // Use for errors outside of source code

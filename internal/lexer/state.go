@@ -35,7 +35,7 @@ func initState() *lexerState {
 	}
 }
 
-func (stateMchn *lexerState) addError(message string) {
+func (stateMchn *lexerState) addError(message string, args ...any) {
 	lineIndex := stateMchn.lineIndex
 	if stateMchn.startPosition != stateMchn.lineIndex {
 		lineIndex = stateMchn.startPosition
@@ -44,7 +44,7 @@ func (stateMchn *lexerState) addError(message string) {
 		Line:   stateMchn.lineNum,
 		Column: lineIndex,
 	}
-	stateMchn.messages = stateMchn.messages.Complain(errLevel, message, pos)
+	stateMchn.messages = stateMchn.messages.Complain(errLevel, pos, message, args...)
 }
 
 func (stateMchn *lexerState) push(char byte) {
@@ -65,12 +65,12 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 	case LIT_CHAR:
 		str, err := strconv.Unquote(stateMchn.sequence.String())
 		if err != nil {
-			stateMchn.addError(fmt.Sprintf("Invalid character literal %s", stateMchn.sequence.String()))
+			stateMchn.addError("Invalid character literal %s", stateMchn.sequence.String())
 			return
 		}
 		char, size := utf8.DecodeRuneInString(str)
 		if char == utf8.RuneError && size > 1 {
-			stateMchn.addError(fmt.Sprintf("Invalid character literal %s", stateMchn.sequence.String()))
+			stateMchn.addError("Invalid character literal %s", stateMchn.sequence.String())
 			return
 		} else if size == 0 {
 			char = 0
@@ -86,8 +86,7 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 	case LIT_STRING:
 		str, err := strconv.Unquote(stateMchn.sequence.String())
 		if err != nil {
-			fmt.Println(stateMchn.sequence.String())
-			stateMchn.addError(fmt.Sprintf("Invalid string literal %s", stateMchn.sequence.String()))
+			stateMchn.addError("Invalid string literal %s", stateMchn.sequence.String())
 			return
 		}
 		index := 0
@@ -103,7 +102,7 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 	case LIT_FLOAT:
 		val, err := strconv.ParseFloat(stateMchn.sequence.String(), 64)
 		if err != nil {
-			stateMchn.addError(fmt.Sprintf("Invalid floating point literal %s", stateMchn.sequence.String()))
+			stateMchn.addError("Invalid floating point literal %s", stateMchn.sequence.String())
 			return
 		}
 		token = Token{
@@ -117,7 +116,7 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 	case LIT_INT:
 		val, err := strconv.ParseInt(stateMchn.sequence.String(), 10, 64)
 		if err != nil {
-			stateMchn.addError(fmt.Sprintf("Invalid integer literal %s", stateMchn.sequence.String()))
+			stateMchn.addError("Invalid integer literal %s", stateMchn.sequence.String())
 			return
 		}
 		token = Token{
@@ -131,7 +130,7 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 	case LIT_HEX:
 		val, err := strconv.ParseInt(stateMchn.sequence.String(), 0, 64)
 		if err != nil {
-			stateMchn.addError(fmt.Sprintf("Invalid hexadecimal literal %s", stateMchn.sequence.String()))
+			stateMchn.addError("Invalid hexadecimal literal %s", stateMchn.sequence.String())
 			return
 		}
 		token = Token{

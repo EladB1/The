@@ -5,13 +5,14 @@ Exit code: 0
 
 Output:
 
-Scope: { id: @global, parent: @built-in, interfaces: map[Logger:{name: Logger}], structs: map[ErrorLogger:{name: ErrorLogger, size: 0}], children: [
-    Scope: { id: Logger, parent: @global, functions: map[fn log(String):{Signature: fn log(String), hasImplementation: true}] },
+Scope: { id: @global, parent: @built-in, interfaces: map[Logger:{name: Logger}], structs: map[ErrorLogger:{name: ErrorLogger, size: 0}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[SOME_CONST:{name: SOME_CONST, Type: uint32, Initialized: true}], children: [
+    Scope: { id: Logger, parent: @global, functions: map[log:{name: log, returns: None, overloads: [{parameters: (String), implemented: false}]}] },
     Scope: { id: ErrorLogger, parent: @global, namedBlocks: map[Logger:{name: Logger}], children: [
-        Scope: { id: Logger@ErrorLogger, parent: ErrorLogger, functions: map[fn log(String):{Signature: fn log(String), hasImplementation: false}], children: [
-            Scope: { id: fn@log, parent: Logger@ErrorLogger, variables: map[error:{name: error, Type: String}] }
+        Scope: { id: Logger@ErrorLogger, parent: ErrorLogger, functions: map[log:{name: log, returns: None, overloads: [{parameters: (String), implemented: true}]}], children: [
+            Scope: { id: log@Logger@ErrorLogger, parent: Logger@ErrorLogger, variables: map[error:{name: error, Type: String, Initialized: false}] }
         ] }
-    ] }
+    ] },
+    Scope: { id: @main, parent: @global }
 ] }
 
 

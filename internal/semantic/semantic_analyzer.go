@@ -42,7 +42,7 @@ func collectTypeNames(ast parser.AST) {
 		name := nameNode.Token.Value
 		result := globalScope.lookupType(name)
 		if result != nil {
-			messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Name '%s' already in use", name), nameNode.Location)
+			messages = messages.Complain(diagnostic.NameError, nameNode.Location, "Name '%s' already in use", name)
 			continue
 		}
 		childScope := globalScope.addChild(name)
@@ -86,7 +86,7 @@ func analyzeStructFnSignatures() {
 			body = def[2]
 			for _, node := range def[1].Children {
 				if globalScope.lookupInterface(node.Token.Value) == nil {
-					messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Could not find interface name: '%s'", node.Token.Value), node.Location)
+					messages = messages.Complain(diagnostic.NameError, node.Location, "Could not find interface name: '%s'", node.Token.Value)
 				} else {
 					impl = append(impl, node.Token.Value)
 				}
@@ -97,7 +97,7 @@ func analyzeStructFnSignatures() {
 			case "fn":
 				symbol := processFunctionSignature(node)
 				if err := currentScope.functions.add(symbol); err != nil {
-					messages = messages.Complain(diagnostic.IllegalStatementError, err.Error(), node.Location)
+					messages = messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 				}
 			case "named-block":
 				symbol := analyzeNamedBlock(node, str.name, impl)
@@ -121,7 +121,7 @@ func collectFunctionSignatures(ast parser.AST) {
 		if node.Label == "fn" {
 			symbol := processFunctionSignature(node)
 			if err := globalScope.functions.add(symbol); err != nil {
-				messages = messages.Complain(diagnostic.IllegalStatementError, err.Error(), node.Location)
+				messages = messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 			}
 		}
 	}
@@ -133,10 +133,10 @@ func analyzeGlobals(ast parser.AST) {
 		if node.Label == "Variable" {
 			symbol := analyzeVariable(node)
 			if symbol.isMutable {
-				messages = messages.Warn("Mutable global variable declared", node.Location)
+				messages = messages.Warn(node.Location, "Mutable global variable declared")
 			}
 			if symbol.isPrivate {
-				messages = messages.Complain(diagnostic.AccessError, "Cannot use private modifier outside of a struct", node.Location)
+				messages = messages.Complain(diagnostic.AccessError, node.Location, "Cannot use private modifier outside of a struct")
 				continue
 			}
 			if symbol != nil {

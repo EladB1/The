@@ -232,7 +232,6 @@ children: [
                 ] },
                 Node: { Label: "ARR-END"
                 children: [
-                    Node: { Token: {Value: ^, Type: bitwise operator, Line: 17, Column: 8} },
                     Node: { Token: {Value: 1, Type: int literal, Line: 17, Column: 9} }
                 ] }
             ] },
@@ -254,13 +253,11 @@ children: [
                 children: [
                     Node: { Label: "ARR-END"
                     children: [
-                        Node: { Token: {Value: ^, Type: bitwise operator, Line: 19, Column: 12} },
                         Node: { Token: {Value: 3, Type: int literal, Line: 19, Column: 13} }
                     ] },
                     Node: { Token: {Value: .., Type: range operator, Line: 19, Column: 14} },
                     Node: { Label: "ARR-END"
                     children: [
-                        Node: { Token: {Value: ^, Type: bitwise operator, Line: 19, Column: 16} },
                         Node: { Token: {Value: 1, Type: int literal, Line: 19, Column: 17} }
                     ] }
                 ] }
