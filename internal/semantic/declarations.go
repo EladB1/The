@@ -124,6 +124,8 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 			case "cast":
 				if len(symbol.parameters) > 0 || symbol.returnType == datatypes.None || symbol.returnType == datatypes.DynamicType(structName) {
 					messages = messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block must take no parameters and return a different type")
+				} else if intf := globalScope.lookupInterface(symbol.returnType.String()); intf != nil {
+					messages = messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block cannot return an interface")
 				}
 			case "private":
 				symbol.isPrivate = true

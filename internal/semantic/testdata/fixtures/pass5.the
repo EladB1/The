@@ -8,6 +8,10 @@ Object o2 = Object{i: -1, j: 1023};
 bool less = o2 < o;
 bool greater = o2 > o;
 
+interface Matter {
+    fn getMass() -> double;
+}
+
 struct Object {
     int i;
     private {
@@ -16,6 +20,9 @@ struct Object {
     cast {
         fn toInt() -> int {
             return i+j;
+        }
+        fn makeMatter() -> Matter {
+            
         }
     }
     compare {

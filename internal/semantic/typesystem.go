@@ -315,6 +315,10 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 		} else {
 			nodeType = datatypes.Bool
 		}
+	} else if ast.Token.Value == "**" {
+
+	} else if ast.Label == "dot" {
+
 	}
 	ast.Type = nodeType
 	return nodeType
