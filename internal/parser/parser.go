@@ -807,7 +807,7 @@ func parseUnary() AST {
 }
 
 /*
- * left_unary = [ "-" | right_unary_operators ] typecast ;
+ * left_unary = [ "-" | "~" | right_unary_operators ] typecast ;
  */
 func parseLeftUnary() AST {
 	//fmt.Println("In left unary with:", peek())

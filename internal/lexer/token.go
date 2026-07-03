@@ -138,6 +138,7 @@ var (
 		"!",
 		"++",
 		"--",
+		"~",
 	)
 	// any other operators that can't fit into the other categories
 	operators ds.HashSet = ds.BuildHashSet(

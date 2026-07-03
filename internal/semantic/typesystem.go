@@ -90,11 +90,52 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 			messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Variable '%s' not defined in this scope", ast.Token.Value), ast.Location)
 		}
 	} else if ast.Label == "Unary" {
-		//rightTok := ast.Children[1].Token
 		if leftTok := ast.Children[0].Token; leftTok.Kind == lexer.OPERATOR_UNARY || leftTok.Value == "-" {
-			// left unary
+			rhs := evalType(&ast.Children[1], datatypes.None)
+			switch leftTok.Value {
+			case "!":
+				if rhs != datatypes.Bool {
+					messages = messages.Complain(diagnostic.TypeError, "Must use bool value with unary '!'", ast.Location)
+				} else {
+					nodeType = rhs
+				}
+			case "-":
+				if !slices.Contains(numericTypes, rhs) {
+					messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Cannot use unary '-' with type %s", rhs), ast.Location)
+				} else {
+					nodeType = rhs
+				}
+			case "~":
+				if !slices.Contains(unsignedTypes, rhs) && !slices.Contains(signedIntTypes, rhs) {
+					messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Cannot negate value of type %s", rhs), ast.Location)
+				} else {
+					nodeType = rhs
+				}
+			default: // ++, --
+				operand := ast.Children[1].Token
+				symbol := currentScope.lookupVariable(operand.Value)
+				if symbol != nil {
+					if !slices.Contains(numericTypes, symbol.Type) {
+						messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Cannot use '%s' with type %s", ast.Children[0].Token.Value, symbol.Type), operand.Location)
+					} else {
+						nodeType = symbol.Type
+					}
+				} else {
+					messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Could not find variable with name %s", operand.Value), operand.Location)
+				}
+			}
 		} else {
-			// right unary
+			operand := ast.Children[0].Token
+			symbol := currentScope.lookupVariable(operand.Value)
+			if symbol != nil {
+				if !slices.Contains(numericTypes, symbol.Type) {
+					messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Cannot use '%s' with type %s", ast.Children[1].Token.Value, symbol.Type), operand.Location)
+				} else {
+					nodeType = symbol.Type
+				}
+			} else {
+				messages = messages.Complain(diagnostic.NameError, fmt.Sprintf("Could not find variable with name %s", operand.Value), operand.Location)
+			}
 		}
 
 	} else if ast.Label == "typecast" {
@@ -143,11 +184,58 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 		return target
 
 	} else if ast.Label == "index" {
-
+		// only supports one index until arrays added
+		if len(ast.Children) > 2 {
+			messages = messages.Warn("Multiple indexes not yet supported", ast.Location)
+		}
+		lhs := evalType(&ast.Children[0], datatypes.None)
+		rhs := evalType(&ast.Children[1], datatypes.None)
+		if ast.Children[1].Label == "slice" {
+			nodeType = datatypes.String
+		} else {
+			if lhs != datatypes.String && (!slices.Contains(signedIntTypes, rhs) && !slices.Contains(unsignedTypes, rhs)) {
+				messages = messages.Complain(diagnostic.TypeError, "Cannot index String with %s type", ast.Location)
+			}
+			nodeType = datatypes.Char
+		}
 	} else if ast.Label == "slice" {
+		length := len(ast.Children)
+		switch length {
+		case 1:
+			nodeType = datatypes.Int32
+		case 2:
+			var expr parser.AST
+			if ast.Children[0].Token.Kind == lexer.OPERATOR_RANGE {
+				expr = ast.Children[1]
+			} else {
+				expr = ast.Children[0]
+			}
+			operand := evalType(&expr, datatypes.None)
+			if !slices.Contains(signedIntTypes, operand) && !slices.Contains(unsignedTypes, operand) {
+				messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Invalid type %s used in range expression", operand), expr.Location)
+			} else {
+				nodeType = operand
+			}
+		case 3:
+			lhs := evalType(&ast.Children[0], datatypes.None)
+			rhs := evalType(&ast.Children[2], datatypes.None)
+			if (!slices.Contains(signedIntTypes, lhs) && !slices.Contains(unsignedTypes, lhs)) || (!slices.Contains(signedIntTypes, rhs) && !slices.Contains(unsignedTypes, rhs)) {
+				messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Both sides of slice expression must be an int type; got %s and %s", lhs, rhs), ast.Location)
+			} else {
+				nodeType, err = decideNumberType(lhs, rhs, ast.Children[1].Token.Value)
+				if err != nil {
+					messages = messages.Complain(diagnostic.TypeError, err.Error(), ast.Location)
+				}
+			}
+		}
 
 	} else if ast.Label == "ARR-END" {
-
+		expr := evalType(&ast.Children[0], datatypes.None)
+		if !slices.Contains(unsignedTypes, expr) && !slices.Contains(signedIntTypes, expr) {
+			messages = messages.Complain(diagnostic.TypeError, fmt.Sprintf("Cannot use %s as array end value", expr), ast.Location)
+		} else {
+			nodeType = expr
+		}
 	} else if ast.Label == "call" {
 		nodeType = handleFunctionCall()
 	} else if ast.Token.Kind == lexer.OPERATOR_ADD {
