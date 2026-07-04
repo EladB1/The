@@ -1,5 +1,7 @@
 package datatypes
 
+import "strings"
+
 type DataType interface {
 	String() string
 	IsPrimitive() bool
@@ -36,4 +38,16 @@ func (type_ DynamicType) String() string {
 
 func (type_ DynamicType) IsPrimitive() bool {
 	return false
+}
+
+func Join(types []DataType) string {
+	paramStr := strings.Builder{}
+	end := len(types) - 1
+	for i, param := range types {
+		paramStr.WriteString(param.String())
+		if i < end {
+			paramStr.WriteRune(',')
+		}
+	}
+	return paramStr.String()
 }

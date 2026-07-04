@@ -73,3 +73,7 @@ func (ast *AST) IsLiteral() bool {
 		ast.Token.Kind == lexer.LIT_HEX ||
 		ast.Token.Kind == lexer.KW_BOOLVALUE)
 }
+
+func (ast *AST) HasChildren() bool {
+	return len(ast.Children) != 0
+}

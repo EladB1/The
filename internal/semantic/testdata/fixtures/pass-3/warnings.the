@@ -1,0 +1,5 @@
+struct Sample {
+    private {
+        private int i;
+    }
+}

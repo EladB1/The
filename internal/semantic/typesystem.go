@@ -49,6 +49,9 @@ func evalStructLiteral(ast *parser.AST) datatypes.DataType {
 		messages = messages.Complain(diagnostic.NameError, ast.Location, "Struct %s not defined", name)
 		return datatypes.None
 	}
+	if len(ast.Children) == 1 {
+		return datatypes.DynamicType(name)
+	}
 	properties := ast.Children[1].Children
 	visited := ds.HashSet{}
 	for _, prop := range properties {
@@ -237,7 +240,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 			nodeType = expr
 		}
 	} else if ast.Label == "call" {
-		nodeType = handleFunctionCall()
+		nodeType = handleFunctionCall(ast.Children)
 	} else if ast.Token.Kind == lexer.OPERATOR_ADD {
 		lhs := evalType(&ast.Children[0], datatypes.None)
 		rhs := evalType(&ast.Children[1], datatypes.None)
@@ -279,7 +282,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 	} else if ast.Token.Kind == lexer.OPERATOR_COMPARE {
 		lhs := evalType(&ast.Children[0], datatypes.None)
 		rhs := evalType(&ast.Children[1], datatypes.None)
-		if lhs != rhs && !comparableCheck(lhs, rhs) {
+		if !comparableCheck(lhs, rhs) {
 			messages = messages.Complain(diagnostic.TypeError, ast.Location, "Invalid comparison between %s and %s", lhs, rhs)
 		} else {
 			if lhs == rhs && !lhs.IsPrimitive() && ast.Token.Value != "==" && ast.Token.Value != "!=" {
@@ -316,9 +319,57 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 			nodeType = datatypes.Bool
 		}
 	} else if ast.Token.Value == "**" {
-
+		base := evalType(&ast.Children[0], datatypes.None)
+		expo := evalType(&ast.Children[1], datatypes.None)
+		if !slices.Contains(numericTypes, base) || !slices.Contains(numericTypes, expo) {
+			messages = messages.Complain(diagnostic.TypeError, ast.Location, "Cannot use exponent with types %s and %s", base, expo)
+		} else {
+			// determine type
+			if slices.Contains(floatTypes, expo) {
+				nodeType = expo
+			} else {
+				nodeType = base
+			}
+		}
 	} else if ast.Label == "dot" {
+		left := ast.Children[0]
+		right := ast.Children[1]
+		scope := currentScope
+		changedScope := false
+		if !left.HasChildren() {
+			lhs := evalType(&left, datatypes.None)
+			if right.Label == "call" {
+				// TODO
+			} else {
+				rname := right.Token.Value
+				if lhs == datatypes.String && rname == "length" {
+					return datatypes.Int32
+				} else if !lhs.IsPrimitive() {
+					symbol := globalScope.lookupType(lhs.String())
+					if symbol == nil {
+						messages = messages.Complain(diagnostic.NameError, ast.Location, "Could not find type %s", lhs)
+					} else {
+						prop := symbol.getInnerScope().lookupVariable(rname)
+						if prop == nil {
+							if privBlock := symbol.getInnerScope().lookupNamedBlock("private"); privBlock != nil {
 
+							} else {
+								messages = messages.Complain(diagnostic.NameError, right.Location, "Could not find %s in %s", rname, lhs.String())
+							}
+						} else {
+							if prop.isPrivate && (currentScope != symbol.getInnerScope() || currentScope.parent != symbol.getInnerScope()) {
+								messages = messages.Complain(diagnostic.AccessError, right.Location, "Cannot access private member outside of struct scope")
+							} else {
+								return prop.Type
+							}
+						}
+					}
+				}
+			}
+		}
+		if changedScope {
+			currentScope = scope
+		}
 	}
 	ast.Type = nodeType
 	return nodeType
@@ -327,7 +378,10 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 func comparableCheck(lhs datatypes.DataType, rhs datatypes.DataType) bool {
 	lhsUnsigned := slices.Contains(unsignedTypes, lhs)
 	rhsUnsigned := slices.Contains(unsignedTypes, rhs)
-	return lhsUnsigned == rhsUnsigned
+	lhsSigned := slices.Contains(signedIntTypes, lhs) || slices.Contains(floatTypes, lhs)
+	rhsSigned := slices.Contains(signedIntTypes, rhs) || slices.Contains(floatTypes, rhs)
+
+	return lhs == rhs || (lhsUnsigned && rhsUnsigned) || (lhsSigned && rhsSigned)
 }
 
 func decideNumberType(lhs datatypes.DataType, rhs datatypes.DataType, operator string) (datatypes.DataType, error) {
@@ -348,7 +402,28 @@ func decideNumberType(lhs datatypes.DataType, rhs datatypes.DataType, operator s
 	}
 }
 
-func handleFunctionCall() datatypes.DataType {
+func handleFunctionCall(details []parser.AST) datatypes.DataType {
+	// TODO
+	name := details[0].Token
+	symbol := currentScope.lookupFunction(name.Value)
+	if symbol == nil {
+		messages = messages.Complain(diagnostic.NameError, name.Location, "Could not find function %s in scope", name.Value)
+		return datatypes.None
+	}
+	// check parameters
+	var params []datatypes.DataType = []datatypes.DataType{}
+	if len(details) == 2 {
+		for _, param := range details[1].Children {
+			params = append(params, evalType(&param, datatypes.None))
+		}
+	}
+	paramList := datatypes.Join(params)
+	if _, ok := symbol.overloads[paramList]; ok {
+		return symbol.returnType
+	} else {
+		// TODO: find closest error
+		messages = messages.Complain(diagnostic.CallError, details[1].Location, "Could not find function '%s(%s)->%s'", name.Value, paramList, symbol.returnType)
+	}
 	return datatypes.None
 }
 

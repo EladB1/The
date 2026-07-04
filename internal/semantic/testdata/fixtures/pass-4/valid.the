@@ -1,0 +1,11 @@
+fn test() {
+    println("test");
+}
+
+fn test(int i) {
+    println("test" + (i as string));
+}
+
+interface A {
+    fn test();
+}

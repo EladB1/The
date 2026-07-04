@@ -12,6 +12,7 @@ type (
 	LookupMode int
 	TypeSymbol interface {
 		getSymbolType() string
+		getInnerScope() *Scope
 	}
 	FunctionSymbol struct {
 		name       string
@@ -74,6 +75,13 @@ func (intf InterfaceSymbol) getSymbolType() string {
 }
 func (str StructSymbol) getSymbolType() string {
 	return "struct"
+}
+
+func (intf InterfaceSymbol) getInnerScope() *Scope {
+	return intf.innerScope
+}
+func (str StructSymbol) getInnerScope() *Scope {
+	return str.innerScope
 }
 
 func (scope *Scope) lookupNamedBlock(name string) *NamedBlockSymbol {
@@ -201,23 +209,12 @@ func (nb NamedBlockSymbol) HasReturnType(returnType datatypes.DataType) bool {
 	return false
 }
 
-func (symbol FnCreateSymbol) stringifyParams() string {
-	paramStr := strings.Builder{}
-	for i, param := range symbol.parameters {
-		paramStr.WriteString(param.String())
-		if i < len(symbol.parameters)-1 {
-			paramStr.WriteRune(',')
-		}
-	}
-	return paramStr.String()
-}
-
 func (symbol FnCreateSymbol) getSignature() string {
 	returns := ""
 	if symbol.returnType != datatypes.None {
 		returns = fmt.Sprintf("->%s", symbol.returnType)
 	}
-	return fmt.Sprintf("fn %s(%s)%s", symbol.name, symbol.stringifyParams(), returns)
+	return fmt.Sprintf("fn %s(%s)%s", symbol.name, datatypes.Join(symbol.parameters), returns)
 }
 
 func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
@@ -239,14 +236,14 @@ func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
 			}
 			return fmt.Errorf("Function name '%s' can only be overloaded with return type %s. Found: %s", symbol.name, fn.returnType, symbol.returnType)
 		}
-		params := symbol.stringifyParams()
+		params := datatypes.Join(symbol.parameters)
 		if _, ok := fn.overloads[params]; ok {
 			return fmt.Errorf("Function with signature '%s' cannot be redefined", symbol.getSignature())
 		} else {
 			fn.overloads[params] = symbol.toOverload()
 		}
 	} else {
-		params := symbol.stringifyParams()
+		params := datatypes.Join(symbol.parameters)
 		table[symbol.name] = FunctionSymbol{
 			name:       symbol.name,
 			returnType: symbol.returnType,

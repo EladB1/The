@@ -40,15 +40,12 @@ struct F {
         fn action() {
             println(z);
         }
-        private float f;
     }
     cast {
         fn toString() -> String {
             return (x as String) + ", " + (y as String);
         }
-        // fn toSomething(int i) -> String {}
-        // fn toSame() -> F {}
-        // fn toNothing() {}
+        
     }
     compare {
         fn equals(F other) -> bool {
@@ -60,6 +57,5 @@ struct F {
         fn greaterThan(F other) -> bool {
             return x > other.x || y > other.y;
         }
-        //fn abc(int i) -> String {}
     }
 }

@@ -66,10 +66,8 @@ children: [
 ] }
 , Compiler messages:
 [
-    "NameError: Name 'A' already in use at line: 1, column: 11",
     "NameError: Name 'A' already in use at line: 2, column: 11",
     "NameError: Name 'A' already in use at line: 3, column: 8",
-    "NameError: Name 'B' already in use at line: 4, column: 8",
     "NameError: Name 'B' already in use at line: 5, column: 8"
 ]
 

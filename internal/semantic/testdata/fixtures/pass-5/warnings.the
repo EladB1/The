@@ -1,0 +1,3 @@
+mut int total;
+double pi = 3.14;
+float otherPi = pi as float;

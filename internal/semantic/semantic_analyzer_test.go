@@ -117,9 +117,6 @@ func TestPassFour(t *testing.T) {
 	t.Run("should run valid.the and have no errors", func(t *testing.T) {
 		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
 	})
-	t.Run("should run warnings.the and have warnings", func(t *testing.T) {
-		snapshotTestSemanticAnalyzer(t, "warnings.json", subdir)
-	})
 	t.Run("should errors.the and have a mix of errors and warnings", func(t *testing.T) {
 		snapshotTestSemanticAnalyzer(t, "errors.json", subdir)
 	})

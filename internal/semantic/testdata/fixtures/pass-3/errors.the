@@ -1,0 +1,20 @@
+struct Test {
+    uint32 u;
+    float w;
+
+    private {
+        mut int i;
+        float u;
+        mut private double pay;
+    }
+
+    cast {
+        fn toSomething(int i) -> String {}
+        fn toSame() -> Test {}
+        fn toNothing() {}
+    }
+    
+    compare {
+        fn abc(int i) -> String {}
+    }
+}

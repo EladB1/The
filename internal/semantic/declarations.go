@@ -138,10 +138,12 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 				messages = messages.Complain(diagnostic.IllegalStatementError, node.Location, "Variable declaration only allowed in struct or private block")
 			} else {
 				symbol := analyzeVariable(node)
-				if symbol.isPrivate {
-					messages = messages.Complain(diagnostic.Warning, node.Location, "Redundant use of private in private block")
+				if symbol != nil {
+					if symbol.isPrivate {
+						messages = messages.Complain(diagnostic.Warning, node.Location, "Redundant use of private in private block")
+					}
+					currentScope.variables[symbol.name] = *symbol
 				}
-				currentScope.variables[symbol.name] = *symbol
 
 			}
 		}

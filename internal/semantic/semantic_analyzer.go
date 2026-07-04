@@ -9,7 +9,7 @@ import (
 
 var specialBlocks []string = []string{"private", "cast", "compare"}
 
-var messages diagnostic.PhaseDiagnostics = diagnostic.PhaseDiagnostics{}
+var messages diagnostic.PhaseDiagnostics
 
 func initScope() *Scope {
 	globalScope := rootScope.addChild("@global")
@@ -17,12 +17,19 @@ func initScope() *Scope {
 }
 
 /* moving scope pointer that starts at global scope */
-var currentScope *Scope = initScope()
+var currentScope *Scope
 
 /* global scope pointer that can be quickly referenced rather than going through full tree */
-var globalScope *Scope = initScope()
+var globalScope *Scope
+
+func setup() {
+	messages = diagnostic.PhaseDiagnostics{}
+	currentScope = initScope()
+	globalScope = initScope()
+}
 
 func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
+	setup()
 	collectTypeNames(ast)
 	analyzeInterfaceFnSignatures()
 	analyzeStructFnSignatures()
@@ -68,7 +75,10 @@ func analyzeInterfaceFnSignatures() {
 		currentScope = intf.innerScope
 		for _, node := range intf.Def.Children[1].Children {
 			symbol := processFunctionSignature(node)
-			currentScope.functions.add(symbol)
+			err := currentScope.functions.add(symbol)
+			if err != nil {
+				messages = messages.Complain(diagnostic.IllegalStatementError, node.Location, "%v", err)
+			}
 		}
 	}
 	currentScope = globalScope // reset the current scope
@@ -132,6 +142,9 @@ func analyzeGlobals(ast parser.AST) {
 	for _, node := range ast.Children {
 		if node.Label == "Variable" {
 			symbol := analyzeVariable(node)
+			if symbol == nil {
+				continue
+			}
 			if symbol.isMutable {
 				messages = messages.Warn(node.Location, "Mutable global variable declared")
 			}

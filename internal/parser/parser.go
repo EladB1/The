@@ -143,7 +143,7 @@ func checkVariableDeclaration() bool {
 }
 
 func checkExpressionStart() bool {
-	return isLiteral() || checkKind(lexer.OPERATOR_UNARY) || checkKind(lexer.ID) || checkValue("(")
+	return isLiteral() || checkKind(lexer.OPERATOR_UNARY) || checkKind(lexer.ID) || checkValue("(") || (checkKind(lexer.LIT_STRING) && checkValueAhead(".", 1))
 }
 
 /*

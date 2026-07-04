@@ -1,67 +1,68 @@
 
 [TestPassFour/should_run_valid.the_and_have_no_errors - 1]
 AST:
-Node: { Label: "program" }
+Node: { Label: "program"
+children: [
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: test, Type: identifier, Line: 0, Column: 3} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "call"
+            children: [
+                Node: { Token: {Value: println, Type: identifier, Line: 1, Column: 4} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [5] with length 0) }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: test, Type: identifier, Line: 4, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 4, Column: 8} },
+                Node: { Token: {Value: i, Type: identifier, Line: 4, Column: 12} }
+            ] }
+        ] },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "call"
+            children: [
+                Node: { Token: {Value: println, Type: identifier, Line: 5, Column: 4} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Token: {Value: +, Type: add operator, Line: 5, Column: 19}
+                    children: [
+                        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [6] with length 0) },
+                        Node: { Label: "typecast"
+                        children: [
+                            Node: { Token: {Value: i, Type: identifier, Line: 5, Column: 22} },
+                            Node: { Token: {Value: string, Type: identifier, Line: 5, Column: 27} }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: A, Type: identifier, Line: 8, Column: 10} },
+        Node: { Label: "interface-body"
+        children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: test, Type: identifier, Line: 9, Column: 7} }
+            ] }
+        ] }
+    ] }
+] }
 , Compiler messages:
-[
-    "NameError: Name 'A' already in use at line: 1, column: 11",
-    "NameError: Name 'A' already in use at line: 2, column: 11",
-    "NameError: Name 'A' already in use at line: 3, column: 8",
-    "NameError: Name 'B' already in use at line: 4, column: 8",
-    "NameError: Name 'B' already in use at line: 5, column: 8",
-    "NameError: Name 'A' already in use at line: 3, column: 11",
-    "NameError: Name 'B' already in use at line: 10, column: 11",
-    "NameError: Name 'A' already in use at line: 1, column: 8",
-    "NameError: Name 'B' already in use at line: 7, column: 8",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5"
-]
-
----
-
-[TestPassFour/should_run_warnings.the_and_have_warnings - 1]
-AST:
-Node: { Label: "program" }
-, Compiler messages:
-[
-    "NameError: Name 'A' already in use at line: 1, column: 11",
-    "NameError: Name 'A' already in use at line: 2, column: 11",
-    "NameError: Name 'A' already in use at line: 3, column: 8",
-    "NameError: Name 'B' already in use at line: 4, column: 8",
-    "NameError: Name 'B' already in use at line: 5, column: 8",
-    "NameError: Name 'A' already in use at line: 3, column: 11",
-    "NameError: Name 'B' already in use at line: 10, column: 11",
-    "NameError: Name 'A' already in use at line: 1, column: 8",
-    "NameError: Name 'B' already in use at line: 7, column: 8",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9"
-]
+[]
 
 ---
 
@@ -245,37 +246,6 @@ children: [
 ] }
 , Compiler messages:
 [
-    "NameError: Name 'A' already in use at line: 1, column: 11",
-    "NameError: Name 'A' already in use at line: 2, column: 11",
-    "NameError: Name 'A' already in use at line: 3, column: 8",
-    "NameError: Name 'B' already in use at line: 4, column: 8",
-    "NameError: Name 'B' already in use at line: 5, column: 8",
-    "NameError: Name 'A' already in use at line: 3, column: 11",
-    "NameError: Name 'B' already in use at line: 10, column: 11",
-    "NameError: Name 'A' already in use at line: 1, column: 8",
-    "NameError: Name 'B' already in use at line: 7, column: 8",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
-    "NameError: Name 'A' already in use at line: 17, column: 11",
-    "IllegalStatementError: Function with signature 'fn test(int)->bool' cannot be redefined at line: 18, column: 5",
-    "NameError: Name: 'x' already defined at line: 36, column: 9",
-    "NameError: Name: 'y' already defined at line: 37, column: 9",
-    "Warning: Redundant use of private in private block at line: 43, column: 9",
     "IllegalStatementError: Function with signature 'fn test()' cannot be redefined at line: 9, column: 1",
     "IllegalStatementError: Function name 'test' already defined without a return type; cannot overload with return type bool at line: 13, column: 1",
     "IllegalStatementError: Function with signature 'fn test(int,char)' cannot be redefined at line: 15, column: 1"
