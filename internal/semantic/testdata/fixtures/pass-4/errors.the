@@ -11,6 +11,8 @@ fn test() {
 }
 
 fn test(char c) -> bool {}
+fn test(int i, char c);
+fn test(int i, char c);
 
 interface A {
     fn test();

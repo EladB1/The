@@ -1,5 +1,5 @@
 
-[TestSemanticAnalyzer/should_run_pass1.the_and_have_no_errors - 1]
+[TestPassOne/should_run_valid.the_and_have_no_errors - 1]
 AST:
 Node: { Label: "program"
 children: [
@@ -34,7 +34,7 @@ children: [
 
 ---
 
-[TestSemanticAnalyzer/should_run_pass1_errors.the_and_have_errors - 1]
+[TestPassOne/should_errors.the_and_have_errors - 1]
 AST:
 Node: { Label: "program"
 children: [

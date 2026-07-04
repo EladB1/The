@@ -1,0 +1,177 @@
+
+[TestPassTwo/should_run_valid.the_and_have_no_errors - 1]
+AST:
+Node: { Label: "program"
+children: [
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: Empty, Type: identifier, Line: 0, Column: 10} },
+        Node: { Label: "interface-body" }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: A, Type: identifier, Line: 2, Column: 10} },
+        Node: { Label: "interface-body"
+        children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: a, Type: identifier, Line: 3, Column: 7} }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: b, Type: identifier, Line: 4, Column: 7} },
+                Node: { Token: {Value: int, Type: type keyword, Line: 4, Column: 14} }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: c, Type: identifier, Line: 5, Column: 7} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: int, Type: type keyword, Line: 5, Column: 9} },
+                        Node: { Token: {Value: i, Type: identifier, Line: 5, Column: 13} }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: d, Type: identifier, Line: 6, Column: 7} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: uint64, Type: type keyword, Line: 6, Column: 9} },
+                        Node: { Token: {Value: u, Type: identifier, Line: 6, Column: 16} }
+                    ] }
+                ] },
+                Node: { Token: {Value: bool, Type: type keyword, Line: 6, Column: 22} }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: B, Type: identifier, Line: 9, Column: 10} },
+        Node: { Label: "interface-body"
+        children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: a, Type: identifier, Line: 10, Column: 7} }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: b, Type: identifier, Line: 11, Column: 7} },
+                Node: { Label: "fn-body"
+                children: [
+                    Node: { Label: "call"
+                    children: [
+                        Node: { Token: {Value: println, Type: identifier, Line: 12, Column: 8} },
+                        Node: { Label: "params"
+                        children: [
+                            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [0] with length 0) }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: c, Type: identifier, Line: 14, Column: 7} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: uint32, Type: type keyword, Line: 14, Column: 9} },
+                        Node: { Token: {Value: a, Type: identifier, Line: 14, Column: 16} }
+                    ] },
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: uint64, Type: type keyword, Line: 14, Column: 19} },
+                        Node: { Token: {Value: b, Type: identifier, Line: 14, Column: 26} }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: d, Type: identifier, Line: 15, Column: 7} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: bool, Type: type keyword, Line: 15, Column: 9} },
+                        Node: { Token: {Value: isOpen, Type: identifier, Line: 15, Column: 14} }
+                    ] },
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: int, Type: type keyword, Line: 15, Column: 22} },
+                        Node: { Token: {Value: x, Type: identifier, Line: 15, Column: 26} }
+                    ] }
+                ] },
+                Node: { Label: "fn-body"
+                children: [
+                    Node: { Label: "control-flow"
+                    children: [
+                        Node: { Token: {Value: return, Type: flow keyword, Line: 16, Column: 8} }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: e, Type: identifier, Line: 18, Column: 7} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: A, Type: identifier, Line: 18, Column: 9} },
+                        Node: { Token: {Value: something, Type: identifier, Line: 18, Column: 11} }
+                    ] },
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: A, Type: identifier, Line: 18, Column: 22} },
+                        Node: { Token: {Value: otherthing, Type: identifier, Line: 18, Column: 24} }
+                    ] }
+                ] },
+                Node: { Token: {Value: bool, Type: type keyword, Line: 18, Column: 39} },
+                Node: { Label: "fn-body"
+                children: [
+                    Node: { Label: "control-flow"
+                    children: [
+                        Node: { Token: {Value: return, Type: flow keyword, Line: 19, Column: 8} },
+                        Node: { Token: {Value: ==, Type: compare operator, Line: 19, Column: 25}
+                        children: [
+                            Node: { Token: {Value: something, Type: identifier, Line: 19, Column: 15} },
+                            Node: { Token: {Value: otherthing, Type: identifier, Line: 19, Column: 28} }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] }
+] }
+, Compiler messages:
+[
+    "NameError: Name 'A' already in use at line: 1, column: 11",
+    "NameError: Name 'A' already in use at line: 2, column: 11",
+    "NameError: Name 'A' already in use at line: 3, column: 8",
+    "NameError: Name 'B' already in use at line: 4, column: 8",
+    "NameError: Name 'B' already in use at line: 5, column: 8",
+    "NameError: Name 'A' already in use at line: 3, column: 11",
+    "NameError: Name 'B' already in use at line: 10, column: 11"
+]
+
+---
+
+[TestPassTwo/should_errors.the_and_have_errors - 1]
+AST:
+Node: { Label: "program" }
+, Compiler messages:
+[
+    "NameError: Name 'A' already in use at line: 1, column: 11",
+    "NameError: Name 'A' already in use at line: 2, column: 11",
+    "NameError: Name 'A' already in use at line: 3, column: 8",
+    "NameError: Name 'B' already in use at line: 4, column: 8",
+    "NameError: Name 'B' already in use at line: 5, column: 8",
+    "NameError: Name 'A' already in use at line: 3, column: 11",
+    "NameError: Name 'B' already in use at line: 10, column: 11"
+]
+
+---
