@@ -179,10 +179,7 @@ children: [
             ] },
             Node: { Label: "index"
             children: [
-                Node: { Label: "index"
-                children: [
-                    Node: { Token: {Value: str, Type: identifier, Line: 13, Column: 4} }
-                ] },
+                Node: { Token: {Value: str, Type: identifier, Line: 13, Column: 4} },
                 Node: { Label: "slice"
                 children: [
                     Node: { Token: {Value: .., Type: range operator, Line: 13, Column: 8} }
@@ -190,10 +187,7 @@ children: [
             ] },
             Node: { Label: "index"
             children: [
-                Node: { Label: "index"
-                children: [
-                    Node: { Token: {Value: str, Type: identifier, Line: 14, Column: 4} }
-                ] },
+                Node: { Token: {Value: str, Type: identifier, Line: 14, Column: 4} },
                 Node: { Label: "slice"
                 children: [
                     Node: { Token: {Value: 0, Type: int literal, Line: 14, Column: 8} },
@@ -203,10 +197,7 @@ children: [
             ] },
             Node: { Label: "index"
             children: [
-                Node: { Label: "index"
-                children: [
-                    Node: { Token: {Value: str, Type: identifier, Line: 15, Column: 4} }
-                ] },
+                Node: { Token: {Value: str, Type: identifier, Line: 15, Column: 4} },
                 Node: { Label: "slice"
                 children: [
                     Node: { Token: {Value: 5, Type: int literal, Line: 15, Column: 11} }
@@ -214,10 +205,7 @@ children: [
             ] },
             Node: { Label: "index"
             children: [
-                Node: { Label: "index"
-                children: [
-                    Node: { Token: {Value: str, Type: identifier, Line: 16, Column: 4} }
-                ] },
+                Node: { Token: {Value: str, Type: identifier, Line: 16, Column: 4} },
                 Node: { Label: "slice"
                 children: [
                     Node: { Token: {Value: 1, Type: int literal, Line: 16, Column: 8} },
@@ -226,10 +214,7 @@ children: [
             ] },
             Node: { Label: "index"
             children: [
-                Node: { Label: "index"
-                children: [
-                    Node: { Token: {Value: str, Type: identifier, Line: 17, Column: 4} }
-                ] },
+                Node: { Token: {Value: str, Type: identifier, Line: 17, Column: 4} },
                 Node: { Label: "ARR-END"
                 children: [
                     Node: { Token: {Value: 1, Type: int literal, Line: 17, Column: 9} }
@@ -237,18 +222,12 @@ children: [
             ] },
             Node: { Label: "index"
             children: [
-                Node: { Label: "index"
-                children: [
-                    Node: { Token: {Value: str, Type: identifier, Line: 18, Column: 4} }
-                ] },
+                Node: { Token: {Value: str, Type: identifier, Line: 18, Column: 4} },
                 Node: { Token: {Value: 3, Type: int literal, Line: 18, Column: 8} }
             ] },
             Node: { Label: "index"
             children: [
-                Node: { Label: "index"
-                children: [
-                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [4] with length 0) }
-                ] },
+                Node: { Token: %!v(PANIC=String method: runtime error: index out of range [4] with length 0) },
                 Node: { Label: "slice"
                 children: [
                     Node: { Label: "ARR-END"
@@ -338,7 +317,7 @@ children: [
         Node: { Token: {Value: +, Type: add operator, Line: 5, Column: 10}
         children: [
             Node: { Token: {Value: 5, Type: int literal, Line: 5, Column: 8} },
-            Node: { Token: {Value: term, Type: Virtual, Missing: true, Line: 5, Column: 11} }
+            Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
         ] }
     ] },
     Node: { Label: "Variable"
@@ -348,20 +327,20 @@ children: [
         Node: { Token: {Value: %, Type: multiply operator, Line: 6, Column: 9}
         children: [
             Node: { Token: {Value: 6, Type: int literal, Line: 6, Column: 8} },
-            Node: { Token: {Value: term, Type: Virtual, Missing: true, Line: 7, Column: 0} }
+            Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
         ] }
     ] },
     Node: { Label: "Variable"
     children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 7, Column: 0} },
         Node: { Token: {Value: j, Type: identifier, Line: 7, Column: 4} },
-        Node: { Token: {Value: term, Type: Virtual, Missing: true, Line: 8, Column: 0} }
+        Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
     ] },
     Node: { Label: "Variable"
     children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 8, Column: 0} },
         Node: { Token: {Value: squared, Type: identifier, Line: 8, Column: 4} },
-        Node: { Token: {Value: term, Type: Virtual, Missing: true, Line: 9, Column: 0} }
+        Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
     ] },
     Node: { Label: "Variable"
     children: [
@@ -373,7 +352,7 @@ children: [
             Node: { Token: {Value: **, Type: operator, Line: 9, Column: 24}
             children: [
                 Node: { Token: {Value: 2, Type: int literal, Line: 9, Column: 22} },
-                Node: { Token: {Value: term, Type: Virtual, Missing: true, Line: 9, Column: 26} }
+                Node: { Token: {Value: , Type: , Line: 0, Column: 0} }
             ] }
         ] }
     ] },
@@ -396,16 +375,11 @@ children: [
     "SyntaxError: Expected ';' but got 'mut' at line: 5, column: 1",
     "SyntaxError: Expected 'identifier' but got 'assign operator' at line: 5, column: 7",
     "SyntaxError: Expected ';' but got 'int' at line: 6, column: 1",
-    "SyntaxError: Expected expression but got ; at line: 6, column: 12",
-    "SyntaxError: Expected expression but got int at line: 8, column: 1",
     "SyntaxError: Expected ';' but got 'int' at line: 8, column: 1",
     "SyntaxError: Expected expression but got ')' at line: 8, column: 9",
-    "SyntaxError: Expected expression but got int at line: 9, column: 1",
     "SyntaxError: Expected ';' but got 'int' at line: 9, column: 1",
     "SyntaxError: Expected expression but got '**' at line: 9, column: 15",
-    "SyntaxError: Expected expression but got double at line: 10, column: 1",
     "SyntaxError: Expected ';' but got 'double' at line: 10, column: 1",
-    "SyntaxError: Expected expression but got ; at line: 10, column: 27",
     "SyntaxError: Expected type but got '1' at line: 11, column: 15",
     "SyntaxError: Expected ';' but got '1' at line: 11, column: 15",
     "SyntaxError: Expected declaration but found '1' at line: 11, column: 15"
@@ -502,6 +476,24 @@ children: [
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 13, Column: 4} },
                 Node: { Token: {Value: sum, Type: identifier, Line: 13, Column: 11} }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 16, Column: 0} },
+        Node: { Token: {Value: i, Type: identifier, Line: 16, Column: 4} },
+        Node: { Label: "call"
+        children: [
+            Node: { Token: {Value: add, Type: identifier, Line: 16, Column: 8} },
+            Node: { Label: "params"
+            children: [
+                Node: { Token: {Value: 0, Type: int literal, Line: 16, Column: 12} },
+                Node: { Label: "Unary"
+                children: [
+                    Node: { Token: {Value: -, Type: add operator, Line: 16, Column: 15} },
+                    Node: { Token: {Value: 1, Type: int literal, Line: 16, Column: 16} }
+                ] }
             ] }
         ] }
     ] }
@@ -1270,10 +1262,7 @@ children: [
                     Node: { Token: {Value: in, Type: operator keyword, Line: 29, Column: 23} },
                     Node: { Label: "index"
                     children: [
-                        Node: { Label: "index"
-                        children: [
-                            Node: { Token: {Value: str, Type: identifier, Line: 29, Column: 26} }
-                        ] },
+                        Node: { Token: {Value: str, Type: identifier, Line: 29, Column: 26} },
                         Node: { Label: "slice"
                         children: [
                             Node: { Token: {Value: .., Type: range operator, Line: 29, Column: 30} }

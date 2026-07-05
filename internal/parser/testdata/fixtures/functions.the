@@ -13,3 +13,5 @@ fn add(int x, int y) -> int {
     doNothing();
     return sum;
 }
+
+int i = add(0, -1);

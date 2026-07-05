@@ -255,7 +255,10 @@ int  x    int  y   return       ==
 Grammar rule(s):
 
 ```ebnf
-
+struct = "struct" identifier [ "impl" interface_list ] struct_body ;
+interface_list = identifier { "," identifier };
+struct_body =  "{" { ( variable ";" ) | function | named_block } "}" ;
+named_block = identifier "{" { function | ( variable ";" ) } "}" ;
 ```
 
 <table>
@@ -416,6 +419,10 @@ unary = left_unary | right_unary ;
 left_unary = [ "-" | right_unary_operators ] typecast ;
 right_unary = typecast [ right_unary_operators ] ;
 right_unary_operators = "++" | "--" ;
+typecast = postfix [ "as" type ] ;
+postfix = primary { postfix_op } ;
+primary = literal | identifier | "(" expression ")" ;
+postfix_op = "." identifier | "(" [  expression { "," expression } ] ")" | "[" index_value "]" ;
 ```
 
 <table>
@@ -467,14 +474,13 @@ i++
 Grammar rule(s):
 
 ```ebnf
-index = term { "[" index_value "]" } ;
-term = literal | member | call | expression ;
+postfix = primary { postfix_op } ;
+primary = literal | identifier | "(" expression ")" ;
+postfix_op = "." identifier | "(" [  expression { "," expression } ] ")" | "[" index_value "]" ;
 index_value =  slice | expression | array_end ;
 slice = [ expression | array_end ] range_operator [ expression | array_end ] ;
 range_operator = ".." [ "=" ] ;
 array_end = "^" expression ;
-member = ( identifier | string_literal ) { "." identifier } ;
-call = member "(" [  expression { "," expression } ]")" ;
 ```
 
 <table>
@@ -572,8 +578,11 @@ a       1
 Grammar rule(s):
 
 ```ebnf
-member = ( identifier | string_literal ) { "." identifier } ;
-call = member "(" [  expression { "," expression } ]")" ;
+assignment = postfix assign_operator expression ;
+assign_operator =  "=" | "+=" | "-=" | "*=" | "/=" ;
+postfix = primary { postfix_op } ;
+primary = literal | identifier | "(" expression ")" ;
+postfix_op = "." identifier | "(" [  expression { "," expression } ] ")" | "[" index_value "]" ;
 ```
 
 <table>
@@ -659,6 +668,52 @@ doNothing();
        /   \
 "hello"     length
 
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```
+a.b.c.d
+```
+
+</td>
+<td>
+
+```
+        dot
+       /   \
+      dot   d
+     /   \
+  dot     c
+ /   \
+a     b
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```
+a.b.c.Action(1+5, -5)
+```
+
+</td>
+<td>
+
+```
+        call
+       /   \
+      dot   Action
+     /   \     |
+  dot     c  params
+ /   \       /     \ 
+a     b     +      unary
+           / \     /    \
+          1   5   -      5
 ```
 
 </td>

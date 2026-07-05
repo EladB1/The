@@ -610,13 +610,13 @@ func parseRange() AST {
 }
 
 /*
- * assignment = member assign_operator expression ;
+ * assignment = postfix assign_operator expression ;
  */
 func parseAssignment() AST {
 	//fmt.Println("In assignment: ", peek())
-	member := parseMember()
+	postfix := parsePostfix()
 	ast := nodeFromToken(expectKind(lexer.OPERATOR_ASSIGN))
-	ast.AddChildren(member, parseExpression())
+	ast.AddChildren(postfix, parseExpression())
 	return ast
 }
 
@@ -833,68 +833,52 @@ func parseRightUnary() AST {
 }
 
 /*
- * typecast = index [ "as" type ] ;
+ * typecast = postfix [ "as" type ] ;
  */
 func parseTypecast() AST {
 	//fmt.Println("In typecast with:", peek())
 	ast := AST{Label: "typecast", Location: peek().Location}
-	index := parseIndex()
+	postfix := parsePostfix()
 	if !checkValue("as") {
-		return index
+		return postfix
 	}
-	ast.AddChildren(index)
+	ast.AddChildren(postfix)
 	consume()
 	ast.AddChildToken(expectType())
 	return ast
 }
 
 /*
- * index = term { "[" index_value "]" } ;
+ * postfix = primary { postfix_op } ;
  */
-func parseIndex() AST {
-	//fmt.Println("In index with:", peek())
-	var operand AST
-	ast := AST{Label: "index", Location: peek().Location}
-	operand = parseTerm()
-	if !checkValue("[") {
-		return operand
+func parsePostfix() AST {
+	fmt.Println("In postfix with:", peek())
+	primary := parsePrimary()
+	if !checkValue(".") && !checkValue("(") && !checkValue("[") {
+		fmt.Println("DEBUG", peek())
+		return primary
 	}
-	ast.AddChildren(operand)
-	for checkValue("[") {
-		consume()
-		operand = ast
-		ast = AST{Label: "index", Location: peek().Location}
-		ast.AddChildren(operand, parseIndexValue())
-		expectValue("]")
+	fmt.Println("DEBUG2")
+	ast := primary
+	for checkValue(".") || checkValue("(") || checkValue("[") {
+		fmt.Println("HERE")
+		postfix := parsePostfixOp()
+		postfix.PrependChildren(ast)
+		ast = postfix
 	}
 	return ast
 }
 
 /*
- * term = literal | member | call | "(" expression ")" ;
+ * primary = literal | identifier | "(" expression ")" ;
  */
-func parseTerm() AST {
-	//fmt.Println("In term with:", peek())
+func parsePrimary() AST {
+	fmt.Println("In primary with:", peek())
 	if isLiteral() {
 		return parseLiteral()
 	}
-	if checkKind(lexer.ID) || checkKind(lexer.LIT_STRING) {
-		if checkValueAhead(".", 1) {
-			for i := state.ptr + 2; i < state.length-2; i += 2 {
-				curr := state.tokens[i]
-				next := state.tokens[i+1]
-				if curr.Kind == lexer.ID && next.Value == "(" {
-					return parseCall()
-				} else if curr.Kind == lexer.ID && next.Value != "." {
-					break
-				}
-			}
-			return parseMember()
-		}
-		if checkValueAhead("(", 1) {
-			return parseCall()
-		}
-		return parseMember() // identifier
+	if checkKind(lexer.ID) {
+		return nodeFromToken(consume())
 	}
 	if checkValue("(") {
 		consume()
@@ -902,13 +886,42 @@ func parseTerm() AST {
 		expectValue(")")
 		return expr
 	}
-	state.addError("Expected expression but got %s", peek().GetValueString())
-	return nodeFromToken(lexer.Token{
-		Kind:     lexer.Virtual,
-		Value:    "term",
-		Missing:  true,
-		Location: peek().Location,
-	})
+	fmt.Println("WTF")
+	return AST{}
+}
+
+/*
+ * postfix_op = "." identifier | "(" [  expression { "," expression } ]")" | "[" index_value "]" ;
+ */
+func parsePostfixOp() AST {
+	fmt.Println("In postfix_op with:", peek())
+	var ast AST
+	if checkValue(".") {
+		ast = AST{Label: "dot", Location: consume().Location}
+		ast.AddChildToken(expectKind(lexer.ID))
+	} else if checkValue("(") {
+		fmt.Println("HERE")
+		ast = AST{Label: "call", Location: peek().Location}
+		expectValue("(")
+		if checkValue(")") {
+			consume()
+			return ast
+		}
+		params := AST{Label: "params", Location: peek().Location}
+		params.AddChildren(parseExpression())
+		for checkValue(",") {
+			consume()
+			params.AddChildren(parseExpression())
+		}
+		ast.AddChildren(params)
+		expectValue(")")
+	} else {
+		ast = AST{Label: "index", Location: peek().Location}
+		expectValue("[")
+		ast.AddChildren(parseIndexValue())
+		expectValue("]")
+	}
+	return ast
 }
 
 func isLiteral() bool {
@@ -1101,43 +1114,6 @@ func parseModifiers() AST {
 }
 
 /*
- * member = ( identifier | string_literal ) { "." identifier } ;
- */
-func parseMember() AST {
-	//fmt.Println("In member with:", peek())
-	ast := nodeFromToken(consume())
-	for checkValue(".") {
-		lhs := ast
-		ast = AST{Label: "dot", Location: consume().Location}
-		ast.AddChildren(lhs, nodeFromToken(expectKind(lexer.ID)))
-	}
-	return ast
-}
-
-/*
- * call = member "(" [  expression { "," expression } ]")" ;
- */
-func parseCall() AST {
-	//fmt.Println("In call with:", peek())
-	ast := AST{Label: "call", Location: peek().Location}
-	ast.AddChildren(parseMember())
-	expectValue("(")
-	if checkValue(")") {
-		consume()
-		return ast
-	}
-	params := AST{Label: "params", Location: peek().Location}
-	params.AddChildren(parseExpression())
-	for checkValue(",") {
-		consume()
-		params.AddChildren(parseExpression())
-	}
-	ast.AddChildren(params)
-	expectValue(")")
-	return ast
-}
-
-/*
  * control_flow = "return" [ expression ] | "continue" | "break" ;
  */
 func parseControlFlow() AST {
@@ -1147,9 +1123,7 @@ func parseControlFlow() AST {
 		ast.AddChildToken(consume())
 	} else {
 		ast.AddChildToken(consume())
-		if checkValue(";") { // return;
-			return ast
-		} else { // return i + 1;
+		if checkExpressionStart() {
 			ast.AddChildren(parseExpression())
 		}
 	}

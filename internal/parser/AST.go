@@ -52,6 +52,11 @@ func (ast AST) to_string(indentLevel int) string {
 	return builder.String()
 }
 
+func (ast *AST) PrependChildren(nodes ...AST) {
+	ast.Children = append(nodes, ast.Children...)
+	fmt.Println("Post-Prepend:", ast)
+}
+
 func (ast *AST) AddChildren(nodes ...AST) {
 	ast.Children = append(ast.Children, nodes...)
 }

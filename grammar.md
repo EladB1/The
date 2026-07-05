@@ -25,7 +25,7 @@ for_conditions = ( ( variable | assignment ) ";" expression ";" expression ) | (
 range = expression [ range_operator expression [ ".." expression ] ] ;  
 
 (* operators: reverse order of precendence *)
-assignment = member assign_operator expression ;
+assignment = postfix assign_operator expression ;
 assign_operator =  "=" | "+=" | "-=" | "*=" | "/=" ;
 expression = logical_or ;
 logical_or = logical_and { "||" logical_and } ;
@@ -44,9 +44,10 @@ unary = left_unary | right_unary ;
 left_unary = [ "-" | "~" | right_unary_operators ] typecast ;
 right_unary = typecast [ right_unary_operators ] ;
 right_unary_operators = "++" | "--" ;
-typecast = index [ "as" type ] ;
-index = term { "[" index_value "]" } ;
-term = literal | member | call | "(" expression ")" ;
+typecast = postfix [ "as" type ] ;
+postfix = primary { postfix_op } ;
+primary = literal | identifier | "(" expression ")" ;
+postfix_op = "." identifier | "(" [  expression { "," expression } ] ")" | "[" index_value "]" ;
 index_value =  slice | expression | array_end ;
 slice = [ expression | array_end ] range_operator [ expression | array_end ] ;
 range_operator = ".." [ "=" ] ;
@@ -68,10 +69,8 @@ property = identifier ":" expression ;
 (* variable info *)
 modifiers = "private" [ "mut" ] | "mut" [ "private" ] ;
 type = "int" | "int64" | "uint32" | "uint64" | "float" | "double" | "String" | "char" | "bool" | identifier ;
-member = ( identifier | string_literal ) { "." identifier } ;
 identifier =  ( "A" ... "Z" | "a" ... "z" | "_" ) { "A" ... "Z" | "a" ... "z" | "_" | "0" ... "9" } ;
 
 (* control flow *)
-call = member "(" [  expression { "," expression } ]")" ;
 control_flow = "return" [ expression ] | "continue" | "break" ;
 ```
