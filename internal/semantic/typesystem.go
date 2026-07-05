@@ -332,44 +332,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 			}
 		}
 	} else if ast.Label == "dot" {
-		left := ast.Children[0]
-		right := ast.Children[1]
-		scope := currentScope
-		changedScope := false
-		if !left.HasChildren() {
-			lhs := evalType(&left, datatypes.None)
-			if right.Label == "call" {
-				// TODO
-			} else {
-				rname := right.Token.Value
-				if lhs == datatypes.String && rname == "length" {
-					return datatypes.Int32
-				} else if !lhs.IsPrimitive() {
-					symbol := globalScope.lookupType(lhs.String())
-					if symbol == nil {
-						messages = messages.Complain(diagnostic.NameError, ast.Location, "Could not find type %s", lhs)
-					} else {
-						prop := symbol.getInnerScope().lookupVariable(rname)
-						if prop == nil {
-							if privBlock := symbol.getInnerScope().lookupNamedBlock("private"); privBlock != nil {
-
-							} else {
-								messages = messages.Complain(diagnostic.NameError, right.Location, "Could not find %s in %s", rname, lhs.String())
-							}
-						} else {
-							if prop.isPrivate && (currentScope != symbol.getInnerScope() || currentScope.parent != symbol.getInnerScope()) {
-								messages = messages.Complain(diagnostic.AccessError, right.Location, "Cannot access private member outside of struct scope")
-							} else {
-								return prop.Type
-							}
-						}
-					}
-				}
-			}
-		}
-		if changedScope {
-			currentScope = scope
-		}
+		nodeType = handleDot(ast.Children[0], ast.Children[1])
 	}
 	ast.Type = nodeType
 	return nodeType
@@ -423,6 +386,45 @@ func handleFunctionCall(details []parser.AST) datatypes.DataType {
 	} else {
 		// TODO: find closest error
 		messages = messages.Complain(diagnostic.CallError, details[1].Location, "Could not find function '%s(%s)->%s'", name.Value, paramList, symbol.returnType)
+	}
+	return datatypes.None
+}
+
+func handleDot(left parser.AST, right parser.AST) datatypes.DataType {
+	var lhs datatypes.DataType = datatypes.None
+	//end := false
+	if left.Token.Value != "dot" {
+		lhs = evalType(&left, datatypes.None)
+		//end = true
+	} else {
+		lhs = handleDot(left.Children[0], left.Children[1])
+	}
+	if right.Label == "call" {
+		// TODO
+	} else {
+		rname := right.Token.Value
+		if lhs == datatypes.String && rname == "length" {
+			return datatypes.Int32
+		} else if !lhs.IsPrimitive() {
+			symbol := globalScope.lookupType(lhs.String())
+			if symbol == nil {
+				messages = messages.Complain(diagnostic.NameError, left.Location, "Could not find type %s", lhs)
+			} else {
+				var scope *Scope
+				if privateBlock := symbol.getNamedBlockIfExists("private"); privateBlock != nil {
+					scope = privateBlock.innerScope
+				} else {
+					scope = symbol.getInnerScope()
+				}
+				if prop := scope.lookupVariable(rname); prop != nil {
+					return prop.Type
+				} else {
+					messages = messages.Complain(diagnostic.NameError, right.Location, "Could not find property %s in type %s", rname, lhs)
+				}
+			}
+		} else {
+			messages = messages.Complain(diagnostic.TypeError, right.Location, "Cannot access property %s of type %s", rname, lhs)
+		}
 	}
 	return datatypes.None
 }

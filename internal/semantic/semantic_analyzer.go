@@ -152,9 +152,7 @@ func analyzeGlobals(ast parser.AST) {
 				messages = messages.Complain(diagnostic.AccessError, node.Location, "Cannot use private modifier outside of a struct")
 				continue
 			}
-			if symbol != nil {
-				globalScope.variables[symbol.name] = *symbol
-			}
+			globalScope.variables[symbol.name] = *symbol
 		}
 	}
 }

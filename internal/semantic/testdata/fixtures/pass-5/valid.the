@@ -1,7 +1,7 @@
-int i = 0;
-double y = 0;
+// int i = 0;
+// double y = 0;
 Object o = Object {i: 0, j: 1024};
-Object o2 = Object{i: -1, j: 1023};
+//Object o2 = Object{i: -1, j: 1023};
 struct Object {
     int i;
     private {
@@ -12,32 +12,41 @@ struct Object {
             return i+j;
         }
     }
-    compare {
-        fn lessThan(Object other) -> bool {
-            return i < other.i && j < other.j;
-        }
-    }
+    // compare {
+    //     fn lessThan(Object other) -> bool {
+    //         return i < other.i && j < other.j;
+    //     }
+    // }
 }
 
-fn plusOne(int i) -> int {
-    return i + 1;
+// fn plusOne(int i) -> int {
+//     return i + 1;
+// }
+
+// bool less = o2 < o;
+// bool is = false;
+// int oint = o as int;
+//int oi = o.i;
+// double y2 = y + 1;
+// int x = i + 1;
+// double z = y * x;
+// int x2 = plusOne(x);
+// int len = "hello".length;
+
+// struct Thing {
+//     uint32 value;
+// }
+// Thing t1 = Thing {
+//     value: 32,
+// };
+// Thing t2 = Thing{};
+// bool equal = t1 == t2;
+
+struct Nested {
+    Object object;
 }
 
-bool less = o2 < o;
-bool is = false;
-int oint = o as int;
-int oi = o.i;
-double y2 = y + 1;
-int x = i + 1;
-double z = y * x;
-int x2 = plusOne(x);
-int len = "hello".length;
-
-struct Thing {
-    uint32 value;
-}
-Thing t1 = Thing {
-    value: 32,
+Nested nested = Nested {
+    object: o,
 };
-Thing t2 = Thing{};
-bool equal = t1 == t2;
+int nestedValue = nested.object.i;

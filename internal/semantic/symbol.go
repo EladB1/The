@@ -13,6 +13,7 @@ type (
 	TypeSymbol interface {
 		getSymbolType() string
 		getInnerScope() *Scope
+		getNamedBlockIfExists(string) *NamedBlockSymbol
 	}
 	FunctionSymbol struct {
 		name       string
@@ -82,6 +83,14 @@ func (intf InterfaceSymbol) getInnerScope() *Scope {
 }
 func (str StructSymbol) getInnerScope() *Scope {
 	return str.innerScope
+}
+
+func (intf InterfaceSymbol) getNamedBlockIfExists(name string) *NamedBlockSymbol {
+	return nil
+}
+
+func (str StructSymbol) getNamedBlockIfExists(name string) *NamedBlockSymbol {
+	return str.innerScope.lookupNamedBlock(name)
 }
 
 func (scope *Scope) lookupNamedBlock(name string) *NamedBlockSymbol {
