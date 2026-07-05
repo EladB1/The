@@ -921,7 +921,7 @@ func parsePostfixOp() AST {
 
 func isLiteral() bool {
 	return (checkKind(lexer.LIT_CHAR) ||
-		(checkKind(lexer.LIT_STRING) && !checkValueAhead(".", 1)) ||
+		checkKind(lexer.LIT_STRING) ||
 		checkKind(lexer.KW_BOOLVALUE) ||
 		checkKind(lexer.LIT_FLOAT) ||
 		checkKind(lexer.LIT_HEX) ||

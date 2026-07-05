@@ -73,3 +73,18 @@ func (scope *Scope) to_string(indentLevel int) string {
 	builder.WriteString(" }")
 	return builder.String()
 }
+
+func (scope *Scope) HasParentScope(other *Scope) bool {
+	if scope.id == other.id {
+		return true
+	}
+	fmt.Printf(scope.id, other.id)
+	curr := scope
+	for curr != &rootScope {
+		if curr.id == other.id {
+			return true
+		}
+		curr = curr.parent
+	}
+	return false
+}

@@ -142,6 +142,7 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 					if symbol.isPrivate {
 						messages = messages.Complain(diagnostic.Warning, node.Location, "Redundant use of private in private block")
 					}
+					symbol.isPrivate = true
 					currentScope.variables[symbol.name] = *symbol
 				}
 
@@ -190,8 +191,8 @@ func analyzeVariable(varNode parser.AST) *VariableSymbol {
 		return nil
 	}
 	if rhs != nil {
-		if evalType(rhs, varType) != varType {
-			// TODO
+		if rType := evalType(rhs, varType); rType != varType {
+			messages = messages.Complain(diagnostic.TypeError, rhs.Location, "Cannot assign type %s to variable type %s", rType, varType)
 			fmt.Println("HI", name.Value, rhs.Type)
 		}
 	}

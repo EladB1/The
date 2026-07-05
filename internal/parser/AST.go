@@ -33,6 +33,9 @@ func (ast AST) to_string(indentLevel int) string {
 	} else {
 		builder.WriteString(fmt.Sprintf("Token: %v", ast.Token))
 	}
+	if ast.Type != nil {
+		builder.WriteString(fmt.Sprintf(", Type: %v", ast.Type))
+	}
 	childCount := len(ast.Children)
 	if childCount > 0 {
 		builder.WriteString("\n")

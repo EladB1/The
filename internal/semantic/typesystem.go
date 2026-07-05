@@ -261,7 +261,6 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 	} else if ast.Token.Kind == lexer.OPERATOR_MULT {
 		lhs := evalType(&ast.Children[0], datatypes.None)
 		rhs := evalType(&ast.Children[1], datatypes.None)
-		fmt.Println(lhs, rhs)
 		if !slices.Contains(numericTypes, lhs) || !slices.Contains(numericTypes, rhs) {
 			messages = messages.Complain(diagnostic.TypeError, ast.Location, "Cannot use operator '%s' between %s and %s", ast.Token.Value, lhs, rhs)
 		} else {
@@ -332,7 +331,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataTy
 			}
 		}
 	} else if ast.Label == "dot" {
-		nodeType = handleDot(ast.Children[0], ast.Children[1])
+		nodeType = handleDot(ast.Children[0], ast.Children[1], false)
 	}
 	ast.Type = nodeType
 	return nodeType
@@ -366,9 +365,25 @@ func decideNumberType(lhs datatypes.DataType, rhs datatypes.DataType, operator s
 }
 
 func handleFunctionCall(details []parser.AST) datatypes.DataType {
-	// TODO
-	name := details[0].Token
-	symbol := currentScope.lookupFunction(name.Value)
+	scope := currentScope
+	var name lexer.Token
+	if details[0].Label == "dot" {
+		lhs := handleDot(details[0].Children[0], details[0].Children[1], true)
+		symbol := globalScope.lookupType(lhs.String())
+		if symbol == nil {
+			messages = messages.Complain(diagnostic.NameError, details[0].Children[1].Location, "Could not find type %s", lhs)
+			return datatypes.None
+		}
+		name = details[0].Children[1].Token
+		scope = symbol.getInnerScope()
+		// TODO: handle named block functions
+		if symbol.getSymbolType() == "struct" {
+
+		}
+	} else {
+		name = details[0].Token
+	}
+	symbol := scope.lookupFunction(name.Value)
 	if symbol == nil {
 		messages = messages.Complain(diagnostic.NameError, name.Location, "Could not find function %s in scope", name.Value)
 		return datatypes.None
@@ -381,8 +396,12 @@ func handleFunctionCall(details []parser.AST) datatypes.DataType {
 		}
 	}
 	paramList := datatypes.Join(params)
-	if _, ok := symbol.overloads[paramList]; ok {
-		return symbol.returnType
+	if fn, ok := symbol.overloads[paramList]; ok {
+		if fn.isPrivate && !currentScope.HasParentScope(scope) {
+			messages = messages.Complain(diagnostic.AccessError, details[1].Location, "Cannot access private function '%s' from outside struct definition", name.Value)
+		} else {
+			return symbol.returnType
+		}
 	} else {
 		// TODO: find closest error
 		messages = messages.Complain(diagnostic.CallError, details[1].Location, "Could not find function '%s(%s)->%s'", name.Value, paramList, symbol.returnType)
@@ -390,41 +409,42 @@ func handleFunctionCall(details []parser.AST) datatypes.DataType {
 	return datatypes.None
 }
 
-func handleDot(left parser.AST, right parser.AST) datatypes.DataType {
+func handleDot(left parser.AST, right parser.AST, isFnCall bool) datatypes.DataType {
 	var lhs datatypes.DataType = datatypes.None
-	//end := false
 	if left.Token.Value != "dot" {
 		lhs = evalType(&left, datatypes.None)
-		//end = true
 	} else {
-		lhs = handleDot(left.Children[0], left.Children[1])
+		lhs = handleDot(left.Children[0], left.Children[1], isFnCall)
 	}
-	if right.Label == "call" {
-		// TODO
-	} else {
-		rname := right.Token.Value
-		if lhs == datatypes.String && rname == "length" {
-			return datatypes.Int32
-		} else if !lhs.IsPrimitive() {
-			symbol := globalScope.lookupType(lhs.String())
-			if symbol == nil {
-				messages = messages.Complain(diagnostic.NameError, left.Location, "Could not find type %s", lhs)
-			} else {
-				var scope *Scope
-				if privateBlock := symbol.getNamedBlockIfExists("private"); privateBlock != nil {
-					scope = privateBlock.innerScope
-				} else {
-					scope = symbol.getInnerScope()
-				}
-				if prop := scope.lookupVariable(rname); prop != nil {
-					return prop.Type
-				} else {
-					messages = messages.Complain(diagnostic.NameError, right.Location, "Could not find property %s in type %s", rname, lhs)
-				}
-			}
+	if isFnCall {
+		return lhs
+	}
+	rname := right.Token.Value
+	if lhs == datatypes.String && rname == "length" {
+		return datatypes.Int32
+	} else if !lhs.IsPrimitive() {
+		symbol := globalScope.lookupType(lhs.String())
+		if symbol == nil {
+			messages = messages.Complain(diagnostic.NameError, left.Location, "Could not find type %s", lhs)
 		} else {
-			messages = messages.Complain(diagnostic.TypeError, right.Location, "Cannot access property %s of type %s", rname, lhs)
+			var scope *Scope
+			if privateBlock := symbol.getNamedBlockIfExists("private"); privateBlock != nil {
+				scope = privateBlock.innerScope
+			} else {
+				scope = symbol.getInnerScope()
+			}
+			if prop := scope.lookupVariable(rname); prop != nil {
+				if prop.isPrivate && !currentScope.HasParentScope(symbol.getInnerScope()) {
+					messages = messages.Complain(diagnostic.AccessError, right.Location, "Cannot access private property from outside struct definition")
+				} else {
+					return prop.Type
+				}
+			} else {
+				messages = messages.Complain(diagnostic.NameError, right.Location, "Could not find property %s in type %s", rname, lhs)
+			}
 		}
+	} else {
+		messages = messages.Complain(diagnostic.TypeError, right.Location, "Cannot access property %s of type %s", rname, lhs)
 	}
 	return datatypes.None
 }
