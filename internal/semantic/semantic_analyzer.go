@@ -34,6 +34,19 @@ func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
 	analyzeInterfaceFnSignatures()
 	analyzeStructFnSignatures()
 	collectFunctionSignatures(ast)
+	// TODO: Uncomment code below when ready
+	// missingEntry := false
+	// if fn := globalScope.lookupFunction("main"); fn != nil {
+	// 	if _, found := fn.overloads[""]; !found || fn.returnType != datatypes.Int32 {
+	// 		missingEntry = true
+	// 	}
+	// } else {
+	// 	missingEntry = true
+	// }
+	// if missingEntry {
+	// 	messages = messages.ComplainPositionless(diagnostic.Error, "Missing entrypoint function 'fn main()->int'")
+	// 	return ast, messages
+	// }
 	analyzeGlobals(ast)
 	fmt.Println(globalScope)
 	return ast, messages

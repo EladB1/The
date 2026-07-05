@@ -191,9 +191,9 @@ func analyzeVariable(varNode parser.AST) *VariableSymbol {
 		return nil
 	}
 	if rhs != nil {
+		// TODO: Make sure this error is only present when evalType doesn't have any errors
 		if rType := evalType(rhs, varType); rType != varType {
 			messages = messages.Complain(diagnostic.TypeError, rhs.Location, "Cannot assign type %s to variable type %s", rType, varType)
-			fmt.Println("HI", name.Value, rhs.Type)
 		}
 	}
 	return &VariableSymbol{
