@@ -706,14 +706,15 @@ a.b.c.Action(1+5, -5)
 
 ```
         call
-       /   \
-      dot   Action
-     /   \     |
-  dot     c  params
- /   \       /     \ 
-a     b     +      unary
-           / \     /    \
-          1   5   -      5
+       /    \
+      dot   params   
+     /   \     |   \
+  dot  Action  +   unary
+     /   \    / \   |   \
+  dot     c  1   5  -    5
+ /   \
+a     b
+
 ```
 
 </td>

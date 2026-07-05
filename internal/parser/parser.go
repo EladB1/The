@@ -852,16 +852,13 @@ func parseTypecast() AST {
  * postfix = primary { postfix_op } ;
  */
 func parsePostfix() AST {
-	fmt.Println("In postfix with:", peek())
+	//fmt.Println("In postfix with:", peek())
 	primary := parsePrimary()
 	if !checkValue(".") && !checkValue("(") && !checkValue("[") {
-		fmt.Println("DEBUG", peek())
 		return primary
 	}
-	fmt.Println("DEBUG2")
 	ast := primary
 	for checkValue(".") || checkValue("(") || checkValue("[") {
-		fmt.Println("HERE")
 		postfix := parsePostfixOp()
 		postfix.PrependChildren(ast)
 		ast = postfix
@@ -873,7 +870,7 @@ func parsePostfix() AST {
  * primary = literal | identifier | "(" expression ")" ;
  */
 func parsePrimary() AST {
-	fmt.Println("In primary with:", peek())
+	//fmt.Println("In primary with:", peek())
 	if isLiteral() {
 		return parseLiteral()
 	}
@@ -886,7 +883,6 @@ func parsePrimary() AST {
 		expectValue(")")
 		return expr
 	}
-	fmt.Println("WTF")
 	return AST{}
 }
 
@@ -894,13 +890,12 @@ func parsePrimary() AST {
  * postfix_op = "." identifier | "(" [  expression { "," expression } ]")" | "[" index_value "]" ;
  */
 func parsePostfixOp() AST {
-	fmt.Println("In postfix_op with:", peek())
+	//fmt.Println("In postfix_op with:", peek())
 	var ast AST
 	if checkValue(".") {
 		ast = AST{Label: "dot", Location: consume().Location}
 		ast.AddChildToken(expectKind(lexer.ID))
 	} else if checkValue("(") {
-		fmt.Println("HERE")
 		ast = AST{Label: "call", Location: peek().Location}
 		expectValue("(")
 		if checkValue(")") {

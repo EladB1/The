@@ -15,3 +15,4 @@ fn add(int x, int y) -> int {
 }
 
 int i = add(0, -1);
+int j = a.b.c.Action(1+5, -5);
