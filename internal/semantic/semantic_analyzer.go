@@ -44,7 +44,7 @@ func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
 	// 	missingEntry = true
 	// }
 	// if missingEntry {
-	// 	messages = messages.ComplainPositionless(diagnostic.Error, "Missing entrypoint function 'fn main()->int'")
+	// 	messages.ComplainPositionless(diagnostic.Error, "Missing entrypoint function 'fn main()->int'")
 	// 	return ast, messages
 	// }
 	analyzeGlobals(ast)
@@ -62,7 +62,7 @@ func collectTypeNames(ast parser.AST) {
 		name := nameNode.Token.Value
 		result := globalScope.lookupType(name)
 		if result != nil {
-			messages = messages.Complain(diagnostic.NameError, nameNode.Location, "Name '%s' already in use", name)
+			messages.Complain(diagnostic.NameError, nameNode.Location, "Name '%s' already in use", name)
 			continue
 		}
 		childScope := globalScope.addChild(name)
@@ -90,7 +90,7 @@ func analyzeInterfaceFnSignatures() {
 			symbol := processFunctionSignature(node)
 			err := currentScope.functions.add(symbol)
 			if err != nil {
-				messages = messages.Complain(diagnostic.IllegalStatementError, node.Location, "%v", err)
+				messages.Complain(diagnostic.IllegalStatementError, node.Location, "%v", err)
 			}
 		}
 	}
@@ -109,7 +109,7 @@ func analyzeStructFnSignatures() {
 			body = def[2]
 			for _, node := range def[1].Children {
 				if globalScope.lookupInterface(node.Token.Value) == nil {
-					messages = messages.Complain(diagnostic.NameError, node.Location, "Could not find interface name: '%s'", node.Token.Value)
+					messages.Complain(diagnostic.NameError, node.Location, "Could not find interface name: '%s'", node.Token.Value)
 				} else {
 					impl = append(impl, node.Token.Value)
 				}
@@ -120,7 +120,7 @@ func analyzeStructFnSignatures() {
 			case "fn":
 				symbol := processFunctionSignature(node)
 				if err := currentScope.functions.add(symbol); err != nil {
-					messages = messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
+					messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 				}
 			case "named-block":
 				symbol := analyzeNamedBlock(node, str.name, impl)
@@ -144,7 +144,7 @@ func collectFunctionSignatures(ast parser.AST) {
 		if node.Label == "fn" {
 			symbol := processFunctionSignature(node)
 			if err := globalScope.functions.add(symbol); err != nil {
-				messages = messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
+				messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 			}
 		}
 	}
@@ -159,10 +159,10 @@ func analyzeGlobals(ast parser.AST) {
 				continue
 			}
 			if symbol.isMutable {
-				messages = messages.Warn(node.Location, "Mutable global variable declared")
+				messages.Warn(node.Location, "Mutable global variable declared")
 			}
 			if symbol.isPrivate {
-				messages = messages.Complain(diagnostic.AccessError, node.Location, "Cannot use private modifier outside of a struct")
+				messages.Complain(diagnostic.AccessError, node.Location, "Cannot use private modifier outside of a struct")
 				continue
 			}
 			globalScope.variables[symbol.name] = *symbol

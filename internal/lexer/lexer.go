@@ -27,7 +27,7 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 	}
 	// EOF actions
 	if state.in_multiline_comment {
-		state.messages = state.messages.ComplainPositionless(errLevel, "Reached EOF while scanning for */")
+		state.messages.ComplainPositionless(errLevel, "Reached EOF while scanning for */")
 	}
 	state.tokens = append(state.tokens, Token{
 		Kind: EOF,

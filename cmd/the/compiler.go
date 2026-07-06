@@ -39,7 +39,7 @@ func init() {
 
 func compile(source []string) {
 	tokens, lexerDiagnostics := lexer.Lex(source, false)
-	compilerDiagnostics = append(compilerDiagnostics, lexerDiagnostics...)
+	compilerDiagnostics.Combine(lexerDiagnostics)
 	//lexer.PrintTokens(tokens)
 	//ds.LiteralStorage.Show()
 	if lexerDiagnostics.HasError() {
@@ -47,14 +47,14 @@ func compile(source []string) {
 		os.Exit(1)
 	}
 	ast, parserDiagnostics := parser.Parse(tokens)
-	compilerDiagnostics = append(compilerDiagnostics, parserDiagnostics...)
+	compilerDiagnostics.Combine(parserDiagnostics)
 	//fmt.Println(ast)
 	if parserDiagnostics.HasError() {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}
 	_, semanticDiagnostics := semantic.Analyze(ast)
-	compilerDiagnostics = append(compilerDiagnostics, semanticDiagnostics...)
+	compilerDiagnostics.Combine(semanticDiagnostics)
 	//fmt.Println(ast)
 	if semanticDiagnostics.HasError() {
 		reportStatus(compilerDiagnostics)
@@ -70,7 +70,7 @@ func compile(source []string) {
 func reportStatus(messages diagnostic.PhaseDiagnostics) (int, int) {
 	var warningCnt int = 0
 	var errorCnt int = 0
-	for _, message := range messages {
+	for _, message := range messages.Messages {
 		if message.Level == diagnostic.Warning {
 			if conf.SuppressWarnings {
 				continue

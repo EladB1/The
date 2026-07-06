@@ -26,8 +26,8 @@ func snapshotTestParser(t *testing.T, filename string, debug bool) {
 	ast, messages := Parse(tokens)
 	var msgBuilder strings.Builder
 	var formatStr string
-	for i, msg := range messages {
-		if i != len(messages)-1 {
+	for i, msg := range messages.Messages {
+		if i != len(messages.Messages)-1 {
 			formatStr = fmt.Sprintf("\n\t\"%v\",", msg)
 		} else {
 			formatStr = fmt.Sprintf("\n\t\"%v\"\n", msg)
@@ -78,7 +78,7 @@ func TestParser(t *testing.T) {
 			},
 		}
 		ast, messages := Parse([]lexer.Token{token})
-		if len(messages) != 0 {
+		if len(messages.Messages) != 0 {
 			t.Errorf("Expected no warnings or errors but got %v\n", messages)
 			os.Exit(1)
 		}

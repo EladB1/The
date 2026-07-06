@@ -44,7 +44,7 @@ func (stateMchn *lexerState) addError(message string, args ...any) {
 		Line:   stateMchn.lineNum,
 		Column: lineIndex,
 	}
-	stateMchn.messages = stateMchn.messages.Complain(errLevel, pos, message, args...)
+	stateMchn.messages.Complain(errLevel, pos, message, args...)
 }
 
 func (stateMchn *lexerState) push(char byte) {

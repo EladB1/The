@@ -586,7 +586,7 @@ func parseForConditions() AST {
 			"for (type identifier[ , type identifier ] in range-expression) {}",
 		}, "\n\t")
 		state.addError("Invalid for loop syntax")
-		state.messages = state.messages.ProvideInfo("Valid loop forms:\n\t%s", loopForms)
+		state.messages.ProvideInfo("Valid loop forms:\n\t%s", loopForms)
 		sync(forSignatureCtx)
 	}
 	return ast

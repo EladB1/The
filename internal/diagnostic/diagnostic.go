@@ -32,10 +32,14 @@ type Diagnostic struct {
 	Position ds.SourceLocation
 }
 
-type PhaseDiagnostics []Diagnostic
+//type PhaseDiagnostics []Diagnostic
+
+type PhaseDiagnostics struct {
+	Messages []Diagnostic
+}
 
 func (diagnostics PhaseDiagnostics) HasError() bool {
-	for _, diagnostic := range diagnostics {
+	for _, diagnostic := range diagnostics.Messages {
 		if strings.HasSuffix(string(diagnostic.Level), "Error") {
 			return true
 		}
@@ -43,37 +47,45 @@ func (diagnostics PhaseDiagnostics) HasError() bool {
 	return false
 }
 
-func (diagnostics PhaseDiagnostics) Complain(level Severity, pos ds.SourceLocation, formatStr string, args ...any) PhaseDiagnostics {
+func (diagnostics *PhaseDiagnostics) Complain(level Severity, pos ds.SourceLocation, formatStr string, args ...any) {
 	diagnostic := Diagnostic{
 		Level:    level,
 		Message:  fmt.Sprintf(formatStr, args...),
 		Position: pos,
 	}
-	return append(diagnostics, diagnostic)
+	diagnostics.Messages = append(diagnostics.Messages, diagnostic)
 }
 
-func (diagnostics PhaseDiagnostics) ComplainPositionless(level Severity, message string, args ...any) PhaseDiagnostics {
+func (diagnostics *PhaseDiagnostics) ComplainPositionless(level Severity, message string, args ...any) {
 	pos := ds.SourceLocation{
 		Line:   -1,
 		Column: -1,
 	}
-	return diagnostics.Complain(level, pos, message, args...)
+	diagnostics.Complain(level, pos, message, args...)
 }
 
-func (diagnostics PhaseDiagnostics) ProvideInfo(message string, args ...any) PhaseDiagnostics {
-	return diagnostics.ComplainPositionless(Info, message, args...)
+func (diagnostics *PhaseDiagnostics) ProvideInfo(message string, args ...any) {
+	diagnostics.ComplainPositionless(Info, message, args...)
 }
 
-func (diagnostics PhaseDiagnostics) Warn(pos ds.SourceLocation, message string, args ...any) PhaseDiagnostics {
-	return diagnostics.Complain(Warning, pos, message, args...)
+func (diagnostics *PhaseDiagnostics) Warn(pos ds.SourceLocation, message string, args ...any) {
+	diagnostics.Complain(Warning, pos, message, args...)
 }
 
-func (diagnostics PhaseDiagnostics) WarnPositionless(message string, args ...any) PhaseDiagnostics {
+func (diagnostics *PhaseDiagnostics) WarnPositionless(message string, args ...any) {
 	pos := ds.SourceLocation{
 		Line:   -1,
 		Column: -1,
 	}
-	return diagnostics.Warn(pos, message, args...)
+	diagnostics.Warn(pos, message, args...)
+}
+
+func (diagnostic *PhaseDiagnostics) Combine(other PhaseDiagnostics) {
+	if len(diagnostic.Messages) == 0 {
+		diagnostic.Messages = other.Messages
+		return
+	}
+	diagnostic.Messages = append(diagnostic.Messages, other.Messages...)
 }
 
 // Use for errors outside of source code

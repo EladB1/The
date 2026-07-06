@@ -30,8 +30,8 @@ func snapshotTestLexer(t *testing.T, filename string) {
 		}
 		tokenBuilder.WriteString(formatStr)
 	}
-	for i, msg := range messages {
-		if i != len(messages)-1 {
+	for i, msg := range messages.Messages {
+		if i != len(messages.Messages)-1 {
 			formatStr = fmt.Sprintf("\n\t\"%v\",", msg)
 		} else {
 			formatStr = fmt.Sprintf("\n\t\"%v\"\n", msg)

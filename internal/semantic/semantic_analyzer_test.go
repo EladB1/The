@@ -67,8 +67,8 @@ func snapshotTestSemanticAnalyzer(t *testing.T, filename string, subdir string) 
 	result, messages := Analyze(ast)
 	var msgBuilder strings.Builder
 	var formatStr string
-	for i, msg := range messages {
-		if i != len(messages)-1 {
+	for i, msg := range messages.Messages {
+		if i != len(messages.Messages)-1 {
 			formatStr = fmt.Sprintf("\n\t\"%v\",", msg)
 		} else {
 			formatStr = fmt.Sprintf("\n\t\"%v\"\n", msg)
