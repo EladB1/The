@@ -42,21 +42,21 @@ func compile(source []string) {
 	compilerDiagnostics.Combine(lexerDiagnostics)
 	//lexer.PrintTokens(tokens)
 	//ds.LiteralStorage.Show()
-	if lexerDiagnostics.HasError() {
+	if lexerDiagnostics.HasError {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}
 	ast, parserDiagnostics := parser.Parse(tokens)
 	compilerDiagnostics.Combine(parserDiagnostics)
 	//fmt.Println(ast)
-	if parserDiagnostics.HasError() {
+	if parserDiagnostics.HasError {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}
 	_, semanticDiagnostics := semantic.Analyze(ast)
 	compilerDiagnostics.Combine(semanticDiagnostics)
 	//fmt.Println(ast)
-	if semanticDiagnostics.HasError() {
+	if semanticDiagnostics.HasError {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}

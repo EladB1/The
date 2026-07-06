@@ -36,15 +36,7 @@ type Diagnostic struct {
 
 type PhaseDiagnostics struct {
 	Messages []Diagnostic
-}
-
-func (diagnostics PhaseDiagnostics) HasError() bool {
-	for _, diagnostic := range diagnostics.Messages {
-		if strings.HasSuffix(string(diagnostic.Level), "Error") {
-			return true
-		}
-	}
-	return false
+	HasError bool
 }
 
 func (diagnostics *PhaseDiagnostics) Complain(level Severity, pos ds.SourceLocation, formatStr string, args ...any) {
@@ -52,6 +44,9 @@ func (diagnostics *PhaseDiagnostics) Complain(level Severity, pos ds.SourceLocat
 		Level:    level,
 		Message:  fmt.Sprintf(formatStr, args...),
 		Position: pos,
+	}
+	if strings.HasSuffix(string(level), "Error") {
+		diagnostics.HasError = true
 	}
 	diagnostics.Messages = append(diagnostics.Messages, diagnostic)
 }
@@ -80,12 +75,13 @@ func (diagnostics *PhaseDiagnostics) WarnPositionless(message string, args ...an
 	diagnostics.Warn(pos, message, args...)
 }
 
-func (diagnostic *PhaseDiagnostics) Combine(other PhaseDiagnostics) {
-	if len(diagnostic.Messages) == 0 {
-		diagnostic.Messages = other.Messages
+func (diagnostics *PhaseDiagnostics) Combine(other PhaseDiagnostics) {
+	if len(diagnostics.Messages) == 0 {
+		diagnostics.Messages = other.Messages
 		return
 	}
-	diagnostic.Messages = append(diagnostic.Messages, other.Messages...)
+	diagnostics.HasError = diagnostics.HasError && other.HasError
+	diagnostics.Messages = append(diagnostics.Messages, other.Messages...)
 }
 
 // Use for errors outside of source code
