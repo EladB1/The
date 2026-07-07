@@ -1,63 +1,31 @@
-int i = 0;
-int i = y + 1;
-double y = 0;
-mut int total;
-private String s;
-bool is = false;
-int num = 4;
-int n = num.Sqrt;
-Object o = Object {i: 0, j: 1024};
-Object o2 = Object{i: -1, j: 1023};
-bool less = o2 < o;
-bool greater = o2 > o;
-bool less2 = o2 < 5;
-
-interface Matter {
-    fn getMass() -> double;
+interface A {
+    fn test() -> int;
 }
 
-struct Object {
-    int i;
-    private {
-        uint64 j;
-        fn do() -> float {
-            return;
-        }
+interface B {
+    fn do(int i) -> bool;
+}
+
+struct C impl A, B {
+    A {}
+}
+
+struct D impl A,A {
+    A {}
+}
+
+struct E impl A, B {
+    A {
+        fn test();
+        fn extra() -> int;
     }
-    cast {
-        fn toInt() -> int {
-            return i+j;
-        }
-        fn makeMatter() -> Matter {}
+    B {
+        fn do() -> bool;
+        fn extra();
     }
 }
-
-struct Thing {
-    String desc;
+interface F {
+    fn something() {
+        println("something");
+    }
 }
-
-int x = i + 1;
-uint32 u = 0x100;
-bool b = x == z;
-bool b2 = u < z;
-bool b3 = (u as double) < z;
-int obj = o as int;
-uint32 obj2 = o as uint32;
-Thing t = Thing{
-    desc: "placeholder",
-};
-Object fromT = t as Object;
-int u2 = u as int;
-bool u3 = u as bool;
-float f = y as float;
-
-fn test(int i) -> int {
-    return i+1;
-}
-
-int result2 = test(2, 'c');
-
-int oj = o.j;
-int oMedian = o.middle;
-int result = o.run();
-float response = o2.do();

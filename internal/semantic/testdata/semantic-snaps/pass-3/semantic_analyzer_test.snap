@@ -459,6 +459,41 @@ children: [
                 ] }
             ] }
         ] }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: A, Type: identifier, Line: 21, Column: 10} },
+        Node: { Label: "interface-body"
+        children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: do, Type: identifier, Line: 22, Column: 7} }
+            ] }
+        ] }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 25, Column: 0}
+    children: [
+        Node: { Token: {Value: B, Type: identifier, Line: 25, Column: 7} },
+        Node: { Label: "interface_list"
+        children: [
+            Node: { Token: {Value: A, Type: identifier, Line: 25, Column: 14} },
+            Node: { Token: {Value: Z, Type: identifier, Line: 25, Column: 17} }
+        ] },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "named-block"
+            children: [
+                Node: { Token: {Value: A, Type: identifier, Line: 26, Column: 4} },
+                Node: { Label: "named-block-body"
+                children: [
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: do, Type: identifier, Line: 27, Column: 11} },
+                        Node: { Label: "fn-body" }
+                    ] }
+                ] }
+            ] }
+        ] }
     ] }
 ] }
 , Compiler messages:
@@ -468,7 +503,8 @@ children: [
     "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 12, column: 9",
     "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 13, column: 9",
     "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 14, column: 9",
-    "NamedBlockError: Function signature 'fn abc(int)->String' not supported; only 'fn equals(Test)->bool,fn lessThan(Test)->bool,fn greaterThan(Test)->bool' supported at line: 18, column: 9"
+    "NamedBlockError: Function signature 'fn abc(int)->String' not supported; only 'fn equals(Test)->bool,fn lessThan(Test)->bool,fn greaterThan(Test)->bool' supported at line: 18, column: 9",
+    "NameError: Could not find interface name: 'Z' at line: 26, column: 18"
 ]
 
 ---

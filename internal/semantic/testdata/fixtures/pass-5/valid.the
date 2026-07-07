@@ -1,57 +1,36 @@
-int i = 0;
-double y = 0;
-Object o = Object {i: 0, j: 1024};
-Object o2 = Object{i: -1, j: 1023};
-struct Object {
-    int i;
-    private {
-        int j;
+struct A {}
+interface B {
+    fn test();
+    fn implemented() -> bool {
+        return true;
     }
-    cast {
-        fn toInt() -> int {
-            return i+j;
+}
+struct C impl B {
+    B {
+        fn test() {
+            return;
         }
     }
-    compare {
-        fn lessThan(Object other) -> bool {
-            return i < other.i && j < other.j;
+}
+interface D {
+    fn action(C c1, C c2) -> bool;
+    fn action(C c) -> bool;
+}
+struct E impl B,D {
+    B {
+        fn test() {
+            println("in E");
+        }
+        fn implemented() -> bool {
+            return true && false;
         }
     }
-    fn test(int x, int y) -> int {
-        return i + j + x + y;
+    D {
+        fn action(C c1, C c2) -> bool {
+            return c1.implemented() && c2.implemented();
+        }
+        fn action(C c1) -> bool {
+            return !c1.implemented;
+        }
     }
 }
-
-fn plusOne(int i) -> int {
-    return i + 1;
-}
-
-bool less = o2 < o;
-bool is = false;
-int oint = o as int;
-int oi = o.i;
-double y2 = y + 1;
-int x = i + 1;
-double z = y * x;
-int x2 = plusOne(x);
-int len = "hello".length;
-
-struct Thing {
-    uint32 value;
-}
-Thing t1 = Thing {
-    value: 32,
-};
-Thing t2 = Thing{};
-bool equal = t1 == t2;
-
-struct Nested {
-    Object object;
-}
-
-Nested nested = Nested {
-    object: o,
-};
-int nestedValue = nested.object.i;
-int val = o.test(10, 20);
-int nestedVal = nested.object.test(30, 40);

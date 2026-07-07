@@ -30,7 +30,10 @@ children: [
     ] }
 ] }
 , Compiler messages:
-[]
+[
+    "ImplementationError: struct Two is missing named block for interface A at line: 7, column: 1",
+    "ImplementationError: struct Two is missing named block for interface B at line: 7, column: 1"
+]
 
 ---
 

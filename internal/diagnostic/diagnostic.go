@@ -24,6 +24,7 @@ const (
 	NamedBlockError       Severity = "NamedBlockError"
 	CastError             Severity = "CastError"
 	CallError             Severity = "CallError"
+	ImplementationError   Severity = "ImplementationError"
 )
 
 type Diagnostic struct {

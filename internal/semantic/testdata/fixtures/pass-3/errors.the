@@ -18,3 +18,13 @@ struct Test {
         fn abc(int i) -> String {}
     }
 }
+
+interface A {
+    fn do();
+}
+
+struct B impl A, Z {
+    A {
+        fn do() {}
+    }
+}
