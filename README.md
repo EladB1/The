@@ -634,7 +634,6 @@ interface A {
 interface B {
     fn do(int b);
 }
-// do has the same parameter types, return type, and name so their signatures match
 
 struct C impl A, B {
     A {
@@ -655,35 +654,14 @@ instance.do(0); // Which do() is used when this is called?
 
 The example above would result in an error since the compiler won't know which `do()` to pick, but there's a way to fix it.
 
-If a function with a matching signature is specified at the top-level, *"The"* will default to that one. Within the top-level `do()`, the specific implementations of the function can be called.
-
-Going back to the earlier example:
+The caller must pick a specific implementation of the function. It doesn't matter where in the code this is done.
 
 ```
-struct C impl A, B {
-    fn do(int n) {
-        this.A.do(n);
-        B.do(n); // `this.` is optional
-    }
-    A {
-        fn do(int a) {
-            // implementation
-        }
-    }
-    B {
-        fn do(int b) {
-            // implementation
-        }
-    }
-}
-
-C instance = C {};
-instance.do(0); // Uses top level implementation
+instance.A.do(0);
+instance.B.do(0);
 ```
 
-The example above works because the intent of how the code should work is made clear by defining a "default" `do()`.
-
-> **Note**: Any top level method that matches the signature of an interface implementation method will take precedence the same way even if there are no conflicts.
+> **Note**: `instance.Interface.function()` can be be used even if there are no conflicts
 
 ### Memory Management
 
