@@ -3,3 +3,5 @@ interface A {}
 struct A {}
 struct B {}
 struct B {}
+interface cast {}
+interface compare {}

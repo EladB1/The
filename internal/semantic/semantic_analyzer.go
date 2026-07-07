@@ -68,17 +68,23 @@ func collectTypeNames(ast parser.AST) {
 			messages.Complain(diagnostic.NameError, nameNode.Location, "Name '%s' already in use", name)
 			continue
 		}
-		childScope := globalScope.addChild(name)
 		if node.Label == "interface" {
+			forbidden_names := []string{"cast", "compare"}
+			if slices.Contains(forbidden_names, name) {
+				messages.Complain(diagnostic.NameError, node.Location, "Cannot name interface '%s'", name)
+				continue
+			}
+			childScope := globalScope.addChild(name)
 			globalScope.interfaces[name] = InterfaceSymbol{
 				name:       name,
 				innerScope: childScope,
 				Def:        &node,
 			}
 		} else if node.Token.Value == "struct" {
+			childScope := globalScope.addChild(name)
 			childScope.variables["this"] = VariableSymbol{
 				name:        "this",
-				Type:        datatypes.DynamicType(name),
+				Type:        datatypes.Ref,
 				isPrivate:   true,
 				isMutable:   false,
 				Initialized: true,
@@ -186,6 +192,14 @@ func analyzeInterfaceImplementation() {
 			if namedBlock == nil {
 				messages.Complain(diagnostic.ImplementationError, str.Def.Location, "struct %s is missing named block for interface %s", str.name, intfName)
 			} else {
+				str.innerScope.variables[intfName] = VariableSymbol{
+					name:        intfName,
+					Type:        datatypes.ScopeRef,
+					isPrivate:   true,
+					isMutable:   false,
+					Def:         namedBlock.Def,
+					Initialized: true,
+				}
 				for _, fn := range intf.innerScope.functions {
 					missing := false
 					returnStr := ""

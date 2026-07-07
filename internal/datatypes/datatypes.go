@@ -11,17 +11,19 @@ type PrimitiveType string
 type DynamicType string
 
 const (
-	Int32  PrimitiveType = "int"
-	Int64  PrimitiveType = "int64"
-	Uint32 PrimitiveType = "uint32"
-	Uint64 PrimitiveType = "uint64"
-	Float  PrimitiveType = "float"
-	Double PrimitiveType = "double"
-	Bool   PrimitiveType = "bool"
-	Char   PrimitiveType = "char"
-	String PrimitiveType = "String"
-	None   PrimitiveType = "None"
-	Any    PrimitiveType = "any"
+	Int32    PrimitiveType = "int"
+	Int64    PrimitiveType = "int64"
+	Uint32   PrimitiveType = "uint32"
+	Uint64   PrimitiveType = "uint64"
+	Float    PrimitiveType = "float"
+	Double   PrimitiveType = "double"
+	Bool     PrimitiveType = "bool"
+	Char     PrimitiveType = "char"
+	String   PrimitiveType = "String"
+	Ref      PrimitiveType = "Ref"
+	ScopeRef PrimitiveType = "ScopeRef"
+	None     PrimitiveType = "None"
+	Any      PrimitiveType = "any"
 )
 
 func (type_ PrimitiveType) String() string {

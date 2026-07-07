@@ -61,3 +61,5 @@ int oj = o.j;
 int oMedian = o.middle;
 int result = o.run();
 float response = o2.do();
+fn test(int i) -> int;
+int testCall = test(10);

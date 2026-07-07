@@ -365,6 +365,7 @@ func decideNumberType(lhs datatypes.DataType, rhs datatypes.DataType, operator s
 }
 
 func handleFunctionCall(details []parser.AST) datatypes.DataType {
+	// TODO: handle calls to functions without bodies
 	scope := currentScope
 	var name lexer.Token
 	if details[0].Label == "dot" {
