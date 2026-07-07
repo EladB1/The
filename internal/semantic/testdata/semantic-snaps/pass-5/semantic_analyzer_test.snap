@@ -381,8 +381,8 @@ children: [
     "ImplementationError: Implementation function test returns None but interface A returns int at line: 18, column: 5",
     "ImplementationError: Named block A contains function extra which its interface does not at line: 18, column: 5",
     "ImplementationError: Interface B implementation missing 'fn do(int)->bool' at line: 22, column: 5",
-    "ImplementationError: Named block B contains function do()->bool which its interface does not at line: 22, column: 5",
-    "ImplementationError: Named block B contains function extra which its interface does not at line: 22, column: 5"
+    "ImplementationError: Named block B contains function extra which its interface does not at line: 22, column: 5",
+    "ImplementationError: Named block B contains function do()->bool which its interface does not at line: 22, column: 5"
 ]
 
 ---

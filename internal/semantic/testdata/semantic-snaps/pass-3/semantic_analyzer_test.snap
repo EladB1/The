@@ -543,13 +543,13 @@ children: [
 ] }
 , Compiler messages:
 [
+    "NameError: Could not find interface name: 'Z' at line: 26, column: 18",
     "NameError: Name: 'u' already defined at line: 7, column: 15",
     "Warning: Redundant use of private in private block at line: 8, column: 9",
     "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 12, column: 9",
     "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 13, column: 9",
     "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 14, column: 9",
-    "NamedBlockError: Function signature 'fn abc(int)->String' not supported; only 'fn equals(Test)->bool,fn lessThan(Test)->bool,fn greaterThan(Test)->bool' supported at line: 18, column: 9",
-    "NameError: Could not find interface name: 'Z' at line: 26, column: 18"
+    "NamedBlockError: Function signature 'fn abc(int)->String' not supported; only 'fn equals(Test)->bool,fn lessThan(Test)->bool,fn greaterThan(Test)->bool' supported at line: 18, column: 9"
 ]
 
 ---

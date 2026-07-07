@@ -6,6 +6,7 @@ private String s;
 bool is = false;
 int num = 4;
 int n = num.Sqrt;
+int hi = "hello";
 Object o = Object {i: 0, j: 1024};
 Object o2 = Object{i: -1, j: 1023};
 bool less = o2 < o;
