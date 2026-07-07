@@ -931,11 +931,38 @@ children: [
                 Node: { Token: {Value: do, Type: identifier, Line: 62, Column: 20} }
             ] }
         ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: test, Type: identifier, Line: 63, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 63, Column: 8} },
+                Node: { Token: {Value: i, Type: identifier, Line: 63, Column: 12} }
+            ] }
+        ] },
+        Node: { Token: {Value: int, Type: type keyword, Line: 63, Column: 18} }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 64, Column: 0} },
+        Node: { Token: {Value: testCall, Type: identifier, Line: 64, Column: 4} },
+        Node: { Label: "call", Type: int
+        children: [
+            Node: { Token: {Value: test, Type: identifier, Line: 64, Column: 15} },
+            Node: { Label: "params"
+            children: [
+                Node: { Token: {Value: 10, Type: int literal, Line: 64, Column: 20} }
+            ] }
+        ] }
     ] }
 ] }
 , Compiler messages:
 [
     "NamedBlockError: Functions in cast block cannot return an interface at line: 31, column: 9",
+    "IllegalStatementError: Function with signature 'fn test(int)->int' cannot be redefined at line: 64, column: 1",
     "NameError: Name: 'i' already defined at line: 2, column: 5",
     "Warning: Mutable global variable declared at line: 4, column: 1",
     "AccessError: Cannot use private modifier outside of a struct at line: 5, column: 1",

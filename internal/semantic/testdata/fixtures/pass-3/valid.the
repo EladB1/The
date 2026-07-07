@@ -1,10 +1,19 @@
 struct A {
+    B b;
+    double d;
+    int64 e;
+    float f;
+    uint32 g;
+    uint64 h;
+    
     fn test() {
 
     }
 }
 
 struct B {
+    String a;
+    char c;
     fn test() {
 
     }
@@ -15,6 +24,7 @@ struct B {
 }
 
 struct C {
+    bool isTrue;
     fn test(int i) -> bool {
         return i == 0;
     }

@@ -148,6 +148,8 @@ func analyzeStructFnSignatures() {
 				}
 			default:
 				symbol := analyzeVariable(node)
+				str.sizeInBytes += symbol.Type.GetSizeInBytes()
+				globalScope.structs[str.name] = str
 				if symbol != nil {
 					currentScope.variables[symbol.name] = *symbol
 				}

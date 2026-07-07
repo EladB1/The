@@ -65,13 +65,25 @@ children: [
     children: [
         Node: { Token: {Value: B, Type: identifier, Line: 4, Column: 7} },
         Node: { Label: "struct-body" }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: cast, Type: identifier, Line: 5, Column: 10} },
+        Node: { Label: "interface-body" }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: compare, Type: identifier, Line: 6, Column: 10} },
+        Node: { Label: "interface-body" }
     ] }
 ] }
 , Compiler messages:
 [
     "NameError: Name 'A' already in use at line: 2, column: 11",
     "NameError: Name 'A' already in use at line: 3, column: 8",
-    "NameError: Name 'B' already in use at line: 5, column: 8"
+    "NameError: Name 'B' already in use at line: 5, column: 8",
+    "NameError: Cannot name interface 'cast' at line: 6, column: 1",
+    "NameError: Cannot name interface 'compare' at line: 7, column: 1"
 ]
 
 ---
