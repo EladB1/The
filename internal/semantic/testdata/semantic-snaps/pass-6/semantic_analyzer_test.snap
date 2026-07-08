@@ -1913,7 +1913,7 @@ children: [
     "NameError: Could not find property middle in type Object at line: 89, column: 17",
     "NameError: Could not find function run in scope at line: 90, column: 16",
     "AccessError: Cannot access private function 'do' from outside struct definition at line: 91, column: 20",
-    "AmbiguityError: Interfaces B,A both contain function named test. Change the function call to pick which one to use at line: 123, column: 18",
+    "AmbiguityError: Interfaces A,B both contain function named test. Change the function call to pick which one to use at line: 123, column: 18",
     "NameError: Name: 'i' already defined at line: 124, column: 5",
     "NameError: Name: 'n' already defined at line: 125, column: 5",
     "AccessError: Cannot access private function 'sum' from outside struct definition at line: 146, column: 17",

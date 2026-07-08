@@ -3,6 +3,7 @@ package semantic
 import (
 	"fmt"
 	"slices"
+	"sort"
 	"strings"
 
 	ds "github.com/EladB1/The/internal/datastructures"
@@ -493,6 +494,7 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 			scope = symbol.getInnerScope()
 			if symbol.getSymbolType() == "struct" {
 				if conflicts := symbol.getConflicts(name.Value); len(conflicts) > 1 {
+					sort.Strings(conflicts)
 					messages.Complain(diagnostic.AmbiguityError, name.Location, "Interfaces %s both contain function named %s. Change the function call to pick which one to use", strings.Join(conflicts, ","), name.Value)
 					return datatypes.None, true
 				} else if len(conflicts) == 1 {
