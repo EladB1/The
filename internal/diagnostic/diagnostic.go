@@ -25,6 +25,8 @@ const (
 	CastError             Severity = "CastError"
 	CallError             Severity = "CallError"
 	ImplementationError   Severity = "ImplementationError"
+	AmbiguityError        Severity = "AmbiguityError"
+	ReferenceError        Severity = "ReferenceError"
 )
 
 type Diagnostic struct {

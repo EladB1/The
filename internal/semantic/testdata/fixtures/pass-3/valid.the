@@ -55,7 +55,6 @@ struct F {
         fn toString() -> String {
             return (x as String) + ", " + (y as String);
         }
-        
     }
     compare {
         fn equals(F other) -> bool {

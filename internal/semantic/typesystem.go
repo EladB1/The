@@ -3,6 +3,7 @@ package semantic
 import (
 	"fmt"
 	"slices"
+	"strings"
 
 	ds "github.com/EladB1/The/internal/datastructures"
 	"github.com/EladB1/The/internal/datatypes"
@@ -357,12 +358,12 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 					} else {
 						switch operator {
 						case "<", "<=":
-							if symbol := compareBlock.innerScope.lookupFunction("lessThan"); symbol == nil || symbol.returnType != datatypes.Bool {
+							if symbol := compareBlock.innerScope.lookupFunctionByName("lessThan"); symbol == nil || symbol.returnType != datatypes.Bool {
 								messages.Complain(diagnostic.TypeError, ast.Location, "Unsupported comparison. To support operators '<' and '<=', add function 'fn lessThan(%s)->bool' to compare block in %s definition", lhs, lhs)
 								hasError = true
 							}
 						case ">", ">=":
-							if symbol := compareBlock.innerScope.lookupFunction("greaterThan"); symbol == nil || symbol.returnType != datatypes.Bool {
+							if symbol := compareBlock.innerScope.lookupFunctionByName("greaterThan"); symbol == nil || symbol.returnType != datatypes.Bool {
 								messages.Complain(diagnostic.TypeError, ast.Location, "Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(%s)->bool' to compare block in %s definition", lhs, lhs)
 								hasError = true
 							}
@@ -449,21 +450,47 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 		if hasErr {
 			hasError = hasErr
 		}
-		symbol := globalScope.lookupType(lhs.String())
-		if symbol == nil {
-			messages.Complain(diagnostic.NameError, details[0].Children[1].Location, "Could not find type %s", lhs)
-			return datatypes.None, true
+		if lhs.IsScopeRef() {
+			fmt.Println("Details:", details)
+			scopes := lhs.GetScopes()
+			if len(scopes) < 2 {
+				messages.Complain(diagnostic.ReferenceError, details[0].Location, "Could not find reference value")
+				hasError = true
+			} else {
+				str := globalScope.lookupStruct(scopes[0])
+				if str == nil {
+					messages.Complain(diagnostic.NameError, details[0].Location, "Could not find struct %s", scopes[0])
+					hasError = true
+				}
+				nb := str.innerScope.lookupNamedBlock(scopes[1])
+				if nb == nil {
+					messages.Complain(diagnostic.NameError, details[0].Location, "Could not find named block %s in struct %s", scopes[1], scopes[0])
+					hasError = true
+				}
+				scope = nb.innerScope
+				name = details[0].Children[1].Token
+			}
+		} else {
+			symbol := globalScope.lookupType(lhs.String())
+			if symbol == nil {
+				messages.Complain(diagnostic.NameError, details[0].Children[1].Location, "Could not find type %s", lhs)
+				return datatypes.None, true
+			}
+			name = details[0].Children[1].Token
+			scope = symbol.getInnerScope()
+			if symbol.getSymbolType() == "struct" {
+				if conflicts := symbol.getConflicts(name.Value); len(conflicts) > 1 {
+					messages.Complain(diagnostic.AmbiguityError, name.Location, "Interfaces %s both contain function named %s. Change the function call to pick which one to use", strings.Join(conflicts, ","), name.Value)
+					return datatypes.None, true
+				}
+			}
 		}
-		name = details[0].Children[1].Token
-		scope = symbol.getInnerScope()
 		// TODO: handle named block functions
-		if symbol.getSymbolType() == "struct" {
 
-		}
 	} else {
 		name = details[0].Token
 	}
-	symbol := scope.lookupFunction(name.Value)
+	symbol := scope.lookupFunctionByName(name.Value)
 	if symbol == nil {
 		messages.Complain(diagnostic.NameError, name.Location, "Could not find function %s in scope", name.Value)
 		return datatypes.None, true
@@ -481,8 +508,8 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 	}
 	paramList := datatypes.Join(params)
 	if fn, ok := symbol.overloads[paramList]; ok {
-		if fn.isPrivate && !currentScope.HasParentScope(scope) {
-			messages.Complain(diagnostic.AccessError, details[1].Location, "Cannot access private function '%s' from outside struct definition", name.Value)
+		if fn.isPrivate {
+			messages.Complain(diagnostic.AccessError, details[0].Location, "Cannot access private function '%s' from outside struct definition", name.Value)
 			hasError = true
 		} else {
 			return symbol.returnType, hasError

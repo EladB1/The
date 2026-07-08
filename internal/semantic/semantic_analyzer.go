@@ -155,6 +155,13 @@ func analyzeStructFnSignatures() {
 				}
 			}
 		}
+		str.implFnNames = map[string][]string{}
+		for _, nb := range currentScope.namedBlocks {
+			for _, fn := range nb.innerScope.functions {
+				str.implFnNames[fn.name] = append(str.implFnNames[fn.name], nb.name)
+			}
+		}
+		globalScope.structs[str.name] = str
 	}
 	currentScope = globalScope // reset the current scope
 }
@@ -195,9 +202,11 @@ func analyzeInterfaceImplementation() {
 				messages.Complain(diagnostic.ImplementationError, str.Def.Location, "struct %s is missing named block for interface %s", str.name, intfName)
 			} else {
 				str.innerScope.variables[intfName] = VariableSymbol{
-					name:        intfName,
-					Type:        datatypes.ScopeRef,
-					isPrivate:   true,
+					name: intfName,
+					Type: datatypes.ScopeRef{
+						Scopes: []string{str.name, intfName},
+					},
+					isPrivate:   false,
 					isMutable:   false,
 					Def:         namedBlock.Def,
 					Initialized: true,
@@ -208,11 +217,11 @@ func analyzeInterfaceImplementation() {
 					if fn.returnType != datatypes.None {
 						returnStr = fmt.Sprintf("->%s", fn.returnType)
 					}
-					nb_fn := namedBlock.innerScope.lookupFunction(fn.name)
+					nb_fn := namedBlock.innerScope.lookupFunctionByName(fn.name)
 					if nb_fn == nil {
 						missing = true
 						namedBlock.innerScope.functions[fn.name] = fn
-						nb_fn = namedBlock.innerScope.lookupFunction(fn.name)
+						nb_fn = namedBlock.innerScope.lookupFunctionByName(fn.name)
 					} else if nb_fn.returnType != fn.returnType {
 						messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Implementation function %s returns %s but interface %s returns %s", fn.name, nb_fn.returnType, intfName, fn.returnType)
 						continue
@@ -245,7 +254,7 @@ func analyzeInterfaceImplementation() {
 					if fn.returnType != datatypes.None {
 						returnStr = fmt.Sprintf("->%s", fn.returnType)
 					}
-					intf_fn := intf.innerScope.lookupFunction(fn.name)
+					intf_fn := intf.innerScope.lookupFunctionByName(fn.name)
 					if intf_fn == nil {
 						messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Named block %s contains function %s which its interface does not", intfName, fn.name)
 						continue

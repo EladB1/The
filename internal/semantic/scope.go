@@ -3,6 +3,8 @@ package semantic
 import (
 	"fmt"
 	"strings"
+
+	"github.com/EladB1/The/internal/datatypes"
 )
 
 type Scope struct {
@@ -78,7 +80,6 @@ func (scope *Scope) HasParentScope(other *Scope) bool {
 	if scope.id == other.id {
 		return true
 	}
-	fmt.Printf(scope.id, other.id)
 	curr := scope
 	for curr != &rootScope {
 		if curr.id == other.id {
@@ -87,4 +88,120 @@ func (scope *Scope) HasParentScope(other *Scope) bool {
 		curr = curr.parent
 	}
 	return false
+}
+
+func (scope *Scope) lookupType(name string) TypeSymbol {
+	curr := scope
+	for curr != nil {
+		if intf, ok := curr.interfaces[name]; ok {
+			return intf
+		}
+		if str, ok := curr.structs[name]; ok {
+			return str
+		}
+		curr = curr.parent
+	}
+	return nil
+}
+
+func (scope *Scope) lookupInterface(name string) *InterfaceSymbol {
+	curr := scope
+	for curr != nil {
+		if intf, ok := curr.interfaces[name]; ok {
+			return &intf
+		}
+		curr = curr.parent
+	}
+	return nil
+}
+
+func (scope *Scope) lookupStruct(name string) *StructSymbol {
+	curr := scope
+	for curr != nil {
+		if str, ok := curr.structs[name]; ok {
+			return &str
+		}
+		curr = curr.parent
+	}
+	return nil
+}
+
+func (scope *Scope) lookupNamedBlock(name string) *NamedBlockSymbol {
+	curr := scope
+	for curr != nil {
+		if nb, ok := curr.namedBlocks[name]; ok {
+			return &nb
+		}
+		curr = curr.parent
+	}
+	return nil
+}
+
+func (nb NamedBlockSymbol) HasReturnType(returnType datatypes.DataType) bool {
+	for _, fnSymbol := range nb.innerScope.functions {
+		if fnSymbol.returnType == returnType {
+			return true
+		}
+	}
+	return false
+}
+
+func (scope *Scope) lookupVariable(name string) *VariableSymbol {
+	curr := scope
+	for curr != nil {
+		if variable, ok := curr.variables[name]; ok {
+			return &variable
+		}
+		curr = curr.parent
+	}
+	return nil
+}
+
+func (scope *Scope) lookupFunctionsByReturnType(returnType datatypes.DataType) []*FunctionSymbol {
+	matching := []*FunctionSymbol{}
+	for _, fn := range scope.functions {
+		if fn.returnType == returnType {
+			matching = append(matching, &fn)
+		}
+	}
+	return matching
+}
+
+func (scope *Scope) lookupFunctionByName(name string) *FunctionSymbol {
+	curr := scope
+	for curr != nil {
+		if fn, ok := curr.functions[name]; ok {
+			return &fn
+		}
+		curr = curr.parent
+	}
+	return nil
+}
+
+func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
+	fn, ok := table[symbol.name]
+	if ok {
+		if fn.returnType != symbol.returnType {
+			if fn.returnType == datatypes.None {
+				return fmt.Errorf("Function name '%s' already defined without a return type; cannot overload with return type %s", symbol.name, symbol.returnType)
+			}
+			return fmt.Errorf("Function name '%s' can only be overloaded with return type %s. Found: %s", symbol.name, fn.returnType, symbol.returnType)
+		}
+		params := datatypes.Join(symbol.parameters)
+		if _, ok := fn.overloads[params]; ok {
+			return fmt.Errorf("Function with signature '%s' cannot be redefined", symbol.getSignature())
+		} else {
+			fn.overloads[params] = symbol.toOverload()
+		}
+	} else {
+		params := datatypes.Join(symbol.parameters)
+		table[symbol.name] = FunctionSymbol{
+			name:       symbol.name,
+			returnType: symbol.returnType,
+			overloads: map[string]FnOverloadSymbol{
+				params: symbol.toOverload(),
+			},
+		}
+	}
+	return nil
 }

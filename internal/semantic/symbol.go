@@ -9,11 +9,11 @@ import (
 )
 
 type (
-	LookupMode int
 	TypeSymbol interface {
 		getSymbolType() string
 		getInnerScope() *Scope
 		getNamedBlockIfExists(string) *NamedBlockSymbol
+		getConflicts(string) []string
 	}
 	FunctionSymbol struct {
 		name       string
@@ -55,6 +55,7 @@ type (
 		sizeInBytes int
 		Def         *parser.AST
 		innerScope  *Scope
+		implFnNames map[string][]string
 	}
 	NamedBlockSymbol struct {
 		name           string
@@ -85,81 +86,23 @@ func (str StructSymbol) getInnerScope() *Scope {
 	return str.innerScope
 }
 
+func (intf InterfaceSymbol) getConflicts(fn string) []string {
+	return nil
+}
+
+func (str StructSymbol) getConflicts(fn string) []string {
+	if names, ok := str.implFnNames[fn]; ok {
+		return names
+	}
+	return nil
+}
+
 func (intf InterfaceSymbol) getNamedBlockIfExists(name string) *NamedBlockSymbol {
 	return nil
 }
 
 func (str StructSymbol) getNamedBlockIfExists(name string) *NamedBlockSymbol {
 	return str.innerScope.lookupNamedBlock(name)
-}
-
-func (scope *Scope) lookupNamedBlock(name string) *NamedBlockSymbol {
-	curr := scope
-	for curr != nil {
-		if nb, ok := curr.namedBlocks[name]; ok {
-			return &nb
-		}
-		curr = curr.parent
-	}
-	return nil
-}
-
-func (scope *Scope) lookupInterface(name string) *InterfaceSymbol {
-	curr := scope
-	for curr != nil {
-		if intf, ok := curr.interfaces[name]; ok {
-			return &intf
-		}
-		curr = curr.parent
-	}
-	return nil
-}
-
-func (scope *Scope) lookupStruct(name string) *StructSymbol {
-	curr := scope
-	for curr != nil {
-		if str, ok := curr.structs[name]; ok {
-			return &str
-		}
-		curr = curr.parent
-	}
-	return nil
-}
-
-func (scope *Scope) lookupVariable(name string) *VariableSymbol {
-	curr := scope
-	for curr != nil {
-		if variable, ok := curr.variables[name]; ok {
-			return &variable
-		}
-		curr = curr.parent
-	}
-	return nil
-}
-
-func (scope *Scope) lookupFunction(name string) *FunctionSymbol {
-	curr := scope
-	for curr != nil {
-		if fn, ok := curr.functions[name]; ok {
-			return &fn
-		}
-		curr = curr.parent
-	}
-	return nil
-}
-
-func (scope *Scope) lookupType(name string) TypeSymbol {
-	curr := scope
-	for curr != nil {
-		if intf, ok := curr.interfaces[name]; ok {
-			return intf
-		}
-		if str, ok := curr.structs[name]; ok {
-			return str
-		}
-		curr = curr.parent
-	}
-	return nil
 }
 
 func (intf InterfaceSymbol) String() string {
@@ -209,15 +152,6 @@ func (nb NamedBlockSymbol) String() string {
 	return fmt.Sprintf("{name: %s}", nb.name)
 }
 
-func (nb NamedBlockSymbol) HasReturnType(returnType datatypes.DataType) bool {
-	for _, fnSymbol := range nb.innerScope.functions {
-		if fnSymbol.returnType == returnType {
-			return true
-		}
-	}
-	return false
-}
-
 func (symbol FnCreateSymbol) getSignature() string {
 	returns := ""
 	if symbol.returnType != datatypes.None {
@@ -234,32 +168,4 @@ func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
 		Body:                     symbol.Body,
 		innerScope:               symbol.innerScope,
 	}
-}
-
-func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
-	fn, ok := table[symbol.name]
-	if ok {
-		if fn.returnType != symbol.returnType {
-			if fn.returnType == datatypes.None {
-				return fmt.Errorf("Function name '%s' already defined without a return type; cannot overload with return type %s", symbol.name, symbol.returnType)
-			}
-			return fmt.Errorf("Function name '%s' can only be overloaded with return type %s. Found: %s", symbol.name, fn.returnType, symbol.returnType)
-		}
-		params := datatypes.Join(symbol.parameters)
-		if _, ok := fn.overloads[params]; ok {
-			return fmt.Errorf("Function with signature '%s' cannot be redefined", symbol.getSignature())
-		} else {
-			fn.overloads[params] = symbol.toOverload()
-		}
-	} else {
-		params := datatypes.Join(symbol.parameters)
-		table[symbol.name] = FunctionSymbol{
-			name:       symbol.name,
-			returnType: symbol.returnType,
-			overloads: map[string]FnOverloadSymbol{
-				params: symbol.toOverload(),
-			},
-		}
-	}
-	return nil
 }

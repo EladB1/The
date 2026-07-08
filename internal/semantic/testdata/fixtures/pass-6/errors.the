@@ -1,66 +1,123 @@
-int i = 0;
-int i = y + 1;
-double y = 0;
-mut int total;
-private String s;
-bool is = false;
-int num = 4;
-int n = num.Sqrt;
-int hi = "hello";
-Object o = Object {i: 0, j: 1024};
-Object o2 = Object{i: -1, j: 1023};
-bool less = o2 < o;
-bool greater = o2 > o;
-bool less2 = o2 < 5;
+// int i = 0;
+// int i = y + 1;
+// double y = 0;
+// mut int total;
+// private String s;
+// bool is = false;
+// int num = 4;
+// int n = num.Sqrt;
+// int hi = "hello";
+// Object o = Object {i: 0, j: 1024};
+// Object o2 = Object{i: -1, j: 1023};
+// bool less = o2 < o;
+// bool greater = o2 > o;
+// bool less2 = o2 < 5;
 
-interface Matter {
-    fn getMass() -> double;
+// interface Matter {
+//     fn getMass() -> double;
+// }
+
+// struct Object {
+//     int i;
+//     private {
+//         uint64 j;
+//         fn do() -> float {
+//             return;
+//         }
+//     }
+//     cast {
+//         fn toInt() -> int {
+//             return i+j;
+//         }
+//         fn makeMatter() -> Matter {}
+//     }
+// }
+
+// struct Thing {
+//     String desc;
+// }
+
+// int x = i + 1;
+// uint32 u = 0x100;
+// bool b = x == z;
+// bool b2 = u < z;
+// bool b3 = (u as double) < z;
+// int obj = o as int;
+// uint32 obj2 = o as uint32;
+// Thing t = Thing{
+//     desc: "placeholder",
+// };
+// Object fromT = t as Object;
+// int u2 = u as int;
+// bool u3 = u as bool;
+// float f = y as float;
+
+// fn test(int i) -> int {
+//     return i+1;
+// }
+
+// int result2 = test(2, 'c');
+
+// int oj = o.j;
+// int oMedian = o.middle;
+// int result = o.run();
+// float response = o2.do();
+// fn test(int i) -> int;
+// int testCall = test(10);
+
+interface A {
+    fn test();
+    fn test2() -> int;
 }
 
-struct Object {
-    int i;
-    private {
-        uint64 j;
-        fn do() -> float {
+interface B {
+    fn test();
+    fn test2(int i) -> String; 
+}
+
+struct C impl A, B {
+    A {
+        fn test() {
             return;
         }
-    }
-    cast {
-        fn toInt() -> int {
-            return i+j;
+        fn test2() -> int {
+            return 0;
         }
-        fn makeMatter() -> Matter {}
+    }
+    B {
+        fn test() {
+            println("hello");
+        }
+        fn test2(int i) -> String {
+            return 1;
+        }
     }
 }
 
-struct Thing {
-    String desc;
-}
+C instance = C{};
+int i = instance.test2();
 
-int x = i + 1;
-uint32 u = 0x100;
-bool b = x == z;
-bool b2 = u < z;
-bool b3 = (u as double) < z;
-int obj = o as int;
-uint32 obj2 = o as uint32;
-Thing t = Thing{
-    desc: "placeholder",
-};
-Object fromT = t as Object;
-int u2 = u as int;
-bool u3 = u as bool;
-float f = y as float;
-
-fn test(int i) -> int {
-    return i+1;
-}
-
-int result2 = test(2, 'c');
-
-int oj = o.j;
-int oMedian = o.middle;
-int result = o.run();
-float response = o2.do();
-fn test(int i) -> int;
-int testCall = test(10);
+// struct D {
+//     fn test() -> int {
+//         return sum() + product();
+//     }
+//     int i;
+//     private {
+//         int j;
+//         fn sum() -> int {
+//             return i+j+k;
+//         }
+//     }
+//     private {
+//         int k;
+//         fn product() -> int {
+//             return i * j * k;
+//         }
+//     }
+// }
+// D d = D{i: 1, j: 2};
+// int sumTwice = d.sum() + d.j + d.i;
+/*
+instance -> C
+A -> ScopeRef(C, A)
+*/

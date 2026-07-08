@@ -10,6 +10,9 @@ struct Test {
 
     cast {
         fn toSomething(int i) -> String {}
+        fn toString() -> String {
+            return "";
+        }
         fn toSame() -> Test {}
         fn toNothing() {}
     }

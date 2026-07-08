@@ -105,8 +105,11 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 	}
 	body := details[1].Children
 	scope := currentScope
-	newScope := currentScope.addChild(fmt.Sprintf("%s@%s", name, currentScope.id))
-	currentScope = newScope
+	var newScope *Scope = nil
+	if name != "private" {
+		newScope = currentScope.addChild(fmt.Sprintf("%s@%s", name, currentScope.id))
+		currentScope = newScope
+	}
 	for _, node := range body {
 		switch node.Label {
 		case "fn":
@@ -126,9 +129,17 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block must take no parameters and return a different type")
 				} else if intf := globalScope.lookupInterface(symbol.returnType.String()); intf != nil {
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block cannot return an interface")
+				} else if matches := newScope.lookupFunctionsByReturnType(symbol.returnType); len(matches) > 0 {
+					messages.Complain(diagnostic.AmbiguityError, node.Location, "Cannot have more than one cast function that returns %s", symbol.returnType)
 				}
 			case "private":
 				symbol.isPrivate = true
+				currentScope = scope
+				// private is not a real named block; it is only a shortcut to mark everything in it as private
+				if err := currentScope.functions.add(symbol); err != nil {
+					messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
+				}
+				continue
 			}
 			if err := currentScope.functions.add(symbol); err != nil {
 				messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
@@ -137,6 +148,7 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 			if name != "private" {
 				messages.Complain(diagnostic.IllegalStatementError, node.Location, "Variable declaration only allowed in struct or private block")
 			} else {
+				currentScope = scope
 				symbol := analyzeVariable(node)
 				if symbol != nil {
 					if symbol.isPrivate {
@@ -145,11 +157,14 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 					symbol.isPrivate = true
 					currentScope.variables[symbol.name] = *symbol
 				}
-
+				continue
 			}
 		}
 	}
 	currentScope = scope
+	if newScope == nil {
+		return nil
+	}
 	return &NamedBlockSymbol{
 		name:           name,
 		isSpecialBlock: slices.Contains(specialBlocks, name),
