@@ -66,8 +66,9 @@ children: [
             Node: { Token: {Value: &&, Type: operator, Line: 6, Column: 16}
             children: [
                 Node: { Token: {Value: b, Type: identifier, Line: 6, Column: 14} },
-                Node: { Token: {Value: !, Type: unary operator, Line: 6, Column: 19}
+                Node: { Label: "Unary"
                 children: [
+                    Node: { Token: {Value: !, Type: unary operator, Line: 6, Column: 19} },
                     Node: { Token: {Value: c, Type: identifier, Line: 6, Column: 20} }
                 ] }
             ] }
@@ -295,8 +296,9 @@ children: [
     children: [
         Node: { Token: {Value: bool, Type: type keyword, Line: 3, Column: 0} },
         Node: { Token: {Value: isSomething, Type: identifier, Line: 3, Column: 5} },
-        Node: { Token: {Value: !, Type: unary operator, Line: 3, Column: 19}
+        Node: { Label: "Unary"
         children: [
+            Node: { Token: {Value: !, Type: unary operator, Line: 3, Column: 19} },
             Node: { Token: {Value: d, Type: identifier, Line: 3, Column: 20} }
         ] }
     ] },

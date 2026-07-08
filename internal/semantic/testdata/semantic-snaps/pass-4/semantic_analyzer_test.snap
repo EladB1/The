@@ -13,7 +13,7 @@ children: [
                 Node: { Token: {Value: println, Type: identifier, Line: 1, Column: 4} },
                 Node: { Label: "params"
                 children: [
-                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [5] with length 0) }
+                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [6] with length 0) }
                 ] }
             ] }
         ] }
@@ -38,7 +38,7 @@ children: [
                 children: [
                     Node: { Token: {Value: +, Type: add operator, Line: 5, Column: 19}
                     children: [
-                        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [6] with length 0) },
+                        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [7] with length 0) },
                         Node: { Label: "typecast"
                         children: [
                             Node: { Token: {Value: i, Type: identifier, Line: 5, Column: 22} },
@@ -80,7 +80,7 @@ children: [
                 Node: { Token: {Value: println, Type: identifier, Line: 1, Column: 4} },
                 Node: { Label: "params"
                 children: [
-                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [2] with length 0) }
+                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [3] with length 0) }
                 ] }
             ] }
         ] }
@@ -105,7 +105,7 @@ children: [
                 children: [
                     Node: { Token: {Value: +, Type: add operator, Line: 5, Column: 19}
                     children: [
-                        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [3] with length 0) },
+                        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [4] with length 0) },
                         Node: { Label: "typecast"
                         children: [
                             Node: { Token: {Value: i, Type: identifier, Line: 5, Column: 22} },
@@ -126,7 +126,7 @@ children: [
                 Node: { Token: {Value: println, Type: identifier, Line: 9, Column: 4} },
                 Node: { Label: "params"
                 children: [
-                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [4] with length 0) }
+                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [5] with length 0) }
                 ] }
             ] }
         ] }

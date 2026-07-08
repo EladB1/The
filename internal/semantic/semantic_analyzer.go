@@ -180,7 +180,6 @@ func collectFunctionSignatures(ast parser.AST) {
 
 // Pass five
 func analyzeInterfaceImplementation() {
-	// TODO: disambiguation
 	for _, str := range globalScope.structs {
 		if len(str.implements) == 0 { // no interface_list node
 			continue

@@ -12,11 +12,6 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-var unsignedTypes []datatypes.DataType = []datatypes.DataType{datatypes.Uint32, datatypes.Uint64}
-var signedIntTypes []datatypes.DataType = []datatypes.DataType{datatypes.Int32, datatypes.Int64}
-var floatTypes []datatypes.DataType = []datatypes.DataType{datatypes.Float, datatypes.Double}
-var numericTypes []datatypes.DataType = slices.Concat(unsignedTypes, signedIntTypes, floatTypes)
-
 func evalLiteral(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataType {
 	if ast.Label == "struct_literal" {
 		return evalStructLiteral(ast)
@@ -33,7 +28,7 @@ func evalLiteral(ast *parser.AST, expectedType datatypes.DataType) datatypes.Dat
 		}
 		return datatypes.Float
 	case lexer.LIT_INT, lexer.LIT_HEX:
-		if slices.Contains(numericTypes, expectedType) {
+		if slices.Contains(datatypes.NumericTypes, expectedType) {
 			return expectedType
 		}
 		return datatypes.Int32
@@ -57,12 +52,7 @@ func evalStructLiteral(ast *parser.AST) datatypes.DataType {
 	visited := ds.HashSet{}
 	for _, prop := range properties {
 		propId := prop.Children[0].Token.Value
-		var innerScope *Scope
-		if privateBlock := symbol.innerScope.lookupNamedBlock("private"); privateBlock != nil {
-			innerScope = privateBlock.innerScope
-		} else {
-			innerScope = symbol.innerScope
-		}
+		innerScope := symbol.innerScope
 		property := innerScope.lookupVariable(propId)
 		if property == nil {
 			messages.Complain(diagnostic.NameError, prop.Location, "Could not find property '%s' in struct %s", propId, symbol.name)
@@ -83,6 +73,7 @@ func evalStructLiteral(ast *parser.AST) datatypes.DataType {
 
 func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataType, bool) {
 	hasError := false
+	hasErr := false
 	var nodeType datatypes.DataType = datatypes.None
 	var err error = nil
 	if ast.IsLiteral() {
@@ -97,7 +88,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 		}
 	} else if ast.Label == "Unary" {
 		if leftTok := ast.Children[0].Token; leftTok.Kind == lexer.OPERATOR_UNARY || leftTok.Value == "-" {
-			rhs, hasErr := evalType(&ast.Children[1], datatypes.None)
+			rhs, hasErr := evalType(&ast.Children[1], expectedType)
 			if hasErr {
 				hasError = hasErr
 			}
@@ -107,17 +98,17 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 					messages.Complain(diagnostic.TypeError, ast.Location, "Must use bool value with unary '!'")
 					hasError = true
 				} else {
-					nodeType = rhs
+					nodeType = datatypes.Bool
 				}
 			case "-":
-				if !slices.Contains(numericTypes, rhs) {
+				if !slices.Contains(datatypes.NumericTypes, rhs) {
 					messages.Complain(diagnostic.TypeError, ast.Location, "Cannot use unary '-' with type %s", rhs)
 					hasError = true
 				} else {
 					nodeType = rhs
 				}
 			case "~":
-				if !slices.Contains(unsignedTypes, rhs) && !slices.Contains(signedIntTypes, rhs) {
+				if !slices.Contains(datatypes.IntTypes, rhs) {
 					messages.Complain(diagnostic.TypeError, ast.Location, "Cannot negate value of type %s", rhs)
 					hasError = true
 				} else {
@@ -127,7 +118,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 				operand := ast.Children[1].Token
 				symbol := currentScope.lookupVariable(operand.Value)
 				if symbol != nil {
-					if !slices.Contains(numericTypes, symbol.Type) {
+					if !slices.Contains(datatypes.NumericTypes, symbol.Type) {
 						messages.Complain(diagnostic.TypeError, operand.Location, "Cannot use '%s' with type %s", ast.Children[0].Token.Value, symbol.Type)
 						hasError = true
 					} else {
@@ -142,7 +133,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 			operand := ast.Children[0].Token
 			symbol := currentScope.lookupVariable(operand.Value)
 			if symbol != nil {
-				if !slices.Contains(numericTypes, symbol.Type) {
+				if !slices.Contains(datatypes.NumericTypes, symbol.Type) {
 					messages.Complain(diagnostic.TypeError, operand.Location, "Cannot use '%s' with type %s", ast.Children[1].Token.Value, symbol.Type)
 					hasError = true
 				} else {
@@ -156,22 +147,20 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 
 	} else if ast.Label == "typecast" {
 		lhs, hasErr := evalType(&ast.Children[0], datatypes.None)
-		if hasErr {
-			hasError = hasErr
-		}
+		hasError = hasError || hasErr
 		target := nodeToType(ast.Children[1])
 		if lhs != target && target != datatypes.String {
 			if lhs == datatypes.Uint64 {
 				if target == datatypes.Uint32 || target == datatypes.Float || target == datatypes.Int32 {
 					messages.Warn(ast.Location, "Lossy conversion from %s to %s", lhs, target)
-				} else if !slices.Contains(numericTypes, target) {
+				} else if !slices.Contains(datatypes.NumericTypes, target) {
 					messages.Complain(diagnostic.CastError, ast.Location, "Typecasting from %s to %s not allowed", lhs, target)
 					hasError = true
 				}
 			} else if lhs == datatypes.Int64 {
 				if target == datatypes.Uint32 || target == datatypes.Float || target == datatypes.Int32 {
 					messages.Warn(ast.Location, "Lossy conversion from %s to %s", lhs, target)
-				} else if !slices.Contains(numericTypes, target) {
+				} else if !slices.Contains(datatypes.NumericTypes, target) {
 					messages.Complain(diagnostic.CastError, ast.Location, "Typecasting from %s to %s not allowed", lhs, target)
 					hasError = true
 				}
@@ -180,7 +169,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 			} else if lhs == datatypes.Double {
 				if target == datatypes.Uint32 || target == datatypes.Float || target == datatypes.Int32 {
 					messages.Warn(ast.Location, "Lossy conversion from %s to %s", lhs, target)
-				} else if !slices.Contains(numericTypes, target) {
+				} else if !slices.Contains(datatypes.NumericTypes, target) {
 					messages.Complain(diagnostic.CastError, ast.Location, "Typecasting from %s to %s not allowed", lhs, target)
 					hasError = true
 				}
@@ -200,7 +189,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 						hasError = true
 					}
 				}
-			} else if slices.Contains(numericTypes, lhs) && slices.Contains(numericTypes, target) {
+			} else if slices.Contains(datatypes.NumericTypes, lhs) && slices.Contains(datatypes.NumericTypes, target) {
 				return target, hasError
 			} else {
 				messages.Complain(diagnostic.CastError, ast.Location, "Typecasting from %s to %s not allowed", lhs, target)
@@ -210,19 +199,19 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 		return target, hasError
 
 	} else if ast.Label == "index" {
-		// only supports one index until arrays added
-		if len(ast.Children) > 2 {
-			messages.Warn(ast.Location, "Multiple indexes not yet supported")
-		}
 		lhs, lHasErr := evalType(&ast.Children[0], datatypes.None)
 		rhs, rHasErr := evalType(&ast.Children[1], datatypes.None)
 		if lHasErr || rHasErr {
 			hasError = true
 		}
+		if lhs != datatypes.String {
+			messages.Complain(diagnostic.TypeError, ast.Children[0].Location, "Cannot index type %s", lhs.String())
+			hasError = true
+		}
 		if ast.Children[1].Label == "slice" {
 			nodeType = datatypes.String
 		} else {
-			if lhs != datatypes.String && (!slices.Contains(signedIntTypes, rhs) && !slices.Contains(unsignedTypes, rhs)) {
+			if lhs != datatypes.String && !slices.Contains(datatypes.IntTypes, rhs) {
 				messages.Complain(diagnostic.TypeError, ast.Location, "Cannot index String with %s type", rhs)
 				hasError = true
 			}
@@ -244,7 +233,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 			if hasErr {
 				hasError = hasErr
 			}
-			if !slices.Contains(signedIntTypes, operand) && !slices.Contains(unsignedTypes, operand) {
+			if !slices.Contains(datatypes.IntTypes, operand) {
 				messages.Complain(diagnostic.TypeError, expr.Location, "Invalid type %s used in range expression", operand)
 				hasError = true
 			} else {
@@ -255,25 +244,24 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 			rhs, rHasErr := evalType(&ast.Children[2], datatypes.None)
 			if lHasErr || rHasErr {
 				hasError = true
-			}
-			if (!slices.Contains(signedIntTypes, lhs) && !slices.Contains(unsignedTypes, lhs)) || (!slices.Contains(signedIntTypes, rhs) && !slices.Contains(unsignedTypes, rhs)) {
-				messages.Complain(diagnostic.TypeError, ast.Location, "Both sides of slice expression must be an int type; got %s and %s", lhs, rhs)
-				hasError = true
 			} else {
-				nodeType, err = decideNumberType(lhs, rhs, ast.Children[1].Token.Value)
-				if err != nil {
-					messages.Complain(diagnostic.TypeError, ast.Location, "%s", err.Error())
+				if !slices.Contains(datatypes.IntTypes, lhs) || !slices.Contains(datatypes.IntTypes, rhs) {
+					messages.Complain(diagnostic.TypeError, ast.Location, "Both sides of slice expression must be an int type; got %s and %s", lhs, rhs)
 					hasError = true
+				} else {
+					nodeType, err = decideNumberType(lhs, rhs, ast.Children[1].Token.Value)
+					if err != nil {
+						messages.Complain(diagnostic.TypeError, ast.Location, "%s", err.Error())
+						hasError = true
+					}
 				}
 			}
 		}
 
 	} else if ast.Label == "ARR-END" {
 		expr, hasErr := evalType(&ast.Children[0], datatypes.None)
-		if hasErr {
-			hasError = hasErr
-		}
-		if !slices.Contains(unsignedTypes, expr) && !slices.Contains(signedIntTypes, expr) {
+		hasError = hasError || hasErr
+		if !hasErr && !slices.Contains(datatypes.IntTypes, expr) {
 			messages.Complain(diagnostic.TypeError, ast.Location, "Cannot use %s as array end value", expr)
 			hasError = true
 		} else {
@@ -282,102 +270,24 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 	} else if ast.Label == "call" {
 		hasErr := false
 		nodeType, hasErr = handleFunctionCall(ast.Children)
-		if hasErr {
-			hasError = hasErr
-		}
+		hasError = hasError || hasErr
 	} else if ast.Token.Kind == lexer.OPERATOR_ADD {
-		lhs, lHasErr := evalType(&ast.Children[0], datatypes.None)
-		rhs, rHasErr := evalType(&ast.Children[1], datatypes.None)
-		if lHasErr || rHasErr {
-			hasError = true
-		}
-		if (lhs == datatypes.String || lhs == datatypes.Char) && (rhs == datatypes.String || rhs == datatypes.Char) {
-			nodeType = datatypes.String
-		} else if slices.Contains(numericTypes, lhs) && slices.Contains(numericTypes, rhs) {
-			if lhs == rhs {
-				nodeType = lhs
-			} else {
-				nodeType, err = decideNumberType(lhs, rhs, ast.Token.Value)
-				if err != nil {
-					messages.Complain(diagnostic.TypeError, ast.Location, "%s", err.Error())
-					hasError = true
-				}
-			}
-		} else {
-			messages.Complain(diagnostic.TypeError, ast.Location, "Cannot use operator '%s' between %s and %s", ast.Token.Value, lhs, rhs)
-			hasError = true
-		}
+		nodeType, hasErr = evalAdd(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
+		hasError = hasError || hasErr
 	} else if ast.Token.Kind == lexer.OPERATOR_MULT {
-		lhs, lHasErr := evalType(&ast.Children[0], datatypes.None)
-		rhs, rHasErr := evalType(&ast.Children[1], datatypes.None)
-		if lHasErr || rHasErr {
-			hasError = true
-		}
-		if !slices.Contains(numericTypes, lhs) || !slices.Contains(numericTypes, rhs) {
-			messages.Complain(diagnostic.TypeError, ast.Location, "Cannot use operator '%s' between %s and %s", ast.Token.Value, lhs, rhs)
-			hasError = true
-		} else {
-			nodeType, err = decideNumberType(lhs, rhs, ast.Token.Value)
-			if err != nil {
-				messages.Complain(diagnostic.TypeError, ast.Location, "%s", err.Error())
-				hasError = true
-			}
-		}
+		nodeType, hasErr = evalMult(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
+		hasError = hasError || hasErr
 	} else if ast.Token.Kind == lexer.OPERATOR_BS || ast.Token.Kind == lexer.OPERATOR_BW {
-		lhs, lHasErr := evalType(&ast.Children[0], datatypes.None)
-		rhs, rHasErr := evalType(&ast.Children[1], datatypes.None)
-		if lHasErr || rHasErr {
-			hasError = true
-		}
-		if (lhs == datatypes.Uint32 || lhs == datatypes.Uint64) && (rhs == datatypes.Uint32 || rhs == datatypes.Uint64) ||
-			(lhs == datatypes.Int32 || lhs == datatypes.Int64) && (rhs == datatypes.Int32 || rhs == datatypes.Int64) {
-			nodeType, _ = decideNumberType(lhs, rhs, ast.Token.Value)
-		} else {
-			messages.Complain(diagnostic.TypeError, ast.Location, "Cannot use operator '%s' between %s and %s", ast.Token.Value, lhs, rhs)
-			hasError = true
-		}
+		nodeType, hasErr = evalBitOperation(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
+		hasError = hasError || hasErr
 	} else if ast.Token.Kind == lexer.OPERATOR_COMPARE {
-		lhs, lHasErr := evalType(&ast.Children[0], datatypes.None)
-		rhs, rHasErr := evalType(&ast.Children[1], datatypes.None)
-		if lHasErr || rHasErr {
-			hasError = true
-		}
-		if !comparableCheck(lhs, rhs) {
-			messages.Complain(diagnostic.TypeError, ast.Location, "Invalid comparison between %s and %s", lhs, rhs)
-			hasError = true
-		} else {
-			if lhs == rhs && !lhs.IsPrimitive() && ast.Token.Value != "==" && ast.Token.Value != "!=" {
-				str := globalScope.lookupStruct(lhs.String())
-				if str == nil {
-					messages.Complain(diagnostic.NameError, ast.Location, "Cannot find struct definition for %s", lhs.String())
-				} else {
-					operator := ast.Token.Value
-					compareBlock := str.innerScope.lookupNamedBlock("compare")
-					if compareBlock == nil {
-						messages.Complain(diagnostic.TypeError, ast.Location, "Cannot compare %s using operator '%s'. To support this comparison add a compare block with the appropriate functions", lhs, operator)
-					} else {
-						switch operator {
-						case "<", "<=":
-							if symbol := compareBlock.innerScope.lookupFunctionByName("lessThan"); symbol == nil || symbol.returnType != datatypes.Bool {
-								messages.Complain(diagnostic.TypeError, ast.Location, "Unsupported comparison. To support operators '<' and '<=', add function 'fn lessThan(%s)->bool' to compare block in %s definition", lhs, lhs)
-								hasError = true
-							}
-						case ">", ">=":
-							if symbol := compareBlock.innerScope.lookupFunctionByName("greaterThan"); symbol == nil || symbol.returnType != datatypes.Bool {
-								messages.Complain(diagnostic.TypeError, ast.Location, "Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(%s)->bool' to compare block in %s definition", lhs, lhs)
-								hasError = true
-							}
-						}
-					}
-				}
-			}
-			nodeType = datatypes.Bool
-		}
+		nodeType, hasErr = evalCompare(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
+		hasError = hasError || hasErr
 	} else if ast.Token.Value == "&&" || ast.Token.Value == "||" {
-		lhs, lHasErr := evalType(&ast.Children[0], datatypes.None)
-		rhs, rHasErr := evalType(&ast.Children[1], datatypes.None)
+		lhs, lHasErr := evalType(&ast.Children[0], expectedType)
+		rhs, rHasErr := evalType(&ast.Children[1], expectedType)
 		if lHasErr || rHasErr {
-			hasError = true
+			return datatypes.None, true
 		}
 		if lhs != datatypes.Bool || rhs != datatypes.Bool {
 			messages.Complain(diagnostic.TypeError, ast.Location, "Cannot use operator '%s' between %s and %s", ast.Token.Value, lhs, rhs)
@@ -386,17 +296,17 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 			nodeType = datatypes.Bool
 		}
 	} else if ast.Token.Value == "**" {
-		base, baseHasErr := evalType(&ast.Children[0], datatypes.None)
-		expo, expoHasErr := evalType(&ast.Children[1], datatypes.None)
+		base, baseHasErr := evalType(&ast.Children[0], expectedType)
+		expo, expoHasErr := evalType(&ast.Children[1], expectedType)
 		if baseHasErr || expoHasErr {
-			hasError = true
+			return datatypes.None, true
 		}
-		if !slices.Contains(numericTypes, base) || !slices.Contains(numericTypes, expo) {
+		if !slices.Contains(datatypes.NumericTypes, base) || !slices.Contains(datatypes.NumericTypes, expo) {
 			messages.Complain(diagnostic.TypeError, ast.Location, "Cannot use exponent with types %s and %s", base, expo)
 			hasError = true
 		} else {
 			// determine type
-			if slices.Contains(floatTypes, expo) {
+			if slices.Contains(datatypes.FloatTypes, expo) {
 				nodeType = expo
 			} else {
 				nodeType = base
@@ -413,11 +323,115 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 	return nodeType, hasError
 }
 
+func evalAdd(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+	hasError := false
+	lhs, lHasErr := evalType(left, expectedType)
+	rhs, rHasErr := evalType(right, expectedType)
+	if lHasErr || rHasErr {
+		return datatypes.None, true
+	}
+	if (lhs == datatypes.String || lhs == datatypes.Char) && (rhs == datatypes.String || rhs == datatypes.Char) {
+		return datatypes.String, hasError
+	} else if slices.Contains(datatypes.NumericTypes, lhs) && slices.Contains(datatypes.NumericTypes, rhs) {
+		if lhs == rhs {
+			return lhs, hasError
+		} else {
+			nodeType, err := decideNumberType(lhs, rhs, operator.Value)
+			if err != nil {
+				messages.Complain(diagnostic.TypeError, operator.Location, "%s", err.Error())
+				hasError = true
+			} else {
+				return nodeType, hasError
+			}
+		}
+	} else {
+		messages.Complain(diagnostic.TypeError, operator.Location, "Cannot use operator '%s' between %s and %s", operator.Value, lhs, rhs)
+		hasError = true
+	}
+	return datatypes.None, hasError
+}
+
+func evalMult(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+	hasError := false
+	lhs, lHasErr := evalType(left, expectedType)
+	rhs, rHasErr := evalType(right, expectedType)
+	if lHasErr || rHasErr {
+		return datatypes.None, true
+	}
+	if !slices.Contains(datatypes.NumericTypes, lhs) || !slices.Contains(datatypes.NumericTypes, rhs) {
+		messages.Complain(diagnostic.TypeError, operator.Location, "Cannot use operator '%s' between %s and %s", operator.Value, lhs, rhs)
+		hasError = true
+	} else {
+		nodeType, err := decideNumberType(lhs, rhs, operator.Value)
+		if err != nil {
+			messages.Complain(diagnostic.TypeError, operator.Location, "%s", err.Error())
+			hasError = true
+		} else {
+			return nodeType, hasError
+		}
+	}
+	return datatypes.None, hasError
+}
+
+func evalBitOperation(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+	hasError := false
+	lhs, lHasErr := evalType(left, expectedType)
+	rhs, rHasErr := evalType(right, expectedType)
+	if lHasErr || rHasErr {
+		return datatypes.None, true
+	}
+	if (lhs == datatypes.Uint32 || lhs == datatypes.Uint64) && (rhs == datatypes.Uint32 || rhs == datatypes.Uint64) ||
+		(lhs == datatypes.Int32 || lhs == datatypes.Int64) && (rhs == datatypes.Int32 || rhs == datatypes.Int64) {
+		nodeType, _ := decideNumberType(lhs, rhs, operator.Value)
+		return nodeType, hasError
+	}
+	messages.Complain(diagnostic.TypeError, operator.Location, "Cannot use operator '%s' between %s and %s", operator.Value, lhs, rhs)
+	return datatypes.None, true
+}
+
+func evalCompare(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+	hasError := false
+	lhs, lHasErr := evalType(left, expectedType)
+	rhs, rHasErr := evalType(right, expectedType)
+	if lHasErr || rHasErr {
+		return datatypes.None, true
+	}
+	if !comparableCheck(lhs, rhs) {
+		messages.Complain(diagnostic.TypeError, operator.Location, "Invalid comparison between %s and %s", lhs, rhs)
+		return datatypes.None, true
+	}
+	if lhs == rhs && !lhs.IsPrimitive() && operator.Value != "==" && operator.Value != "!=" {
+		str := globalScope.lookupStruct(lhs.String())
+		if str == nil {
+			messages.Complain(diagnostic.NameError, operator.Location, "Cannot find struct definition for %s", lhs.String())
+		} else {
+			compareBlock := str.innerScope.lookupNamedBlock("compare")
+			if compareBlock == nil {
+				messages.Complain(diagnostic.TypeError, operator.Location, "Cannot compare %s using operator '%s'. To support this comparison add a compare block with the appropriate functions", lhs, operator.Value)
+			} else {
+				switch operator.Value {
+				case "<", "<=":
+					if symbol := compareBlock.innerScope.lookupFunctionByName("lessThan"); symbol == nil || symbol.returnType != datatypes.Bool {
+						messages.Complain(diagnostic.TypeError, operator.Location, "Unsupported comparison. To support operators '<' and '<=', add function 'fn lessThan(%s)->bool' to compare block in %s definition", lhs, lhs)
+						hasError = true
+					}
+				case ">", ">=":
+					if symbol := compareBlock.innerScope.lookupFunctionByName("greaterThan"); symbol == nil || symbol.returnType != datatypes.Bool {
+						messages.Complain(diagnostic.TypeError, operator.Location, "Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(%s)->bool' to compare block in %s definition", lhs, lhs)
+						hasError = true
+					}
+				}
+			}
+		}
+	}
+	return datatypes.Bool, hasError
+}
+
 func comparableCheck(lhs datatypes.DataType, rhs datatypes.DataType) bool {
-	lhsUnsigned := slices.Contains(unsignedTypes, lhs)
-	rhsUnsigned := slices.Contains(unsignedTypes, rhs)
-	lhsSigned := slices.Contains(signedIntTypes, lhs) || slices.Contains(floatTypes, lhs)
-	rhsSigned := slices.Contains(signedIntTypes, rhs) || slices.Contains(floatTypes, rhs)
+	lhsUnsigned := slices.Contains(datatypes.UnsignedTypes, lhs)
+	rhsUnsigned := slices.Contains(datatypes.UnsignedTypes, rhs)
+	lhsSigned := slices.Contains(datatypes.SignedIntTypes, lhs) || slices.Contains(datatypes.FloatTypes, lhs)
+	rhsSigned := slices.Contains(datatypes.SignedIntTypes, rhs) || slices.Contains(datatypes.FloatTypes, rhs)
 
 	return lhs == rhs || (lhsUnsigned && rhsUnsigned) || (lhsSigned && rhsSigned)
 }
@@ -451,7 +465,6 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 			hasError = hasErr
 		}
 		if lhs.IsScopeRef() {
-			fmt.Println("Details:", details)
 			scopes := lhs.GetScopes()
 			if len(scopes) < 2 {
 				messages.Complain(diagnostic.ReferenceError, details[0].Location, "Could not find reference value")
@@ -482,11 +495,16 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 				if conflicts := symbol.getConflicts(name.Value); len(conflicts) > 1 {
 					messages.Complain(diagnostic.AmbiguityError, name.Location, "Interfaces %s both contain function named %s. Change the function call to pick which one to use", strings.Join(conflicts, ","), name.Value)
 					return datatypes.None, true
+				} else if len(conflicts) == 1 {
+					if nb := scope.lookupNamedBlock(conflicts[0]); nb != nil {
+						scope = nb.innerScope
+					} else {
+						messages.Complain(diagnostic.NameError, details[0].Location, "Could not find function %s", name.Value)
+						hasError = true
+					}
 				}
 			}
 		}
-		// TODO: handle named block functions
-
 	} else {
 		name = details[0].Token
 	}
@@ -546,12 +564,7 @@ func handleDot(left parser.AST, right parser.AST, isFnCall bool) (datatypes.Data
 			messages.Complain(diagnostic.NameError, left.Location, "Could not find type %s", lhs)
 			hasError = true
 		} else {
-			var scope *Scope
-			if privateBlock := symbol.getNamedBlockIfExists("private"); privateBlock != nil {
-				scope = privateBlock.innerScope
-			} else {
-				scope = symbol.getInnerScope()
-			}
+			scope := symbol.getInnerScope()
 			if prop := scope.lookupVariable(rname); prop != nil {
 				if prop.isPrivate && !currentScope.HasParentScope(symbol.getInnerScope()) {
 					messages.Complain(diagnostic.AccessError, right.Location, "Cannot access private property from outside struct definition")

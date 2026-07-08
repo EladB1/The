@@ -179,6 +179,8 @@ func (state *lexerState) lexLine(line string) {
 			}
 		case '^':
 			state.buildAndAppendTokenFromByte(OPERATOR_BW, curr)
+		case '~':
+			state.buildAndAppendTokenFromByte(OPERATOR_UNARY, curr)
 		case '"', '\'':
 			state.tokenizeQuotes(line)
 		default:

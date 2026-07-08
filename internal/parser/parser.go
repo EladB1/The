@@ -143,7 +143,7 @@ func checkVariableDeclaration() bool {
 }
 
 func checkExpressionStart() bool {
-	return isLiteral() || checkKind(lexer.OPERATOR_UNARY) || checkKind(lexer.ID) || checkValue("(") || (checkKind(lexer.LIT_STRING) && checkValueAhead(".", 1))
+	return isLiteral() || checkKind(lexer.OPERATOR_ADD) || checkKind(lexer.OPERATOR_UNARY) || checkKind(lexer.ID) || checkValue("(") || (checkKind(lexer.LIT_STRING) && checkValueAhead(".", 1))
 }
 
 /*
@@ -651,40 +651,21 @@ func parseLogicalOr() AST {
 }
 
 /*
- * logical_and = logical_not { "&&" logical_not } ;
+ * logical_and = comparison { "&&" comparison } ;
  */
 func parseLogicalAnd() AST {
 	//fmt.Println("In logical and with:", peek())
 	var operand AST
-	ast := parseLogicalNot()
+	ast := parseComparison()
 	for checkValue("&&") {
 		operand = ast
 		ast = nodeFromToken(consume())
-		ast.AddChildren(operand, parseLogicalNot())
+		ast.AddChildren(operand, parseComparison())
 	}
 	if checkValue("&&") {
 		state.addError("Expected operand but got %s", peek().GetValueString())
 	}
 	return ast
-}
-
-/*
- * logical_not = [ "!" ] comparison ;
- */
-func parseLogicalNot() AST {
-	//fmt.Println("In logical not with:", peek())
-	ast := AST{}
-	hasNot := false
-	if checkValue("!") {
-		ast = nodeFromToken(consume())
-		hasNot = true
-	}
-	compare := parseComparison()
-	if hasNot {
-		ast.AddChildren(compare)
-		return ast
-	}
-	return compare
 }
 
 /*
@@ -807,7 +788,7 @@ func parseUnary() AST {
 }
 
 /*
- * left_unary = [ "-" | "~" | right_unary_operators ] typecast ;
+ * left_unary = [ "-" | "~" | "!" | right_unary_operators ] typecast ;
  */
 func parseLeftUnary() AST {
 	//fmt.Println("In left unary with:", peek())

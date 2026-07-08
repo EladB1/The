@@ -2,6 +2,7 @@ package datatypes
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 )
 
@@ -115,3 +116,12 @@ func Join(types []DataType) string {
 	}
 	return paramStr.String()
 }
+
+var (
+	UnsignedTypes  []DataType = []DataType{Uint32, Uint64}
+	SignedIntTypes []DataType = []DataType{Int32, Int64}
+	IntTypes       []DataType = slices.Concat(UnsignedTypes, SignedIntTypes)
+	FloatTypes     []DataType = []DataType{Float, Double}
+	SignedTypes    []DataType = slices.Concat(SignedIntTypes, FloatTypes)
+	NumericTypes   []DataType = slices.Concat(UnsignedTypes, SignedTypes)
+)
