@@ -527,7 +527,7 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 		}
 	}
 	paramList := datatypes.Join(params)
-	if fn, ok := symbol.overloads[paramList]; ok {
+	if fn := symbol.getMatchingOverload(params); fn != nil {
 		if fn.isPrivate {
 			messages.Complain(diagnostic.AccessError, details[0].Location, "Cannot access private function '%s' from outside struct definition", name.Value)
 			hasError = true

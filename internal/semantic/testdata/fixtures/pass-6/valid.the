@@ -19,7 +19,7 @@ String greet = "hello, world!";
 String copy = greet[..];
 String slice1 = greet[..5];
 String slice2 = greet[5..];
-String end = greet[^1];
+char end = greet[^1];
 String slice3 = greet[^3 ..= ^1];
 float expo = 2 ** 32;
 // functions

@@ -2,6 +2,7 @@ package semantic
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/EladB1/The/internal/datatypes"
@@ -18,7 +19,7 @@ type (
 	FunctionSymbol struct {
 		name       string
 		returnType datatypes.DataType
-		overloads  map[string]FnOverloadSymbol
+		overloads  []FnOverloadSymbol
 	}
 	FnOverloadSymbol struct {
 		parameters               []datatypes.DataType
@@ -126,12 +127,12 @@ func (str StructSymbol) String() string {
 
 func (fn FunctionSymbol) String() string {
 	overloads := strings.Builder{}
-	for key, symbol := range fn.overloads {
+	for _, symbol := range fn.overloads {
 		priv := ""
 		if symbol.isPrivate {
 			priv = ", isPrivate: true"
 		}
-		overloads.WriteString(fmt.Sprintf("{parameters: (%s)%s, implemented: %v}", key, priv, symbol.hasDefaultImplementation))
+		overloads.WriteString(fmt.Sprintf("{parameters: (%s)%s, implemented: %v}", datatypes.Join(symbol.parameters), priv, symbol.hasDefaultImplementation))
 	}
 	return fmt.Sprintf("{name: %s, returns: %s, overloads: [%s]}", fn.name, fn.returnType, overloads.String())
 }
@@ -168,4 +169,36 @@ func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
 		Body:                     symbol.Body,
 		innerScope:               symbol.innerScope,
 	}
+}
+
+func (fn FunctionSymbol) getMatchingOverload(params []datatypes.DataType) *FnOverloadSymbol {
+	count := len(params)
+	for _, overload := range fn.overloads {
+		matches := false
+		if count == len(overload.parameters) {
+			for i := range count {
+				param := overload.parameters[i]
+				isImplementor := false
+				if !param.IsPrimitive() && !params[i].IsPrimitive() && params[i] != param {
+					if intf := globalScope.lookupInterface(param.String()); intf != nil {
+						if str := globalScope.lookupStruct(params[i].String()); str != nil {
+							if slices.Contains(str.implements, param.String()) {
+								isImplementor = true
+							}
+						}
+					}
+				}
+				if params[i] == param || param == datatypes.Any || isImplementor {
+					matches = true
+				} else {
+					matches = false
+				}
+			}
+		}
+		if matches {
+			return &overload
+		}
+	}
+	return nil
+
 }

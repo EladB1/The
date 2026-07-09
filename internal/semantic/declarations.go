@@ -63,7 +63,7 @@ func processFunctionSignature(fnNode parser.AST) FnCreateSymbol {
 		if currentScope.id != "@global" {
 			scopeId = fmt.Sprintf("%s@%s", name, currentScope.id)
 		}
-		newScope = currentScope.addChild(scopeId)
+		newScope = currentScope.addChild(scopeId, Function)
 		for i := range len(paramNames) {
 			newScope.variables[paramNames[i]] = VariableSymbol{
 				name: paramNames[i],
@@ -83,17 +83,61 @@ func processFunctionSignature(fnNode parser.AST) FnCreateSymbol {
 }
 
 func analyzeFunctionBody(fn FunctionSymbol) {
-	// scope := currentScope
-	// currentScope = fn.innerScope
-	// for _, node := range fn.Body.Children {
-	// 	if node.Label == "Variable" {
-	// 		symbol := analyzeVariable(node)
-	// 		if symbol != nil {
-	// 			currentScope.variables[symbol.name] = *symbol
-	// 		}
-	// 	}
-	// }
-	// currentScope = scope
+	scope := currentScope
+	for _, overload := range fn.overloads {
+		returnStr := ""
+		if fn.returnType != datatypes.None {
+			returnStr = fmt.Sprintf("->%s", fn.returnType)
+		}
+		params := datatypes.Join(overload.parameters)
+		sig := fmt.Sprintf("%s(%s)%s", fn.name, params, returnStr)
+		if !overload.hasDefaultImplementation {
+			continue
+		}
+		currentScope = overload.innerScope
+		length := len(overload.Body.Children)
+		for i, stmt := range overload.Body.Children {
+			if stmt.Label == "Variable" {
+				symbol := analyzeVariable(stmt)
+				if symbol != nil {
+					currentScope.variables[symbol.name] = *symbol
+				}
+			} else if stmt.Token.Kind == lexer.OPERATOR_ASSIGN {
+				// TODO
+			} else if stmt.Label == "control-flow" {
+				if i != length-1 {
+					messages.Warn(stmt.Location, "Unreachable code found after statement")
+				}
+				// TODO: continue and break
+				if len(stmt.Children) == 1 && stmt.Children[0].Token.Value == "return" {
+					if fn.returnType != datatypes.None {
+						messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' missing return value, expected: %s", sig, fn.returnType)
+
+					} else {
+						stmt.Type = datatypes.None
+					}
+				} else if len(stmt.Children) == 1 { // continue and break
+
+				} else { // return something
+					rhs, rHasErr := evalType(&stmt.Children[1], fn.returnType)
+					if !rHasErr && rhs != fn.returnType {
+						messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' expected return type %s but got %s", sig, fn.returnType, rhs)
+					} else {
+						stmt.Type = rhs
+					}
+				}
+			} else if stmt.Label == "if-block" {
+
+			} else if stmt.Label == "for" {
+
+			} else if stmt.Label == "while" {
+
+			} else {
+				stmt.Type, _ = evalType(&stmt, datatypes.None) // expressions
+			}
+		}
+	}
+	currentScope = scope
 }
 
 func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *NamedBlockSymbol {
@@ -107,7 +151,7 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 	scope := currentScope
 	var newScope *Scope = nil
 	if name != "private" {
-		newScope = currentScope.addChild(fmt.Sprintf("%s@%s", name, currentScope.id))
+		newScope = currentScope.addChild(fmt.Sprintf("%s@%s", name, currentScope.id), NamedBlock)
 		currentScope = newScope
 	}
 	for _, node := range body {

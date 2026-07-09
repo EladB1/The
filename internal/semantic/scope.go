@@ -7,8 +7,21 @@ import (
 	"github.com/EladB1/The/internal/datatypes"
 )
 
+type ScopeType int
+
+const (
+	Default ScopeType = iota
+	Interface
+	Struct
+	NamedBlock
+	Function
+	Loop
+	Branch
+)
+
 type Scope struct {
 	id          string
+	kind        ScopeType
 	parent      *Scope
 	children    []*Scope
 	functions   FunctionSymbolTable
@@ -18,9 +31,10 @@ type Scope struct {
 	namedBlocks NamedBlockSymbolTable
 }
 
-func (scope *Scope) addChild(id string) *Scope {
+func (scope *Scope) addChild(id string, kind ScopeType) *Scope {
 	newScope := Scope{
 		id:          id,
+		kind:        kind,
 		parent:      scope,
 		functions:   FunctionSymbolTable{},
 		variables:   VariableSymbolTable{},
@@ -42,6 +56,9 @@ func (scope *Scope) to_string(indentLevel int) string {
 	builder.WriteString(prefix)
 	builder.WriteString("Scope: { id: ")
 	builder.WriteString(scope.id)
+	if scope.kind != Default {
+		builder.WriteString(fmt.Sprintf(", type: %v", scope.kind))
+	}
 	if scope.parent != nil {
 		builder.WriteString(", parent: ")
 		builder.WriteString(scope.parent.id)
@@ -81,8 +98,22 @@ func (scope *Scope) HasParentScope(other *Scope) bool {
 		return true
 	}
 	curr := scope
-	for curr != &rootScope {
+	for curr != rootScope {
 		if curr.id == other.id {
+			return true
+		}
+		curr = curr.parent
+	}
+	return false
+}
+
+func (scope *Scope) HasScopeTypeAncestor(sType ScopeType) bool {
+	if scope.kind == sType {
+		return true
+	}
+	curr := scope
+	for curr != rootScope {
+		if curr.kind == sType {
 			return true
 		}
 		curr = curr.parent
@@ -170,6 +201,7 @@ func (scope *Scope) lookupFunctionsByReturnType(returnType datatypes.DataType) [
 func (scope *Scope) lookupFunctionByName(name string) *FunctionSymbol {
 	curr := scope
 	for curr != nil {
+		fmt.Println(curr.id)
 		if fn, ok := curr.functions[name]; ok {
 			return &fn
 		}
@@ -187,20 +219,17 @@ func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
 			}
 			return fmt.Errorf("Function name '%s' can only be overloaded with return type %s. Found: %s", symbol.name, fn.returnType, symbol.returnType)
 		}
-		params := datatypes.Join(symbol.parameters)
-		if _, ok := fn.overloads[params]; ok {
+		if fn.getMatchingOverload(symbol.parameters) != nil {
 			return fmt.Errorf("Function with signature '%s' cannot be redefined", symbol.getSignature())
 		} else {
-			fn.overloads[params] = symbol.toOverload()
+			fn.overloads = append(fn.overloads, symbol.toOverload())
+			table[fn.name] = fn
 		}
 	} else {
-		params := datatypes.Join(symbol.parameters)
 		table[symbol.name] = FunctionSymbol{
 			name:       symbol.name,
 			returnType: symbol.returnType,
-			overloads: map[string]FnOverloadSymbol{
-				params: symbol.toOverload(),
-			},
+			overloads:  []FnOverloadSymbol{symbol.toOverload()},
 		}
 	}
 	return nil

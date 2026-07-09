@@ -14,7 +14,7 @@ var specialBlocks []string = []string{"private", "cast", "compare"}
 var messages diagnostic.PhaseDiagnostics
 
 func initScope() *Scope {
-	globalScope := rootScope.addChild("@global")
+	globalScope := rootScope.addChild("@global", Default)
 	return globalScope
 }
 
@@ -38,7 +38,7 @@ func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
 	collectFunctionSignatures(ast)
 	analyzeInterfaceImplementation()
 	analyzeGlobals(ast)
-
+	analyzeInterfaceFnBodies()
 	// TODO: Uncomment code below when ready
 	// missingEntry := false
 	// if fn := globalScope.lookupFunction("main"); fn != nil {
@@ -74,14 +74,14 @@ func collectTypeNames(ast parser.AST) {
 				messages.Complain(diagnostic.NameError, node.Location, "Cannot name interface '%s'", name)
 				continue
 			}
-			childScope := globalScope.addChild(name)
+			childScope := globalScope.addChild(name, Interface)
 			globalScope.interfaces[name] = InterfaceSymbol{
 				name:       name,
 				innerScope: childScope,
 				Def:        &node,
 			}
 		} else if node.Token.Value == "struct" {
-			childScope := globalScope.addChild(name)
+			childScope := globalScope.addChild(name, Struct)
 			childScope.variables["this"] = VariableSymbol{
 				name:        "this",
 				Type:        datatypes.Ref,
@@ -225,24 +225,25 @@ func analyzeInterfaceImplementation() {
 						messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Implementation function %s returns %s but interface %s returns %s", fn.name, nb_fn.returnType, intfName, fn.returnType)
 						continue
 					}
-					for paramList, overload := range fn.overloads {
+					for i, overload := range fn.overloads {
+						params := datatypes.Join(overload.parameters)
 						if missing {
 							if overload.hasDefaultImplementation {
-								nb_fn.overloads[paramList] = overload
+								nb_fn.overloads[i].parameters = overload.parameters
 								namedBlock.innerScope.functions[fn.name] = *nb_fn
 							} else {
-								messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Interface %s implementation missing 'fn %s(%s)%s'", intfName, fn.name, paramList, returnStr)
+								messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Interface %s implementation missing 'fn %s(%s)%s'", intfName, fn.name, params, returnStr)
 							}
 						} else {
-							_, ok := nb_fn.overloads[paramList]
+							match := nb_fn.getMatchingOverload(overload.parameters)
 							if overload.hasDefaultImplementation {
-								if !ok {
-									nb_fn.overloads[paramList] = overload
+								if match == nil {
+									nb_fn.overloads[i].parameters = overload.parameters
 									namedBlock.innerScope.functions[nb_fn.name] = *nb_fn
 								}
 							} else {
-								if !ok {
-									messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Interface %s implementation missing 'fn %s(%s)%s'", intfName, fn.name, paramList, returnStr)
+								if match == nil {
+									messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Interface %s implementation missing 'fn %s(%s)%s'", intfName, fn.name, params, returnStr)
 								}
 							}
 						}
@@ -258,9 +259,9 @@ func analyzeInterfaceImplementation() {
 						messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Named block %s contains function %s which its interface does not", intfName, fn.name)
 						continue
 					}
-					for paramList := range fn.overloads {
-						if _, ok := intf_fn.overloads[paramList]; !ok {
-							messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Named block %s contains function %s(%s)%s which its interface does not", intfName, fn.name, paramList, returnStr)
+					for _, overload := range fn.overloads {
+						if match := intf_fn.getMatchingOverload(overload.parameters); match == nil {
+							messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Named block %s contains function %s(%s)%s which its interface does not", intfName, fn.name, datatypes.Join(overload.parameters), returnStr)
 						}
 					}
 				}
@@ -293,9 +294,6 @@ func analyzeGlobals(ast parser.AST) {
 func analyzeInterfaceFnBodies() {
 	for _, intf := range globalScope.interfaces {
 		for _, fn := range intf.innerScope.functions {
-			// if !fn.hasDefaultImplementation {
-			// 	continue
-			// }
 			analyzeFunctionBody(fn)
 		}
 	}

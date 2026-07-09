@@ -2,8 +2,9 @@ package semantic
 
 import "github.com/EladB1/The/internal/datatypes"
 
-var rootScope Scope = Scope{
+var rootScope *Scope = &Scope{
 	id:          "@built-in",
+	kind:        Default,
 	parent:      nil,
 	interfaces:  InterfaceSymbolTable{},
 	structs:     StructSymbolTable{},
@@ -11,29 +12,23 @@ var rootScope Scope = Scope{
 	functions: FunctionSymbolTable{
 		"print": FunctionSymbol{
 			name: "print",
-			overloads: map[string]FnOverloadSymbol{
-				datatypes.Any.String(): {
-					parameters: []datatypes.DataType{datatypes.Any},
-				},
-			},
+			overloads: []FnOverloadSymbol{{
+				parameters: []datatypes.DataType{datatypes.Any},
+			}},
 			returnType: datatypes.None,
 		},
 		"println": FunctionSymbol{
 			name: "println",
-			overloads: map[string]FnOverloadSymbol{
-				datatypes.Any.String(): {
-					parameters: []datatypes.DataType{datatypes.Any},
-				},
-			},
+			overloads: []FnOverloadSymbol{{
+				parameters: []datatypes.DataType{datatypes.Any},
+			}},
 			returnType: datatypes.None,
 		},
 		"printerr": FunctionSymbol{
 			name: "printerr",
-			overloads: map[string]FnOverloadSymbol{
-				datatypes.Any.String(): {
-					parameters: []datatypes.DataType{datatypes.Any},
-				},
-			},
+			overloads: []FnOverloadSymbol{{
+				parameters: []datatypes.DataType{datatypes.Any},
+			}},
 			returnType: datatypes.None,
 		},
 	},
