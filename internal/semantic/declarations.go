@@ -11,10 +11,19 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
+var (
+	ifBlockCounter int
+	whileCounter   int
+	forCounter     int
+)
+
 func processFunctionSignature(fnNode parser.AST) FnCreateSymbol {
 	details := fnNode.Children
 	length := len(details)
 	name := details[0].Token.Value
+	ifBlockCounter = 0
+	whileCounter = 0
+	forCounter = 0
 	var paramNode *parser.AST = nil
 	var returnTypeNode *parser.AST = nil
 	var bodyNode *parser.AST = nil
@@ -85,59 +94,169 @@ func processFunctionSignature(fnNode parser.AST) FnCreateSymbol {
 func analyzeFunctionBody(fn FunctionSymbol) {
 	scope := currentScope
 	for _, overload := range fn.overloads {
-		returnStr := ""
-		if fn.returnType != datatypes.None {
-			returnStr = fmt.Sprintf("->%s", fn.returnType)
-		}
-		params := datatypes.Join(overload.parameters)
-		sig := fmt.Sprintf("%s(%s)%s", fn.name, params, returnStr)
 		if !overload.hasDefaultImplementation {
 			continue
 		}
 		currentScope = overload.innerScope
-		length := len(overload.Body.Children)
-		for i, stmt := range overload.Body.Children {
-			if stmt.Label == "Variable" {
-				symbol := analyzeVariable(stmt)
-				if symbol != nil {
-					currentScope.variables[symbol.name] = *symbol
-				}
-			} else if stmt.Token.Kind == lexer.OPERATOR_ASSIGN {
-				// TODO
-			} else if stmt.Label == "control-flow" {
-				if i != length-1 {
-					messages.Warn(stmt.Location, "Unreachable code found after statement")
-				}
-				// TODO: continue and break
-				if len(stmt.Children) == 1 && stmt.Children[0].Token.Value == "return" {
-					if fn.returnType != datatypes.None {
-						messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' missing return value, expected: %s", sig, fn.returnType)
-
-					} else {
-						stmt.Type = datatypes.None
-					}
-				} else if len(stmt.Children) == 1 { // continue and break
-
-				} else { // return something
-					rhs, rHasErr := evalType(&stmt.Children[1], fn.returnType)
-					if !rHasErr && rhs != fn.returnType {
-						messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' expected return type %s but got %s", sig, fn.returnType, rhs)
-					} else {
-						stmt.Type = rhs
-					}
-				}
-			} else if stmt.Label == "if-block" {
-
-			} else if stmt.Label == "for" {
-
-			} else if stmt.Label == "while" {
-
-			} else {
-				stmt.Type, _ = evalType(&stmt, datatypes.None) // expressions
-			}
+		params := datatypes.Join(overload.parameters)
+		returnStr := ""
+		if fn.returnType != datatypes.None {
+			returnStr = fmt.Sprintf("->%s", fn.returnType)
+		}
+		sig := fmt.Sprintf("%s(%s)%s", fn.name, params, returnStr)
+		hasReturn := analyzeBlockAndCheckForReturn(overload.Body.Children, fn, sig)
+		if !hasReturn && fn.returnType != datatypes.None {
+			messages.Complain(diagnostic.TypeError, overload.Body.Location, "Function '%s' may not return a value", sig)
 		}
 	}
 	currentScope = scope
+}
+
+func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig string) bool {
+	hasValidReturn := false
+	length := len(body)
+	for i, stmt := range body {
+		if stmt.Label == "Variable" {
+			symbol := analyzeVariable(stmt)
+			if symbol != nil {
+				if symbol.isPrivate {
+					messages.Complain(diagnostic.IllegalStatementError, stmt.Location, "Cannot set private variable in function body")
+				} else {
+					currentScope.variables[symbol.name] = *symbol
+				}
+			}
+		} else if stmt.Token.Kind == lexer.OPERATOR_ASSIGN {
+			left := stmt.Children[0]
+			symbol := currentScope.lookupVariable(left.Token.Value)
+			if !symbol.isMutable {
+				messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", left.Token.Value)
+				continue
+			}
+			if symbol == nil {
+				messages.Complain(diagnostic.NameError, left.Location, "Variable '%s' is not defined in this scope", left.Token.Value)
+				continue
+			}
+			rhs, hasError := evalType(&stmt.Children[1], symbol.Type)
+			if hasError {
+				continue
+			}
+			stmt.Children[0].Type = symbol.Type
+			operator := stmt.Token.Value
+			switch operator {
+			case "+=":
+				if symbol.Type == datatypes.String {
+					if rhs != datatypes.Char && rhs != datatypes.String {
+						messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot concatenate %s to String", rhs.String())
+					}
+				} else if slices.Contains(datatypes.NumericTypes, symbol.Type) {
+					result, err := decideNumberType(symbol.Type, rhs, operator)
+					if err != nil {
+						messages.Complain(diagnostic.TypeError, stmt.Location, "%s", err.Error())
+					} else if result != symbol.Type {
+						messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, symbol.Type)
+					}
+				} else {
+					messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Invalid operation between %s to %s", rhs.String(), symbol.Type)
+				}
+			case "-=", "*=", "/=":
+				if slices.Contains(datatypes.NumericTypes, symbol.Type) {
+					result, err := decideNumberType(symbol.Type, rhs, operator)
+					if err != nil {
+						messages.Complain(diagnostic.TypeError, stmt.Location, "%s", err.Error())
+					} else if result != symbol.Type {
+						messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, symbol.Type)
+					}
+				} else {
+					messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Invalid operation between %s to %s", rhs.String(), symbol.Type)
+				}
+			default:
+				// TODO: handle interface/struct
+				if symbol.Type != rhs {
+					if !ImplementsInterface(symbol.Type, rhs) {
+						messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, symbol.Type)
+					}
+				} else if intf := globalScope.lookupInterface(rhs.String()); intf != nil {
+					messages.Complain(diagnostic.IllegalStatementError, stmt.Children[1].Location, "Cannot use interface type as value")
+				}
+
+			}
+			stmt.Children[1].Type = rhs
+		} else if stmt.Label == "control-flow" {
+			if i != length-1 {
+				messages.Warn(stmt.Location, "Unreachable code found after statement")
+			}
+			// TODO: continue and break
+			if len(stmt.Children) == 1 && stmt.Children[0].Token.Value == "return" {
+				if fn.returnType != datatypes.None {
+					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' missing return value, expected: %s", sig, fn.returnType)
+				} else {
+					stmt.Type = datatypes.None
+					hasValidReturn = true
+				}
+			} else if len(stmt.Children) == 1 { // continue and break
+				if !currentScope.HasScopeTypeAncestor(Loop) {
+					messages.Complain(diagnostic.IllegalStatementError, stmt.Location, "Cannot use %s outside of loop", stmt.Children[0].Token.Value)
+				}
+			} else { // return something
+				rhs, rHasErr := evalType(&stmt.Children[1], fn.returnType)
+				if !rHasErr && rhs != fn.returnType {
+					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' expected return type %s but got %s", sig, fn.returnType, rhs)
+				} else {
+					stmt.Type = rhs
+					hasValidReturn = true
+				}
+			}
+		} else if stmt.Label == "if-block" {
+			scope := currentScope
+			elseIfCounter := 0
+			for i, branch := range stmt.Children {
+				currentScope = scope
+				var id string
+				if branch.Label == "else if" {
+					id = fmt.Sprintf("%s#%d.%d@%s", branch.Label, ifBlockCounter, elseIfCounter, currentScope.id)
+					elseIfCounter++
+				} else {
+					id = fmt.Sprintf("%s#%d@%s", branch.Label, ifBlockCounter, currentScope.id)
+				}
+				branchScope := currentScope.addChild(id, Branch)
+				currentScope = branchScope
+				block_index := 0
+				if branch.Label != "else" {
+					condition, hasErr := evalType(&branch.Children[0], datatypes.Bool)
+					if !hasErr && condition != datatypes.Bool {
+						messages.Complain(diagnostic.TypeError, branch.Children[0].Location, "Expected bool but got %s", condition)
+					}
+					block_index = 1
+				}
+				returns := analyzeBlockAndCheckForReturn(branch.Children[block_index].Children, fn, sig)
+				if i == 0 {
+					hasValidReturn = returns
+				} else {
+					hasValidReturn = hasValidReturn && returns
+				}
+			}
+			currentScope = scope
+			ifBlockCounter++
+
+		} else if stmt.Label == "for" {
+
+		} else if stmt.Label == "while" {
+			scope := currentScope
+			newScope := currentScope.addChild(fmt.Sprintf("while#%d@%s", whileCounter, currentScope.id), Loop)
+			whileCounter++
+			currentScope = newScope
+			cond, hasError := evalType(&stmt.Children[0], datatypes.Bool)
+			if !hasError && cond != datatypes.Bool {
+				messages.Complain(diagnostic.TypeError, stmt.Children[0].Location, "Expected bool as loop condition but got %s", cond.String())
+			}
+			analyzeBlockAndCheckForReturn(stmt.Children[1].Children, fn, sig)
+			currentScope = scope
+
+		} else {
+			stmt.Type, _ = evalType(&stmt, datatypes.None) // expressions
+		}
+	}
+	return hasValidReturn
 }
 
 func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *NamedBlockSymbol {

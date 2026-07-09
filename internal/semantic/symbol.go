@@ -2,7 +2,6 @@ package semantic
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	"github.com/EladB1/The/internal/datatypes"
@@ -181,17 +180,7 @@ func (fn FunctionSymbol) getMatchingOverload(params []datatypes.DataType) *FnOve
 			}
 			for i := range count {
 				param := overload.parameters[i]
-				isImplementor := false
-				if !param.IsPrimitive() && !params[i].IsPrimitive() && params[i] != param {
-					if intf := globalScope.lookupInterface(param.String()); intf != nil {
-						if str := globalScope.lookupStruct(params[i].String()); str != nil {
-							if slices.Contains(str.implements, param.String()) {
-								isImplementor = true
-							}
-						}
-					}
-				}
-				if params[i] == param || param == datatypes.Any || isImplementor {
+				if params[i] == param || param == datatypes.Any || ImplementsInterface(param, params[i]) {
 					matches = true
 				} else {
 					matches = false

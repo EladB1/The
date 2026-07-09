@@ -438,6 +438,9 @@ func comparableCheck(lhs datatypes.DataType, rhs datatypes.DataType) bool {
 }
 
 func decideNumberType(lhs datatypes.DataType, rhs datatypes.DataType, operator string) (datatypes.DataType, error) {
+	if lhs == rhs {
+		return lhs, nil
+	}
 	if (lhs == datatypes.Uint32 || lhs == datatypes.Uint64) && (rhs == datatypes.Uint32 || rhs == datatypes.Uint64) {
 		return datatypes.Uint64, nil
 	} else if (lhs == datatypes.Int32 || lhs == datatypes.Int64) && (rhs == datatypes.Int32 || rhs == datatypes.Int64) {

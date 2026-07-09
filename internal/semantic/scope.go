@@ -2,6 +2,7 @@ package semantic
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/EladB1/The/internal/datatypes"
@@ -232,4 +233,16 @@ func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
 		}
 	}
 	return nil
+}
+
+func ImplementsInterface(possibleIntf, type_ datatypes.DataType) bool {
+	if possibleIntf.IsPrimitive() || type_.IsPrimitive() {
+		return false
+	}
+	if intf := globalScope.lookupInterface(possibleIntf.String()); intf != nil {
+		if str := globalScope.lookupStruct(type_.String()); str != nil {
+			return slices.Contains(str.implements, intf.name)
+		}
+	}
+	return false
 }
