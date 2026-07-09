@@ -201,7 +201,6 @@ func (scope *Scope) lookupFunctionsByReturnType(returnType datatypes.DataType) [
 func (scope *Scope) lookupFunctionByName(name string) *FunctionSymbol {
 	curr := scope
 	for curr != nil {
-		fmt.Println(curr.id)
 		if fn, ok := curr.functions[name]; ok {
 			return &fn
 		}

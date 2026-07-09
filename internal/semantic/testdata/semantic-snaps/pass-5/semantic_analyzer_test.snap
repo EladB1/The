@@ -26,7 +26,7 @@ children: [
                     Node: { Label: "control-flow"
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 4, Column: 8} },
-                        Node: { Token: {Value: true, Type: boolean value keyword, Line: 4, Column: 15} }
+                        Node: { Token: {Value: true, Type: boolean value keyword, Line: 4, Column: 15}, Type: bool }
                     ] }
                 ] }
             ] }
@@ -375,10 +375,10 @@ children: [
 ] }
 , Compiler messages:
 [
-    "ImplementationError: Interface A implementation missing 'fn test()->int' at line: 10, column: 5",
     "ImplementationError: struct C is missing named block for interface B at line: 9, column: 1",
-    "ImplementationError: Interface A implementation missing 'fn test()->int' at line: 14, column: 5",
+    "ImplementationError: Interface A implementation missing 'fn test()->int' at line: 10, column: 5",
     "ImplementationError: struct cannot implement interface multiple times at line: 13, column: 1",
+    "ImplementationError: Interface A implementation missing 'fn test()->int' at line: 14, column: 5",
     "ImplementationError: Implementation function test returns None but interface A returns int at line: 18, column: 5",
     "ImplementationError: Named block A contains function extra which its interface does not at line: 18, column: 5",
     "ImplementationError: Interface B implementation missing 'fn do(int)->bool' at line: 22, column: 5",

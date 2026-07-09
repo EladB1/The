@@ -3,6 +3,7 @@ package diagnostic
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/fatih/color"
@@ -40,6 +41,15 @@ type Diagnostic struct {
 type PhaseDiagnostics struct {
 	Messages []Diagnostic
 	HasError bool
+}
+
+func (diagnostics *PhaseDiagnostics) Sort() {
+	sort.Slice(diagnostics.Messages, func(i, j int) bool {
+		if diagnostics.Messages[i].Position.Line != diagnostics.Messages[j].Position.Line {
+			return diagnostics.Messages[i].Position.Line < diagnostics.Messages[j].Position.Line
+		}
+		return diagnostics.Messages[i].Position.Column != diagnostics.Messages[j].Position.Column
+	})
 }
 
 func (diagnostics *PhaseDiagnostics) Complain(level Severity, pos ds.SourceLocation, formatStr string, args ...any) {

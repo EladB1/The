@@ -193,14 +193,14 @@ children: [
     ] },
     Node: { Label: "Variable"
     children: [
-        Node: { Token: {Value: String, Type: type keyword, Line: 21, Column: 0} },
-        Node: { Token: {Value: end, Type: identifier, Line: 21, Column: 7} },
+        Node: { Token: {Value: char, Type: type keyword, Line: 21, Column: 0} },
+        Node: { Token: {Value: end, Type: identifier, Line: 21, Column: 5} },
         Node: { Label: "index", Type: char
         children: [
-            Node: { Token: {Value: greet, Type: identifier, Line: 21, Column: 13}, Type: String },
+            Node: { Token: {Value: greet, Type: identifier, Line: 21, Column: 11}, Type: String },
             Node: { Label: "ARR-END", Type: int
             children: [
-                Node: { Token: {Value: 1, Type: int literal, Line: 21, Column: 20}, Type: int }
+                Node: { Token: {Value: 1, Type: int literal, Line: 21, Column: 18}, Type: int }
             ] }
         ] }
     ] },
@@ -753,9 +753,7 @@ children: [
     ] }
 ] }
 , Compiler messages:
-[
-    "TypeError: Cannot assign type char to variable type String at line: 22, column: 19"
-]
+[]
 
 ---
 
@@ -1876,7 +1874,6 @@ children: [
 ] }
 , Compiler messages:
 [
-    "NamedBlockError: Functions in cast block cannot return an interface at line: 71, column: 9",
     "NameError: Name: 'i' already defined at line: 3, column: 5",
     "Warning: Mutable global variable declared at line: 5, column: 1",
     "AccessError: Cannot use private modifier outside of a struct at line: 6, column: 1",
@@ -1900,13 +1897,14 @@ children: [
     "TypeError: Invalid comparison between int and char at line: 29, column: 33",
     "TypeError: Invalid type String used in range expression at line: 32, column: 23",
     "TypeError: Cannot use char as array end value at line: 33, column: 20",
-    "TypeError: Cannot use bool as array end value at line: 34, column: 23",
     "TypeError: Cannot use char as array end value at line: 34, column: 33",
+    "TypeError: Cannot use bool as array end value at line: 34, column: 23",
     "TypeError: Cannot use exponent with types String and int at line: 35, column: 21",
     "CallError: Could not find function 'test(int,char)->int' at line: 43, column: 20",
     "TypeError: Cannot compare Object using operator '<'. To support this comparison add a compare block with the appropriate functions at line: 51, column: 16",
     "TypeError: Cannot compare Object using operator '>'. To support this comparison add a compare block with the appropriate functions at line: 52, column: 19",
     "TypeError: Invalid comparison between Object and int at line: 53, column: 17",
+    "NamedBlockError: Functions in cast block cannot return an interface at line: 71, column: 9",
     "CastError: Cannot typecast Object to uint32. To support this typecasting add a function returning target type to cast block at line: 81, column: 15",
     "CastError: Cannot typecast Thing to Object. To support typecasting add a cast block with a function returning the target type at line: 85, column: 16",
     "AccessError: Cannot access private property from outside struct definition at line: 88, column: 12",
@@ -1916,13 +1914,13 @@ children: [
     "AmbiguityError: Interfaces A,B both contain function named test. Change the function call to pick which one to use at line: 123, column: 18",
     "NameError: Name: 'i' already defined at line: 124, column: 5",
     "NameError: Name: 'n' already defined at line: 125, column: 5",
-    "AccessError: Cannot access private function 'sum' from outside struct definition at line: 146, column: 17",
     "AccessError: Cannot access private property from outside struct definition at line: 146, column: 28",
-    "TypeError: Invalid type 'E' provided at line: 148, column: 1",
+    "AccessError: Cannot access private function 'sum' from outside struct definition at line: 146, column: 17",
     "NameError: Struct E not defined at line: 148, column: 7",
-    "NameError: Could not find property 'h' in struct D at line: 149, column: 10",
+    "TypeError: Invalid type 'E' provided at line: 148, column: 1",
+    "TypeError: Property type int expected but found bool at line: 149, column: 31",
     "IllegalStatementError: Cannot define struct property 'i' multiple times in struct literal at line: 149, column: 22",
-    "TypeError: Property type int expected but found bool at line: 149, column: 31"
+    "NameError: Could not find property 'h' in struct D at line: 149, column: 10"
 ]
 
 ---

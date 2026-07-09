@@ -176,6 +176,9 @@ func (fn FunctionSymbol) getMatchingOverload(params []datatypes.DataType) *FnOve
 	for _, overload := range fn.overloads {
 		matches := false
 		if count == len(overload.parameters) {
+			if count == 0 {
+				return &overload
+			}
 			for i := range count {
 				param := overload.parameters[i]
 				isImplementor := false

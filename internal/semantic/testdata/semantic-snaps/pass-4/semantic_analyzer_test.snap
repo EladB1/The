@@ -197,21 +197,21 @@ children: [
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 19, Column: 8} },
                         Node: { Token: {Value: x, Type: identifier, Line: 19, Column: 12} },
-                        Node: { Token: {Value: 5, Type: int literal, Line: 19, Column: 16} }
+                        Node: { Token: {Value: 5, Type: int literal, Line: 19, Column: 16}, Type: int }
                     ] },
                     Node: { Label: "Variable"
                     children: [
                         Node: { Token: {Value: uint32, Type: type keyword, Line: 20, Column: 8} },
                         Node: { Token: {Value: y, Type: identifier, Line: 20, Column: 15} },
-                        Node: { Token: {Value: 1, Type: int literal, Line: 20, Column: 19} }
+                        Node: { Token: {Value: 1, Type: int literal, Line: 20, Column: 19}, Type: uint32 }
                     ] },
                     Node: { Label: "control-flow"
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 21, Column: 8} },
-                        Node: { Token: {Value: -, Type: add operator, Line: 21, Column: 17}
+                        Node: { Token: {Value: -, Type: add operator, Line: 21, Column: 17}, Type: None
                         children: [
-                            Node: { Token: {Value: x, Type: identifier, Line: 21, Column: 15} },
-                            Node: { Token: {Value: y, Type: identifier, Line: 21, Column: 19} }
+                            Node: { Token: {Value: x, Type: identifier, Line: 21, Column: 15}, Type: int },
+                            Node: { Token: {Value: y, Type: identifier, Line: 21, Column: 19}, Type: uint32 }
                         ] }
                     ] }
                 ] }
@@ -248,7 +248,8 @@ children: [
 [
     "IllegalStatementError: Function with signature 'fn test()' cannot be redefined at line: 9, column: 1",
     "IllegalStatementError: Function name 'test' already defined without a return type; cannot overload with return type bool at line: 13, column: 1",
-    "IllegalStatementError: Function with signature 'fn test(int,char)' cannot be redefined at line: 15, column: 1"
+    "IllegalStatementError: Function with signature 'fn test(int,char)' cannot be redefined at line: 15, column: 1",
+    "TypeError: Cannot use operator '-' between int and uint32 at line: 22, column: 18"
 ]
 
 ---

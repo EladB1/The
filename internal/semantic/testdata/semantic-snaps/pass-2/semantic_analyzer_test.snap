@@ -136,10 +136,10 @@ children: [
                     Node: { Label: "control-flow"
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 19, Column: 8} },
-                        Node: { Token: {Value: ==, Type: compare operator, Line: 19, Column: 25}
+                        Node: { Token: {Value: ==, Type: compare operator, Line: 19, Column: 25}, Type: bool
                         children: [
-                            Node: { Token: {Value: something, Type: identifier, Line: 19, Column: 15} },
-                            Node: { Token: {Value: otherthing, Type: identifier, Line: 19, Column: 28} }
+                            Node: { Token: {Value: something, Type: identifier, Line: 19, Column: 15}, Type: A },
+                            Node: { Token: {Value: otherthing, Type: identifier, Line: 19, Column: 28}, Type: A }
                         ] }
                     ] }
                 ] }

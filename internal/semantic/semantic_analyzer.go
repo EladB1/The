@@ -52,6 +52,7 @@ func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
 	// 	messages.ComplainPositionless(diagnostic.Error, "Missing entrypoint function 'fn main()->int'")
 	// }
 	fmt.Println(globalScope)
+	messages.Sort()
 	return ast, messages
 }
 
