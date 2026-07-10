@@ -562,6 +562,10 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 			messages.Complain(diagnostic.AccessError, details[0].Location, "Cannot access private function '%s' from outside struct definition", name.Value)
 			hasError = true
 		} else {
+			if !fn.hasDefaultImplementation && !currentScope.HasScopeTypeAncestor(Interface) && symbol.returnType != datatypes.None {
+				messages.Complain(diagnostic.CallError, details[0].Location, "Function without body cannot be called")
+				hasError = true
+			}
 			return symbol.returnType, hasError
 		}
 	} else {

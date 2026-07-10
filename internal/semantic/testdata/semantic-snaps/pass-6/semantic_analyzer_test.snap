@@ -211,7 +211,7 @@ children: [
         Node: { Label: "index", Type: String
         children: [
             Node: { Token: {Value: greet, Type: identifier, Line: 22, Column: 16}, Type: String },
-            Node: { Label: "slice", Type: int64
+            Node: { Label: "slice", Type: int
             children: [
                 Node: { Label: "ARR-END", Type: int
                 children: [
@@ -1893,14 +1893,15 @@ children: [
     "TypeError: Cannot use operator '<<' between char and char at line: 25, column: 14",
     "TypeError: Cannot use operator '^' between char and char at line: 26, column: 14",
     "TypeError: Cannot index type char at line: 28, column: 21",
-    "TypeError: Invalid comparison between int and String at line: 29, column: 19",
     "TypeError: Invalid comparison between int and char at line: 29, column: 33",
+    "TypeError: Invalid comparison between int and String at line: 29, column: 19",
     "TypeError: Invalid type String used in range expression at line: 32, column: 23",
     "TypeError: Cannot use char as array end value at line: 33, column: 20",
     "TypeError: Cannot use char as array end value at line: 34, column: 33",
     "TypeError: Cannot use bool as array end value at line: 34, column: 23",
     "TypeError: Cannot use exponent with types String and int at line: 35, column: 21",
     "CallError: Could not find function 'test(int,char)->int' at line: 43, column: 20",
+    "CallError: Function without body cannot be called at line: 45, column: 16",
     "TypeError: Cannot compare Object using operator '<'. To support this comparison add a compare block with the appropriate functions at line: 51, column: 16",
     "TypeError: Cannot compare Object using operator '>'. To support this comparison add a compare block with the appropriate functions at line: 52, column: 19",
     "TypeError: Invalid comparison between Object and int at line: 53, column: 17",

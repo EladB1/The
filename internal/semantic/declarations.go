@@ -131,7 +131,6 @@ func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig str
 			if i != length-1 {
 				messages.Warn(stmt.Location, "Unreachable code found after statement")
 			}
-			// TODO: continue and break
 			if len(stmt.Children) == 1 && stmt.Children[0].Token.Value == "return" {
 				if fn.returnType != datatypes.None {
 					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' missing return value, expected: %s", sig, fn.returnType)

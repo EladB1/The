@@ -229,8 +229,10 @@ func analyzeInterfaceImplementation() {
 					for i, overload := range fn.overloads {
 						params := datatypes.Join(overload.parameters)
 						if missing {
-							if overload.hasDefaultImplementation {
+							if overload.hasDefaultImplementation { // copy it over from the interface
 								nb_fn.overloads[i].parameters = overload.parameters
+								nb_fn.overloads[i].innerScope = namedBlock.innerScope.addChild(fmt.Sprintf("%s@%s", fn.name, namedBlock.innerScope.id), Function)
+								nb_fn.overloads[i].innerScope.variables = overload.innerScope.variables
 								namedBlock.innerScope.functions[fn.name] = *nb_fn
 							} else {
 								messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Interface %s implementation missing 'fn %s(%s)%s'", intfName, fn.name, params, returnStr)

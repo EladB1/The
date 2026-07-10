@@ -1503,13 +1503,11 @@ children: [
                         Node: { Token: {Value: total, Type: identifier, Line: 55, Column: 9} },
                         Node: { Token: {Value: 0, Type: int literal, Line: 55, Column: 17} }
                     ] },
-                    Node: { Token: {Value: ;, Type: separator, Line: 55, Column: 18} },
                     Node: { Token: {Value: <, Type: compare operator, Line: 55, Column: 22}
                     children: [
                         Node: { Token: {Value: i, Type: identifier, Line: 55, Column: 20} },
                         Node: { Token: {Value: x, Type: identifier, Line: 55, Column: 24} }
                     ] },
-                    Node: { Token: {Value: ;, Type: separator, Line: 55, Column: 25} },
                     Node: { Label: "Unary"
                     children: [
                         Node: { Token: {Value: i, Type: identifier, Line: 55, Column: 27} },
