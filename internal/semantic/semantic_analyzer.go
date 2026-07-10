@@ -39,18 +39,20 @@ func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
 	analyzeInterfaceImplementation()
 	analyzeGlobals(ast)
 	analyzeInterfaceFnBodies()
-	// TODO: Uncomment code below when ready
-	// missingEntry := false
-	// if fn := globalScope.lookupFunction("main"); fn != nil {
-	// 	if _, found := fn.overloads[""]; !found || fn.returnType != datatypes.Int32 {
-	// 		missingEntry = true
-	// 	}
-	// } else {
-	// 	missingEntry = true
-	// }
-	// if missingEntry {
-	// 	messages.ComplainPositionless(diagnostic.Error, "Missing entrypoint function 'fn main()->int'")
-	// }
+	analyzeStructMethodBodies()
+	analyzeFunctionsBodies()
+	missingEntry := true
+	if fn := globalScope.lookupFunctionByName("main"); fn != nil {
+		for _, overload := range fn.overloads {
+			if len(overload.parameters) == 0 && fn.returnType == datatypes.Int32 {
+				missingEntry = false
+				break
+			}
+		}
+	}
+	if missingEntry {
+		messages.ComplainPositionless(diagnostic.Error, "Missing entrypoint function 'fn main()->int'")
+	}
 	fmt.Println(globalScope)
 	messages.Sort()
 	return ast, messages
@@ -303,11 +305,22 @@ func analyzeInterfaceFnBodies() {
 }
 
 // Pass eight
-func analyzeStructMethodBodies() {}
-
-// Pass nine
-func analyzeFunctionsBodies(ast parser.AST) {
-
+func analyzeStructMethodBodies() {
+	for _, str := range globalScope.structs {
+		for _, fn := range str.innerScope.functions {
+			analyzeFunctionBody(fn)
+		}
+		for _, nb := range str.innerScope.namedBlocks {
+			for _, fn := range nb.innerScope.functions {
+				analyzeFunctionBody(fn)
+			}
+		}
+	}
 }
 
-// helpers
+// Pass nine
+func analyzeFunctionsBodies() {
+	for _, fn := range globalScope.functions {
+		analyzeFunctionBody(fn)
+	}
+}
