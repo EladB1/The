@@ -575,9 +575,9 @@ func parseForConditions() AST {
 		}
 	} else if checkKind(lexer.ID) {
 		ast.AddChildren(parseAssignment())
-		ast.AddChildToken(expectValue(";"))
+		expectValue(";")
 		ast.AddChildren(parseExpression())
-		ast.AddChildToken(expectValue(";"))
+		expectValue(";")
 		ast.AddChildren(parseExpression())
 	} else {
 		loopForms := strings.Join([]string{

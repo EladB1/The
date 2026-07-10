@@ -5,7 +5,8 @@ interface A {
     }
     fn other(int u) -> int {
         //continue;
-        //mut int i = 1;
+        mut int j = 1;
+        String s = "hello";
         //private int j = 0;
         //i += 5;
         // while (true) {
@@ -19,17 +20,27 @@ interface A {
         // }
         // return i - 1;
         //println("hi");
-        if (u == 0) {
-            return 1;
+        // if (u == 0) {
+        //     return 1;
+        // }
+        // else if (u == 1) {
+        //     return 1;
+        // }
+        // else if (u == 2) {
+        //     return 1;
+        // }
+        // else {
+        //     return u as int;
+        // }
+
+        for (mut int i = 0; i < 10; i++) {
+            int x = i;
         }
-        else if (u == 1) {
-            return 1;
-        }
-        else if (u == 2) {
-            return 1;
-        }
-        else {
-            return u as int;
-        }
+        for(j = 1; j < 10; j++) {}
+        for(int i in 0 .. 10 .. 2) {}
+        for (char c in s) {}
+        for (char c, int i in s) {}
+
+        return 0;
     }
 }

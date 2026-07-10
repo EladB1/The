@@ -260,13 +260,40 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 		}
 
 	} else if ast.Label == "ARR-END" {
-		expr, hasErr := evalType(&ast.Children[0], datatypes.None)
+		expr, hasErr := evalType(&ast.Children[0], expectedType)
 		hasError = hasError || hasErr
 		if !hasErr && !slices.Contains(datatypes.IntTypes, expr) {
 			messages.Complain(diagnostic.TypeError, ast.Location, "Cannot use %s as array end value", expr)
 			hasError = true
 		} else {
 			nodeType = expr
+		}
+	} else if ast.Label == "range" {
+		parts := len(ast.Children)
+		first, firstHasErr := evalType(&ast.Children[0], expectedType)
+		second, secondHasErr := evalType(&ast.Children[2], expectedType)
+		if !firstHasErr && !slices.Contains(datatypes.IntTypes, first) {
+			messages.Complain(diagnostic.TypeError, ast.Children[0].Location, "Cannot use %s as range start", first)
+		}
+		if !secondHasErr && !slices.Contains(datatypes.IntTypes, second) {
+			messages.Complain(diagnostic.TypeError, ast.Children[1].Location, "Cannot use %s as range end", second)
+		}
+		nodeType, err = decideNumberType(first, second, ast.Children[1].Token.Value)
+		if err != nil {
+			messages.Complain(diagnostic.TypeError, ast.Children[2].Location, "%s", err.Error())
+		}
+		if parts == 5 { // first .. second .. third
+			if ast.Children[3].Token.Value == "..=" {
+				messages.Complain(diagnostic.IllegalStatementError, ast.Children[3].Location, "Cannot use inclusive operator for range step value")
+			}
+			third, thirdHasErr := evalType(&ast.Children[4], nodeType)
+			if !thirdHasErr && !slices.Contains(datatypes.IntTypes, third) {
+				messages.Complain(diagnostic.TypeError, ast.Children[4].Location, "Cannot use %s as range step value", third)
+			}
+			nodeType, err = decideNumberType(nodeType, third, "..")
+			if err != nil {
+				messages.Complain(diagnostic.TypeError, ast.Children[4].Location, "%s", err.Error())
+			}
 		}
 	} else if ast.Label == "call" {
 		hasErr := false
