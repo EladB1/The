@@ -138,10 +138,10 @@ children: [
                             Node: { Label: "control-flow"
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 24, Column: 12} },
-                                Node: { Token: {Value: &&, Type: operator, Line: 24, Column: 24}
+                                Node: { Token: {Value: &&, Type: operator, Line: 24, Column: 24}, Type: bool
                                 children: [
-                                    Node: { Token: {Value: true, Type: boolean value keyword, Line: 24, Column: 19} },
-                                    Node: { Token: {Value: false, Type: boolean value keyword, Line: 24, Column: 27} }
+                                    Node: { Token: {Value: true, Type: boolean value keyword, Line: 24, Column: 19}, Type: bool },
+                                    Node: { Token: {Value: false, Type: boolean value keyword, Line: 24, Column: 27}, Type: bool }
                                 ] }
                             ] }
                         ] }
@@ -177,7 +177,7 @@ children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 29, Column: 12} },
                                 Node: { Token: {Value: &&, Type: operator, Line: 29, Column: 36}
                                 children: [
-                                    Node: { Label: "call"
+                                    Node: { Label: "call", Type: None
                                     children: [
                                         Node: { Label: "dot"
                                         children: [
@@ -185,7 +185,7 @@ children: [
                                             Node: { Token: {Value: implemented, Type: identifier, Line: 29, Column: 22} }
                                         ] }
                                     ] },
-                                    Node: { Label: "call"
+                                    Node: { Label: "call", Type: None
                                     children: [
                                         Node: { Label: "dot"
                                         children: [
@@ -214,10 +214,10 @@ children: [
                             Node: { Label: "control-flow"
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 32, Column: 12} },
-                                Node: { Label: "Unary"
+                                Node: { Label: "Unary", Type: None
                                 children: [
                                     Node: { Token: {Value: !, Type: unary operator, Line: 32, Column: 19} },
-                                    Node: { Label: "dot"
+                                    Node: { Label: "dot", Type: None
                                     children: [
                                         Node: { Token: {Value: c1, Type: identifier, Line: 32, Column: 20} },
                                         Node: { Token: {Value: implemented, Type: identifier, Line: 32, Column: 23} }
@@ -231,8 +231,138 @@ children: [
         ] }
     ] }
 ] }
-, Compiler messages:
-[]
+ScopeTree:
+Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overloads: [{parameters: (any), implemented: false}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: false}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: false}]}], variables: map[DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B}], structs: map[One:{name: One, size: 0} Two:{name: Two, size: 0, implements: [A, B]}], children: [
+        Scope: { id: A, type: 1, parent: @global },
+        Scope: { id: B, type: 1, parent: @global },
+        Scope: { id: One, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Two, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A}], structs: map[B:{name: B, size: 0}], children: [
+        Scope: { id: A, type: 1, parent: @global },
+        Scope: { id: B, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B} Empty:{name: Empty}], children: [
+        Scope: { id: Empty, type: 1, parent: @global },
+        Scope: { id: A, type: 1, parent: @global, functions: map[a:{name: a, returns: None, overloads: [{parameters: (), implemented: false}]} b:{name: b, returns: int, overloads: [{parameters: (), implemented: false}]} c:{name: c, returns: None, overloads: [{parameters: (int), implemented: false}]} d:{name: d, returns: bool, overloads: [{parameters: (uint64), implemented: false}]}] },
+        Scope: { id: B, type: 1, parent: @global, functions: map[a:{name: a, returns: None, overloads: [{parameters: (), implemented: false}]} b:{name: b, returns: None, overloads: [{parameters: (), implemented: true}]} c:{name: c, returns: None, overloads: [{parameters: (uint32,uint64), implemented: false}]} d:{name: d, returns: None, overloads: [{parameters: (bool,int), implemented: true}]} e:{name: e, returns: bool, overloads: [{parameters: (A,A), implemented: true}]}], children: [
+            Scope: { id: b@B, type: 4, parent: B },
+            Scope: { id: d@B, type: 4, parent: B, variables: map[isOpen:{name: isOpen, Type: bool, Initialized: false} x:{name: x, Type: int, Initialized: false}] },
+            Scope: { id: e@B, type: 4, parent: B, variables: map[otherthing:{name: otherthing, Type: A, Initialized: false} something:{name: something, Type: A, Initialized: false}] }
+        ] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[I:{name: I}], children: [
+        Scope: { id: I, type: 1, parent: @global, functions: map[a:{name: a, returns: None, overloads: [{parameters: (), implemented: false}{parameters: (int), implemented: false}]}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[D:{name: D}], structs: map[A:{name: A, size: 36} B:{name: B, size: 8} C:{name: C, size: 4} E:{name: E, size: 0, implements: [D]} F:{name: F, size: 8}], children: [
+        Scope: { id: A, type: 2, parent: @global, functions: map[test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[b:{name: b, Type: B, Initialized: false} d:{name: d, Type: double, Initialized: false} e:{name: e, Type: int64, Initialized: false} f:{name: f, Type: float, Initialized: false} g:{name: g, Type: uint32, Initialized: false} h:{name: h, Type: uint64, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: test@A, type: 4, parent: A }
+        ] },
+        Scope: { id: B, type: 2, parent: @global, functions: map[test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}]} test2:{name: test2, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[a:{name: a, Type: String, Initialized: false} c:{name: c, Type: char, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: test@B, type: 4, parent: B },
+            Scope: { id: test2@B, type: 4, parent: B }
+        ] },
+        Scope: { id: C, type: 2, parent: @global, functions: map[test:{name: test, returns: bool, overloads: [{parameters: (int), implemented: true}]}], variables: map[isTrue:{name: isTrue, Type: bool, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: test@C, type: 4, parent: C, variables: map[i:{name: i, Type: int, Initialized: false}] }
+        ] },
+        Scope: { id: D, type: 1, parent: @global, functions: map[sample:{name: sample, returns: None, overloads: [{parameters: (), implemented: false}]}] },
+        Scope: { id: E, type: 2, parent: @global, namedBlocks: map[D:{name: D}], variables: map[D:{name: D, Type: ScopeRef(E,D), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: D@E, type: 3, parent: E, functions: map[sample:{name: sample, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: sample@D@E, type: 4, parent: D@E }
+            ] }
+        ] },
+        Scope: { id: F, type: 2, parent: @global, namedBlocks: map[cast:{name: cast} compare:{name: compare}], functions: map[action:{name: action, returns: None, overloads: [{parameters: (), isPrivate: true, implemented: true}]}], variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true} x:{name: x, Type: int, Initialized: false} y:{name: y, Type: int, Initialized: false} z:{name: z, Type: int, isPrivate: true, Initialized: false}], children: [
+            Scope: { id: action@F, type: 4, parent: F },
+            Scope: { id: cast@F, type: 3, parent: F, functions: map[toString:{name: toString, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: toString@cast@F, type: 4, parent: cast@F }
+            ] },
+            Scope: { id: compare@F, type: 3, parent: F, functions: map[equals:{name: equals, returns: bool, overloads: [{parameters: (F), implemented: true}]} greaterThan:{name: greaterThan, returns: bool, overloads: [{parameters: (F), implemented: true}]} lessThan:{name: lessThan, returns: bool, overloads: [{parameters: (F), implemented: true}]}], children: [
+                Scope: { id: equals@compare@F, type: 4, parent: compare@F, variables: map[other:{name: other, Type: F, Initialized: false}] },
+                Scope: { id: lessThan@compare@F, type: 4, parent: compare@F, variables: map[other:{name: other, Type: F, Initialized: false}] },
+                Scope: { id: greaterThan@compare@F, type: 4, parent: compare@F, variables: map[other:{name: other, Type: F, Initialized: false}] }
+            ] }
+        ] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, structs: map[Sample:{name: Sample, size: 0}], children: [
+        Scope: { id: Sample, type: 2, parent: @global, variables: map[i:{name: i, Type: int, isPrivate: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A}], structs: map[B:{name: B, size: 0, implements: [A]} Test:{name: Test, size: 8}], children: [
+        Scope: { id: Test, type: 2, parent: @global, namedBlocks: map[cast:{name: cast} compare:{name: compare}], variables: map[i:{name: i, Type: int, isPrivate: true, isMutable: true, Initialized: false} pay:{name: pay, Type: double, isPrivate: true, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true} u:{name: u, Type: uint32, Initialized: false} w:{name: w, Type: float, Initialized: false}], children: [
+            Scope: { id: cast@Test, type: 3, parent: Test, functions: map[toNothing:{name: toNothing, returns: None, overloads: [{parameters: (), implemented: true}]} toSame:{name: toSame, returns: Test, overloads: [{parameters: (), implemented: true}]} toSomething:{name: toSomething, returns: String, overloads: [{parameters: (int), implemented: true}]} toString:{name: toString, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: toSomething@cast@Test, type: 4, parent: cast@Test, variables: map[i:{name: i, Type: int, Initialized: false}] },
+                Scope: { id: toString@cast@Test, type: 4, parent: cast@Test },
+                Scope: { id: toSame@cast@Test, type: 4, parent: cast@Test },
+                Scope: { id: toNothing@cast@Test, type: 4, parent: cast@Test }
+            ] },
+            Scope: { id: compare@Test, type: 3, parent: Test, functions: map[abc:{name: abc, returns: String, overloads: [{parameters: (int), implemented: true}]}], children: [
+                Scope: { id: abc@compare@Test, type: 4, parent: compare@Test, variables: map[i:{name: i, Type: int, Initialized: false}] }
+            ] }
+        ] },
+        Scope: { id: A, type: 1, parent: @global, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: false}]}] },
+        Scope: { id: B, type: 2, parent: @global, namedBlocks: map[A:{name: A}], variables: map[A:{name: A, Type: ScopeRef(B,A), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: A@B, type: 3, parent: B, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: do@A@B, type: 4, parent: A@B }
+            ] }
+        ] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A}], functions: map[test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}]}], children: [
+        Scope: { id: A, type: 1, parent: @global, functions: map[test:{name: test, returns: None, overloads: [{parameters: (), implemented: false}]}] },
+        Scope: { id: @test, type: 4, parent: @global },
+        Scope: { id: @test, type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A}], functions: map[abc:{name: abc, returns: float, overloads: [{parameters: (int), implemented: true}]} test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,char), implemented: false}]}], children: [
+        Scope: { id: A, type: 1, parent: @global, functions: map[test:{name: test, returns: None, overloads: [{parameters: (), implemented: false}]} test2:{name: test2, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+            Scope: { id: test2@A, type: 4, parent: A, variables: map[x:{name: x, Type: int, Initialized: true} y:{name: y, Type: uint32, Initialized: true}] }
+        ] },
+        Scope: { id: @test, type: 4, parent: @global },
+        Scope: { id: @test, type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
+        Scope: { id: @test, type: 4, parent: @global },
+        Scope: { id: @test, type: 4, parent: @global, variables: map[c:{name: c, Type: char, Initialized: false}] },
+        Scope: { id: @abc, type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[B:{name: B} D:{name: D}], structs: map[A:{name: A, size: 0} C:{name: C, size: 0, implements: [B]} E:{name: E, size: 0, implements: [B, D]}], children: [
+        Scope: { id: A, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: B, type: 1, parent: @global, functions: map[implemented:{name: implemented, returns: bool, overloads: [{parameters: (), implemented: true}]} test:{name: test, returns: None, overloads: [{parameters: (), implemented: false}]}], children: [
+            Scope: { id: implemented@B, type: 4, parent: B }
+        ] },
+        Scope: { id: C, type: 2, parent: @global, namedBlocks: map[B:{name: B}], variables: map[B:{name: B, Type: ScopeRef(C,B), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: B@C, type: 3, parent: C, functions: map[implemented:{name: implemented, returns: bool, overloads: [{parameters: (), implemented: true}]} test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: test@B@C, type: 4, parent: B@C },
+                Scope: { id: implemented@B@C, type: 4, parent: B@C }
+            ] }
+        ] },
+        Scope: { id: D, type: 1, parent: @global, functions: map[action:{name: action, returns: bool, overloads: [{parameters: (C,C), implemented: false}{parameters: (C), implemented: false}]}] },
+        Scope: { id: E, type: 2, parent: @global, namedBlocks: map[B:{name: B} D:{name: D}], variables: map[B:{name: B, Type: ScopeRef(E,B), Initialized: true} D:{name: D, Type: ScopeRef(E,D), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: B@E, type: 3, parent: E, functions: map[implemented:{name: implemented, returns: bool, overloads: [{parameters: (), implemented: true}]} test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: test@B@E, type: 4, parent: B@E },
+                Scope: { id: implemented@B@E, type: 4, parent: B@E }
+            ] },
+            Scope: { id: D@E, type: 3, parent: E, functions: map[action:{name: action, returns: bool, overloads: [{parameters: (C,C), implemented: true}{parameters: (C), implemented: true}]}], children: [
+                Scope: { id: action@D@E, type: 4, parent: D@E, variables: map[c1:{name: c1, Type: C, Initialized: false} c2:{name: c2, Type: C, Initialized: false}] },
+                Scope: { id: action@D@E, type: 4, parent: D@E, variables: map[c1:{name: c1, Type: C, Initialized: false}] }
+            ] }
+        ] }
+    ] }
+] }
+Compiler messages:
+[
+    "Error: Missing entrypoint function 'fn main()->int' ",
+    "NameError: Could not find function implemented in scope at line: 30, column: 43",
+    "NameError: Could not find function implemented in scope at line: 30, column: 23",
+    "TypeError: Must use bool value with unary '!' at line: 33, column: 20",
+    "NameError: Could not find property implemented in type C at line: 33, column: 24"
+]
 
 ---
 
@@ -373,8 +503,151 @@ children: [
         ] }
     ] }
 ] }
-, Compiler messages:
+ScopeTree:
+Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overloads: [{parameters: (any), implemented: false}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: false}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: false}]}], variables: map[DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B}], structs: map[One:{name: One, size: 0} Two:{name: Two, size: 0, implements: [A, B]}], children: [
+        Scope: { id: A, type: 1, parent: @global },
+        Scope: { id: B, type: 1, parent: @global },
+        Scope: { id: One, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Two, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A}], structs: map[B:{name: B, size: 0}], children: [
+        Scope: { id: A, type: 1, parent: @global },
+        Scope: { id: B, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B} Empty:{name: Empty}], children: [
+        Scope: { id: Empty, type: 1, parent: @global },
+        Scope: { id: A, type: 1, parent: @global, functions: map[a:{name: a, returns: None, overloads: [{parameters: (), implemented: false}]} b:{name: b, returns: int, overloads: [{parameters: (), implemented: false}]} c:{name: c, returns: None, overloads: [{parameters: (int), implemented: false}]} d:{name: d, returns: bool, overloads: [{parameters: (uint64), implemented: false}]}] },
+        Scope: { id: B, type: 1, parent: @global, functions: map[a:{name: a, returns: None, overloads: [{parameters: (), implemented: false}]} b:{name: b, returns: None, overloads: [{parameters: (), implemented: true}]} c:{name: c, returns: None, overloads: [{parameters: (uint32,uint64), implemented: false}]} d:{name: d, returns: None, overloads: [{parameters: (bool,int), implemented: true}]} e:{name: e, returns: bool, overloads: [{parameters: (A,A), implemented: true}]}], children: [
+            Scope: { id: b@B, type: 4, parent: B },
+            Scope: { id: d@B, type: 4, parent: B, variables: map[isOpen:{name: isOpen, Type: bool, Initialized: false} x:{name: x, Type: int, Initialized: false}] },
+            Scope: { id: e@B, type: 4, parent: B, variables: map[otherthing:{name: otherthing, Type: A, Initialized: false} something:{name: something, Type: A, Initialized: false}] }
+        ] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[I:{name: I}], children: [
+        Scope: { id: I, type: 1, parent: @global, functions: map[a:{name: a, returns: None, overloads: [{parameters: (), implemented: false}{parameters: (int), implemented: false}]}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[D:{name: D}], structs: map[A:{name: A, size: 36} B:{name: B, size: 8} C:{name: C, size: 4} E:{name: E, size: 0, implements: [D]} F:{name: F, size: 8}], children: [
+        Scope: { id: A, type: 2, parent: @global, functions: map[test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[b:{name: b, Type: B, Initialized: false} d:{name: d, Type: double, Initialized: false} e:{name: e, Type: int64, Initialized: false} f:{name: f, Type: float, Initialized: false} g:{name: g, Type: uint32, Initialized: false} h:{name: h, Type: uint64, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: test@A, type: 4, parent: A }
+        ] },
+        Scope: { id: B, type: 2, parent: @global, functions: map[test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}]} test2:{name: test2, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[a:{name: a, Type: String, Initialized: false} c:{name: c, Type: char, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: test@B, type: 4, parent: B },
+            Scope: { id: test2@B, type: 4, parent: B }
+        ] },
+        Scope: { id: C, type: 2, parent: @global, functions: map[test:{name: test, returns: bool, overloads: [{parameters: (int), implemented: true}]}], variables: map[isTrue:{name: isTrue, Type: bool, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: test@C, type: 4, parent: C, variables: map[i:{name: i, Type: int, Initialized: false}] }
+        ] },
+        Scope: { id: D, type: 1, parent: @global, functions: map[sample:{name: sample, returns: None, overloads: [{parameters: (), implemented: false}]}] },
+        Scope: { id: E, type: 2, parent: @global, namedBlocks: map[D:{name: D}], variables: map[D:{name: D, Type: ScopeRef(E,D), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: D@E, type: 3, parent: E, functions: map[sample:{name: sample, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: sample@D@E, type: 4, parent: D@E }
+            ] }
+        ] },
+        Scope: { id: F, type: 2, parent: @global, namedBlocks: map[cast:{name: cast} compare:{name: compare}], functions: map[action:{name: action, returns: None, overloads: [{parameters: (), isPrivate: true, implemented: true}]}], variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true} x:{name: x, Type: int, Initialized: false} y:{name: y, Type: int, Initialized: false} z:{name: z, Type: int, isPrivate: true, Initialized: false}], children: [
+            Scope: { id: action@F, type: 4, parent: F },
+            Scope: { id: cast@F, type: 3, parent: F, functions: map[toString:{name: toString, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: toString@cast@F, type: 4, parent: cast@F }
+            ] },
+            Scope: { id: compare@F, type: 3, parent: F, functions: map[equals:{name: equals, returns: bool, overloads: [{parameters: (F), implemented: true}]} greaterThan:{name: greaterThan, returns: bool, overloads: [{parameters: (F), implemented: true}]} lessThan:{name: lessThan, returns: bool, overloads: [{parameters: (F), implemented: true}]}], children: [
+                Scope: { id: equals@compare@F, type: 4, parent: compare@F, variables: map[other:{name: other, Type: F, Initialized: false}] },
+                Scope: { id: lessThan@compare@F, type: 4, parent: compare@F, variables: map[other:{name: other, Type: F, Initialized: false}] },
+                Scope: { id: greaterThan@compare@F, type: 4, parent: compare@F, variables: map[other:{name: other, Type: F, Initialized: false}] }
+            ] }
+        ] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, structs: map[Sample:{name: Sample, size: 0}], children: [
+        Scope: { id: Sample, type: 2, parent: @global, variables: map[i:{name: i, Type: int, isPrivate: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A}], structs: map[B:{name: B, size: 0, implements: [A]} Test:{name: Test, size: 8}], children: [
+        Scope: { id: Test, type: 2, parent: @global, namedBlocks: map[cast:{name: cast} compare:{name: compare}], variables: map[i:{name: i, Type: int, isPrivate: true, isMutable: true, Initialized: false} pay:{name: pay, Type: double, isPrivate: true, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true} u:{name: u, Type: uint32, Initialized: false} w:{name: w, Type: float, Initialized: false}], children: [
+            Scope: { id: cast@Test, type: 3, parent: Test, functions: map[toNothing:{name: toNothing, returns: None, overloads: [{parameters: (), implemented: true}]} toSame:{name: toSame, returns: Test, overloads: [{parameters: (), implemented: true}]} toSomething:{name: toSomething, returns: String, overloads: [{parameters: (int), implemented: true}]} toString:{name: toString, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: toSomething@cast@Test, type: 4, parent: cast@Test, variables: map[i:{name: i, Type: int, Initialized: false}] },
+                Scope: { id: toString@cast@Test, type: 4, parent: cast@Test },
+                Scope: { id: toSame@cast@Test, type: 4, parent: cast@Test },
+                Scope: { id: toNothing@cast@Test, type: 4, parent: cast@Test }
+            ] },
+            Scope: { id: compare@Test, type: 3, parent: Test, functions: map[abc:{name: abc, returns: String, overloads: [{parameters: (int), implemented: true}]}], children: [
+                Scope: { id: abc@compare@Test, type: 4, parent: compare@Test, variables: map[i:{name: i, Type: int, Initialized: false}] }
+            ] }
+        ] },
+        Scope: { id: A, type: 1, parent: @global, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: false}]}] },
+        Scope: { id: B, type: 2, parent: @global, namedBlocks: map[A:{name: A}], variables: map[A:{name: A, Type: ScopeRef(B,A), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: A@B, type: 3, parent: B, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: do@A@B, type: 4, parent: A@B }
+            ] }
+        ] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A}], functions: map[test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}]}], children: [
+        Scope: { id: A, type: 1, parent: @global, functions: map[test:{name: test, returns: None, overloads: [{parameters: (), implemented: false}]}] },
+        Scope: { id: @test, type: 4, parent: @global },
+        Scope: { id: @test, type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A}], functions: map[abc:{name: abc, returns: float, overloads: [{parameters: (int), implemented: true}]} test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,char), implemented: false}]}], children: [
+        Scope: { id: A, type: 1, parent: @global, functions: map[test:{name: test, returns: None, overloads: [{parameters: (), implemented: false}]} test2:{name: test2, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+            Scope: { id: test2@A, type: 4, parent: A, variables: map[x:{name: x, Type: int, Initialized: true} y:{name: y, Type: uint32, Initialized: true}] }
+        ] },
+        Scope: { id: @test, type: 4, parent: @global },
+        Scope: { id: @test, type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
+        Scope: { id: @test, type: 4, parent: @global },
+        Scope: { id: @test, type: 4, parent: @global, variables: map[c:{name: c, Type: char, Initialized: false}] },
+        Scope: { id: @abc, type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[B:{name: B} D:{name: D}], structs: map[A:{name: A, size: 0} C:{name: C, size: 0, implements: [B]} E:{name: E, size: 0, implements: [B, D]}], children: [
+        Scope: { id: A, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: B, type: 1, parent: @global, functions: map[implemented:{name: implemented, returns: bool, overloads: [{parameters: (), implemented: true}]} test:{name: test, returns: None, overloads: [{parameters: (), implemented: false}]}], children: [
+            Scope: { id: implemented@B, type: 4, parent: B }
+        ] },
+        Scope: { id: C, type: 2, parent: @global, namedBlocks: map[B:{name: B}], variables: map[B:{name: B, Type: ScopeRef(C,B), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: B@C, type: 3, parent: C, functions: map[implemented:{name: implemented, returns: bool, overloads: [{parameters: (), implemented: true}]} test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: test@B@C, type: 4, parent: B@C },
+                Scope: { id: implemented@B@C, type: 4, parent: B@C }
+            ] }
+        ] },
+        Scope: { id: D, type: 1, parent: @global, functions: map[action:{name: action, returns: bool, overloads: [{parameters: (C,C), implemented: false}{parameters: (C), implemented: false}]}] },
+        Scope: { id: E, type: 2, parent: @global, namedBlocks: map[B:{name: B} D:{name: D}], variables: map[B:{name: B, Type: ScopeRef(E,B), Initialized: true} D:{name: D, Type: ScopeRef(E,D), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: B@E, type: 3, parent: E, functions: map[implemented:{name: implemented, returns: bool, overloads: [{parameters: (), implemented: true}]} test:{name: test, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: test@B@E, type: 4, parent: B@E },
+                Scope: { id: implemented@B@E, type: 4, parent: B@E }
+            ] },
+            Scope: { id: D@E, type: 3, parent: E, functions: map[action:{name: action, returns: bool, overloads: [{parameters: (C,C), implemented: true}{parameters: (C), implemented: true}]}], children: [
+                Scope: { id: action@D@E, type: 4, parent: D@E, variables: map[c1:{name: c1, Type: C, Initialized: false} c2:{name: c2, Type: C, Initialized: false}] },
+                Scope: { id: action@D@E, type: 4, parent: D@E, variables: map[c1:{name: c1, Type: C, Initialized: false}] }
+            ] }
+        ] }
+    ] },
+    Scope: { id: @global, parent: @built-in },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B} F:{name: F}], structs: map[C:{name: C, size: 0, implements: [A, B]} D:{name: D, size: 0, implements: [A, A]} E:{name: E, size: 0, implements: [A, B]}], children: [
+        Scope: { id: A, type: 1, parent: @global, functions: map[test:{name: test, returns: int, overloads: [{parameters: (), implemented: false}]}] },
+        Scope: { id: B, type: 1, parent: @global, functions: map[do:{name: do, returns: bool, overloads: [{parameters: (int), implemented: false}]}] },
+        Scope: { id: C, type: 2, parent: @global, namedBlocks: map[A:{name: A}], variables: map[A:{name: A, Type: ScopeRef(C,A), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: A@C, type: 3, parent: C, functions: map[test:{name: test, returns: int, overloads: [{parameters: (), implemented: false}]}] }
+        ] },
+        Scope: { id: D, type: 2, parent: @global, namedBlocks: map[A:{name: A}], variables: map[A:{name: A, Type: ScopeRef(D,A), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: A@D, type: 3, parent: D, functions: map[test:{name: test, returns: int, overloads: [{parameters: (), implemented: false}]}] }
+        ] },
+        Scope: { id: E, type: 2, parent: @global, namedBlocks: map[A:{name: A} B:{name: B}], variables: map[A:{name: A, Type: ScopeRef(E,A), Initialized: true} B:{name: B, Type: ScopeRef(E,B), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: A@E, type: 3, parent: E, functions: map[extra:{name: extra, returns: int, overloads: [{parameters: (), implemented: false}]} test:{name: test, returns: None, overloads: [{parameters: (), implemented: false}]}] },
+            Scope: { id: B@E, type: 3, parent: E, functions: map[do:{name: do, returns: bool, overloads: [{parameters: (), implemented: false}]} extra:{name: extra, returns: None, overloads: [{parameters: (), implemented: false}]}] }
+        ] },
+        Scope: { id: F, type: 1, parent: @global, functions: map[something:{name: something, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+            Scope: { id: something@F, type: 4, parent: F }
+        ] }
+    ] }
+] }
+Compiler messages:
 [
+    "Error: Missing entrypoint function 'fn main()->int' ",
     "ImplementationError: struct C is missing named block for interface B at line: 9, column: 1",
     "ImplementationError: Interface A implementation missing 'fn test()->int' at line: 10, column: 5",
     "ImplementationError: struct cannot implement interface multiple times at line: 13, column: 1",
