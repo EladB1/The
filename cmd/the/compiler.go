@@ -53,9 +53,10 @@ func compile(source []string) {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}
-	_, semanticDiagnostics := semantic.Analyze(ast)
+	ast, scopeTree, semanticDiagnostics := semantic.Analyze(ast)
+	fmt.Println(scopeTree)
 	compilerDiagnostics.Combine(semanticDiagnostics)
-	//fmt.Println(ast)
+	fmt.Println(ast)
 	if semanticDiagnostics.HasError {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)

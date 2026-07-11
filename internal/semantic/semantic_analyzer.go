@@ -30,7 +30,7 @@ func setup() {
 	globalScope = initScope()
 }
 
-func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
+func Analyze(ast parser.AST) (parser.AST, *Scope, diagnostic.PhaseDiagnostics) {
 	setup()
 	collectTypeNames(ast)
 	analyzeInterfaceFnSignatures()
@@ -53,9 +53,8 @@ func Analyze(ast parser.AST) (parser.AST, diagnostic.PhaseDiagnostics) {
 	if missingEntry {
 		messages.ComplainPositionless(diagnostic.Error, "Missing entrypoint function 'fn main()->int'")
 	}
-	fmt.Println(globalScope)
 	messages.Sort()
-	return ast, messages
+	return ast, rootScope, messages
 }
 
 // Pass one
