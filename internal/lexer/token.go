@@ -65,7 +65,11 @@ func (token Token) GetValueString(pool ds.LiteralPool) string {
 	case LIT_FLOAT:
 		value = fmt.Sprintf("%g", token.FloatVal)
 	case LIT_STRING:
-		value = strconv.Quote(string(pool[token.StrIndex]))
+		if len(pool) == 0 {
+			value = fmt.Sprintf("stringIndex: %d", token.StrIndex)
+		} else {
+			value = strconv.Quote(string(pool[token.StrIndex]))
+		}
 	case LIT_CHAR:
 		if token.CharVal == 0 {
 			value = "''"

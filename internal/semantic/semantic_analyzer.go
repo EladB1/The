@@ -26,8 +26,8 @@ var globalScope *Scope
 
 func setup() {
 	messages = diagnostic.PhaseDiagnostics{}
-	currentScope = initScope()
 	globalScope = initScope()
+	currentScope = globalScope
 }
 
 func Analyze(ast parser.AST) (parser.AST, *Scope, diagnostic.PhaseDiagnostics) {
