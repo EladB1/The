@@ -8,14 +8,21 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gkampitakis/go-snaps/snaps"
+
+	ds "github.com/EladB1/The/internal/datastructures"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
 	"github.com/EladB1/The/internal/testutils"
-	"github.com/gkampitakis/go-snaps/snaps"
 )
 
 var dir string = "./testdata/fixtures"
 var snapsDir string = "testdata/semantic-snaps"
+
+type Fixture struct {
+	AST      parser.AST
+	Literals ds.LiteralPool
+}
 
 func TestGenerateFixtures(t *testing.T) {
 	if os.Getenv("UPDATE_FIXTURES") != "true" {
@@ -33,28 +40,32 @@ func TestGenerateFixtures(t *testing.T) {
 		testpath := filepath.Join(dir, pass.Name())
 		fixtures := testutils.GetSourceFromDirectory(t, testpath)
 		for _, fixture := range fixtures {
-			tokens, _ := lexer.Lex(fixture.Source, false)
-			ast, _ := parser.Parse(tokens)
-			testutils.WriteResultToFile(ast, testpath, fixture.File)
+			tokens, pool, _ := lexer.Lex(fixture.Source, false)
+			ast, _ := parser.Parse(tokens, pool)
+			fix := Fixture{
+				AST:      ast,
+				Literals: pool,
+			}
+			testutils.WriteResultToFile(fix, testpath, fixture.File)
 		}
 	}
 
 }
 
-func loadAST(t *testing.T, testdir string, filename string) parser.AST {
+func loadFixture(t *testing.T, testdir string, filename string) Fixture {
 	path := filepath.Join(testdir, filename)
 	content, err := os.ReadFile(path)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to read file %s\n%v", filename, err)
 		os.Exit(1)
 	}
-	var ast parser.AST
-	err = json.Unmarshal(content, &ast)
+	var fixture Fixture
+	err = json.Unmarshal(content, &fixture)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Failed to unmarshal json", err)
 		os.Exit(1)
 	}
-	return ast
+	return fixture
 }
 
 func snapshotTestSemanticAnalyzer(t *testing.T, filename string, subdir string) {
@@ -63,8 +74,8 @@ func snapshotTestSemanticAnalyzer(t *testing.T, filename string, subdir string) 
 	snapshots := snaps.WithConfig(
 		snaps.Dir(snapTarget),
 	)
-	ast := loadAST(t, testdir, filename)
-	result, scopeTree, messages := Analyze(ast)
+	fixture := loadFixture(t, testdir, filename)
+	result, scopeTree, messages := Analyze(fixture.AST)
 	var msgBuilder strings.Builder
 	var formatStr string
 	for i, msg := range messages.Messages {
@@ -75,7 +86,7 @@ func snapshotTestSemanticAnalyzer(t *testing.T, filename string, subdir string) 
 		}
 		msgBuilder.WriteString(formatStr)
 	}
-	results := fmt.Sprintf("AST:\n%v\nScopeTree:\n%v\nCompiler messages:\n[%s]\n", result, scopeTree, msgBuilder.String())
+	results := fmt.Sprintf("AST:\n%v\nScopeTree:\n%v\nCompiler messages:\n[%s]\n", result.String(fixture.Literals), scopeTree, msgBuilder.String())
 	snapshots.MatchSnapshot(t, results)
 }
 

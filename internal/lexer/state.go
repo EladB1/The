@@ -15,6 +15,7 @@ type (
 		sequence             strings.Builder
 		startPosition        int
 		tokens               []Token
+		pool                 ds.LiteralPool
 		messages             diagnostic.PhaseDiagnostics
 		lineNum              int
 		lineIndex            int
@@ -25,52 +26,55 @@ type (
 
 func initState() *lexerState {
 	return &lexerState{
-		tokens:               []Token{},
+
 		sequence:             strings.Builder{},
 		startPosition:        0,
-		in_multiline_comment: false,
+		tokens:               []Token{},
+		pool:                 ds.LiteralPool{},
 		messages:             diagnostic.PhaseDiagnostics{},
 		lineNum:              0,
 		lineIndex:            0,
+		in_multiline_comment: false,
+		in_word:              false,
 	}
 }
 
-func (stateMchn *lexerState) addError(message string, args ...any) {
-	lineIndex := stateMchn.lineIndex
-	if stateMchn.startPosition != stateMchn.lineIndex {
-		lineIndex = stateMchn.startPosition
+func (state *lexerState) addError(message string, args ...any) {
+	lineIndex := state.lineIndex
+	if state.startPosition != state.lineIndex {
+		lineIndex = state.startPosition
 	}
 	pos := ds.SourceLocation{
-		Line:   stateMchn.lineNum,
+		Line:   state.lineNum,
 		Column: lineIndex,
 	}
-	stateMchn.messages.Complain(errLevel, pos, message, args...)
+	state.messages.Complain(errLevel, pos, message, args...)
 }
 
-func (stateMchn *lexerState) push(char byte) {
-	stateMchn.sequence.WriteByte(char)
+func (state *lexerState) push(char byte) {
+	state.sequence.WriteByte(char)
 }
 
-func (stateMchn *lexerState) clearSequence() {
-	stateMchn.sequence.Reset()
+func (state *lexerState) clearSequence() {
+	state.sequence.Reset()
 }
 
-func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
-	column := stateMchn.lineIndex
-	if stateMchn.sequence.Len() > 1 && stateMchn.startPosition != stateMchn.lineIndex {
-		column = stateMchn.startPosition
+func (state *lexerState) buildAndAppendToken(tokenType TokenType) {
+	column := state.lineIndex
+	if state.sequence.Len() > 1 && state.startPosition != state.lineIndex {
+		column = state.startPosition
 	}
 	var token Token
 	switch tokenType {
 	case LIT_CHAR:
-		str, err := strconv.Unquote(stateMchn.sequence.String())
+		str, err := strconv.Unquote(state.sequence.String())
 		if err != nil {
-			stateMchn.addError("Invalid character literal %s", stateMchn.sequence.String())
+			state.addError("Invalid character literal %s", state.sequence.String())
 			return
 		}
 		char, size := utf8.DecodeRuneInString(str)
 		if char == utf8.RuneError && size > 1 {
-			stateMchn.addError("Invalid character literal %s", stateMchn.sequence.String())
+			state.addError("Invalid character literal %s", state.sequence.String())
 			return
 		} else if size == 0 {
 			char = 0
@@ -79,99 +83,99 @@ func (stateMchn *lexerState) buildAndAppendToken(tokenType TokenType) {
 			Kind:    tokenType,
 			CharVal: char,
 			Location: ds.SourceLocation{
-				Line:   stateMchn.lineNum,
+				Line:   state.lineNum,
 				Column: column,
 			},
 		}
 	case LIT_STRING:
-		str, err := strconv.Unquote(stateMchn.sequence.String())
+		str, err := strconv.Unquote(state.sequence.String())
 		if err != nil {
-			stateMchn.addError("Invalid string literal %s", stateMchn.sequence.String())
+			state.addError("Invalid string literal %s", state.sequence.String())
 			return
 		}
 		index := 0
-		ds.LiteralStorage, index = ds.LiteralStorage.Add(str)
+		state.pool, index = state.pool.Add(str)
 		token = Token{
 			Kind:     tokenType,
 			StrIndex: index,
 			Location: ds.SourceLocation{
-				Line:   stateMchn.lineNum,
+				Line:   state.lineNum,
 				Column: column,
 			},
 		}
 	case LIT_FLOAT:
-		val, err := strconv.ParseFloat(stateMchn.sequence.String(), 64)
+		val, err := strconv.ParseFloat(state.sequence.String(), 64)
 		if err != nil {
-			stateMchn.addError("Invalid floating point literal %s", stateMchn.sequence.String())
+			state.addError("Invalid floating point literal %s", state.sequence.String())
 			return
 		}
 		token = Token{
 			Kind:     tokenType,
 			FloatVal: val,
 			Location: ds.SourceLocation{
-				Line:   stateMchn.lineNum,
+				Line:   state.lineNum,
 				Column: column,
 			},
 		}
 	case LIT_INT:
-		val, err := strconv.ParseInt(stateMchn.sequence.String(), 10, 64)
+		val, err := strconv.ParseInt(state.sequence.String(), 10, 64)
 		if err != nil {
-			stateMchn.addError("Invalid integer literal %s", stateMchn.sequence.String())
+			state.addError("Invalid integer literal %s", state.sequence.String())
 			return
 		}
 		token = Token{
 			Kind:   tokenType,
 			IntVal: int64(val),
 			Location: ds.SourceLocation{
-				Line:   stateMchn.lineNum,
+				Line:   state.lineNum,
 				Column: column,
 			},
 		}
 	case LIT_HEX:
-		val, err := strconv.ParseInt(stateMchn.sequence.String(), 0, 64)
+		val, err := strconv.ParseInt(state.sequence.String(), 0, 64)
 		if err != nil {
-			stateMchn.addError("Invalid hexadecimal literal %s", stateMchn.sequence.String())
+			state.addError("Invalid hexadecimal literal %s", state.sequence.String())
 			return
 		}
 		token = Token{
 			Kind:   tokenType,
 			IntVal: int64(val),
 			Location: ds.SourceLocation{
-				Line:   stateMchn.lineNum,
+				Line:   state.lineNum,
 				Column: column,
 			},
 		}
 	default:
 		token = Token{
 			Kind:  tokenType,
-			Value: stateMchn.sequence.String(),
+			Value: state.sequence.String(),
 			Location: ds.SourceLocation{
-				Line:   stateMchn.lineNum,
+				Line:   state.lineNum,
 				Column: column,
 			},
 		}
 	}
-	stateMchn.tokens = append(stateMchn.tokens, token)
-	stateMchn.clearSequence()
+	state.tokens = append(state.tokens, token)
+	state.clearSequence()
 }
 
-func (stateMchn *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, char byte) {
-	stateMchn.tokens = append(stateMchn.tokens, Token{
+func (state *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, char byte) {
+	state.tokens = append(state.tokens, Token{
 		Kind:  tokenType,
 		Value: string(char),
 		Location: ds.SourceLocation{
-			Line:   stateMchn.lineNum,
-			Column: stateMchn.lineIndex,
+			Line:   state.lineNum,
+			Column: state.lineIndex,
 		},
 	})
-	stateMchn.clearSequence()
+	state.clearSequence()
 }
 
-func (stateMchn *lexerState) debug() {
+func (state *lexerState) debug() {
 	fmt.Printf("State: {Sequence: %s, position: %d, flags: {in_multiline_comment: %v}, sequence start: %d}\n",
-		stateMchn.sequence.String(),
-		stateMchn.startPosition,
-		stateMchn.in_multiline_comment,
-		stateMchn.startPosition,
+		state.sequence.String(),
+		state.startPosition,
+		state.in_multiline_comment,
+		state.startPosition,
 	)
 }

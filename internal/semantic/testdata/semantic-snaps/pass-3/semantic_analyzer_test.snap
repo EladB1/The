@@ -214,7 +214,7 @@ children: [
                                             Node: { Token: {Value: x, Type: identifier, Line: 55, Column: 20}, Type: int },
                                             Node: { Token: {Value: String, Type: type keyword, Line: 55, Column: 25} }
                                         ] },
-                                        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [2] with length 0), Type: String }
+                                        Node: { Token: {Value: ", ", Type: string literal, Line: 55, Column: 35}, Type: String }
                                     ] },
                                     Node: { Label: "typecast"
                                     children: [
@@ -519,8 +519,8 @@ Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overlo
 ] }
 Compiler messages:
 [
-    "Error: Missing entrypoint function 'fn main()->int' ",
-    "Warning: Redundant use of private in private block at line: 3, column: 9"
+    "Warning: Redundant use of private in private block at line: 3, column: 9",
+    "Error: Missing entrypoint function 'fn main()->int' "
 ]
 
 ---
@@ -603,7 +603,7 @@ children: [
                             Node: { Label: "control-flow"
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 13, Column: 12} },
-                                Node: { Token: %!v(PANIC=String method: runtime error: index out of range [1] with length 0), Type: String }
+                                Node: { Token: {Value: "", Type: string literal, Line: 13, Column: 19}, Type: String }
                             ] }
                         ] }
                     ] },
@@ -764,18 +764,18 @@ Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overlo
 ] }
 Compiler messages:
 [
-    "Error: Missing entrypoint function 'fn main()->int' ",
     "NameError: Name: 'u' already defined at line: 7, column: 15",
     "Warning: Redundant use of private in private block at line: 8, column: 9",
-    "TypeError: Function 'toSomething(int)->String' may not return a value at line: 12, column: 41",
     "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 12, column: 9",
+    "TypeError: Function 'toSomething(int)->String' may not return a value at line: 12, column: 41",
     "AmbiguityError: Cannot have more than one cast function that returns String at line: 13, column: 9",
-    "TypeError: Function 'toSame()->Test' may not return a value at line: 16, column: 29",
     "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 16, column: 9",
+    "TypeError: Function 'toSame()->Test' may not return a value at line: 16, column: 29",
     "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 17, column: 9",
-    "TypeError: Function 'abc(int)->String' may not return a value at line: 21, column: 33",
     "NamedBlockError: Function signature 'fn abc(int)->String' not supported; only 'fn equals(Test)->bool,fn lessThan(Test)->bool,fn greaterThan(Test)->bool' supported at line: 21, column: 9",
-    "NameError: Could not find interface name: 'Z' at line: 29, column: 18"
+    "TypeError: Function 'abc(int)->String' may not return a value at line: 21, column: 33",
+    "NameError: Could not find interface name: 'Z' at line: 29, column: 18",
+    "Error: Missing entrypoint function 'fn main()->int' "
 ]
 
 ---

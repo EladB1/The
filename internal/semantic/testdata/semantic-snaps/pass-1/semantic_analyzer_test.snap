@@ -41,9 +41,9 @@ Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overlo
 ] }
 Compiler messages:
 [
-    "Error: Missing entrypoint function 'fn main()->int' ",
+    "ImplementationError: struct Two is missing named block for interface B at line: 7, column: 1",
     "ImplementationError: struct Two is missing named block for interface A at line: 7, column: 1",
-    "ImplementationError: struct Two is missing named block for interface B at line: 7, column: 1"
+    "Error: Missing entrypoint function 'fn main()->int' "
 ]
 
 ---
@@ -105,12 +105,12 @@ Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overlo
 ] }
 Compiler messages:
 [
-    "Error: Missing entrypoint function 'fn main()->int' ",
     "NameError: Name 'A' already in use at line: 2, column: 11",
     "NameError: Name 'A' already in use at line: 3, column: 8",
     "NameError: Name 'B' already in use at line: 5, column: 8",
     "NameError: Cannot name interface 'cast' at line: 6, column: 1",
-    "NameError: Cannot name interface 'compare' at line: 7, column: 1"
+    "NameError: Cannot name interface 'compare' at line: 7, column: 1",
+    "Error: Missing entrypoint function 'fn main()->int' "
 ]
 
 ---

@@ -25,5 +25,3 @@ func (pool LiteralPool) Show() {
 	}
 	fmt.Println("]")
 }
-
-var LiteralStorage LiteralPool

@@ -18,7 +18,7 @@ var (
 	next byte
 )
 
-func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics) {
+func Lex(sourceCode []string, debug bool) ([]Token, ds.LiteralPool, diagnostic.PhaseDiagnostics) {
 	state := initState()
 	for ; state.lineNum < len(sourceCode); state.lineNum++ {
 		state.clearSequence()
@@ -36,7 +36,7 @@ func Lex(sourceCode []string, debug bool) ([]Token, diagnostic.PhaseDiagnostics)
 			Column: state.lineIndex,
 		},
 	})
-	return state.tokens, state.messages
+	return state.tokens, state.pool, state.messages
 }
 
 func (state *lexerState) lexLine(line string) {

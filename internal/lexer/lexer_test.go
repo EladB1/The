@@ -18,15 +18,15 @@ func snapshotTestLexer(t *testing.T, filename string) {
 	snapshots := snaps.WithConfig(
 		snaps.Dir("testdata/lexer-snaps"),
 	)
-	tokens, messages := Lex(src, false)
+	tokens, pool, messages := Lex(src, false)
 	var tokenBuilder strings.Builder
 	var messagesBuilder strings.Builder
 	var formatStr string
 	for i, token := range tokens {
 		if i != len(tokens)-1 {
-			formatStr = fmt.Sprintf("\n\t%v,", token)
+			formatStr = fmt.Sprintf("\n\t%v,", token.String(pool))
 		} else {
-			formatStr = fmt.Sprintf("\n\t%v\n", token)
+			formatStr = fmt.Sprintf("\n\t%v\n", token.String(pool))
 		}
 		tokenBuilder.WriteString(formatStr)
 	}

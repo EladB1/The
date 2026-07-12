@@ -55,7 +55,7 @@ const (
 	OPERATOR_UNARY   TokenType = "unary operator"
 )
 
-func (token Token) GetValueString() string {
+func (token Token) GetValueString(pool ds.LiteralPool) string {
 	value := token.Value
 	switch token.Kind {
 	case LIT_INT:
@@ -65,7 +65,7 @@ func (token Token) GetValueString() string {
 	case LIT_FLOAT:
 		value = fmt.Sprintf("%g", token.FloatVal)
 	case LIT_STRING:
-		value = strconv.Quote(string(ds.LiteralStorage[token.StrIndex]))
+		value = strconv.Quote(string(pool[token.StrIndex]))
 	case LIT_CHAR:
 		if token.CharVal == 0 {
 			value = "''"
@@ -78,21 +78,21 @@ func (token Token) GetValueString() string {
 	return value
 }
 
-func (token Token) String() string {
+func (token Token) String(pool ds.LiteralPool) string {
 	missing := ""
 	if token.Missing {
 		missing = " Missing: true,"
 	}
-	return fmt.Sprintf("{Value: %s, Type: %s,%s Line: %d, Column: %d}", token.GetValueString(), token.Kind, missing, token.Location.Line, token.Location.Column)
+	return fmt.Sprintf("{Value: %s, Type: %s,%s Line: %d, Column: %d}", token.GetValueString(pool), token.Kind, missing, token.Location.Line, token.Location.Column)
 }
 
 func (token Token) HasValue(value string) bool {
 	return token.Value == value
 }
 
-func PrintTokens(tokens []Token) {
+func PrintTokens(tokens []Token, pool ds.LiteralPool) {
 	for _, token := range tokens {
-		fmt.Println(token)
+		fmt.Println(token.String(pool))
 	}
 }
 

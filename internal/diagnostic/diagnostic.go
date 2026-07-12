@@ -45,10 +45,16 @@ type PhaseDiagnostics struct {
 
 func (diagnostics *PhaseDiagnostics) Sort() {
 	sort.Slice(diagnostics.Messages, func(i, j int) bool {
+		if diagnostics.Messages[i].Position.Line == -1 {
+			return diagnostics.Messages[i].Position.Line > diagnostics.Messages[j].Position.Line
+		}
 		if diagnostics.Messages[i].Position.Line != diagnostics.Messages[j].Position.Line {
 			return diagnostics.Messages[i].Position.Line < diagnostics.Messages[j].Position.Line
 		}
-		return diagnostics.Messages[i].Position.Column != diagnostics.Messages[j].Position.Column
+		if diagnostics.Messages[i].Position.Column != diagnostics.Messages[j].Position.Column {
+			return diagnostics.Messages[i].Position.Column < diagnostics.Messages[j].Position.Column
+		}
+		return diagnostics.Messages[i].Level <= diagnostics.Messages[j].Level
 	})
 }
 

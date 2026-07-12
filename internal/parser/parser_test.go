@@ -9,12 +9,17 @@ import (
 	"strings"
 	"testing"
 
-	ds "github.com/EladB1/The/internal/datastructures"
 	"github.com/gkampitakis/go-snaps/snaps"
 
+	ds "github.com/EladB1/The/internal/datastructures"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/testutils"
 )
+
+type Fixture struct {
+	Tokens   []lexer.Token
+	Literals ds.LiteralPool
+}
 
 var dir string = "./testdata/fixtures/"
 
@@ -22,8 +27,8 @@ func snapshotTestParser(t *testing.T, filename string, debug bool) {
 	snapshots := snaps.WithConfig(
 		snaps.Dir("testdata/parser-snaps"),
 	)
-	tokens := loadTokens(t, filename)
-	ast, messages := Parse(tokens)
+	fixture := loadFixture(t, filename)
+	ast, messages := Parse(fixture.Tokens, fixture.Literals)
 	var msgBuilder strings.Builder
 	var formatStr string
 	for i, msg := range messages.Messages {
@@ -36,25 +41,25 @@ func snapshotTestParser(t *testing.T, filename string, debug bool) {
 	}
 	results := fmt.Sprintf("AST:\n%v\n, Compiler messages:\n[%s]\n", ast, msgBuilder.String())
 	if debug {
-		lexer.PrintTokens(tokens)
+		lexer.PrintTokens(fixture.Tokens, fixture.Literals)
 	}
 	snapshots.MatchSnapshot(t, results)
 }
 
-func loadTokens(t *testing.T, filename string) []lexer.Token {
+func loadFixture(t *testing.T, filename string) Fixture {
 	path := filepath.Join(dir, filename)
 	content, err := os.ReadFile(path)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to read file %s\n%v", filename, err)
 		os.Exit(1)
 	}
-	var tokens []lexer.Token
-	err = json.Unmarshal(content, &tokens)
+	var fixture Fixture
+	err = json.Unmarshal(content, &fixture)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Failed to unmarshal json", err)
 		os.Exit(1)
 	}
-	return tokens
+	return fixture
 }
 
 func TestGenerateFixtures(t *testing.T) {
@@ -63,8 +68,12 @@ func TestGenerateFixtures(t *testing.T) {
 	}
 	fixtures := testutils.GetSourceFromDirectory(t, dir)
 	for _, fixture := range fixtures {
-		tokens, _ := lexer.Lex(fixture.Source, false)
-		testutils.WriteResultToFile(tokens, dir, fixture.File)
+		tokens, pool, _ := lexer.Lex(fixture.Source, false)
+		fix := Fixture{
+			Tokens:   tokens,
+			Literals: pool,
+		}
+		testutils.WriteResultToFile(fix, dir, fixture.File)
 	}
 }
 
@@ -77,7 +86,7 @@ func TestParser(t *testing.T) {
 				Column: 0,
 			},
 		}
-		ast, messages := Parse([]lexer.Token{token})
+		ast, messages := Parse([]lexer.Token{token}, ds.LiteralPool{})
 		if len(messages.Messages) != 0 {
 			t.Errorf("Expected no warnings or errors but got %v\n", messages)
 			os.Exit(1)

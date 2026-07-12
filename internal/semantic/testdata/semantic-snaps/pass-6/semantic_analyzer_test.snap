@@ -61,7 +61,7 @@ children: [
         Node: { Token: {Value: third, Type: identifier, Line: 8, Column: 5} },
         Node: { Label: "index", Type: char
         children: [
-            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [20] with length 0), Type: String },
+            Node: { Token: {Value: "something", Type: string literal, Line: 8, Column: 13}, Type: String },
             Node: { Token: {Value: 2, Type: int literal, Line: 8, Column: 25}, Type: int }
         ] }
     ] },
@@ -141,7 +141,7 @@ children: [
         Node: { Token: {Value: len, Type: identifier, Line: 16, Column: 4} },
         Node: { Label: "dot", Type: int
         children: [
-            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [21] with length 0) },
+            Node: { Token: {Value: "hello", Type: string literal, Line: 16, Column: 10} },
             Node: { Token: {Value: length, Type: identifier, Line: 16, Column: 18} }
         ] }
     ] },
@@ -149,7 +149,7 @@ children: [
     children: [
         Node: { Token: {Value: String, Type: type keyword, Line: 17, Column: 0} },
         Node: { Token: {Value: greet, Type: identifier, Line: 17, Column: 7} },
-        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [22] with length 0), Type: String }
+        Node: { Token: {Value: "hello, world!", Type: string literal, Line: 17, Column: 15}, Type: String }
     ] },
     Node: { Label: "Variable"
     children: [
@@ -672,7 +672,7 @@ children: [
                             Node: { Label: "control-flow"
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 88, Column: 12} },
-                                Node: { Token: %!v(PANIC=String method: runtime error: index out of range [23] with length 0), Type: String }
+                                Node: { Token: {Value: "test", Type: string literal, Line: 88, Column: 19}, Type: String }
                             ] }
                         ] }
                     ] }
@@ -1153,11 +1153,11 @@ Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overlo
 ] }
 Compiler messages:
 [
-    "Error: Missing entrypoint function 'fn main()->int' ",
     "Warning: Mutable global variable declared at line: 1, column: 1",
     "Warning: Lossy conversion from double to float at line: 3, column: 17",
     "Warning: Lossy conversion from double to int at line: 4, column: 9",
-    "Warning: Lossy conversion from int64 to int at line: 6, column: 13"
+    "Warning: Lossy conversion from int64 to int at line: 6, column: 13",
+    "Error: Missing entrypoint function 'fn main()->int' "
 ]
 
 ---
@@ -1232,7 +1232,7 @@ children: [
     children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 9, Column: 0} },
         Node: { Token: {Value: hi, Type: identifier, Line: 9, Column: 4} },
-        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [10] with length 0), Type: String }
+        Node: { Token: {Value: "hello", Type: string literal, Line: 9, Column: 9}, Type: String }
     ] },
     Node: { Label: "Variable"
     children: [
@@ -1320,7 +1320,7 @@ children: [
         Node: { Token: {Value: fromString, Type: identifier, Line: 18, Column: 6} },
         Node: { Label: "typecast"
         children: [
-            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [11] with length 0), Type: String },
+            Node: { Token: {Value: "2.0", Type: string literal, Line: 18, Column: 19}, Type: String },
             Node: { Token: {Value: float, Type: type keyword, Line: 18, Column: 28} }
         ] }
     ] },
@@ -1361,7 +1361,7 @@ children: [
         Node: { Label: "Unary", Type: None
         children: [
             Node: { Token: {Value: !, Type: unary operator, Line: 22, Column: 13} },
-            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [12] with length 0), Type: String }
+            Node: { Token: {Value: "hello", Type: string literal, Line: 22, Column: 14}, Type: String }
         ] }
     ] },
     Node: { Label: "Variable"
@@ -1400,7 +1400,7 @@ children: [
         Node: { Token: {Value: third, Type: identifier, Line: 26, Column: 5} },
         Node: { Label: "index", Type: char
         children: [
-            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [13] with length 0), Type: String },
+            Node: { Token: {Value: "something", Type: string literal, Line: 26, Column: 13}, Type: String },
             Node: { Token: {Value: '3', Type: char literal, Line: 26, Column: 25}, Type: char }
         ] }
     ] },
@@ -1412,7 +1412,7 @@ children: [
         children: [
             Node: { Label: "index", Type: char
             children: [
-                Node: { Token: %!v(PANIC=String method: runtime error: index out of range [14] with length 0), Type: String },
+                Node: { Token: {Value: "something", Type: string literal, Line: 27, Column: 9}, Type: String },
                 Node: { Token: {Value: 3, Type: int literal, Line: 27, Column: 21}, Type: int }
             ] },
             Node: { Token: {Value: 0, Type: int literal, Line: 27, Column: 24}, Type: int }
@@ -1427,7 +1427,7 @@ children: [
             Node: { Token: {Value: ==, Type: compare operator, Line: 28, Column: 18}, Type: None
             children: [
                 Node: { Token: {Value: 0, Type: int literal, Line: 28, Column: 16}, Type: int },
-                Node: { Token: %!v(PANIC=String method: runtime error: index out of range [15] with length 0), Type: String }
+                Node: { Token: {Value: "0", Type: string literal, Line: 28, Column: 21}, Type: String }
             ] },
             Node: { Token: {Value: ==, Type: compare operator, Line: 28, Column: 32}, Type: None
             children: [
@@ -1440,7 +1440,7 @@ children: [
     children: [
         Node: { Token: {Value: String, Type: type keyword, Line: 29, Column: 0} },
         Node: { Token: {Value: greet, Type: identifier, Line: 29, Column: 7} },
-        Node: { Token: %!v(PANIC=String method: runtime error: index out of range [16] with length 0), Type: String }
+        Node: { Token: {Value: "hello, world!", Type: string literal, Line: 29, Column: 15}, Type: String }
     ] },
     Node: { Label: "Variable"
     children: [
@@ -1464,7 +1464,7 @@ children: [
             Node: { Token: {Value: greet, Type: identifier, Line: 31, Column: 16}, Type: String },
             Node: { Label: "slice", Type: None
             children: [
-                Node: { Token: %!v(PANIC=String method: runtime error: index out of range [17] with length 0) },
+                Node: { Token: {Value: "5", Type: string literal, Line: 31, Column: 22} },
                 Node: { Token: {Value: .., Type: range operator, Line: 31, Column: 25} }
             ] }
         ] }
@@ -1778,7 +1778,7 @@ children: [
                 Node: { Label: "property"
                 children: [
                     Node: { Token: {Value: desc, Type: identifier, Line: 82, Column: 4} },
-                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [18] with length 0) }
+                    Node: { Token: {Value: "placeholder", Type: string literal, Line: 82, Column: 10} }
                 ] }
             ] }
         ] }
@@ -1935,7 +1935,7 @@ children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 113, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [19] with length 0) }
+                                    Node: { Token: {Value: "hello", Type: string literal, Line: 113, Column: 20} }
                                 ] }
                             ] }
                         ] }
@@ -2412,7 +2412,6 @@ Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overlo
 ] }
 Compiler messages:
 [
-    "Error: Missing entrypoint function 'fn main()->int' ",
     "NameError: Name: 'i' already defined at line: 3, column: 5",
     "Warning: Mutable global variable declared at line: 5, column: 1",
     "AccessError: Cannot use private modifier outside of a struct at line: 6, column: 1",
@@ -2436,8 +2435,8 @@ Compiler messages:
     "TypeError: Invalid comparison between int and char at line: 29, column: 33",
     "TypeError: Invalid type String used in range expression at line: 32, column: 23",
     "TypeError: Cannot use char as array end value at line: 33, column: 20",
-    "TypeError: Cannot use char as array end value at line: 34, column: 33",
     "TypeError: Cannot use bool as array end value at line: 34, column: 23",
+    "TypeError: Cannot use char as array end value at line: 34, column: 33",
     "TypeError: Cannot use exponent with types String and int at line: 35, column: 21",
     "CallError: Could not find function 'test(int,char)->int' at line: 43, column: 20",
     "CallError: Function without body cannot be called at line: 45, column: 16",
@@ -2447,8 +2446,8 @@ Compiler messages:
     "TypeError: Function 'do()->float' may not return a value at line: 63, column: 26",
     "TypeError: Function 'do()->float' missing return value, expected: float at line: 64, column: 13",
     "TypeError: Cannot use operator '+' between int and uint64 at line: 69, column: 21",
-    "TypeError: Function 'makeMatter()->Matter' may not return a value at line: 71, column: 35",
     "NamedBlockError: Functions in cast block cannot return an interface at line: 71, column: 9",
+    "TypeError: Function 'makeMatter()->Matter' may not return a value at line: 71, column: 35",
     "CastError: Cannot typecast Object to uint32. To support this typecasting add a function returning target type to cast block at line: 81, column: 15",
     "CastError: Cannot typecast Thing to Object. To support typecasting add a cast block with a function returning the target type at line: 85, column: 16",
     "AccessError: Cannot access private property from outside struct definition at line: 88, column: 12",
@@ -2462,13 +2461,14 @@ Compiler messages:
     "NameError: Name: 'n' already defined at line: 125, column: 5",
     "AccessError: Cannot access private function 'sum' from outside struct definition at line: 129, column: 16",
     "AccessError: Cannot access private function 'product' from outside struct definition at line: 129, column: 24",
-    "AccessError: Cannot access private property from outside struct definition at line: 146, column: 28",
     "AccessError: Cannot access private function 'sum' from outside struct definition at line: 146, column: 17",
+    "AccessError: Cannot access private property from outside struct definition at line: 146, column: 28",
     "TypeError: Invalid type 'E' provided at line: 148, column: 1",
     "NameError: Struct E not defined at line: 148, column: 7",
     "NameError: Could not find property 'h' in struct D at line: 149, column: 10",
     "IllegalStatementError: Cannot define struct property 'i' multiple times in struct literal at line: 149, column: 22",
-    "TypeError: Property type int expected but found bool at line: 149, column: 31"
+    "TypeError: Property type int expected but found bool at line: 149, column: 31",
+    "Error: Missing entrypoint function 'fn main()->int' "
 ]
 
 ---

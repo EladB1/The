@@ -38,17 +38,16 @@ func init() {
 }
 
 func compile(source []string) {
-	tokens, lexerDiagnostics := lexer.Lex(source, false)
+	tokens, literals, lexerDiagnostics := lexer.Lex(source, false)
 	compilerDiagnostics.Combine(lexerDiagnostics)
-	//lexer.PrintTokens(tokens)
-	//ds.LiteralStorage.Show()
+	//lexer.PrintTokens(tokens, literals)
 	if lexerDiagnostics.HasError {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}
-	ast, parserDiagnostics := parser.Parse(tokens)
+	ast, parserDiagnostics := parser.Parse(tokens, literals)
 	compilerDiagnostics.Combine(parserDiagnostics)
-	//fmt.Println(ast)
+	// fmt.Println(ast.String(literals))
 	if parserDiagnostics.HasError {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
@@ -56,7 +55,7 @@ func compile(source []string) {
 	ast, scopeTree, semanticDiagnostics := semantic.Analyze(ast)
 	fmt.Println(scopeTree)
 	compilerDiagnostics.Combine(semanticDiagnostics)
-	fmt.Println(ast)
+	fmt.Println(ast.String(literals))
 	if semanticDiagnostics.HasError {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)

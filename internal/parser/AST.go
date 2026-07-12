@@ -19,11 +19,11 @@ type (
 	}
 )
 
-func (ast AST) String() string {
-	return ast.to_string(0)
+func (ast AST) String(pool ds.LiteralPool) string {
+	return ast.to_string(0, pool)
 }
 
-func (ast AST) to_string(indentLevel int) string {
+func (ast AST) to_string(indentLevel int, pool ds.LiteralPool) string {
 	prefix := strings.Repeat("\t", indentLevel)
 	builder := strings.Builder{}
 	builder.WriteString(prefix)
@@ -31,7 +31,7 @@ func (ast AST) to_string(indentLevel int) string {
 	if ast.Label != "" {
 		builder.WriteString(fmt.Sprintf("Label: \"%s\"", ast.Label))
 	} else {
-		builder.WriteString(fmt.Sprintf("Token: %v", ast.Token))
+		builder.WriteString(fmt.Sprintf("Token: %v", ast.Token.String(pool)))
 	}
 	if ast.Type != nil {
 		builder.WriteString(fmt.Sprintf(", Type: %v", ast.Type))
@@ -42,7 +42,7 @@ func (ast AST) to_string(indentLevel int) string {
 		builder.WriteString(prefix)
 		builder.WriteString("children: [\n")
 		for i, child := range ast.Children {
-			builder.WriteString(child.to_string(indentLevel + 1))
+			builder.WriteString(child.to_string(indentLevel+1, pool))
 			if i != childCount-1 {
 				builder.WriteString(",\n")
 			}

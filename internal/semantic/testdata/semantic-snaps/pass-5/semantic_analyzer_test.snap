@@ -124,7 +124,7 @@ children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 21, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [9] with length 0) }
+                                    Node: { Token: {Value: "in E", Type: string literal, Line: 21, Column: 20} }
                                 ] }
                             ] }
                         ] }
@@ -357,11 +357,11 @@ Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overlo
 ] }
 Compiler messages:
 [
-    "Error: Missing entrypoint function 'fn main()->int' ",
-    "NameError: Could not find function implemented in scope at line: 30, column: 43",
     "NameError: Could not find function implemented in scope at line: 30, column: 23",
+    "NameError: Could not find function implemented in scope at line: 30, column: 43",
     "TypeError: Must use bool value with unary '!' at line: 33, column: 20",
-    "NameError: Could not find property implemented in type C at line: 33, column: 24"
+    "NameError: Could not find property implemented in type C at line: 33, column: 24",
+    "Error: Missing entrypoint function 'fn main()->int' "
 ]
 
 ---
@@ -495,7 +495,7 @@ children: [
                         Node: { Token: {Value: println, Type: identifier, Line: 28, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [8] with length 0) }
+                            Node: { Token: {Value: "something", Type: string literal, Line: 28, Column: 16} }
                         ] }
                     ] }
                 ] }
@@ -647,252 +647,16 @@ Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overlo
 ] }
 Compiler messages:
 [
-    "Error: Missing entrypoint function 'fn main()->int' ",
     "ImplementationError: struct C is missing named block for interface B at line: 9, column: 1",
     "ImplementationError: Interface A implementation missing 'fn test()->int' at line: 10, column: 5",
     "ImplementationError: struct cannot implement interface multiple times at line: 13, column: 1",
     "ImplementationError: Interface A implementation missing 'fn test()->int' at line: 14, column: 5",
-    "ImplementationError: Implementation function test returns None but interface A returns int at line: 18, column: 5",
     "ImplementationError: Named block A contains function extra which its interface does not at line: 18, column: 5",
-    "ImplementationError: Interface B implementation missing 'fn do(int)->bool' at line: 22, column: 5",
+    "ImplementationError: Implementation function test returns None but interface A returns int at line: 18, column: 5",
+    "ImplementationError: Named block B contains function extra which its interface does not at line: 22, column: 5",
     "ImplementationError: Named block B contains function do()->bool which its interface does not at line: 22, column: 5",
-    "ImplementationError: Named block B contains function extra which its interface does not at line: 22, column: 5"
+    "ImplementationError: Interface B implementation missing 'fn do(int)->bool' at line: 22, column: 5",
+    "Error: Missing entrypoint function 'fn main()->int' "
 ]
-
----
-
-[TestPassSix/should_run_valid.the_and_have_no_errors - 1]
-AST:
-Node: { Label: "program"
-children: [
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 0, Column: 0}
-    children: [
-        Node: { Token: {Value: A, Type: identifier, Line: 0, Column: 7} },
-        Node: { Label: "struct-body" }
-    ] },
-    Node: { Label: "interface"
-    children: [
-        Node: { Token: {Value: B, Type: identifier, Line: 1, Column: 10} },
-        Node: { Label: "interface-body"
-        children: [
-            Node: { Label: "fn"
-            children: [
-                Node: { Token: {Value: test, Type: identifier, Line: 2, Column: 7} }
-            ] },
-            Node: { Label: "fn"
-            children: [
-                Node: { Token: {Value: implemented, Type: identifier, Line: 3, Column: 7} },
-                Node: { Token: {Value: bool, Type: type keyword, Line: 3, Column: 24} },
-                Node: { Label: "fn-body"
-                children: [
-                    Node: { Label: "control-flow"
-                    children: [
-                        Node: { Token: {Value: return, Type: flow keyword, Line: 4, Column: 8} },
-                        Node: { Token: {Value: true, Type: boolean value keyword, Line: 4, Column: 15} }
-                    ] }
-                ] }
-            ] }
-        ] }
-    ] },
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 7, Column: 0}
-    children: [
-        Node: { Token: {Value: C, Type: identifier, Line: 7, Column: 7} },
-        Node: { Label: "interface_list"
-        children: [
-            Node: { Token: {Value: B, Type: identifier, Line: 7, Column: 14} }
-        ] },
-        Node: { Label: "struct-body"
-        children: [
-            Node: { Label: "named-block"
-            children: [
-                Node: { Token: {Value: B, Type: identifier, Line: 8, Column: 4} },
-                Node: { Label: "named-block-body"
-                children: [
-                    Node: { Label: "fn"
-                    children: [
-                        Node: { Token: {Value: test, Type: identifier, Line: 9, Column: 11} },
-                        Node: { Label: "fn-body"
-                        children: [
-                            Node: { Label: "control-flow"
-                            children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 10, Column: 12} }
-                            ] }
-                        ] }
-                    ] }
-                ] }
-            ] }
-        ] }
-    ] },
-    Node: { Label: "interface"
-    children: [
-        Node: { Token: {Value: D, Type: identifier, Line: 14, Column: 10} },
-        Node: { Label: "interface-body"
-        children: [
-            Node: { Label: "fn"
-            children: [
-                Node: { Token: {Value: action, Type: identifier, Line: 15, Column: 7} },
-                Node: { Label: "params"
-                children: [
-                    Node: { Label: "param"
-                    children: [
-                        Node: { Token: {Value: C, Type: identifier, Line: 15, Column: 14} },
-                        Node: { Token: {Value: c1, Type: identifier, Line: 15, Column: 16} }
-                    ] },
-                    Node: { Label: "param"
-                    children: [
-                        Node: { Token: {Value: C, Type: identifier, Line: 15, Column: 20} },
-                        Node: { Token: {Value: c2, Type: identifier, Line: 15, Column: 22} }
-                    ] }
-                ] },
-                Node: { Token: {Value: bool, Type: type keyword, Line: 15, Column: 29} }
-            ] },
-            Node: { Label: "fn"
-            children: [
-                Node: { Token: {Value: action, Type: identifier, Line: 16, Column: 7} },
-                Node: { Label: "params"
-                children: [
-                    Node: { Label: "param"
-                    children: [
-                        Node: { Token: {Value: C, Type: identifier, Line: 16, Column: 14} },
-                        Node: { Token: {Value: c, Type: identifier, Line: 16, Column: 16} }
-                    ] }
-                ] },
-                Node: { Token: {Value: bool, Type: type keyword, Line: 16, Column: 22} }
-            ] }
-        ] }
-    ] },
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 18, Column: 0}
-    children: [
-        Node: { Token: {Value: E, Type: identifier, Line: 18, Column: 7} },
-        Node: { Label: "interface_list"
-        children: [
-            Node: { Token: {Value: B, Type: identifier, Line: 18, Column: 14} },
-            Node: { Token: {Value: D, Type: identifier, Line: 18, Column: 16} }
-        ] },
-        Node: { Label: "struct-body"
-        children: [
-            Node: { Label: "named-block"
-            children: [
-                Node: { Token: {Value: B, Type: identifier, Line: 19, Column: 4} },
-                Node: { Label: "named-block-body"
-                children: [
-                    Node: { Label: "fn"
-                    children: [
-                        Node: { Token: {Value: test, Type: identifier, Line: 20, Column: 11} },
-                        Node: { Label: "fn-body"
-                        children: [
-                            Node: { Label: "call"
-                            children: [
-                                Node: { Token: {Value: println, Type: identifier, Line: 21, Column: 12} },
-                                Node: { Label: "params"
-                                children: [
-                                    Node: { Token: %!v(PANIC=String method: runtime error: index out of range [8] with length 0) }
-                                ] }
-                            ] }
-                        ] }
-                    ] },
-                    Node: { Label: "fn"
-                    children: [
-                        Node: { Token: {Value: implemented, Type: identifier, Line: 23, Column: 11} },
-                        Node: { Token: {Value: bool, Type: type keyword, Line: 23, Column: 28} },
-                        Node: { Label: "fn-body"
-                        children: [
-                            Node: { Label: "control-flow"
-                            children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 24, Column: 12} },
-                                Node: { Token: {Value: &&, Type: operator, Line: 24, Column: 24}
-                                children: [
-                                    Node: { Token: {Value: true, Type: boolean value keyword, Line: 24, Column: 19} },
-                                    Node: { Token: {Value: false, Type: boolean value keyword, Line: 24, Column: 27} }
-                                ] }
-                            ] }
-                        ] }
-                    ] }
-                ] }
-            ] },
-            Node: { Label: "named-block"
-            children: [
-                Node: { Token: {Value: D, Type: identifier, Line: 27, Column: 4} },
-                Node: { Label: "named-block-body"
-                children: [
-                    Node: { Label: "fn"
-                    children: [
-                        Node: { Token: {Value: action, Type: identifier, Line: 28, Column: 11} },
-                        Node: { Label: "params"
-                        children: [
-                            Node: { Label: "param"
-                            children: [
-                                Node: { Token: {Value: C, Type: identifier, Line: 28, Column: 18} },
-                                Node: { Token: {Value: c1, Type: identifier, Line: 28, Column: 20} }
-                            ] },
-                            Node: { Label: "param"
-                            children: [
-                                Node: { Token: {Value: C, Type: identifier, Line: 28, Column: 24} },
-                                Node: { Token: {Value: c2, Type: identifier, Line: 28, Column: 26} }
-                            ] }
-                        ] },
-                        Node: { Token: {Value: bool, Type: type keyword, Line: 28, Column: 33} },
-                        Node: { Label: "fn-body"
-                        children: [
-                            Node: { Label: "control-flow"
-                            children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 29, Column: 12} },
-                                Node: { Token: {Value: &&, Type: operator, Line: 29, Column: 36}
-                                children: [
-                                    Node: { Label: "call"
-                                    children: [
-                                        Node: { Label: "dot"
-                                        children: [
-                                            Node: { Token: {Value: c1, Type: identifier, Line: 29, Column: 19} },
-                                            Node: { Token: {Value: implemented, Type: identifier, Line: 29, Column: 22} }
-                                        ] }
-                                    ] },
-                                    Node: { Label: "call"
-                                    children: [
-                                        Node: { Label: "dot"
-                                        children: [
-                                            Node: { Token: {Value: c2, Type: identifier, Line: 29, Column: 39} },
-                                            Node: { Token: {Value: implemented, Type: identifier, Line: 29, Column: 42} }
-                                        ] }
-                                    ] }
-                                ] }
-                            ] }
-                        ] }
-                    ] },
-                    Node: { Label: "fn"
-                    children: [
-                        Node: { Token: {Value: action, Type: identifier, Line: 31, Column: 11} },
-                        Node: { Label: "params"
-                        children: [
-                            Node: { Label: "param"
-                            children: [
-                                Node: { Token: {Value: C, Type: identifier, Line: 31, Column: 18} },
-                                Node: { Token: {Value: c1, Type: identifier, Line: 31, Column: 20} }
-                            ] }
-                        ] },
-                        Node: { Token: {Value: bool, Type: type keyword, Line: 31, Column: 27} },
-                        Node: { Label: "fn-body"
-                        children: [
-                            Node: { Label: "control-flow"
-                            children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 32, Column: 12} },
-                                Node: { Token: {Value: !, Type: unary operator, Line: 32, Column: 19}
-                                children: [
-                                    Node: { Label: "dot"
-                                    children: [
-                                        Node: { Token: {Value: c1, Type: identifier, Line: 32, Column: 20} },
-                                        Node: { Token: {Value: implemented, Type: identifier, Line: 32, Column: 23} }
-                                    ] }
-                                ] }
-                            ] }
-                        ] }
-                    ] }
-                ] }
-            ] }
-        ] }
-    ] }
-] }
-, Compiler messages:
-[]
 
 ---

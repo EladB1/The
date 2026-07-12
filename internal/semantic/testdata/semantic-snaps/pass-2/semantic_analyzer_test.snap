@@ -68,7 +68,7 @@ children: [
                         Node: { Token: {Value: println, Type: identifier, Line: 12, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: %!v(PANIC=String method: runtime error: index out of range [0] with length 0) }
+                            Node: { Token: {Value: "Here", Type: string literal, Line: 12, Column: 16} }
                         ] }
                     ] }
                 ] }
@@ -243,8 +243,8 @@ Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overlo
 ] }
 Compiler messages:
 [
-    "Error: Missing entrypoint function 'fn main()->int' ",
-    "IllegalStatementError: Function name 'a' already defined without a return type; cannot overload with return type bool at line: 4, column: 5"
+    "IllegalStatementError: Function name 'a' already defined without a return type; cannot overload with return type bool at line: 4, column: 5",
+    "Error: Missing entrypoint function 'fn main()->int' "
 ]
 
 ---
