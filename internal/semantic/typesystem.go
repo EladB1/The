@@ -392,8 +392,13 @@ func evalMult(left *parser.AST, right *parser.AST, operator lexer.Token, expecte
 	} else {
 		nodeType, err := decideNumberType(lhs, rhs, operator.Value)
 		if err != nil {
-			messages.Complain(diagnostic.TypeError, operator.Location, "%s", err.Error())
-			hasError = true
+			if slices.Contains(datatypes.UnsignedTypes, lhs) && slices.Contains(datatypes.SignedIntTypes, rhs) && left.Token.Kind == lexer.ID && right.IsLiteral() {
+				nodeType = lhs
+				return nodeType, hasError
+			} else {
+				messages.Complain(diagnostic.TypeError, operator.Location, "%s", err.Error())
+				hasError = true
+			}
 		} else {
 			return nodeType, hasError
 		}
@@ -425,6 +430,15 @@ func evalCompare(left *parser.AST, right *parser.AST, operator lexer.Token, expe
 		return datatypes.None, true
 	}
 	if !comparableCheck(lhs, rhs) {
+		if slices.Contains(datatypes.NumericTypes, lhs) && slices.Contains(datatypes.NumericTypes, rhs) {
+			_, err := handleBinaryNumberExpression(left, right, operator.Value, expectedType)
+			if err == nil {
+				return datatypes.Bool, hasError
+			} else {
+				messages.Complain(diagnostic.TypeError, operator.Location, "%s", err.Error())
+				hasError = true
+			}
+		}
 		messages.Complain(diagnostic.TypeError, operator.Location, "Invalid comparison between %s and %s", lhs, rhs)
 		return datatypes.None, true
 	}
@@ -462,6 +476,24 @@ func comparableCheck(lhs datatypes.DataType, rhs datatypes.DataType) bool {
 	rhsSigned := slices.Contains(datatypes.SignedIntTypes, rhs) || slices.Contains(datatypes.FloatTypes, rhs)
 
 	return lhs == rhs || (lhsUnsigned && rhsUnsigned) || (lhsSigned && rhsSigned)
+}
+
+func handleBinaryNumberExpression(left *parser.AST, right *parser.AST, operator string, expectedType datatypes.DataType) (datatypes.DataType, error) {
+	inferLeft := left.IsLiteralExpression() && !right.IsLiteralExpression()
+	inferRight := !left.IsLiteralExpression() && right.IsLiteralExpression()
+	var lhs, rhs datatypes.DataType
+	var lHasErr, rHasErr bool
+	if inferLeft {
+		rhs, rHasErr = evalType(right, expectedType)
+		lhs, lHasErr = evalType(left, rhs)
+	} else if inferRight {
+		lhs, lHasErr = evalType(left, expectedType)
+		rhs, rHasErr = evalType(right, lhs)
+	}
+	if lHasErr || rHasErr {
+		return datatypes.None, nil
+	}
+	return decideNumberType(lhs, rhs, operator)
 }
 
 func decideNumberType(lhs datatypes.DataType, rhs datatypes.DataType, operator string) (datatypes.DataType, error) {

@@ -14,7 +14,10 @@ struct ErrorLogger impl Logger {
 
 fn main() -> int {
     Logger logger = ErrorLogger{};
-    uint32 i = SOME_CONST ** 2;
+    mut uint32 i = SOME_CONST ** 2;
+    i += 2;
+    i = i * 2;
+    bool less = i < 10;
     if (i > UINT32_MAX) {
         logger.log("This number is too big!");
         return 1;

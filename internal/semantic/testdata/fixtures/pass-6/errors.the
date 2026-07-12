@@ -34,7 +34,7 @@ String end = greet[^'a'];
 String slice3 = greet[^true ..= ^c];
 String expo = greet ** 2;
 
-// functions
+// // functions
 
 fn test(int i) -> int {
     return i+1;

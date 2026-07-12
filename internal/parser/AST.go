@@ -84,3 +84,31 @@ func (ast *AST) IsLiteral() bool {
 func (ast *AST) HasChildren() bool {
 	return len(ast.Children) != 0
 }
+
+func (ast *AST) ContainsIdentifier() bool {
+	if ast.Token.Kind == lexer.ID {
+		return true
+	}
+	for _, child := range ast.Children {
+		if child.ContainsIdentifier() {
+			return true
+		}
+	}
+	return false
+}
+
+func (ast *AST) ContainsOnlyLiterals() bool {
+	if ast.IsLiteral() {
+		return true
+	}
+	for _, child := range ast.Children {
+		if !child.ContainsOnlyLiterals() {
+			return false
+		}
+	}
+	return false
+}
+
+func (ast *AST) IsLiteralExpression() bool {
+	return ast.ContainsOnlyLiterals() && !ast.ContainsIdentifier()
+}

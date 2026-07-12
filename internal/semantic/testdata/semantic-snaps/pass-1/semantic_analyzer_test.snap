@@ -31,7 +31,6 @@ children: [
 ] }
 ScopeTree:
 Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overloads: [{parameters: (any), implemented: false}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: false}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: false}]}], variables: map[DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
-    Scope: { id: @global, parent: @built-in },
     Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B}], structs: map[One:{name: One, size: 0} Two:{name: Two, size: 0, implements: [A, B]}], children: [
         Scope: { id: A, type: 1, parent: @global },
         Scope: { id: B, type: 1, parent: @global },
@@ -90,14 +89,12 @@ children: [
 ] }
 ScopeTree:
 Scope: { id: @built-in, functions: map[print:{name: print, returns: None, overloads: [{parameters: (any), implemented: false}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: false}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: false}]}], variables: map[DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
-    Scope: { id: @global, parent: @built-in },
     Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B}], structs: map[One:{name: One, size: 0} Two:{name: Two, size: 0, implements: [A, B]}], children: [
         Scope: { id: A, type: 1, parent: @global },
         Scope: { id: B, type: 1, parent: @global },
         Scope: { id: One, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: Two, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in },
     Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A}], structs: map[B:{name: B, size: 0}], children: [
         Scope: { id: A, type: 1, parent: @global },
         Scope: { id: B, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] }
