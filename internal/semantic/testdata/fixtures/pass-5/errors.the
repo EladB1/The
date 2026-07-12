@@ -27,5 +27,7 @@ struct E impl A, B {
 interface F {
     fn something() {
         println("something");
+        E e = E{};
+        e.extra();
     }
 }

@@ -97,6 +97,14 @@ func (str StructSymbol) getConflicts(fn string) []string {
 	return nil
 }
 
+func (str StructSymbol) UpdateImplFnNames(fn string, intf string) {
+	if names, ok := str.implFnNames[fn]; ok {
+		str.implFnNames[fn] = append(names, intf)
+	} else {
+		str.implFnNames[fn] = []string{intf}
+	}
+}
+
 func (intf InterfaceSymbol) getNamedBlockIfExists(name string) *NamedBlockSymbol {
 	return nil
 }

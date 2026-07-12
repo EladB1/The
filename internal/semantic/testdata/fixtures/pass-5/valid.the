@@ -30,7 +30,11 @@ struct E impl B,D {
             return c1.implemented() && c2.implemented();
         }
         fn action(C c1) -> bool {
-            return !c1.implemented;
+            return !c1.implemented();
         }
     }
+}
+
+fn main() -> int {
+    return 0;
 }

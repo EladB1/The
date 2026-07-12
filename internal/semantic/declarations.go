@@ -68,9 +68,10 @@ func processFunctionSignature(fnNode parser.AST) FnCreateSymbol {
 		}
 	}
 	if bodyNode != nil {
-		scopeId := fmt.Sprintf("@%s", name)
+		paramList := datatypes.Join(paramTypes)
+		scopeId := fmt.Sprintf("@%s(%s)", name, paramList)
 		if currentScope.id != "@global" {
-			scopeId = fmt.Sprintf("%s@%s", name, currentScope.id)
+			scopeId = fmt.Sprintf("%s(%s)@%s", name, paramList, currentScope.id)
 		}
 		newScope = currentScope.addChild(scopeId, Function)
 		for i := range len(paramNames) {

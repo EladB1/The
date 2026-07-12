@@ -230,6 +230,7 @@ func analyzeInterfaceImplementation() {
 					for i, overload := range fn.overloads {
 						params := datatypes.Join(overload.parameters)
 						if missing {
+							str.UpdateImplFnNames(fn.name, intfName)
 							if overload.hasDefaultImplementation { // copy it over from the interface
 								nb_fn.overloads[i].parameters = overload.parameters
 								nb_fn.overloads[i].innerScope = namedBlock.innerScope.addChild(fmt.Sprintf("%s@%s", fn.name, namedBlock.innerScope.id), Function)

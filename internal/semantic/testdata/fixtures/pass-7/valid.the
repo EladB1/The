@@ -1,5 +1,6 @@
 interface A {
     fn test();
+    fn test(uint32 u) {}
     fn test(int i) {
         println(i);
     }
