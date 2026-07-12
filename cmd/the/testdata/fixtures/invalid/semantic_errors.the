@@ -1,0 +1,29 @@
+// no function: main() -> int
+int i = "hello, world!";
+
+interface Data {
+    fn getValue() -> Any;
+    fn getId() -> int;
+}
+
+interface Json {
+    fn getId() -> int;
+}
+
+struct Metadata impl Data, Json {
+    int id;
+    Any value;
+    Data {
+        fn dataIdEquals(int value) {
+            return value == id;
+        }
+    }
+}
+
+fn main() {
+    x = 5;
+    contains("something", true);
+    Metadata metadata = Metadata{id: 1};
+    metadata.getId();
+    return -1;
+}

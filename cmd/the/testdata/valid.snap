@@ -5,14 +5,360 @@ Exit code: 0
 
 Output:
 
-Scope: { id: @global, parent: @built-in, interfaces: map[Logger:{name: Logger}], structs: map[ErrorLogger:{name: ErrorLogger, size: 0}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[SOME_CONST:{name: SOME_CONST, Type: uint32, Initialized: true}], children: [
-    Scope: { id: Logger, parent: @global, functions: map[log:{name: log, returns: None, overloads: [{parameters: (String), implemented: false}]}] },
-    Scope: { id: ErrorLogger, parent: @global, namedBlocks: map[Logger:{name: Logger}], children: [
-        Scope: { id: Logger@ErrorLogger, parent: ErrorLogger, functions: map[log:{name: log, returns: None, overloads: [{parameters: (String), implemented: true}]}], children: [
-            Scope: { id: log@Logger@ErrorLogger, parent: Logger@ErrorLogger, variables: map[error:{name: error, Type: String, Initialized: false}] }
+Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: false}{parameters: (bool,String), implemented: false}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: false}{parameters: (String,String), implemented: false}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: false}{parameters: (int,String), implemented: false}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: false}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: false}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: false}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: false}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: false}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: false}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: false}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: false}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: false}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: false}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: false}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: false}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: false}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: false}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: false}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: false}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[Logger:{name: Logger}], structs: map[ErrorLogger:{name: ErrorLogger, size: 0, implements: [Logger]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[SOME_CONST:{name: SOME_CONST, Type: uint32, Initialized: true}], children: [
+        Scope: { id: Logger, type: 1, parent: @global, functions: map[log:{name: log, returns: None, overloads: [{parameters: (String), implemented: false}]}] },
+        Scope: { id: ErrorLogger, type: 2, parent: @global, namedBlocks: map[Logger:{name: Logger}], variables: map[Logger:{name: Logger, Type: ScopeRef(ErrorLogger,Logger), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: Logger@ErrorLogger, type: 3, parent: ErrorLogger, functions: map[log:{name: log, returns: None, overloads: [{parameters: (String), implemented: true}]}], children: [
+                Scope: { id: log(String)@Logger@ErrorLogger, type: 4, parent: Logger@ErrorLogger, variables: map[error:{name: error, Type: String, Initialized: false}] }
+            ] }
+        ] },
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[i:{name: i, Type: uint32, isMutable: true, Initialized: true} indx:{name: indx, Type: int, Initialized: true} less:{name: less, Type: bool, Initialized: true} logger:{name: logger, Type: Logger, Initialized: true} str:{name: str, Type: String, Initialized: true}], children: [
+            Scope: { id: if#0@@main(), type: 6, parent: @main() },
+            Scope: { id: else if#0.0@@main(), type: 6, parent: @main() },
+            Scope: { id: else#0@@main(), type: 6, parent: @main() },
+            Scope: { id: for#0@@main(), type: 5, parent: @main(), variables: map[c:{name: c, Type: char, Initialized: false} k:{name: k, Type: int, Initialized: false}], children: [
+                Scope: { id: if#1@for#0@@main(), type: 6, parent: for#0@@main() }
+            ] },
+            Scope: { id: while#0@@main(), type: 5, parent: @main(), children: [
+                Scope: { id: if#2@while#0@@main(), type: 6, parent: while#0@@main() }
+            ] }
+        ] }
+    ] }
+] }
+Node: { Label: "program"
+children: [
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: uint32, Type: type keyword, Line: 0, Column: 0} },
+        Node: { Token: {Value: SOME_CONST, Type: identifier, Line: 0, Column: 7} },
+        Node: { Token: {Value: 50000, Type: int literal, Line: 0, Column: 20}, Type: uint32 }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: Logger, Type: identifier, Line: 2, Column: 10} },
+        Node: { Label: "interface-body"
+        children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: log, Type: identifier, Line: 3, Column: 7} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: String, Type: type keyword, Line: 3, Column: 11} },
+                        Node: { Token: {Value: message, Type: identifier, Line: 3, Column: 18} }
+                    ] }
+                ] }
+            ] }
         ] }
     ] },
-    Scope: { id: @main, parent: @global }
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 6, Column: 0}
+    children: [
+        Node: { Token: {Value: ErrorLogger, Type: identifier, Line: 6, Column: 7} },
+        Node: { Label: "interface_list"
+        children: [
+            Node: { Token: {Value: Logger, Type: identifier, Line: 6, Column: 24} }
+        ] },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "named-block"
+            children: [
+                Node: { Token: {Value: Logger, Type: identifier, Line: 7, Column: 4} },
+                Node: { Label: "named-block-body"
+                children: [
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: log, Type: identifier, Line: 8, Column: 11} },
+                        Node: { Label: "params"
+                        children: [
+                            Node: { Label: "param"
+                            children: [
+                                Node: { Token: {Value: String, Type: type keyword, Line: 8, Column: 15} },
+                                Node: { Token: {Value: error, Type: identifier, Line: 8, Column: 22} }
+                            ] }
+                        ] },
+                        Node: { Label: "fn-body"
+                        children: [
+                            Node: { Label: "call"
+                            children: [
+                                Node: { Token: {Value: println, Type: identifier, Line: 9, Column: 12} },
+                                Node: { Label: "params"
+                                children: [
+                                    Node: { Token: {Value: +, Type: add operator, Line: 9, Column: 30}
+                                    children: [
+                                        Node: { Token: {Value: "Error: ", Type: string literal, Line: 9, Column: 20}, Type: String },
+                                        Node: { Token: {Value: error, Type: identifier, Line: 9, Column: 32}, Type: String }
+                                    ] }
+                                ] }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: main, Type: identifier, Line: 14, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 14, Column: 13} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: Logger, Type: identifier, Line: 15, Column: 4} },
+                Node: { Token: {Value: logger, Type: identifier, Line: 15, Column: 11} },
+                Node: { Label: "struct_literal", Type: ErrorLogger
+                children: [
+                    Node: { Token: {Value: ErrorLogger, Type: identifier, Line: 15, Column: 20} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Label: "modifiers"
+                children: [
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 16, Column: 4} }
+                ] },
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 16, Column: 8} },
+                Node: { Token: {Value: i, Type: identifier, Line: 16, Column: 15} },
+                Node: { Token: {Value: **, Type: operator, Line: 16, Column: 30}, Type: uint32
+                children: [
+                    Node: { Token: {Value: SOME_CONST, Type: identifier, Line: 16, Column: 19}, Type: uint32 },
+                    Node: { Token: {Value: 2, Type: int literal, Line: 16, Column: 33}, Type: uint32 }
+                ] }
+            ] },
+            Node: { Token: {Value: +=, Type: assign operator, Line: 17, Column: 6}
+            children: [
+                Node: { Token: {Value: i, Type: identifier, Line: 17, Column: 4}, Type: uint32 },
+                Node: { Token: {Value: 2, Type: int literal, Line: 17, Column: 9}, Type: uint32 }
+            ] },
+            Node: { Token: {Value: =, Type: assign operator, Line: 18, Column: 6}
+            children: [
+                Node: { Token: {Value: i, Type: identifier, Line: 18, Column: 4}, Type: uint32 },
+                Node: { Token: {Value: *, Type: multiply operator, Line: 18, Column: 10}, Type: uint32
+                children: [
+                    Node: { Token: {Value: i, Type: identifier, Line: 18, Column: 8}, Type: uint32 },
+                    Node: { Token: {Value: 2, Type: int literal, Line: 18, Column: 12}, Type: uint32 }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: bool, Type: type keyword, Line: 19, Column: 4} },
+                Node: { Token: {Value: less, Type: identifier, Line: 19, Column: 9} },
+                Node: { Token: {Value: <, Type: compare operator, Line: 19, Column: 18}, Type: bool
+                children: [
+                    Node: { Token: {Value: i, Type: identifier, Line: 19, Column: 16}, Type: uint32 },
+                    Node: { Token: {Value: 10, Type: int literal, Line: 19, Column: 20}, Type: uint32 }
+                ] }
+            ] },
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: >, Type: compare operator, Line: 20, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 20, Column: 8}, Type: uint32 },
+                        Node: { Token: {Value: UINT32_MAX, Type: identifier, Line: 20, Column: 12}, Type: uint32 }
+                    ] },
+                    Node: { Label: "conditional_body"
+                    children: [
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Label: "dot"
+                            children: [
+                                Node: { Token: {Value: logger, Type: identifier, Line: 21, Column: 8} },
+                                Node: { Token: {Value: log, Type: identifier, Line: 21, Column: 15} }
+                            ] },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: "This number is too big!", Type: string literal, Line: 21, Column: 19} }
+                            ] }
+                        ] },
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 22, Column: 8} },
+                            Node: { Token: {Value: 1, Type: int literal, Line: 22, Column: 15}, Type: int }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else if"
+                children: [
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 24, Column: 19}, Type: bool
+                    children: [
+                        Node: { Token: {Value: %, Type: multiply operator, Line: 24, Column: 15}, Type: uint32
+                        children: [
+                            Node: { Token: {Value: i, Type: identifier, Line: 24, Column: 13}, Type: uint32 },
+                            Node: { Token: {Value: 2, Type: int literal, Line: 24, Column: 17}, Type: int }
+                        ] },
+                        Node: { Token: {Value: 0, Type: int literal, Line: 24, Column: 22}, Type: uint32 }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Label: "dot"
+                            children: [
+                                Node: { Token: {Value: logger, Type: identifier, Line: 25, Column: 8} },
+                                Node: { Token: {Value: log, Type: identifier, Line: 25, Column: 15} }
+                            ] },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: "Number is even", Type: string literal, Line: 25, Column: 19} }
+                            ] }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else"
+                children: [
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Label: "dot"
+                            children: [
+                                Node: { Token: {Value: logger, Type: identifier, Line: 27, Column: 8} },
+                                Node: { Token: {Value: log, Type: identifier, Line: 27, Column: 15} }
+                            ] },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: "Number is odd", Type: string literal, Line: 27, Column: 19} }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: String, Type: type keyword, Line: 28, Column: 4} },
+                Node: { Token: {Value: str, Type: identifier, Line: 28, Column: 11} },
+                Node: { Token: {Value: "hello", Type: string literal, Line: 28, Column: 17}, Type: String }
+            ] },
+            Node: { Label: "for"
+            children: [
+                Node: { Label: "loop-condition"
+                children: [
+                    Node: { Label: "Variable"
+                    children: [
+                        Node: { Token: {Value: int, Type: type keyword, Line: 29, Column: 9} },
+                        Node: { Token: {Value: k, Type: identifier, Line: 29, Column: 13} }
+                    ] },
+                    Node: { Label: "Variable"
+                    children: [
+                        Node: { Token: {Value: char, Type: type keyword, Line: 29, Column: 16} },
+                        Node: { Token: {Value: c, Type: identifier, Line: 29, Column: 21} }
+                    ] },
+                    Node: { Token: {Value: in, Type: operator keyword, Line: 29, Column: 23} },
+                    Node: { Token: {Value: str, Type: identifier, Line: 29, Column: 26} }
+                ] },
+                Node: { Label: "loop-body"
+                children: [
+                    Node: { Label: "if-block"
+                    children: [
+                        Node: { Label: "if"
+                        children: [
+                            Node: { Token: {Value: ||, Type: operator, Line: 30, Column: 19}
+                            children: [
+                                Node: { Token: {Value: ==, Type: compare operator, Line: 30, Column: 14}, Type: bool
+                                children: [
+                                    Node: { Token: {Value: k, Type: identifier, Line: 30, Column: 12}, Type: int },
+                                    Node: { Token: {Value: 0, Type: int literal, Line: 30, Column: 17}, Type: int }
+                                ] },
+                                Node: { Token: {Value: ==, Type: compare operator, Line: 30, Column: 24}, Type: None
+                                children: [
+                                    Node: { Token: {Value: k, Type: identifier, Line: 30, Column: 22}, Type: int },
+                                    Node: { Token: {Value: -, Type: add operator, Line: 30, Column: 38}, Type: None
+                                    children: [
+                                        Node: { Label: "dot", Type: int
+                                        children: [
+                                            Node: { Token: {Value: str, Type: identifier, Line: 30, Column: 27} },
+                                            Node: { Token: {Value: length, Type: identifier, Line: 30, Column: 31} }
+                                        ] },
+                                        Node: { Token: {Value: 1, Type: int literal, Line: 30, Column: 40}, Type: int }
+                                    ] }
+                                ] }
+                            ] },
+                            Node: { Label: "conditional-body"
+                            children: [
+                                Node: { Label: "control-flow"
+                                children: [
+                                    Node: { Token: {Value: continue, Type: flow keyword, Line: 31, Column: 12} }
+                                ] }
+                            ] }
+                        ] }
+                    ] },
+                    Node: { Label: "call"
+                    children: [
+                        Node: { Token: {Value: println, Type: identifier, Line: 32, Column: 8} },
+                        Node: { Label: "params"
+                        children: [
+                            Node: { Token: {Value: c, Type: identifier, Line: 32, Column: 16} }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 34, Column: 4} },
+                Node: { Token: {Value: indx, Type: identifier, Line: 34, Column: 8} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 34, Column: 15}, Type: int }
+            ] },
+            Node: { Label: "while"
+            children: [
+                Node: { Token: {Value: <, Type: compare operator, Line: 35, Column: 16}, Type: None
+                children: [
+                    Node: { Token: {Value: indx, Type: identifier, Line: 35, Column: 11}, Type: int },
+                    Node: { Label: "dot", Type: int
+                    children: [
+                        Node: { Token: {Value: str, Type: identifier, Line: 35, Column: 18} },
+                        Node: { Token: {Value: length, Type: identifier, Line: 35, Column: 22} }
+                    ] }
+                ] },
+                Node: { Label: "loop-body"
+                children: [
+                    Node: { Label: "if-block"
+                    children: [
+                        Node: { Label: "if"
+                        children: [
+                            Node: { Token: {Value: &&, Type: operator, Line: 36, Column: 22}, Type: bool
+                            children: [
+                                Node: { Token: {Value: !=, Type: compare operator, Line: 36, Column: 17}, Type: bool
+                                children: [
+                                    Node: { Token: {Value: indx, Type: identifier, Line: 36, Column: 12}, Type: int },
+                                    Node: { Token: {Value: 0, Type: int literal, Line: 36, Column: 20}, Type: int }
+                                ] },
+                                Node: { Token: {Value: ==, Type: compare operator, Line: 36, Column: 34}, Type: bool
+                                children: [
+                                    Node: { Token: {Value: %, Type: multiply operator, Line: 36, Column: 30}, Type: int
+                                    children: [
+                                        Node: { Token: {Value: indx, Type: identifier, Line: 36, Column: 25}, Type: int },
+                                        Node: { Token: {Value: 7, Type: int literal, Line: 36, Column: 32}, Type: int }
+                                    ] },
+                                    Node: { Token: {Value: 0, Type: int literal, Line: 36, Column: 37}, Type: int }
+                                ] }
+                            ] },
+                            Node: { Label: "conditional-body"
+                            children: [
+                                Node: { Label: "control-flow"
+                                children: [
+                                    Node: { Token: {Value: break, Type: flow keyword, Line: 37, Column: 12} }
+                                ] }
+                            ] }
+                        ] }
+                    ] },
+                    Node: { Label: "Unary"
+                    children: [
+                        Node: { Token: {Value: indx, Type: identifier, Line: 38, Column: 8} },
+                        Node: { Token: {Value: ++, Type: unary operator, Line: 38, Column: 12} }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 40, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 40, Column: 11}, Type: int }
+            ] }
+        ] }
+    ] }
 ] }
 
 

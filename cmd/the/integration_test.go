@@ -66,4 +66,7 @@ func TestInvalidPrograms(t *testing.T) {
 	t.Run("should try to compile parser_errors.the and report parser errors", func(t *testing.T) {
 		snapshotTestCompilerWithArgs(t, snapshots, "testdata/fixtures/invalid/parser_errors.the")
 	})
+	t.Run("should try to compile semantic_errors.the and report semantic errors", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "testdata/fixtures/invalid/semantic_errors.the")
+	})
 }

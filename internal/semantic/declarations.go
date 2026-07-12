@@ -277,12 +277,12 @@ func analyzeForCondition(condition []parser.AST) {
 func analyzeAssignment(stmt *parser.AST) datatypes.DataType {
 	left := stmt.Children[0]
 	symbol := currentScope.lookupVariable(left.Token.Value)
-	if !symbol.isMutable {
-		messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", left.Token.Value)
-		return datatypes.None
-	}
 	if symbol == nil {
 		messages.Complain(diagnostic.NameError, left.Location, "Variable '%s' is not defined in this scope", left.Token.Value)
+		return datatypes.None
+	}
+	if !symbol.isMutable {
+		messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", left.Token.Value)
 		return datatypes.None
 	}
 	rhs, hasError := evalType(&stmt.Children[1], symbol.Type)
