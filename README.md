@@ -663,6 +663,74 @@ instance.B.do(0);
 
 > **Note**: `instance.Interface.function()` can be be used even if there are no conflicts
 
+### Standard Library
+
+Standard library functions/variables are included without importing anything (imports/exports not current supported)
+
+#### Constants:
+
+| Variable | Type | Description | Approx. Value |
+| --- | --- | --- | --- |
+| `INT_MIN` | `int` | Smallest 32-bit signed integer | -2<sup>31</sup> | 
+| `INT_MAX` | `int` | Largest 32-bit signed integer | 2<sup>31</sup> - 1 |
+| `INT64_MIN` | `int64` | Smallest 64-bit signed integer | -2<sup>63</sup> |
+| `INT64_MAX` | `int64` | Largest 64-bit signed integer | 2<sup>63</sup> - 1 | 
+| `UINT32_MAX` | `uint32` | Smallest 32-bit unsigned integer | 2<sup>32</sup> - 1 |
+| `UINT64_MAX` | `uint64` | Largest 64-bit unsigned integer | 2<sup>64</sup> - 1 |
+| `FLOAT_MIN` | `float` | Smallest 32-bit float | -3.4 * 10<sup>38</sup> |
+| `FLOAT_MIN_POSITIVE` | `float` | Smallest (normal) 32-bit float before reaching 0 | 1.18 * 10<sup>-38</sup>
+| `FLOAT_MAX` | `float` | Largest 32-bit float | 3.4 * 10<sup>38</sup> |
+| `FLOAT_EPSILON` | `float` | Value for precise float comparisons; represents max rounding error | 1.19 * 10<sup>-7</sup> |
+| `FLOAT_NaN` | `float` | NaN for 32 bit float | 0x7FC00000 |
+| `FLOAT_INF` | `float` | Positive infinity for 32 bit float | 0x7F800000 |
+| `FLOAT_NEG_INF` | `float` | Negative inifinity for 32 bit float | 0xFF800000 |
+| `DOUBLE_MIN` | `double` | Smallest 64-bit float | -1.79 * 10<sup>308</sup> |
+| `DOUBLE_MIN_POSITIVE` | `double` | Smallest (normal) 64-bit float before reaching 0 | 2.23 * 10<sup>-308</sup> |
+| `DOUBLE_MAX` | `double` | Largest 64-bit float | 1.79 * 10<sup>308</sup> |
+| `DOUBLE_EPSILON` | `double` | Value for precise double comparisons; represents max rounding error | 2.22 * 10<sup>-16</sup> |
+| `DOUBLE_NaN` | `double` | NaN for 64 bit float | 0x7FF8000000000000 |
+| `DOUBLE_INF` | `double` | Positive infinity for 64 bit float | 0x7FF0000000000000 |
+| `DOUBLE_NEG_INF` | `double` | Negative inifinity for 64 bit float | 0xFFF0000000000000 |
+| `PI` | `double` | Value of pi | 3.141592653589793 |
+| `E` | `double` | Value of e (Euler's number) | 2.718281828459045 |
+
+> **NOTE**: `FLOAT_MIN_POSITIVE` and `DOUBLE_MIN_POSITIVE` are both normalized value minimums (hardware accelaration supported). Anything smaller than those will be rounded down to 0. Subnormal floats may be supported later.
+
+
+#### Functions:
+
+| Function | Description
+| --- | --- |
+| `print(Any value)` | Print value to stdout |
+| `println(Any value)` | Print value to stdout with new line ending |
+| `printerr(Any value)` | Print value to stderr |
+| `typeOf(Any value) -> String` | Get the type of a value as a string | 
+| `exit(int status)` | Terminate execution with status code |
+| `exit(int status, String error)` | Terminate execution with status code and error message (will print to stderr) |
+| `sleep(double seconds)` | Block the thread for specified amount of seconds |
+| `getEnv(String key) -> String` | Get the value of environment variable |
+| `setEnv(String key, String value)` | Set the value of environment variable |
+| `indexOf(String string, char chr) -> int` | Get the index of `chr` |
+| `contains(String string, String substring) -> bool` | Check if a string contains a substring |
+| `contains(String string, char chr) -> bool` | Check if a string contains a character |
+| `startsWith(String string, String prefix) -> bool` | Check if a string starts with `prefix` |
+| `endsWith(String string, String suffix) -> bool` | Check if a string ends with `suffix` |
+| `replace(String string, String old, String new) -> String` | Replace the first occurence of `old` with `new` |
+| `replace(String string, char old, char new) -> String` | Replace the first occurence of `old` with `new` |
+| `replaceAll(String string, String old, String new) -> String` |  Replace all occurences of `old` with `new` |
+| `replaceAll(String string, char old, char new) -> String` |  Replace all occurences of `old` with `new` |
+| `reverse(String string) -> String` | Get a string in reverse order |
+| `toUpper(String string) -> String` | Change all characters to uppercase |
+| `toLower(String string) -> String` | Change all characters to lowercase |
+| `trim(String string) -> String` | Remove whitespace from the start and end of string |
+| `trimStart(String string) -> String` | Remove whitespace from the start of string |
+| `trimEnd(String string) -> String` | Remove whitespace from the end of string |
+| `assert(bool condition)` | Check if a condition is true and fail otherwise |
+| `assert(bool condition, String message)` | Check if a condition is true and fail otherwise with a message |
+| `prompt(String promptText) -> String` | Print `promptText` and read from stdin |
+| `secretPrompt(String promptText) -> String` | Print `promptText` and read from stdin but hide characters being typed |
+
+
 ### Memory Management
 
 If the compiler knows the amount of memory of something ahead of time, it will be allocated on the stack and cleaned up when the scope exits
