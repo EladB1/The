@@ -1,6 +1,0 @@
-mut int total;
-double pi = 3.14;
-float otherPi = pi as float;
-int p = pi as int;
-int64 counter = 0;
-int count = counter as int;

@@ -1,5 +1,0 @@
-interface I {
-    fn a();
-    fn a(int i);
-    fn a()->bool;
-}

@@ -1,0 +1,33 @@
+interface Empty {}
+struct Empty {}
+interface Empty {}
+
+interface A {
+    fn do();
+}
+
+interface B {
+    fn do();
+}
+
+struct C impl A, B, A {
+    A {}
+    B {
+        fn do() {
+            printerr("don't");
+            something();
+            return 0;
+        }
+        fn do(int i) -> bool;
+    }
+}
+
+interface D {
+    fn do();
+    fn do(int i) -> bool;
+    fn do();
+    fn undo() -> uint32 {
+        A a = A{};
+        return 1 < 0;
+    }
+}

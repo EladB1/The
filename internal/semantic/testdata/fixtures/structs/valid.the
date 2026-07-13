@@ -1,0 +1,66 @@
+struct Empty {}
+
+interface Device {
+    fn powerOn() -> bool;
+    fn powerOff();
+    fn restart() -> bool {
+        powerOff();
+        return powerOn();
+    }
+    fn uptimeHours() -> uint32 {
+        return 0;
+    }
+}
+
+struct Server impl Device {
+    private {
+        // not real implementations of time... obviously
+        mut uint32 lastStartTime;
+        mut uint32 now;
+    }
+    Device {
+        fn powerOn() -> bool {
+            lastStartTime = now;
+            println("Powering on...");
+            sleep(2.0); // TODO: remove need for casting
+            return true;
+        }
+        fn powerOff() {
+            println("powering off...");
+        }
+        fn uptimeHours() -> uint32 {
+            return now - lastStartTime;
+        }
+    }
+}
+
+interface App {
+    fn help() -> String;
+}
+
+interface Compiler {
+    fn help() -> String {
+        return "./compiler [source_file]";
+    }
+}
+
+struct CompilerApp impl App, Compiler {
+    // implementation conflict: both have `help` function
+    Compiler {}
+    App {
+        fn help() -> String {
+            return "./compiler-app [source_file] [OPTIONS]";
+        } 
+    }
+}
+
+fn resolveImplementationConflict() { // Disambiguation
+    CompilerApp ca = CompilerApp{};
+    println(ca.Compiler.help());
+    println(ca.App.help());
+}
+
+fn main() -> int {
+    
+    return 0;
+}

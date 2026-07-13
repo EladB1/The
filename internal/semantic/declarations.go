@@ -145,7 +145,7 @@ func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig str
 				}
 			} else { // return something
 				rhs, rHasErr := evalType(&stmt.Children[1], fn.returnType)
-				if !rHasErr && rhs != fn.returnType {
+				if !rHasErr && rhs != fn.returnType && !ImplementsInterface(fn.returnType, rhs) {
 					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' expected return type %s but got %s", sig, fn.returnType, rhs)
 				} else {
 					stmt.Type = rhs
@@ -276,52 +276,63 @@ func analyzeForCondition(condition []parser.AST) {
 
 func analyzeAssignment(stmt *parser.AST) datatypes.DataType {
 	left := stmt.Children[0]
-	symbol := currentScope.lookupVariable(left.Token.Value)
-	if symbol == nil {
-		messages.Complain(diagnostic.NameError, left.Location, "Variable '%s' is not defined in this scope", left.Token.Value)
-		return datatypes.None
+	var lhs datatypes.DataType
+	var lHasErr bool
+	if left.Label == "dot" {
+		lhs, lHasErr = handleDot(left.Children[0], left.Children[1], false)
+		if lHasErr {
+			return datatypes.None
+		}
+		// TODO: Fix mutability for this case
+	} else {
+		symbol := currentScope.lookupVariable(left.Token.Value)
+		if symbol == nil {
+			messages.Complain(diagnostic.NameError, left.Location, "Variable '%s' is not defined in this scope", left.Token.Value)
+			return datatypes.None
+		}
+		if !symbol.isMutable {
+			messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", left.Token.Value)
+			return datatypes.None
+		}
+		lhs = symbol.Type
 	}
-	if !symbol.isMutable {
-		messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", left.Token.Value)
-		return datatypes.None
-	}
-	rhs, hasError := evalType(&stmt.Children[1], symbol.Type)
+	rhs, hasError := evalType(&stmt.Children[1], lhs)
 	if hasError {
 		return datatypes.None
 	}
-	stmt.Children[0].Type = symbol.Type
+	stmt.Children[0].Type = lhs
 	operator := stmt.Token.Value
 	switch operator {
 	case "+=":
-		if symbol.Type == datatypes.String {
+		if lhs == datatypes.String {
 			if rhs != datatypes.Char && rhs != datatypes.String {
 				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot concatenate %s to String", rhs.String())
 			}
-		} else if slices.Contains(datatypes.NumericTypes, symbol.Type) {
-			result, err := decideNumberType(symbol.Type, rhs, operator)
+		} else if slices.Contains(datatypes.NumericTypes, lhs) {
+			result, err := decideNumberType(lhs, rhs, operator)
 			if err != nil {
 				messages.Complain(diagnostic.TypeError, stmt.Location, "%s", err.Error())
-			} else if result != symbol.Type {
-				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, symbol.Type)
+			} else if result != lhs {
+				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, lhs)
 			}
 		} else {
-			messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Invalid operation between %s to %s", rhs.String(), symbol.Type)
+			messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Invalid operation between %s to %s", rhs.String(), lhs)
 		}
 	case "-=", "*=", "/=":
-		if slices.Contains(datatypes.NumericTypes, symbol.Type) {
-			result, err := decideNumberType(symbol.Type, rhs, operator)
+		if slices.Contains(datatypes.NumericTypes, lhs) {
+			result, err := decideNumberType(lhs, rhs, operator)
 			if err != nil {
 				messages.Complain(diagnostic.TypeError, stmt.Location, "%s", err.Error())
-			} else if result != symbol.Type {
-				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, symbol.Type)
+			} else if result != lhs {
+				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, lhs)
 			}
 		} else {
-			messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Invalid operation between %s to %s", rhs.String(), symbol.Type)
+			messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Invalid operation between %s to %s", rhs.String(), lhs)
 		}
 	default:
-		if symbol.Type != rhs {
-			if !ImplementsInterface(symbol.Type, rhs) {
-				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, symbol.Type)
+		if lhs != rhs {
+			if !ImplementsInterface(lhs, rhs) {
+				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, lhs)
 			}
 		} else if intf := globalScope.lookupInterface(rhs.String()); intf != nil {
 			messages.Complain(diagnostic.IllegalStatementError, stmt.Children[1].Location, "Cannot use interface type as value")

@@ -1,7 +1,0 @@
-interface A {}
-
-interface B {}
-
-struct One {}
-
-struct Two impl A, B {}

@@ -90,8 +90,8 @@ func snapshotTestSemanticAnalyzer(t *testing.T, filename string, subdir string) 
 	snapshots.MatchSnapshot(t, results)
 }
 
-func TestPassOne(t *testing.T) {
-	subdir := "pass-1"
+func TestInterfaces(t *testing.T) {
+	subdir := "interfaces"
 	t.Run("should run valid.the and have no errors", func(t *testing.T) {
 		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
 	})
@@ -100,18 +100,21 @@ func TestPassOne(t *testing.T) {
 	})
 }
 
-func TestPassTwo(t *testing.T) {
-	subdir := "pass-2"
+func TestStructs(t *testing.T) {
+	subdir := "structs"
 	t.Run("should run valid.the and have no errors", func(t *testing.T) {
 		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
+	})
+	t.Run("should run warnings.the and have warnings", func(t *testing.T) {
+		snapshotTestSemanticAnalyzer(t, "warnings.json", subdir)
 	})
 	t.Run("should errors.the and have errors", func(t *testing.T) {
 		snapshotTestSemanticAnalyzer(t, "errors.json", subdir)
 	})
 }
 
-func TestPassThree(t *testing.T) {
-	subdir := "pass-3"
+func TestVariables(t *testing.T) {
+	subdir := "variables"
 	t.Run("should run valid.the and have no errors", func(t *testing.T) {
 		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
 	})
@@ -123,28 +126,8 @@ func TestPassThree(t *testing.T) {
 	})
 }
 
-func TestPassFour(t *testing.T) {
-	subdir := "pass-4"
-	t.Run("should run valid.the and have no errors", func(t *testing.T) {
-		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
-	})
-	t.Run("should errors.the and have a mix of errors and warnings", func(t *testing.T) {
-		snapshotTestSemanticAnalyzer(t, "errors.json", subdir)
-	})
-}
-
-func TestPassFive(t *testing.T) {
-	subdir := "pass-5"
-	t.Run("should run valid.the and have no errors", func(t *testing.T) {
-		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
-	})
-	t.Run("should errors.the and have a mix of errors and warnings", func(t *testing.T) {
-		snapshotTestSemanticAnalyzer(t, "errors.json", subdir)
-	})
-}
-
-func TestPassSix(t *testing.T) {
-	subdir := "pass-6"
+func TestFunctions(t *testing.T) {
+	subdir := "functions"
 	t.Run("should run valid.the and have no errors", func(t *testing.T) {
 		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
 	})
@@ -155,3 +138,13 @@ func TestPassSix(t *testing.T) {
 		snapshotTestSemanticAnalyzer(t, "errors.json", subdir)
 	})
 }
+
+// func TestBranch(t *testing.T) {
+// 	subdir := "branch"
+// 	t.Run("should run valid.the and have no errors", func(t *testing.T) {
+// 		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
+// 	})
+// 	t.Run("should errors.the and have a mix of errors and warnings", func(t *testing.T) {
+// 		snapshotTestSemanticAnalyzer(t, "errors.json", subdir)
+// 	})
+// }

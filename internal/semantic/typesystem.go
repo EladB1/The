@@ -24,10 +24,10 @@ func evalLiteral(ast *parser.AST, expectedType datatypes.DataType) datatypes.Dat
 	case lexer.LIT_STRING:
 		return datatypes.String
 	case lexer.LIT_FLOAT:
-		if expectedType == datatypes.Double {
-			return datatypes.Double
+		if expectedType == datatypes.Float {
+			return datatypes.Float
 		}
-		return datatypes.Float
+		return datatypes.Double
 	case lexer.LIT_INT, lexer.LIT_HEX:
 		if slices.Contains(datatypes.NumericTypes, expectedType) {
 			return expectedType
@@ -43,7 +43,11 @@ func evalStructLiteral(ast *parser.AST) datatypes.DataType {
 	name := ast.Children[0].Token.Value
 	symbol := globalScope.lookupStruct(name)
 	if symbol == nil {
-		messages.Complain(diagnostic.NameError, ast.Location, "Struct %s not defined", name)
+		if intf := globalScope.lookupInterface(name); intf != nil {
+			messages.Complain(diagnostic.IllegalStatementError, ast.Location, "Cannot create interface literal value")
+		} else {
+			messages.Complain(diagnostic.NameError, ast.Location, "Struct %s not defined", name)
+		}
 		return datatypes.None
 	}
 	if len(ast.Children) == 1 {
@@ -64,7 +68,7 @@ func evalStructLiteral(ast *parser.AST) datatypes.DataType {
 			continue
 		}
 		value := prop.Children[1]
-		if valueType, hasErr := evalType(&value, property.Type); property.Type != valueType && !hasErr {
+		if valueType, hasErr := evalType(&value, property.Type); property.Type != valueType && !ImplementsInterface(property.Type, valueType) && !hasErr {
 			messages.Complain(diagnostic.TypeError, value.Location, "Property type %s expected but found %s", property.Type, valueType)
 		}
 		visited.Append(propId)
@@ -186,6 +190,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 						messages.Complain(diagnostic.CastError, ast.Location, "Cannot typecast %s to %s. To support typecasting add a cast block with a function returning the target type", lhs, target)
 						hasError = true
 					} else if !castBlock.HasReturnType(target) {
+						// TODO: check if the matching function has a body
 						messages.Complain(diagnostic.CastError, ast.Location, "Cannot typecast %s to %s. To support this typecasting add a function returning target type to cast block", lhs, target)
 						hasError = true
 					}
@@ -453,12 +458,12 @@ func evalCompare(left *parser.AST, right *parser.AST, operator lexer.Token, expe
 			} else {
 				switch operator.Value {
 				case "<", "<=":
-					if symbol := compareBlock.innerScope.lookupFunctionByName("lessThan"); symbol == nil || symbol.returnType != datatypes.Bool {
+					if symbol := compareBlock.innerScope.lookupFunctionByName("lessThan"); symbol == nil || symbol.returnType != datatypes.Bool || !symbol.overloads[0].hasDefaultImplementation {
 						messages.Complain(diagnostic.TypeError, operator.Location, "Unsupported comparison. To support operators '<' and '<=', add function 'fn lessThan(%s)->bool' to compare block in %s definition", lhs, lhs)
 						hasError = true
 					}
 				case ">", ">=":
-					if symbol := compareBlock.innerScope.lookupFunctionByName("greaterThan"); symbol == nil || symbol.returnType != datatypes.Bool {
+					if symbol := compareBlock.innerScope.lookupFunctionByName("greaterThan"); symbol == nil || symbol.returnType != datatypes.Bool || !symbol.overloads[0].hasDefaultImplementation {
 						messages.Complain(diagnostic.TypeError, operator.Location, "Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(%s)->bool' to compare block in %s definition", lhs, lhs)
 						hasError = true
 					}

@@ -1,0 +1,130 @@
+struct A {}
+struct A {}
+
+interface Device {
+    fn powerOn();
+    fn powerOff();
+}
+
+struct Server impl Device, Computer {
+    Device {
+        fn powerOn() {
+            println("Server online");
+        }
+    }
+    Computer {}
+    Hardware {}
+}
+
+struct Position2D {
+    int x;
+    int y;
+}
+
+struct Location impl Position2D {}
+
+struct Laptop impl Device {}
+
+struct Container {
+    String id;
+    private int runTimeVersion;
+    random {
+        fn test() {
+            return;
+        }
+    }
+    cast {
+        int wrongPlace;
+        fn toInterface() -> Device {
+            return Server{};
+        }
+        fn toString(String name) -> String {
+            return name + id;
+        }
+        fn toNone() {
+            return;
+        }
+        fn toSame() -> Container {
+            return Container{id: id};
+        }
+    }
+    compare {
+        int wrongPlace2;
+        fn greaterThanOrEqualTo(Container other) -> bool {
+            return true;
+        }
+        fn equals(Container other) -> bool {
+            return false;
+        }
+        fn equals(Container other, uint32 someOtherValue) -> bool {
+            return false;
+        }
+        fn lessThan(Container other) {
+            println(other);
+        }
+        fn greaterThan(Container other) -> bool;
+    }
+}
+
+interface DB {
+    fn connect();
+}
+
+interface Backend {
+    fn connect();
+}
+
+struct App impl DB, Backend {
+    DB {
+        fn connect() {
+            println("Connected");
+        }
+    }
+    Backend {
+        fn connect() {
+            exit(1, "Failed to connect");
+        }
+    }
+}
+
+struct PostgreSQL impl DB {
+    DB {
+        fn connect() {
+            println("Connected to DB server");
+        }
+        fn connect(bool TLS) {
+            if (TLS) {
+                println("Connected to DB server with TLS");
+            } else {
+                printerr("Warning: insecure connection");
+                println("Connected to DB server");
+            }
+        }
+        fn connect() -> bool {
+            return true;
+        }
+    }
+}
+
+struct MariaDB impl DB {
+    DB {
+        fn connect() -> float {
+            float seconds = 0.025;
+            return seconds;
+        }
+    }
+}
+
+fn main() -> int {
+    App app = App{};
+    app.connect();
+    Container one = Container{id: "one", id: "1"};
+    Container two = Container{id: "two", image: "alpine-linux@latest"};
+    Container three = Container{id: '3'};
+    one > two;
+    float f1 = one as float;
+    one * two + three;
+    println(one.runTimeVersion);
+    two.id = "2"; // TODO: Fix mutability for this case
+    return 0;
+}

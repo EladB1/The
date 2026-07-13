@@ -1,0 +1,459 @@
+
+[TestInterfaces/should_run_valid.the_and_have_no_errors - 1]
+AST:
+Node: { Label: "program"
+children: [
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: Empty, Type: identifier, Line: 0, Column: 10} },
+        Node: { Label: "interface-body" }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 1, Column: 0}
+    children: [
+        Node: { Token: {Value: AlsoEmpty, Type: identifier, Line: 1, Column: 7} },
+        Node: { Label: "struct-body" }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: Result, Type: identifier, Line: 3, Column: 10} },
+        Node: { Label: "interface-body"
+        children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: display, Type: identifier, Line: 4, Column: 7} }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: getStatus, Type: identifier, Line: 5, Column: 7} },
+                Node: { Token: {Value: String, Type: type keyword, Line: 5, Column: 22} }
+            ] }
+        ] }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 8, Column: 0}
+    children: [
+        Node: { Token: {Value: TestResult, Type: identifier, Line: 8, Column: 7} },
+        Node: { Label: "interface_list"
+        children: [
+            Node: { Token: {Value: Result, Type: identifier, Line: 8, Column: 23} }
+        ] },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: String, Type: type keyword, Line: 9, Column: 4} },
+                Node: { Token: {Value: status, Type: identifier, Line: 9, Column: 11} }
+            ] },
+            Node: { Label: "named-block"
+            children: [
+                Node: { Token: {Value: Result, Type: identifier, Line: 10, Column: 4} },
+                Node: { Label: "named-block-body"
+                children: [
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: display, Type: identifier, Line: 11, Column: 11} },
+                        Node: { Label: "fn-body"
+                        children: [
+                            Node: { Label: "call"
+                            children: [
+                                Node: { Token: {Value: println, Type: identifier, Line: 12, Column: 12} },
+                                Node: { Label: "params"
+                                children: [
+                                    Node: { Token: {Value: +, Type: add operator, Line: 12, Column: 38}
+                                    children: [
+                                        Node: { Token: {Value: "Result status: ", Type: string literal, Line: 12, Column: 20}, Type: String },
+                                        Node: { Token: {Value: status, Type: identifier, Line: 12, Column: 40}, Type: String }
+                                    ] }
+                                ] }
+                            ] }
+                        ] }
+                    ] },
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: getStatus, Type: identifier, Line: 14, Column: 11} },
+                        Node: { Token: {Value: String, Type: type keyword, Line: 14, Column: 26} },
+                        Node: { Label: "fn-body"
+                        children: [
+                            Node: { Label: "control-flow"
+                            children: [
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 15, Column: 12} },
+                                Node: { Token: {Value: status, Type: identifier, Line: 15, Column: 19}, Type: String }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: Runner, Type: identifier, Line: 20, Column: 10} },
+        Node: { Label: "interface-body"
+        children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: run, Type: identifier, Line: 21, Column: 7} },
+                Node: { Token: {Value: Result, Type: identifier, Line: 21, Column: 16} }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: showUsage, Type: identifier, Line: 22, Column: 7} },
+                Node: { Label: "fn-body"
+                children: [
+                    Node: { Label: "call"
+                    children: [
+                        Node: { Token: {Value: println, Type: identifier, Line: 23, Column: 8} },
+                        Node: { Label: "params"
+                        children: [
+                            Node: { Token: {Value: "Usage is `./run [args]`", Type: string literal, Line: 23, Column: 16} }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: startup, Type: identifier, Line: 25, Column: 7} },
+                Node: { Label: "fn-body"
+                children: [
+                    Node: { Label: "call"
+                    children: [
+                        Node: { Token: {Value: println, Type: identifier, Line: 26, Column: 8} },
+                        Node: { Label: "params"
+                        children: [
+                            Node: { Token: {Value: "Starting run...", Type: string literal, Line: 26, Column: 16} }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 30, Column: 0}
+    children: [
+        Node: { Token: {Value: TestRunner, Type: identifier, Line: 30, Column: 7} },
+        Node: { Label: "interface_list"
+        children: [
+            Node: { Token: {Value: Runner, Type: identifier, Line: 30, Column: 23} }
+        ] },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "named-block"
+            children: [
+                Node: { Token: {Value: Runner, Type: identifier, Line: 31, Column: 4} },
+                Node: { Label: "named-block-body"
+                children: [
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: run, Type: identifier, Line: 32, Column: 11} },
+                        Node: { Token: {Value: Result, Type: identifier, Line: 32, Column: 20} },
+                        Node: { Label: "fn-body"
+                        children: [
+                            Node: { Label: "call"
+                            children: [
+                                Node: { Token: {Value: startup, Type: identifier, Line: 33, Column: 12} }
+                            ] },
+                            Node: { Label: "control-flow"
+                            children: [
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 34, Column: 12} },
+                                Node: { Label: "struct_literal", Type: TestResult
+                                children: [
+                                    Node: { Token: {Value: TestResult, Type: identifier, Line: 34, Column: 19} },
+                                    Node: { Label: "properties"
+                                    children: [
+                                        Node: { Label: "property"
+                                        children: [
+                                            Node: { Token: {Value: status, Type: identifier, Line: 34, Column: 30} },
+                                            Node: { Token: {Value: "passed", Type: string literal, Line: 34, Column: 38} }
+                                        ] }
+                                    ] }
+                                ] }
+                            ] }
+                        ] }
+                    ] },
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: showUsage, Type: identifier, Line: 36, Column: 11} },
+                        Node: { Label: "fn-body"
+                        children: [
+                            Node: { Label: "call"
+                            children: [
+                                Node: { Token: {Value: println, Type: identifier, Line: 37, Column: 12} },
+                                Node: { Label: "params"
+                                children: [
+                                    Node: { Token: {Value: "Usage is `./test-run [args]`", Type: string literal, Line: 37, Column: 20} }
+                                ] }
+                            ] },
+                            Node: { Label: "call"
+                            children: [
+                                Node: { Token: {Value: println, Type: identifier, Line: 38, Column: 12} },
+                                Node: { Label: "params"
+                                children: [
+                                    Node: { Token: {Value: "args:\n--verbose\n--out", Type: string literal, Line: 38, Column: 20} }
+                                ] }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: main, Type: identifier, Line: 43, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 43, Column: 13} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 44, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 44, Column: 11}, Type: int }
+            ] }
+        ] }
+    ] }
+] }
+ScopeTree:
+Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: false}{parameters: (bool,String), implemented: false}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: false}{parameters: (String,String), implemented: false}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: false}{parameters: (int,String), implemented: false}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: false}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: false}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: false}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: false}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: false}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: false}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: false}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: false}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: false}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: false}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: false}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: false}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: false}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: false}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: false}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: false}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[Empty:{name: Empty} Result:{name: Result} Runner:{name: Runner}], structs: map[AlsoEmpty:{name: AlsoEmpty, size: 0} TestResult:{name: TestResult, size: 4, implements: [Result]} TestRunner:{name: TestRunner, size: 0, implements: [Runner]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
+        Scope: { id: Empty, type: 1, parent: @global },
+        Scope: { id: AlsoEmpty, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Result, type: 1, parent: @global, functions: map[display:{name: display, returns: None, overloads: [{parameters: (), implemented: false}]} getStatus:{name: getStatus, returns: String, overloads: [{parameters: (), implemented: false}]}] },
+        Scope: { id: TestResult, type: 2, parent: @global, namedBlocks: map[Result:{name: Result}], variables: map[Result:{name: Result, Type: ScopeRef(TestResult,Result), Initialized: true} status:{name: status, Type: String, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: Result@TestResult, type: 3, parent: TestResult, functions: map[display:{name: display, returns: None, overloads: [{parameters: (), implemented: true}]} getStatus:{name: getStatus, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: display()@Result@TestResult, type: 4, parent: Result@TestResult },
+                Scope: { id: getStatus()@Result@TestResult, type: 4, parent: Result@TestResult }
+            ] }
+        ] },
+        Scope: { id: Runner, type: 1, parent: @global, functions: map[run:{name: run, returns: Result, overloads: [{parameters: (), implemented: false}]} showUsage:{name: showUsage, returns: None, overloads: [{parameters: (), implemented: true}]} startup:{name: startup, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+            Scope: { id: showUsage()@Runner, type: 4, parent: Runner },
+            Scope: { id: startup()@Runner, type: 4, parent: Runner }
+        ] },
+        Scope: { id: TestRunner, type: 2, parent: @global, namedBlocks: map[Runner:{name: Runner}], variables: map[Runner:{name: Runner, Type: ScopeRef(TestRunner,Runner), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: Runner@TestRunner, type: 3, parent: TestRunner, functions: map[run:{name: run, returns: Result, overloads: [{parameters: (), implemented: true}]} showUsage:{name: showUsage, returns: None, overloads: [{parameters: (), implemented: true}]} startup:{name: startup, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: run()@Runner@TestRunner, type: 4, parent: Runner@TestRunner },
+                Scope: { id: showUsage()@Runner@TestRunner, type: 4, parent: Runner@TestRunner },
+                Scope: { id: startup@Runner@TestRunner, type: 4, parent: Runner@TestRunner }
+            ] }
+        ] },
+        Scope: { id: @main(), type: 4, parent: @global }
+    ] }
+] }
+Compiler messages:
+[]
+
+---
+
+[TestInterfaces/should_errors.the_and_have_errors - 1]
+AST:
+Node: { Label: "program"
+children: [
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: Empty, Type: identifier, Line: 0, Column: 10} },
+        Node: { Label: "interface-body" }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 1, Column: 0}
+    children: [
+        Node: { Token: {Value: Empty, Type: identifier, Line: 1, Column: 7} },
+        Node: { Label: "struct-body" }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: Empty, Type: identifier, Line: 2, Column: 10} },
+        Node: { Label: "interface-body" }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: A, Type: identifier, Line: 4, Column: 10} },
+        Node: { Label: "interface-body"
+        children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: do, Type: identifier, Line: 5, Column: 7} }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: B, Type: identifier, Line: 8, Column: 10} },
+        Node: { Label: "interface-body"
+        children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: do, Type: identifier, Line: 9, Column: 7} }
+            ] }
+        ] }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 12, Column: 0}
+    children: [
+        Node: { Token: {Value: C, Type: identifier, Line: 12, Column: 7} },
+        Node: { Label: "interface_list"
+        children: [
+            Node: { Token: {Value: A, Type: identifier, Line: 12, Column: 14} },
+            Node: { Token: {Value: B, Type: identifier, Line: 12, Column: 17} },
+            Node: { Token: {Value: A, Type: identifier, Line: 12, Column: 20} }
+        ] },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "named-block"
+            children: [
+                Node: { Token: {Value: A, Type: identifier, Line: 13, Column: 4} },
+                Node: { Label: "named-block-body" }
+            ] },
+            Node: { Label: "named-block"
+            children: [
+                Node: { Token: {Value: B, Type: identifier, Line: 14, Column: 4} },
+                Node: { Label: "named-block-body"
+                children: [
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: do, Type: identifier, Line: 15, Column: 11} },
+                        Node: { Label: "fn-body"
+                        children: [
+                            Node: { Label: "call"
+                            children: [
+                                Node: { Token: {Value: printerr, Type: identifier, Line: 16, Column: 12} },
+                                Node: { Label: "params"
+                                children: [
+                                    Node: { Token: {Value: "don't", Type: string literal, Line: 16, Column: 21} }
+                                ] }
+                            ] },
+                            Node: { Label: "call"
+                            children: [
+                                Node: { Token: {Value: something, Type: identifier, Line: 17, Column: 12} }
+                            ] },
+                            Node: { Label: "control-flow"
+                            children: [
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 18, Column: 12} },
+                                Node: { Token: {Value: 0, Type: int literal, Line: 18, Column: 19}, Type: int }
+                            ] }
+                        ] }
+                    ] },
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: do, Type: identifier, Line: 20, Column: 11} },
+                        Node: { Label: "params"
+                        children: [
+                            Node: { Label: "param"
+                            children: [
+                                Node: { Token: {Value: int, Type: type keyword, Line: 20, Column: 14} },
+                                Node: { Token: {Value: i, Type: identifier, Line: 20, Column: 18} }
+                            ] }
+                        ] },
+                        Node: { Token: {Value: bool, Type: type keyword, Line: 20, Column: 24} }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: D, Type: identifier, Line: 24, Column: 10} },
+        Node: { Label: "interface-body"
+        children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: do, Type: identifier, Line: 25, Column: 7} }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: do, Type: identifier, Line: 26, Column: 7} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Label: "param"
+                    children: [
+                        Node: { Token: {Value: int, Type: type keyword, Line: 26, Column: 10} },
+                        Node: { Token: {Value: i, Type: identifier, Line: 26, Column: 14} }
+                    ] }
+                ] },
+                Node: { Token: {Value: bool, Type: type keyword, Line: 26, Column: 20} }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: do, Type: identifier, Line: 27, Column: 7} }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: undo, Type: identifier, Line: 28, Column: 7} },
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 28, Column: 17} },
+                Node: { Label: "fn-body"
+                children: [
+                    Node: { Label: "Variable"
+                    children: [
+                        Node: { Token: {Value: A, Type: identifier, Line: 29, Column: 8} },
+                        Node: { Token: {Value: a, Type: identifier, Line: 29, Column: 10} },
+                        Node: { Label: "struct_literal", Type: None
+                        children: [
+                            Node: { Token: {Value: A, Type: identifier, Line: 29, Column: 14} }
+                        ] }
+                    ] },
+                    Node: { Label: "control-flow"
+                    children: [
+                        Node: { Token: {Value: return, Type: flow keyword, Line: 30, Column: 8} },
+                        Node: { Token: {Value: <, Type: compare operator, Line: 30, Column: 17}, Type: bool
+                        children: [
+                            Node: { Token: {Value: 1, Type: int literal, Line: 30, Column: 15}, Type: uint32 },
+                            Node: { Token: {Value: 0, Type: int literal, Line: 30, Column: 19}, Type: uint32 }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] }
+] }
+ScopeTree:
+Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: false}{parameters: (bool,String), implemented: false}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: false}{parameters: (String,String), implemented: false}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: false}{parameters: (int,String), implemented: false}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: false}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: false}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: false}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: false}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: false}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: false}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: false}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: false}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: false}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: false}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: false}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: false}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: false}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: false}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: false}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: false}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[Empty:{name: Empty} Result:{name: Result} Runner:{name: Runner}], structs: map[AlsoEmpty:{name: AlsoEmpty, size: 0} TestResult:{name: TestResult, size: 4, implements: [Result]} TestRunner:{name: TestRunner, size: 0, implements: [Runner]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
+        Scope: { id: Empty, type: 1, parent: @global },
+        Scope: { id: AlsoEmpty, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Result, type: 1, parent: @global, functions: map[display:{name: display, returns: None, overloads: [{parameters: (), implemented: false}]} getStatus:{name: getStatus, returns: String, overloads: [{parameters: (), implemented: false}]}] },
+        Scope: { id: TestResult, type: 2, parent: @global, namedBlocks: map[Result:{name: Result}], variables: map[Result:{name: Result, Type: ScopeRef(TestResult,Result), Initialized: true} status:{name: status, Type: String, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: Result@TestResult, type: 3, parent: TestResult, functions: map[display:{name: display, returns: None, overloads: [{parameters: (), implemented: true}]} getStatus:{name: getStatus, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: display()@Result@TestResult, type: 4, parent: Result@TestResult },
+                Scope: { id: getStatus()@Result@TestResult, type: 4, parent: Result@TestResult }
+            ] }
+        ] },
+        Scope: { id: Runner, type: 1, parent: @global, functions: map[run:{name: run, returns: Result, overloads: [{parameters: (), implemented: false}]} showUsage:{name: showUsage, returns: None, overloads: [{parameters: (), implemented: true}]} startup:{name: startup, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+            Scope: { id: showUsage()@Runner, type: 4, parent: Runner },
+            Scope: { id: startup()@Runner, type: 4, parent: Runner }
+        ] },
+        Scope: { id: TestRunner, type: 2, parent: @global, namedBlocks: map[Runner:{name: Runner}], variables: map[Runner:{name: Runner, Type: ScopeRef(TestRunner,Runner), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: Runner@TestRunner, type: 3, parent: TestRunner, functions: map[run:{name: run, returns: Result, overloads: [{parameters: (), implemented: true}]} showUsage:{name: showUsage, returns: None, overloads: [{parameters: (), implemented: true}]} startup:{name: startup, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: run()@Runner@TestRunner, type: 4, parent: Runner@TestRunner },
+                Scope: { id: showUsage()@Runner@TestRunner, type: 4, parent: Runner@TestRunner },
+                Scope: { id: startup@Runner@TestRunner, type: 4, parent: Runner@TestRunner }
+            ] }
+        ] },
+        Scope: { id: @main(), type: 4, parent: @global }
+    ] },
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B} D:{name: D} Empty:{name: Empty}], structs: map[C:{name: C, size: 0, implements: [A, B, A]}], children: [
+        Scope: { id: Empty, type: 1, parent: @global },
+        Scope: { id: A, type: 1, parent: @global, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: false}]}] },
+        Scope: { id: B, type: 1, parent: @global, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: false}]}] },
+        Scope: { id: C, type: 2, parent: @global, namedBlocks: map[A:{name: A} B:{name: B}], variables: map[A:{name: A, Type: ScopeRef(C,A), Initialized: true} B:{name: B, Type: ScopeRef(C,B), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: A@C, type: 3, parent: C, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: false}]}] },
+            Scope: { id: B@C, type: 3, parent: C, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+                Scope: { id: do()@B@C, type: 4, parent: B@C }
+            ] }
+        ] },
+        Scope: { id: D, type: 1, parent: @global, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: false}]} undo:{name: undo, returns: uint32, overloads: [{parameters: (), implemented: true}]}], children: [
+            Scope: { id: undo()@D, type: 4, parent: D, variables: map[a:{name: a, Type: A, Initialized: true}] }
+        ] }
+    ] }
+] }
+Compiler messages:
+[
+    "NameError: Name 'Empty' already in use at line: 2, column: 8",
+    "NameError: Name 'Empty' already in use at line: 3, column: 11",
+    "ImplementationError: struct cannot implement interface multiple times at line: 13, column: 1",
+    "ImplementationError: Interface A implementation missing 'fn do()' at line: 14, column: 5",
+    "NameError: Could not find function something in scope at line: 18, column: 13",
+    "TypeError: Function 'do()' expected return type None but got int at line: 19, column: 13",
+    "IllegalStatementError: Function name 'do' already defined without a return type; cannot overload with return type bool at line: 21, column: 9",
+    "IllegalStatementError: Function name 'do' already defined without a return type; cannot overload with return type bool at line: 27, column: 5",
+    "IllegalStatementError: Function with signature 'fn do()' cannot be redefined at line: 28, column: 5",
+    "TypeError: Function 'undo()->uint32' may not return a value at line: 29, column: 25",
+    "IllegalStatementError: Cannot create interface literal value at line: 30, column: 15",
+    "TypeError: Cannot assign type None to variable type A at line: 30, column: 15",
+    "TypeError: Function 'undo()->uint32' expected return type uint32 but got bool at line: 31, column: 9",
+    "Error: Missing entrypoint function 'fn main()->int' "
+]
+
+---

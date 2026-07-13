@@ -1,0 +1,46 @@
+interface Empty {}
+struct AlsoEmpty {}
+
+interface Result {
+    fn display();
+    fn getStatus() -> String;
+}
+
+struct TestResult impl Result{
+    String status;
+    Result {
+        fn display() {
+            println("Result status: " + status);
+        }
+        fn getStatus() -> String {
+            return status;
+        }
+    }
+}
+
+interface Runner {
+    fn run() -> Result;
+    fn showUsage() {
+        println("Usage is `./run [args]`");
+    }
+    fn startup() {
+        println("Starting run...");
+    }
+}
+
+struct TestRunner impl Runner {
+    Runner {
+        fn run() -> Result {
+            startup();
+            return TestResult{status: "passed"};
+        }
+        fn showUsage() {
+            println("Usage is `./test-run [args]`");
+            println("args:\n--verbose\n--out");
+        }
+    }
+}
+
+fn main() -> int {
+    return 0;
+}
