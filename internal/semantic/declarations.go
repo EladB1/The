@@ -253,53 +253,66 @@ func analyzeForCondition(condition []parser.AST) {
 					messages.Complain(diagnostic.TypeError, condition[1].Location, "Expected bool as loop condition but got %s", cond.String())
 				}
 				// TODO: Add support for assignment as end part
-				expr, hasErr := evalType(&condition[2], symbol.Type)
+				var expr datatypes.DataType
+				if condition[2].Token.Kind == lexer.OPERATOR_ASSIGN {
+					expr, hasErr = analyzeAssignment(&condition[2])
+
+				} else {
+					expr, hasErr = evalType(&condition[2], symbol.Type)
+				}
 				if !hasErr && symbol.Type != expr {
-					messages.Complain(diagnostic.TypeError, condition[2].Location, "Expected %s as loop expression but got %s", symbol.Type.String(), cond.String())
+					messages.Complain(diagnostic.TypeError, condition[2].Location, "Expected %s as loop expression but got %s", symbol.Type.String(), expr.String())
 				}
 			}
 		}
 	} else {
-		iter := analyzeAssignment(&condition[0])
+		iter, _ := analyzeAssignment(&condition[0])
 		if iter != datatypes.None {
 			cond, hasErr := evalType(&condition[1], datatypes.Bool)
 			if !hasErr && cond != datatypes.Bool {
 				messages.Complain(diagnostic.TypeError, condition[1].Location, "Expected bool as loop condition but got %s", cond.String())
 			}
-			expr, hasErr := evalType(&condition[2], iter)
+			var expr datatypes.DataType
+			if condition[2].Token.Kind == lexer.OPERATOR_ASSIGN {
+				expr, hasErr = analyzeAssignment(&condition[2])
+
+			} else {
+				expr, hasErr = evalType(&condition[2], iter)
+			}
 			if !hasErr && iter != expr {
-				messages.Complain(diagnostic.TypeError, condition[2].Location, "Expected %s as loop expression but got %s", iter.String(), cond.String())
+				messages.Complain(diagnostic.TypeError, condition[2].Location, "Expected %s as loop expression but got %s", iter.String(), expr.String())
 			}
 		}
 
 	}
 }
 
-func analyzeAssignment(stmt *parser.AST) datatypes.DataType {
+func analyzeAssignment(stmt *parser.AST) (datatypes.DataType, bool) {
+	hasError := false
 	left := stmt.Children[0]
 	var lhs datatypes.DataType
 	var lHasErr bool
 	if left.Label == "dot" {
 		lhs, lHasErr = handleDot(left.Children[0], left.Children[1], false)
 		if lHasErr {
-			return datatypes.None
+			return datatypes.None, true
 		}
 		// TODO: Fix mutability for this case
 	} else {
 		symbol := currentScope.lookupVariable(left.Token.Value)
 		if symbol == nil {
 			messages.Complain(diagnostic.NameError, left.Location, "Variable '%s' is not defined in this scope", left.Token.Value)
-			return datatypes.None
+			return datatypes.None, true
 		}
 		if !symbol.isMutable {
 			messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", left.Token.Value)
-			return datatypes.None
+			return datatypes.None, true
 		}
 		lhs = symbol.Type
 	}
-	rhs, hasError := evalType(&stmt.Children[1], lhs)
-	if hasError {
-		return datatypes.None
+	rhs, hasErr := evalType(&stmt.Children[1], lhs)
+	if hasErr {
+		return datatypes.None, true
 	}
 	stmt.Children[0].Type = lhs
 	operator := stmt.Token.Value
@@ -308,32 +321,40 @@ func analyzeAssignment(stmt *parser.AST) datatypes.DataType {
 		if lhs == datatypes.String {
 			if rhs != datatypes.Char && rhs != datatypes.String {
 				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot concatenate %s to String", rhs.String())
+				hasError = true
 			}
 		} else if slices.Contains(datatypes.NumericTypes, lhs) {
 			result, err := decideNumberType(lhs, rhs, operator)
 			if err != nil {
 				messages.Complain(diagnostic.TypeError, stmt.Location, "%s", err.Error())
+				hasError = true
 			} else if result != lhs {
 				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, lhs)
+				hasError = true
 			}
 		} else {
 			messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Invalid operation between %s to %s", rhs.String(), lhs)
+			hasError = true
 		}
 	case "-=", "*=", "/=":
 		if slices.Contains(datatypes.NumericTypes, lhs) {
 			result, err := decideNumberType(lhs, rhs, operator)
 			if err != nil {
 				messages.Complain(diagnostic.TypeError, stmt.Location, "%s", err.Error())
+				hasError = true
 			} else if result != lhs {
 				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, lhs)
+				hasError = true
 			}
 		} else {
 			messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Invalid operation between %s to %s", rhs.String(), lhs)
+			hasError = true
 		}
 	default:
 		if lhs != rhs {
 			if !ImplementsInterface(lhs, rhs) {
 				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, lhs)
+				hasError = true
 			}
 		} else if intf := globalScope.lookupInterface(rhs.String()); intf != nil {
 			messages.Complain(diagnostic.IllegalStatementError, stmt.Children[1].Location, "Cannot use interface type as value")
@@ -341,7 +362,7 @@ func analyzeAssignment(stmt *parser.AST) datatypes.DataType {
 
 	}
 	stmt.Children[1].Type = rhs
-	return lhs
+	return lhs, hasError
 }
 
 func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *NamedBlockSymbol {

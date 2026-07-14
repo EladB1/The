@@ -38,7 +38,7 @@ fn nestedLoops() {
             continue;
         }
         mut int j;
-        for (j = i+1; j < i + 7 && j < limit; j++) {
+        for (j = i+1; j < i + 7 && j < limit; j += 1) {
             println(j);
         }
         if (j == limit) {

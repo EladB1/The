@@ -151,34 +151,34 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
     Scope: { id: @global, parent: @built-in },
     Scope: { id: @global, parent: @built-in, functions: map[getAccountType:{name: getAccountType, returns: String, overloads: [{parameters: (), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} nestedConditions:{name: nestedConditions, returns: int, overloads: [{parameters: (), implemented: true}]} nestedLoops:{name: nestedLoops, returns: None, overloads: [{parameters: (), implemented: true}]} printString:{name: printString, returns: None, overloads: [{parameters: (String), implemented: true}]}], children: [
         Scope: { id: @getAccountType(), type: 4, parent: @global, variables: map[accountType:{name: accountType, Type: String, isMutable: true, Initialized: false} user:{name: user, Type: String, Initialized: true}], children: [
-            Scope: { id: if#6@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: if#7@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: else if#7.0@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: else if#7.1@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: else#7@@getAccountType(), type: 6, parent: @getAccountType() }
+            Scope: { id: if#0@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: if#1@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: else if#1.0@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: else if#1.1@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: else#1@@getAccountType(), type: 6, parent: @getAccountType() }
         ] },
         Scope: { id: @nestedConditions(), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: true} j:{name: j, Type: int, Initialized: true}], children: [
-            Scope: { id: if#0@@nestedConditions(), type: 6, parent: @nestedConditions(), children: [
-                Scope: { id: if#0@if#0@@nestedConditions(), type: 6, parent: if#0@@nestedConditions() },
-                Scope: { id: else if#0.0@if#0@@nestedConditions(), type: 6, parent: if#0@@nestedConditions() }
+            Scope: { id: if#2@@nestedConditions(), type: 6, parent: @nestedConditions(), children: [
+                Scope: { id: if#2@if#2@@nestedConditions(), type: 6, parent: if#2@@nestedConditions() },
+                Scope: { id: else if#2.0@if#2@@nestedConditions(), type: 6, parent: if#2@@nestedConditions() }
             ] }
         ] },
         Scope: { id: @nestedLoops(), type: 4, parent: @global, variables: map[i:{name: i, Type: int, isMutable: true, Initialized: true} limit:{name: limit, Type: int, Initialized: true}], children: [
             Scope: { id: while#0@@nestedLoops(), type: 5, parent: @nestedLoops(), variables: map[j:{name: j, Type: int, isMutable: true, Initialized: false}], children: [
-                Scope: { id: if#2@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() },
+                Scope: { id: if#4@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() },
                 Scope: { id: for#0@while#0@@nestedLoops(), type: 5, parent: while#0@@nestedLoops() },
-                Scope: { id: if#3@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() }
+                Scope: { id: if#5@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() }
             ] }
         ] },
         Scope: { id: @printString(String), type: 4, parent: @global, variables: map[str:{name: str, Type: String, Initialized: false}], children: [
             Scope: { id: for#1@@printString(String), type: 5, parent: @printString(String), variables: map[c:{name: c, Type: char, Initialized: false}] }
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[sum:{name: sum, Type: int, isMutable: true, Initialized: true} type:{name: type, Type: String, Initialized: true}], children: [
-            Scope: { id: if#4@@main(), type: 6, parent: @main() },
-            Scope: { id: else#4@@main(), type: 6, parent: @main() },
+            Scope: { id: if#6@@main(), type: 6, parent: @main() },
+            Scope: { id: else#6@@main(), type: 6, parent: @main() },
             Scope: { id: for#2@@main(), type: 5, parent: @main(), variables: map[i:{name: i, Type: int, isMutable: true, Initialized: true}] },
             Scope: { id: for#3@@main(), type: 5, parent: @main(), variables: map[i:{name: i, Type: int, Initialized: false}], children: [
-                Scope: { id: if#5@for#3@@main(), type: 6, parent: for#3@@main() }
+                Scope: { id: if#7@for#3@@main(), type: 6, parent: for#3@@main() }
             ] },
             Scope: { id: for#4@@main(), type: 5, parent: @main(), variables: map[c:{name: c, Type: char, Initialized: false} i:{name: i, Type: int, Initialized: false}] }
         ] }
@@ -382,34 +382,34 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
     Scope: { id: @global, parent: @built-in },
     Scope: { id: @global, parent: @built-in, functions: map[getAccountType:{name: getAccountType, returns: String, overloads: [{parameters: (), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} nestedConditions:{name: nestedConditions, returns: int, overloads: [{parameters: (), implemented: true}]} nestedLoops:{name: nestedLoops, returns: None, overloads: [{parameters: (), implemented: true}]} printString:{name: printString, returns: None, overloads: [{parameters: (String), implemented: true}]}], children: [
         Scope: { id: @getAccountType(), type: 4, parent: @global, variables: map[accountType:{name: accountType, Type: String, isMutable: true, Initialized: false} user:{name: user, Type: String, Initialized: true}], children: [
-            Scope: { id: if#6@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: if#7@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: else if#7.0@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: else if#7.1@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: else#7@@getAccountType(), type: 6, parent: @getAccountType() }
+            Scope: { id: if#0@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: if#1@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: else if#1.0@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: else if#1.1@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: else#1@@getAccountType(), type: 6, parent: @getAccountType() }
         ] },
         Scope: { id: @nestedConditions(), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: true} j:{name: j, Type: int, Initialized: true}], children: [
-            Scope: { id: if#0@@nestedConditions(), type: 6, parent: @nestedConditions(), children: [
-                Scope: { id: if#0@if#0@@nestedConditions(), type: 6, parent: if#0@@nestedConditions() },
-                Scope: { id: else if#0.0@if#0@@nestedConditions(), type: 6, parent: if#0@@nestedConditions() }
+            Scope: { id: if#2@@nestedConditions(), type: 6, parent: @nestedConditions(), children: [
+                Scope: { id: if#2@if#2@@nestedConditions(), type: 6, parent: if#2@@nestedConditions() },
+                Scope: { id: else if#2.0@if#2@@nestedConditions(), type: 6, parent: if#2@@nestedConditions() }
             ] }
         ] },
         Scope: { id: @nestedLoops(), type: 4, parent: @global, variables: map[i:{name: i, Type: int, isMutable: true, Initialized: true} limit:{name: limit, Type: int, Initialized: true}], children: [
             Scope: { id: while#0@@nestedLoops(), type: 5, parent: @nestedLoops(), variables: map[j:{name: j, Type: int, isMutable: true, Initialized: false}], children: [
-                Scope: { id: if#2@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() },
+                Scope: { id: if#4@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() },
                 Scope: { id: for#0@while#0@@nestedLoops(), type: 5, parent: while#0@@nestedLoops() },
-                Scope: { id: if#3@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() }
+                Scope: { id: if#5@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() }
             ] }
         ] },
         Scope: { id: @printString(String), type: 4, parent: @global, variables: map[str:{name: str, Type: String, Initialized: false}], children: [
             Scope: { id: for#1@@printString(String), type: 5, parent: @printString(String), variables: map[c:{name: c, Type: char, Initialized: false}] }
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[sum:{name: sum, Type: int, isMutable: true, Initialized: true} type:{name: type, Type: String, Initialized: true}], children: [
-            Scope: { id: if#4@@main(), type: 6, parent: @main() },
-            Scope: { id: else#4@@main(), type: 6, parent: @main() },
+            Scope: { id: if#6@@main(), type: 6, parent: @main() },
+            Scope: { id: else#6@@main(), type: 6, parent: @main() },
             Scope: { id: for#2@@main(), type: 5, parent: @main(), variables: map[i:{name: i, Type: int, isMutable: true, Initialized: true}] },
             Scope: { id: for#3@@main(), type: 5, parent: @main(), variables: map[i:{name: i, Type: int, Initialized: false}], children: [
-                Scope: { id: if#5@for#3@@main(), type: 6, parent: for#3@@main() }
+                Scope: { id: if#7@for#3@@main(), type: 6, parent: for#3@@main() }
             ] },
             Scope: { id: for#4@@main(), type: 5, parent: @main(), variables: map[c:{name: c, Type: char, Initialized: false} i:{name: i, Type: int, Initialized: false}] }
         ] }
@@ -614,34 +614,34 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
     Scope: { id: @global, parent: @built-in },
     Scope: { id: @global, parent: @built-in, functions: map[getAccountType:{name: getAccountType, returns: String, overloads: [{parameters: (), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} nestedConditions:{name: nestedConditions, returns: int, overloads: [{parameters: (), implemented: true}]} nestedLoops:{name: nestedLoops, returns: None, overloads: [{parameters: (), implemented: true}]} printString:{name: printString, returns: None, overloads: [{parameters: (String), implemented: true}]}], children: [
         Scope: { id: @getAccountType(), type: 4, parent: @global, variables: map[accountType:{name: accountType, Type: String, isMutable: true, Initialized: false} user:{name: user, Type: String, Initialized: true}], children: [
-            Scope: { id: if#6@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: if#7@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: else if#7.0@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: else if#7.1@@getAccountType(), type: 6, parent: @getAccountType() },
-            Scope: { id: else#7@@getAccountType(), type: 6, parent: @getAccountType() }
+            Scope: { id: if#0@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: if#1@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: else if#1.0@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: else if#1.1@@getAccountType(), type: 6, parent: @getAccountType() },
+            Scope: { id: else#1@@getAccountType(), type: 6, parent: @getAccountType() }
         ] },
         Scope: { id: @nestedConditions(), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: true} j:{name: j, Type: int, Initialized: true}], children: [
-            Scope: { id: if#0@@nestedConditions(), type: 6, parent: @nestedConditions(), children: [
-                Scope: { id: if#0@if#0@@nestedConditions(), type: 6, parent: if#0@@nestedConditions() },
-                Scope: { id: else if#0.0@if#0@@nestedConditions(), type: 6, parent: if#0@@nestedConditions() }
+            Scope: { id: if#2@@nestedConditions(), type: 6, parent: @nestedConditions(), children: [
+                Scope: { id: if#2@if#2@@nestedConditions(), type: 6, parent: if#2@@nestedConditions() },
+                Scope: { id: else if#2.0@if#2@@nestedConditions(), type: 6, parent: if#2@@nestedConditions() }
             ] }
         ] },
         Scope: { id: @nestedLoops(), type: 4, parent: @global, variables: map[i:{name: i, Type: int, isMutable: true, Initialized: true} limit:{name: limit, Type: int, Initialized: true}], children: [
             Scope: { id: while#0@@nestedLoops(), type: 5, parent: @nestedLoops(), variables: map[j:{name: j, Type: int, isMutable: true, Initialized: false}], children: [
-                Scope: { id: if#2@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() },
+                Scope: { id: if#4@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() },
                 Scope: { id: for#0@while#0@@nestedLoops(), type: 5, parent: while#0@@nestedLoops() },
-                Scope: { id: if#3@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() }
+                Scope: { id: if#5@while#0@@nestedLoops(), type: 6, parent: while#0@@nestedLoops() }
             ] }
         ] },
         Scope: { id: @printString(String), type: 4, parent: @global, variables: map[str:{name: str, Type: String, Initialized: false}], children: [
             Scope: { id: for#1@@printString(String), type: 5, parent: @printString(String), variables: map[c:{name: c, Type: char, Initialized: false}] }
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[sum:{name: sum, Type: int, isMutable: true, Initialized: true} type:{name: type, Type: String, Initialized: true}], children: [
-            Scope: { id: if#4@@main(), type: 6, parent: @main() },
-            Scope: { id: else#4@@main(), type: 6, parent: @main() },
+            Scope: { id: if#6@@main(), type: 6, parent: @main() },
+            Scope: { id: else#6@@main(), type: 6, parent: @main() },
             Scope: { id: for#2@@main(), type: 5, parent: @main(), variables: map[i:{name: i, Type: int, isMutable: true, Initialized: true}] },
             Scope: { id: for#3@@main(), type: 5, parent: @main(), variables: map[i:{name: i, Type: int, Initialized: false}], children: [
-                Scope: { id: if#5@for#3@@main(), type: 6, parent: for#3@@main() }
+                Scope: { id: if#7@for#3@@main(), type: 6, parent: for#3@@main() }
             ] },
             Scope: { id: for#4@@main(), type: 5, parent: @main(), variables: map[c:{name: c, Type: char, Initialized: false} i:{name: i, Type: int, Initialized: false}] }
         ] }
