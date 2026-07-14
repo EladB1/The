@@ -21,7 +21,7 @@ if = "if" "(" expression ")" conditional_body ;
 conditional_body = block | statement ;
 while = "while" "(" expression ")" block;
 for = "for" "(" for_conditions ")" block ;
-for_conditions = ( ( variable | assignment ) ";" expression ";" expression ) | ( variable [ "," variable ] "in" range ) ;
+for_conditions = ( ( variable | assignment ) ";" expression ";"  ( expression | assignment ) ) | ( variable [ "," variable ] "in" range ) ;
 range = expression [ range_operator expression [ ".." expression ] ] ;  
 
 (* operators: reverse order of precendence *)

@@ -147,6 +147,24 @@ func checkExpressionStart() bool {
 	return isLiteral() || checkKind(lexer.OPERATOR_ADD) || checkKind(lexer.OPERATOR_UNARY) || checkKind(lexer.ID) || checkValue("(") || (checkKind(lexer.LIT_STRING) && checkValueAhead(".", 1))
 }
 
+func checkAssignment() bool {
+	if checkKind(lexer.ID) && checkKindAhead(lexer.OPERATOR_ASSIGN, 1) {
+		return true
+	}
+	if (checkKind(lexer.ID) || checkKind(lexer.LIT_STRING)) && checkValueAhead(".", 1) { // let semantic analyzer complain about `"hello".length = 5`
+		for i := state.ptr + 2; i < state.length-2; i += 2 {
+			curr := state.tokens[i]
+			next := state.tokens[i+1]
+			if curr.Kind == lexer.ID && next.Kind == lexer.OPERATOR_ASSIGN {
+				return true
+			} else if curr.Kind == lexer.ID && next.Value != "." {
+				break
+			}
+		}
+	}
+	return false
+}
+
 /*
  *	program = { declaration } ;
  */
@@ -272,22 +290,9 @@ func parseBlock(label string) AST {
 func parseStatement() AST {
 	//fmt.Println("In statement with:", peek())
 	var ast AST
-	isAssignment := false
-	if (checkKind(lexer.ID) || checkKind(lexer.LIT_STRING)) && checkValueAhead(".", 1) { // let semantic analyzer complain about `"hello".length = 5`
-		for i := state.ptr + 2; i < state.length-2; i += 2 {
-			curr := state.tokens[i]
-			next := state.tokens[i+1]
-			if curr.Kind == lexer.ID && next.Kind == lexer.OPERATOR_ASSIGN {
-				isAssignment = true
-				break
-			} else if curr.Kind == lexer.ID && next.Value != "." {
-				break
-			}
-		}
-	}
 	if checkVariableDeclaration() {
 		ast = parseVariable()
-	} else if isAssignment || (checkKind(lexer.ID) && checkKindAhead(lexer.OPERATOR_ASSIGN, 1)) {
+	} else if checkAssignment() {
 		ast = parseAssignment()
 	} else if checkKind(lexer.KW_FLOW) {
 		ast = parseControlFlow()
@@ -554,7 +559,7 @@ func parseFor() AST {
 }
 
 /*
- * for_conditions = ( ( variable | assignment ) ";" expression ";" expression ) | ( variable [ "," variable ] "in" range ) ;
+ * for_conditions = ( ( variable | assignment ) ";" expression ";" ( expression | assignment ) ) | ( variable [ "," variable ] "in" range ) ;
  */
 func parseForConditions() AST {
 	//fmt.Println("In for condition with:", peek())
@@ -565,7 +570,11 @@ func parseForConditions() AST {
 			expectValue(";")
 			ast.AddChildren(parseExpression())
 			expectValue(";")
-			ast.AddChildren(parseExpression())
+			if checkAssignment() {
+				ast.AddChildren(parseAssignment())
+			} else {
+				ast.AddChildren(parseExpression())
+			}
 		} else {
 			if checkValue(",") {
 				consume()
@@ -579,7 +588,11 @@ func parseForConditions() AST {
 		expectValue(";")
 		ast.AddChildren(parseExpression())
 		expectValue(";")
-		ast.AddChildren(parseExpression())
+		if checkAssignment() {
+			ast.AddChildren(parseAssignment())
+		} else {
+			ast.AddChildren(parseExpression())
+		}
 	} else {
 		loopForms := strings.Join([]string{
 			"for ([ modifier ] type identifier = expression; condition; increment) {}",
