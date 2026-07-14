@@ -1,0 +1,41 @@
+fn forConditions() {
+    for (int i in "hello") {}
+    for (float f in 0..10) {}
+    for (char c in 'a' ..= 'z') {}
+    for (char c in 'a' ..= 'z' .. 1) {}
+    for (int i = 0; i < 10; i++) {}
+    for (j = 0; j < 10; j++) {}
+    int j;
+    for (j = 0; j % 2; j == 0) {}
+    for (int i = 0; println(i); i++) {}
+    for (int i = 0; i < 10; i == 0) {}
+    for (String s in "hello") {}
+    for (char c in "hello"[1]) {}
+    for (char c, char d in "hello") {}
+    for (char c in 1+1) {}
+    for (int i = 20; i > 0; i -= 4) {}
+}
+
+fn whileConditions() {
+    while (1){}
+    while (keepLooping) {}
+}
+
+fn ifConditions() {
+    if (x) {}
+    if (1) {}
+    if (i == 1) {}
+}
+
+fn controlFlow() {
+    if (1 != 0) {
+        break;
+    } else {
+        continue;
+    }
+}
+
+fn main() -> int {
+    
+    return 0;
+}

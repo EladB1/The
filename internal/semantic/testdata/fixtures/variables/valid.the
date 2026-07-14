@@ -1,0 +1,18 @@
+double g = -9.8;
+String description = "The";
+int i = 0;
+int64 j = 1 - 2 + 3 * 4 ** 5;
+uint32 u = 2 >> 3;
+uint64 u2 = 3 ^ 1;
+bool is = (true || false) && true;
+char newLine = '\n';
+
+fn main() -> int {
+    bool isNot = !is;
+    mut uint64 u3 = -u2;
+    u3 = ~u3;
+    mut String greet = "hello" + ',' + " world";
+    greet += '!';
+    String withNum = "Number: " + 2 as String;
+    return 0;
+}

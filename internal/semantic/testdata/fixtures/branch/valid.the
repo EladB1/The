@@ -1,0 +1,78 @@
+fn getAccountType() -> String {
+    String user = getEnv(toUpper("user"));
+    if (user == "")
+        exit(1, "Failed to find environment variable");
+    mut String accountType;
+    if (user == "root") {
+        accountType = "root";
+    }
+    else if (contains(user, "admin"))
+        accountType = "app-admin";
+    else if (contains(user, "svc")) {
+        accountType = "service account";
+    }
+    else
+        accountType = "user";
+    return accountType;
+}
+
+fn nestedConditions() -> int {
+    int i = 0;
+    int j = 1;
+    if (i != j) {
+        if (i < j) {
+            return i;
+        } else if (i > j) {
+            return j;
+        }
+    }
+    return i + j;
+}
+
+fn nestedLoops() {
+    mut int i = 0;
+    int limit = 1000;
+    while (i < limit) {
+        if (i % 7 == 0) {
+            i++;
+            continue;
+        }
+        mut int j;
+        for (j = i+1; j < i + 7 && j < limit; j++) {
+            println(j);
+        }
+        if (j == limit) {
+            break;
+        }
+        i = j + 1;
+    }
+}
+
+fn printString(String str) {
+    for (char c in str) {
+        print(c);
+    }
+}
+
+fn main() -> int {
+    String type = getAccountType();
+    if (type.length == 4) {
+        println("four");
+    } else {
+        println("other");
+    }
+    mut int sum = 0;
+    for (mut int i = 0; i < 10; i++) {
+        sum += i;
+    }
+    for (int i in 0 ..= 100 .. 2) {
+        if (INT_MAX / sum >= i) // prevent overflow
+            break;
+        sum *= i;
+    }
+    for (int i, char c in "hello"[2..4]) {
+        print(i);
+        print(" " + c + '\n');
+    }
+    return 0;
+}

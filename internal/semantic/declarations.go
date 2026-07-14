@@ -252,6 +252,7 @@ func analyzeForCondition(condition []parser.AST) {
 				if !hasErr && cond != datatypes.Bool {
 					messages.Complain(diagnostic.TypeError, condition[1].Location, "Expected bool as loop condition but got %s", cond.String())
 				}
+				// TODO: Add support for assignment as end part
 				expr, hasErr := evalType(&condition[2], symbol.Type)
 				if !hasErr && symbol.Type != expr {
 					messages.Complain(diagnostic.TypeError, condition[2].Location, "Expected %s as loop expression but got %s", symbol.Type.String(), cond.String())
@@ -340,7 +341,7 @@ func analyzeAssignment(stmt *parser.AST) datatypes.DataType {
 
 	}
 	stmt.Children[1].Type = rhs
-	return rhs
+	return lhs
 }
 
 func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *NamedBlockSymbol {

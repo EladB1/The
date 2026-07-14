@@ -126,6 +126,9 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 					if !slices.Contains(datatypes.NumericTypes, symbol.Type) {
 						messages.Complain(diagnostic.TypeError, operand.Location, "Cannot use '%s' with type %s", ast.Children[0].Token.Value, symbol.Type)
 						hasError = true
+					} else if !symbol.isMutable {
+						messages.Complain(diagnostic.AccessError, operand.Location, "Cannot change value of immutable variable '%s'", symbol.name)
+						hasError = true
 					} else {
 						nodeType = symbol.Type
 					}
@@ -140,6 +143,9 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 			if symbol != nil {
 				if !slices.Contains(datatypes.NumericTypes, symbol.Type) {
 					messages.Complain(diagnostic.TypeError, operand.Location, "Cannot use '%s' with type %s", ast.Children[1].Token.Value, symbol.Type)
+					hasError = true
+				} else if !symbol.isMutable {
+					messages.Complain(diagnostic.AccessError, operand.Location, "Cannot change value of immutable variable '%s'", symbol.name)
 					hasError = true
 				} else {
 					nodeType = symbol.Type
@@ -606,7 +612,7 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 		}
 	} else {
 		// TODO: find closest error
-		messages.Complain(diagnostic.CallError, details[1].Location, "Could not find function '%s(%s)->%s'", name.Value, paramList, symbol.returnType)
+		messages.Complain(diagnostic.CallError, details[0].Location, "Could not find function '%s(%s)->%s'", name.Value, paramList, symbol.returnType)
 		hasError = true
 	}
 	return datatypes.None, hasError

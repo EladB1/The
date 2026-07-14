@@ -41,6 +41,9 @@ struct Container {
         fn toString(String name) -> String {
             return name + id;
         }
+        fn duplicateToString() -> String {
+            return name + id + "dup";
+        }
         fn toNone() {
             return;
         }
@@ -115,6 +118,18 @@ struct MariaDB impl DB {
     }
 }
 
+struct PrivateTester {
+    private {
+        private int y = "y";
+        mut TYPE j;
+        fn test();
+        fn test()->int{}
+        fn something() -> bool {
+            return 0;
+        }
+    }
+}
+
 fn main() -> int {
     App app = App{};
     app.connect();
@@ -126,5 +141,9 @@ fn main() -> int {
     one * two + three;
     println(one.runTimeVersion);
     two.id = "2"; // TODO: Fix mutability for this case
+    StructLiteral{};
+    MariaDB maria = MariaDB{};
+    PostgreSQL pgsql = PostgreSQL{};
+    maria <= pgsql;
     return 0;
 }

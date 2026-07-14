@@ -304,7 +304,7 @@ children: [
     ] }
 ] }
 ScopeTree:
-Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: false}{parameters: (bool,String), implemented: false}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: false}{parameters: (String,String), implemented: false}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: false}{parameters: (int,String), implemented: false}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: false}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: false}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: false}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: false}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: false}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: false}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: false}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: false}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: false}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: false}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: false}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: false}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: false}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: false}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: false}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: false}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
+Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: true}{parameters: (bool,String), implemented: true}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: true}{parameters: (String,String), implemented: true}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: true}{parameters: (int,String), implemented: true}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: true}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: true}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: true}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: true}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: true}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: true}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: true}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: true}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: true}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: true}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: true}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: true}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: true}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: true}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: true}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: true}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
     Scope: { id: @global, parent: @built-in, interfaces: map[Empty:{name: Empty} Result:{name: Result} Runner:{name: Runner}], structs: map[AlsoEmpty:{name: AlsoEmpty, size: 0} TestResult:{name: TestResult, size: 4, implements: [Result]} TestRunner:{name: TestRunner, size: 0, implements: [Runner]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
         Scope: { id: Empty, type: 1, parent: @global },
         Scope: { id: AlsoEmpty, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
@@ -406,7 +406,7 @@ children: [
     ] }
 ] }
 ScopeTree:
-Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: false}{parameters: (bool,String), implemented: false}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: false}{parameters: (String,String), implemented: false}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: false}{parameters: (int,String), implemented: false}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: false}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: false}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: false}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: false}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: false}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: false}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: false}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: false}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: false}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: false}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: false}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: false}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: false}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: false}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: false}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: false}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
+Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: true}{parameters: (bool,String), implemented: true}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: true}{parameters: (String,String), implemented: true}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: true}{parameters: (int,String), implemented: true}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: true}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: true}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: true}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: true}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: true}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: true}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: true}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: true}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: true}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: true}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: true}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: true}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: true}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: true}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: true}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: true}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
     Scope: { id: @global, parent: @built-in, interfaces: map[Empty:{name: Empty} Result:{name: Result} Runner:{name: Runner}], structs: map[AlsoEmpty:{name: AlsoEmpty, size: 0} TestResult:{name: TestResult, size: 4, implements: [Result]} TestRunner:{name: TestRunner, size: 0, implements: [Runner]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
         Scope: { id: Empty, type: 1, parent: @global },
         Scope: { id: AlsoEmpty, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
@@ -683,33 +683,54 @@ children: [
                     ] },
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: toNone, Type: identifier, Line: 43, Column: 11} },
+                        Node: { Token: {Value: duplicateToString, Type: identifier, Line: 43, Column: 11} },
+                        Node: { Token: {Value: String, Type: type keyword, Line: 43, Column: 34} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "control-flow"
                             children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 44, Column: 12} }
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 44, Column: 12} },
+                                Node: { Token: {Value: +, Type: add operator, Line: 44, Column: 29}, Type: None
+                                children: [
+                                    Node: { Token: {Value: +, Type: add operator, Line: 44, Column: 24}, Type: None
+                                    children: [
+                                        Node: { Token: {Value: name, Type: identifier, Line: 44, Column: 19}, Type: None },
+                                        Node: { Token: {Value: id, Type: identifier, Line: 44, Column: 26}, Type: String }
+                                    ] },
+                                    Node: { Token: {Value: "dup", Type: string literal, Line: 44, Column: 31}, Type: String }
+                                ] }
                             ] }
                         ] }
                     ] },
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: toSame, Type: identifier, Line: 46, Column: 11} },
-                        Node: { Token: {Value: Container, Type: identifier, Line: 46, Column: 23} },
+                        Node: { Token: {Value: toNone, Type: identifier, Line: 46, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "control-flow"
                             children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 47, Column: 12} },
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 47, Column: 12} }
+                            ] }
+                        ] }
+                    ] },
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: toSame, Type: identifier, Line: 49, Column: 11} },
+                        Node: { Token: {Value: Container, Type: identifier, Line: 49, Column: 23} },
+                        Node: { Label: "fn-body"
+                        children: [
+                            Node: { Label: "control-flow"
+                            children: [
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 50, Column: 12} },
                                 Node: { Label: "struct_literal", Type: Container
                                 children: [
-                                    Node: { Token: {Value: Container, Type: identifier, Line: 47, Column: 19} },
+                                    Node: { Token: {Value: Container, Type: identifier, Line: 50, Column: 19} },
                                     Node: { Label: "properties"
                                     children: [
                                         Node: { Label: "property"
                                         children: [
-                                            Node: { Token: {Value: id, Type: identifier, Line: 47, Column: 29} },
-                                            Node: { Token: {Value: id, Type: identifier, Line: 47, Column: 33} }
+                                            Node: { Token: {Value: id, Type: identifier, Line: 50, Column: 29} },
+                                            Node: { Token: {Value: id, Type: identifier, Line: 50, Column: 33} }
                                         ] }
                                     ] }
                                 ] }
@@ -720,53 +741,32 @@ children: [
             ] },
             Node: { Label: "named-block"
             children: [
-                Node: { Token: {Value: compare, Type: identifier, Line: 50, Column: 4} },
+                Node: { Token: {Value: compare, Type: identifier, Line: 53, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
                     Node: { Label: "Variable"
                     children: [
-                        Node: { Token: {Value: int, Type: type keyword, Line: 51, Column: 8} },
-                        Node: { Token: {Value: wrongPlace2, Type: identifier, Line: 51, Column: 12} }
+                        Node: { Token: {Value: int, Type: type keyword, Line: 54, Column: 8} },
+                        Node: { Token: {Value: wrongPlace2, Type: identifier, Line: 54, Column: 12} }
                     ] },
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: greaterThanOrEqualTo, Type: identifier, Line: 52, Column: 11} },
+                        Node: { Token: {Value: greaterThanOrEqualTo, Type: identifier, Line: 55, Column: 11} },
                         Node: { Label: "params"
                         children: [
                             Node: { Label: "param"
                             children: [
-                                Node: { Token: {Value: Container, Type: identifier, Line: 52, Column: 32} },
-                                Node: { Token: {Value: other, Type: identifier, Line: 52, Column: 42} }
+                                Node: { Token: {Value: Container, Type: identifier, Line: 55, Column: 32} },
+                                Node: { Token: {Value: other, Type: identifier, Line: 55, Column: 42} }
                             ] }
                         ] },
-                        Node: { Token: {Value: bool, Type: type keyword, Line: 52, Column: 52} },
-                        Node: { Label: "fn-body"
-                        children: [
-                            Node: { Label: "control-flow"
-                            children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 53, Column: 12} },
-                                Node: { Token: {Value: true, Type: boolean value keyword, Line: 53, Column: 19}, Type: bool }
-                            ] }
-                        ] }
-                    ] },
-                    Node: { Label: "fn"
-                    children: [
-                        Node: { Token: {Value: equals, Type: identifier, Line: 55, Column: 11} },
-                        Node: { Label: "params"
-                        children: [
-                            Node: { Label: "param"
-                            children: [
-                                Node: { Token: {Value: Container, Type: identifier, Line: 55, Column: 18} },
-                                Node: { Token: {Value: other, Type: identifier, Line: 55, Column: 28} }
-                            ] }
-                        ] },
-                        Node: { Token: {Value: bool, Type: type keyword, Line: 55, Column: 38} },
+                        Node: { Token: {Value: bool, Type: type keyword, Line: 55, Column: 52} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "control-flow"
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 56, Column: 12} },
-                                Node: { Token: {Value: false, Type: boolean value keyword, Line: 56, Column: 19}, Type: bool }
+                                Node: { Token: {Value: true, Type: boolean value keyword, Line: 56, Column: 19}, Type: bool }
                             ] }
                         ] }
                     ] },
@@ -779,14 +779,9 @@ children: [
                             children: [
                                 Node: { Token: {Value: Container, Type: identifier, Line: 58, Column: 18} },
                                 Node: { Token: {Value: other, Type: identifier, Line: 58, Column: 28} }
-                            ] },
-                            Node: { Label: "param"
-                            children: [
-                                Node: { Token: {Value: uint32, Type: type keyword, Line: 58, Column: 35} },
-                                Node: { Token: {Value: someOtherValue, Type: identifier, Line: 58, Column: 42} }
                             ] }
                         ] },
-                        Node: { Token: {Value: bool, Type: type keyword, Line: 58, Column: 61} },
+                        Node: { Token: {Value: bool, Type: type keyword, Line: 58, Column: 38} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "control-flow"
@@ -798,39 +793,65 @@ children: [
                     ] },
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: lessThan, Type: identifier, Line: 61, Column: 11} },
+                        Node: { Token: {Value: equals, Type: identifier, Line: 61, Column: 11} },
                         Node: { Label: "params"
                         children: [
                             Node: { Label: "param"
                             children: [
-                                Node: { Token: {Value: Container, Type: identifier, Line: 61, Column: 20} },
-                                Node: { Token: {Value: other, Type: identifier, Line: 61, Column: 30} }
+                                Node: { Token: {Value: Container, Type: identifier, Line: 61, Column: 18} },
+                                Node: { Token: {Value: other, Type: identifier, Line: 61, Column: 28} }
+                            ] },
+                            Node: { Label: "param"
+                            children: [
+                                Node: { Token: {Value: uint32, Type: type keyword, Line: 61, Column: 35} },
+                                Node: { Token: {Value: someOtherValue, Type: identifier, Line: 61, Column: 42} }
+                            ] }
+                        ] },
+                        Node: { Token: {Value: bool, Type: type keyword, Line: 61, Column: 61} },
+                        Node: { Label: "fn-body"
+                        children: [
+                            Node: { Label: "control-flow"
+                            children: [
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 62, Column: 12} },
+                                Node: { Token: {Value: false, Type: boolean value keyword, Line: 62, Column: 19}, Type: bool }
+                            ] }
+                        ] }
+                    ] },
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: lessThan, Type: identifier, Line: 64, Column: 11} },
+                        Node: { Label: "params"
+                        children: [
+                            Node: { Label: "param"
+                            children: [
+                                Node: { Token: {Value: Container, Type: identifier, Line: 64, Column: 20} },
+                                Node: { Token: {Value: other, Type: identifier, Line: 64, Column: 30} }
                             ] }
                         ] },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "call"
                             children: [
-                                Node: { Token: {Value: println, Type: identifier, Line: 62, Column: 12} },
+                                Node: { Token: {Value: println, Type: identifier, Line: 65, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: other, Type: identifier, Line: 62, Column: 20} }
+                                    Node: { Token: {Value: other, Type: identifier, Line: 65, Column: 20} }
                                 ] }
                             ] }
                         ] }
                     ] },
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: greaterThan, Type: identifier, Line: 64, Column: 11} },
+                        Node: { Token: {Value: greaterThan, Type: identifier, Line: 67, Column: 11} },
                         Node: { Label: "params"
                         children: [
                             Node: { Label: "param"
                             children: [
-                                Node: { Token: {Value: Container, Type: identifier, Line: 64, Column: 23} },
-                                Node: { Token: {Value: other, Type: identifier, Line: 64, Column: 33} }
+                                Node: { Token: {Value: Container, Type: identifier, Line: 67, Column: 23} },
+                                Node: { Token: {Value: other, Type: identifier, Line: 67, Column: 33} }
                             ] }
                         ] },
-                        Node: { Token: {Value: bool, Type: type keyword, Line: 64, Column: 43} }
+                        Node: { Token: {Value: bool, Type: type keyword, Line: 67, Column: 43} }
                     ] }
                 ] }
             ] }
@@ -838,52 +859,52 @@ children: [
     ] },
     Node: { Label: "interface"
     children: [
-        Node: { Token: {Value: DB, Type: identifier, Line: 68, Column: 10} },
+        Node: { Token: {Value: DB, Type: identifier, Line: 71, Column: 10} },
         Node: { Label: "interface-body"
         children: [
             Node: { Label: "fn"
             children: [
-                Node: { Token: {Value: connect, Type: identifier, Line: 69, Column: 7} }
+                Node: { Token: {Value: connect, Type: identifier, Line: 72, Column: 7} }
             ] }
         ] }
     ] },
     Node: { Label: "interface"
     children: [
-        Node: { Token: {Value: Backend, Type: identifier, Line: 72, Column: 10} },
+        Node: { Token: {Value: Backend, Type: identifier, Line: 75, Column: 10} },
         Node: { Label: "interface-body"
         children: [
             Node: { Label: "fn"
             children: [
-                Node: { Token: {Value: connect, Type: identifier, Line: 73, Column: 7} }
+                Node: { Token: {Value: connect, Type: identifier, Line: 76, Column: 7} }
             ] }
         ] }
     ] },
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 76, Column: 0}
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 79, Column: 0}
     children: [
-        Node: { Token: {Value: App, Type: identifier, Line: 76, Column: 7} },
+        Node: { Token: {Value: App, Type: identifier, Line: 79, Column: 7} },
         Node: { Label: "interface_list"
         children: [
-            Node: { Token: {Value: DB, Type: identifier, Line: 76, Column: 16} },
-            Node: { Token: {Value: Backend, Type: identifier, Line: 76, Column: 20} }
+            Node: { Token: {Value: DB, Type: identifier, Line: 79, Column: 16} },
+            Node: { Token: {Value: Backend, Type: identifier, Line: 79, Column: 20} }
         ] },
         Node: { Label: "struct-body"
         children: [
             Node: { Label: "named-block"
             children: [
-                Node: { Token: {Value: DB, Type: identifier, Line: 77, Column: 4} },
+                Node: { Token: {Value: DB, Type: identifier, Line: 80, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: connect, Type: identifier, Line: 78, Column: 11} },
+                        Node: { Token: {Value: connect, Type: identifier, Line: 81, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "call"
                             children: [
-                                Node: { Token: {Value: println, Type: identifier, Line: 79, Column: 12} },
+                                Node: { Token: {Value: println, Type: identifier, Line: 82, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: "Connected", Type: string literal, Line: 79, Column: 20} }
+                                    Node: { Token: {Value: "Connected", Type: string literal, Line: 82, Column: 20} }
                                 ] }
                             ] }
                         ] }
@@ -892,21 +913,21 @@ children: [
             ] },
             Node: { Label: "named-block"
             children: [
-                Node: { Token: {Value: Backend, Type: identifier, Line: 82, Column: 4} },
+                Node: { Token: {Value: Backend, Type: identifier, Line: 85, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: connect, Type: identifier, Line: 83, Column: 11} },
+                        Node: { Token: {Value: connect, Type: identifier, Line: 86, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "call"
                             children: [
-                                Node: { Token: {Value: exit, Type: identifier, Line: 84, Column: 12} },
+                                Node: { Token: {Value: exit, Type: identifier, Line: 87, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: 1, Type: int literal, Line: 84, Column: 17} },
-                                    Node: { Token: {Value: "Failed to connect", Type: string literal, Line: 84, Column: 20} }
+                                    Node: { Token: {Value: 1, Type: int literal, Line: 87, Column: 17} },
+                                    Node: { Token: {Value: "Failed to connect", Type: string literal, Line: 87, Column: 20} }
                                 ] }
                             ] }
                         ] }
@@ -915,44 +936,44 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 89, Column: 0}
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 92, Column: 0}
     children: [
-        Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 89, Column: 7} },
+        Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 92, Column: 7} },
         Node: { Label: "interface_list"
         children: [
-            Node: { Token: {Value: DB, Type: identifier, Line: 89, Column: 23} }
+            Node: { Token: {Value: DB, Type: identifier, Line: 92, Column: 23} }
         ] },
         Node: { Label: "struct-body"
         children: [
             Node: { Label: "named-block"
             children: [
-                Node: { Token: {Value: DB, Type: identifier, Line: 90, Column: 4} },
+                Node: { Token: {Value: DB, Type: identifier, Line: 93, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: connect, Type: identifier, Line: 91, Column: 11} },
+                        Node: { Token: {Value: connect, Type: identifier, Line: 94, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "call"
                             children: [
-                                Node: { Token: {Value: println, Type: identifier, Line: 92, Column: 12} },
+                                Node: { Token: {Value: println, Type: identifier, Line: 95, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: "Connected to DB server", Type: string literal, Line: 92, Column: 20} }
+                                    Node: { Token: {Value: "Connected to DB server", Type: string literal, Line: 95, Column: 20} }
                                 ] }
                             ] }
                         ] }
                     ] },
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: connect, Type: identifier, Line: 94, Column: 11} },
+                        Node: { Token: {Value: connect, Type: identifier, Line: 97, Column: 11} },
                         Node: { Label: "params"
                         children: [
                             Node: { Label: "param"
                             children: [
-                                Node: { Token: {Value: bool, Type: type keyword, Line: 94, Column: 19} },
-                                Node: { Token: {Value: TLS, Type: identifier, Line: 94, Column: 24} }
+                                Node: { Token: {Value: bool, Type: type keyword, Line: 97, Column: 19} },
+                                Node: { Token: {Value: TLS, Type: identifier, Line: 97, Column: 24} }
                             ] }
                         ] },
                         Node: { Label: "fn-body"
@@ -961,15 +982,15 @@ children: [
                             children: [
                                 Node: { Label: "if"
                                 children: [
-                                    Node: { Token: {Value: TLS, Type: identifier, Line: 95, Column: 16}, Type: bool },
+                                    Node: { Token: {Value: TLS, Type: identifier, Line: 98, Column: 16}, Type: bool },
                                     Node: { Label: "conditional_body"
                                     children: [
                                         Node: { Label: "call"
                                         children: [
-                                            Node: { Token: {Value: println, Type: identifier, Line: 96, Column: 16} },
+                                            Node: { Token: {Value: println, Type: identifier, Line: 99, Column: 16} },
                                             Node: { Label: "params"
                                             children: [
-                                                Node: { Token: {Value: "Connected to DB server with TLS", Type: string literal, Line: 96, Column: 24} }
+                                                Node: { Token: {Value: "Connected to DB server with TLS", Type: string literal, Line: 99, Column: 24} }
                                             ] }
                                         ] }
                                     ] }
@@ -980,18 +1001,18 @@ children: [
                                     children: [
                                         Node: { Label: "call"
                                         children: [
-                                            Node: { Token: {Value: printerr, Type: identifier, Line: 98, Column: 16} },
+                                            Node: { Token: {Value: printerr, Type: identifier, Line: 101, Column: 16} },
                                             Node: { Label: "params"
                                             children: [
-                                                Node: { Token: {Value: "Warning: insecure connection", Type: string literal, Line: 98, Column: 25} }
+                                                Node: { Token: {Value: "Warning: insecure connection", Type: string literal, Line: 101, Column: 25} }
                                             ] }
                                         ] },
                                         Node: { Label: "call"
                                         children: [
-                                            Node: { Token: {Value: println, Type: identifier, Line: 99, Column: 16} },
+                                            Node: { Token: {Value: println, Type: identifier, Line: 102, Column: 16} },
                                             Node: { Label: "params"
                                             children: [
-                                                Node: { Token: {Value: "Connected to DB server", Type: string literal, Line: 99, Column: 24} }
+                                                Node: { Token: {Value: "Connected to DB server", Type: string literal, Line: 102, Column: 24} }
                                             ] }
                                         ] }
                                     ] }
@@ -1001,14 +1022,14 @@ children: [
                     ] },
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: connect, Type: identifier, Line: 102, Column: 11} },
-                        Node: { Token: {Value: bool, Type: type keyword, Line: 102, Column: 24} },
+                        Node: { Token: {Value: connect, Type: identifier, Line: 105, Column: 11} },
+                        Node: { Token: {Value: bool, Type: type keyword, Line: 105, Column: 24} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "control-flow"
                             children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 103, Column: 12} },
-                                Node: { Token: {Value: true, Type: boolean value keyword, Line: 103, Column: 19} }
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 106, Column: 12} },
+                                Node: { Token: {Value: true, Type: boolean value keyword, Line: 106, Column: 19} }
                             ] }
                         ] }
                     ] }
@@ -1016,36 +1037,92 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 108, Column: 0}
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 111, Column: 0}
     children: [
-        Node: { Token: {Value: MariaDB, Type: identifier, Line: 108, Column: 7} },
+        Node: { Token: {Value: MariaDB, Type: identifier, Line: 111, Column: 7} },
         Node: { Label: "interface_list"
         children: [
-            Node: { Token: {Value: DB, Type: identifier, Line: 108, Column: 20} }
+            Node: { Token: {Value: DB, Type: identifier, Line: 111, Column: 20} }
         ] },
         Node: { Label: "struct-body"
         children: [
             Node: { Label: "named-block"
             children: [
-                Node: { Token: {Value: DB, Type: identifier, Line: 109, Column: 4} },
+                Node: { Token: {Value: DB, Type: identifier, Line: 112, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: connect, Type: identifier, Line: 110, Column: 11} },
-                        Node: { Token: {Value: float, Type: type keyword, Line: 110, Column: 24} },
+                        Node: { Token: {Value: connect, Type: identifier, Line: 113, Column: 11} },
+                        Node: { Token: {Value: float, Type: type keyword, Line: 113, Column: 24} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "Variable"
                             children: [
-                                Node: { Token: {Value: float, Type: type keyword, Line: 111, Column: 12} },
-                                Node: { Token: {Value: seconds, Type: identifier, Line: 111, Column: 18} },
-                                Node: { Token: {Value: 0.025, Type: float literal, Line: 111, Column: 28}, Type: float }
+                                Node: { Token: {Value: float, Type: type keyword, Line: 114, Column: 12} },
+                                Node: { Token: {Value: seconds, Type: identifier, Line: 114, Column: 18} },
+                                Node: { Token: {Value: 0.025, Type: float literal, Line: 114, Column: 28}, Type: float }
                             ] },
                             Node: { Label: "control-flow"
                             children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 112, Column: 12} },
-                                Node: { Token: {Value: seconds, Type: identifier, Line: 112, Column: 19}, Type: float }
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 115, Column: 12} },
+                                Node: { Token: {Value: seconds, Type: identifier, Line: 115, Column: 19}, Type: float }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 120, Column: 0}
+    children: [
+        Node: { Token: {Value: PrivateTester, Type: identifier, Line: 120, Column: 7} },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "named-block"
+            children: [
+                Node: { Token: {Value: private, Type: modifier keyword, Line: 121, Column: 4} },
+                Node: { Label: "named-block-body"
+                children: [
+                    Node: { Label: "Variable"
+                    children: [
+                        Node: { Label: "modifiers"
+                        children: [
+                            Node: { Token: {Value: private, Type: modifier keyword, Line: 122, Column: 8} }
+                        ] },
+                        Node: { Token: {Value: int, Type: type keyword, Line: 122, Column: 16} },
+                        Node: { Token: {Value: y, Type: identifier, Line: 122, Column: 20} },
+                        Node: { Token: {Value: "y", Type: string literal, Line: 122, Column: 24}, Type: String }
+                    ] },
+                    Node: { Label: "Variable"
+                    children: [
+                        Node: { Label: "modifiers"
+                        children: [
+                            Node: { Token: {Value: mut, Type: modifier keyword, Line: 123, Column: 8} }
+                        ] },
+                        Node: { Token: {Value: TYPE, Type: identifier, Line: 123, Column: 12} },
+                        Node: { Token: {Value: j, Type: identifier, Line: 123, Column: 17} }
+                    ] },
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: test, Type: identifier, Line: 124, Column: 11} }
+                    ] },
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: test, Type: identifier, Line: 125, Column: 11} },
+                        Node: { Token: {Value: int, Type: type keyword, Line: 125, Column: 19} },
+                        Node: { Label: "fn-body" }
+                    ] },
+                    Node: { Label: "fn"
+                    children: [
+                        Node: { Token: {Value: something, Type: identifier, Line: 126, Column: 11} },
+                        Node: { Token: {Value: bool, Type: type keyword, Line: 126, Column: 26} },
+                        Node: { Label: "fn-body"
+                        children: [
+                            Node: { Label: "control-flow"
+                            children: [
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 127, Column: 12} },
+                                Node: { Token: {Value: 0, Type: int literal, Line: 127, Column: 19}, Type: int }
                             ] }
                         ] }
                     ] }
@@ -1055,143 +1132,170 @@ children: [
     ] },
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: main, Type: identifier, Line: 117, Column: 3} },
-        Node: { Token: {Value: int, Type: type keyword, Line: 117, Column: 13} },
+        Node: { Token: {Value: main, Type: identifier, Line: 132, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 132, Column: 13} },
         Node: { Label: "fn-body"
         children: [
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: App, Type: identifier, Line: 118, Column: 4} },
-                Node: { Token: {Value: app, Type: identifier, Line: 118, Column: 8} },
+                Node: { Token: {Value: App, Type: identifier, Line: 133, Column: 4} },
+                Node: { Token: {Value: app, Type: identifier, Line: 133, Column: 8} },
                 Node: { Label: "struct_literal", Type: App
                 children: [
-                    Node: { Token: {Value: App, Type: identifier, Line: 118, Column: 14} }
+                    Node: { Token: {Value: App, Type: identifier, Line: 133, Column: 14} }
                 ] }
             ] },
             Node: { Label: "call"
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: app, Type: identifier, Line: 119, Column: 4} },
-                    Node: { Token: {Value: connect, Type: identifier, Line: 119, Column: 8} }
+                    Node: { Token: {Value: app, Type: identifier, Line: 134, Column: 4} },
+                    Node: { Token: {Value: connect, Type: identifier, Line: 134, Column: 8} }
                 ] }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: Container, Type: identifier, Line: 120, Column: 4} },
-                Node: { Token: {Value: one, Type: identifier, Line: 120, Column: 14} },
+                Node: { Token: {Value: Container, Type: identifier, Line: 135, Column: 4} },
+                Node: { Token: {Value: one, Type: identifier, Line: 135, Column: 14} },
                 Node: { Label: "struct_literal", Type: Container
                 children: [
-                    Node: { Token: {Value: Container, Type: identifier, Line: 120, Column: 20} },
+                    Node: { Token: {Value: Container, Type: identifier, Line: 135, Column: 20} },
                     Node: { Label: "properties"
                     children: [
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: id, Type: identifier, Line: 120, Column: 30} },
-                            Node: { Token: {Value: "one", Type: string literal, Line: 120, Column: 34} }
+                            Node: { Token: {Value: id, Type: identifier, Line: 135, Column: 30} },
+                            Node: { Token: {Value: "one", Type: string literal, Line: 135, Column: 34} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: id, Type: identifier, Line: 120, Column: 41} },
-                            Node: { Token: {Value: "1", Type: string literal, Line: 120, Column: 45} }
+                            Node: { Token: {Value: id, Type: identifier, Line: 135, Column: 41} },
+                            Node: { Token: {Value: "1", Type: string literal, Line: 135, Column: 45} }
                         ] }
                     ] }
                 ] }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: Container, Type: identifier, Line: 121, Column: 4} },
-                Node: { Token: {Value: two, Type: identifier, Line: 121, Column: 14} },
+                Node: { Token: {Value: Container, Type: identifier, Line: 136, Column: 4} },
+                Node: { Token: {Value: two, Type: identifier, Line: 136, Column: 14} },
                 Node: { Label: "struct_literal", Type: Container
                 children: [
-                    Node: { Token: {Value: Container, Type: identifier, Line: 121, Column: 20} },
+                    Node: { Token: {Value: Container, Type: identifier, Line: 136, Column: 20} },
                     Node: { Label: "properties"
                     children: [
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: id, Type: identifier, Line: 121, Column: 30} },
-                            Node: { Token: {Value: "two", Type: string literal, Line: 121, Column: 34} }
+                            Node: { Token: {Value: id, Type: identifier, Line: 136, Column: 30} },
+                            Node: { Token: {Value: "two", Type: string literal, Line: 136, Column: 34} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: image, Type: identifier, Line: 121, Column: 41} },
-                            Node: { Token: {Value: "alpine-linux@latest", Type: string literal, Line: 121, Column: 48} }
+                            Node: { Token: {Value: image, Type: identifier, Line: 136, Column: 41} },
+                            Node: { Token: {Value: "alpine-linux@latest", Type: string literal, Line: 136, Column: 48} }
                         ] }
                     ] }
                 ] }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: Container, Type: identifier, Line: 122, Column: 4} },
-                Node: { Token: {Value: three, Type: identifier, Line: 122, Column: 14} },
+                Node: { Token: {Value: Container, Type: identifier, Line: 137, Column: 4} },
+                Node: { Token: {Value: three, Type: identifier, Line: 137, Column: 14} },
                 Node: { Label: "struct_literal", Type: Container
                 children: [
-                    Node: { Token: {Value: Container, Type: identifier, Line: 122, Column: 22} },
+                    Node: { Token: {Value: Container, Type: identifier, Line: 137, Column: 22} },
                     Node: { Label: "properties"
                     children: [
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: id, Type: identifier, Line: 122, Column: 32} },
-                            Node: { Token: {Value: '3', Type: char literal, Line: 122, Column: 36} }
+                            Node: { Token: {Value: id, Type: identifier, Line: 137, Column: 32} },
+                            Node: { Token: {Value: '3', Type: char literal, Line: 137, Column: 36} }
                         ] }
                     ] }
                 ] }
             ] },
-            Node: { Token: {Value: >, Type: compare operator, Line: 123, Column: 8}
+            Node: { Token: {Value: >, Type: compare operator, Line: 138, Column: 8}
             children: [
-                Node: { Token: {Value: one, Type: identifier, Line: 123, Column: 4}, Type: Container },
-                Node: { Token: {Value: two, Type: identifier, Line: 123, Column: 10}, Type: Container }
+                Node: { Token: {Value: one, Type: identifier, Line: 138, Column: 4}, Type: Container },
+                Node: { Token: {Value: two, Type: identifier, Line: 138, Column: 10}, Type: Container }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: float, Type: type keyword, Line: 124, Column: 4} },
-                Node: { Token: {Value: f1, Type: identifier, Line: 124, Column: 10} },
+                Node: { Token: {Value: float, Type: type keyword, Line: 139, Column: 4} },
+                Node: { Token: {Value: f1, Type: identifier, Line: 139, Column: 10} },
                 Node: { Label: "typecast"
                 children: [
-                    Node: { Token: {Value: one, Type: identifier, Line: 124, Column: 15}, Type: Container },
-                    Node: { Token: {Value: float, Type: type keyword, Line: 124, Column: 22} }
+                    Node: { Token: {Value: one, Type: identifier, Line: 139, Column: 15}, Type: Container },
+                    Node: { Token: {Value: float, Type: type keyword, Line: 139, Column: 22} }
                 ] }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 125, Column: 14}
+            Node: { Token: {Value: +, Type: add operator, Line: 140, Column: 14}
             children: [
-                Node: { Token: {Value: *, Type: multiply operator, Line: 125, Column: 8}, Type: None
+                Node: { Token: {Value: *, Type: multiply operator, Line: 140, Column: 8}, Type: None
                 children: [
-                    Node: { Token: {Value: one, Type: identifier, Line: 125, Column: 4}, Type: Container },
-                    Node: { Token: {Value: two, Type: identifier, Line: 125, Column: 10}, Type: Container }
+                    Node: { Token: {Value: one, Type: identifier, Line: 140, Column: 4}, Type: Container },
+                    Node: { Token: {Value: two, Type: identifier, Line: 140, Column: 10}, Type: Container }
                 ] },
-                Node: { Token: {Value: three, Type: identifier, Line: 125, Column: 16}, Type: Container }
+                Node: { Token: {Value: three, Type: identifier, Line: 140, Column: 16}, Type: Container }
             ] },
             Node: { Label: "call"
             children: [
-                Node: { Token: {Value: println, Type: identifier, Line: 126, Column: 4} },
+                Node: { Token: {Value: println, Type: identifier, Line: 141, Column: 4} },
                 Node: { Label: "params"
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Token: {Value: one, Type: identifier, Line: 126, Column: 12} },
-                        Node: { Token: {Value: runTimeVersion, Type: identifier, Line: 126, Column: 16} }
+                        Node: { Token: {Value: one, Type: identifier, Line: 141, Column: 12} },
+                        Node: { Token: {Value: runTimeVersion, Type: identifier, Line: 141, Column: 16} }
                     ] }
                 ] }
             ] },
-            Node: { Token: {Value: =, Type: assign operator, Line: 127, Column: 11}
+            Node: { Token: {Value: =, Type: assign operator, Line: 142, Column: 11}
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: two, Type: identifier, Line: 127, Column: 4} },
-                    Node: { Token: {Value: id, Type: identifier, Line: 127, Column: 8} }
+                    Node: { Token: {Value: two, Type: identifier, Line: 142, Column: 4} },
+                    Node: { Token: {Value: id, Type: identifier, Line: 142, Column: 8} }
                 ] },
-                Node: { Token: {Value: "2", Type: string literal, Line: 127, Column: 13} }
+                Node: { Token: {Value: "2", Type: string literal, Line: 142, Column: 13} }
+            ] },
+            Node: { Label: "struct_literal"
+            children: [
+                Node: { Token: {Value: StructLiteral, Type: identifier, Line: 143, Column: 4} }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: MariaDB, Type: identifier, Line: 144, Column: 4} },
+                Node: { Token: {Value: maria, Type: identifier, Line: 144, Column: 12} },
+                Node: { Label: "struct_literal", Type: MariaDB
+                children: [
+                    Node: { Token: {Value: MariaDB, Type: identifier, Line: 144, Column: 20} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 145, Column: 4} },
+                Node: { Token: {Value: pgsql, Type: identifier, Line: 145, Column: 15} },
+                Node: { Label: "struct_literal", Type: PostgreSQL
+                children: [
+                    Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 145, Column: 23} }
+                ] }
+            ] },
+            Node: { Token: {Value: <=, Type: compare operator, Line: 146, Column: 10}
+            children: [
+                Node: { Token: {Value: maria, Type: identifier, Line: 146, Column: 4}, Type: MariaDB },
+                Node: { Token: {Value: pgsql, Type: identifier, Line: 146, Column: 13}, Type: PostgreSQL }
             ] },
             Node: { Label: "control-flow"
             children: [
-                Node: { Token: {Value: return, Type: flow keyword, Line: 128, Column: 4} },
-                Node: { Token: {Value: 0, Type: int literal, Line: 128, Column: 11}, Type: int }
+                Node: { Token: {Value: return, Type: flow keyword, Line: 147, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 147, Column: 11}, Type: int }
             ] }
         ] }
     ] }
 ] }
 ScopeTree:
-Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: false}{parameters: (bool,String), implemented: false}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: false}{parameters: (String,String), implemented: false}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: false}{parameters: (int,String), implemented: false}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: false}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: false}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: false}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: false}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: false}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: false}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: false}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: false}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: false}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: false}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: false}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: false}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: false}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: false}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: false}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: false}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
+Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: true}{parameters: (bool,String), implemented: true}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: true}{parameters: (String,String), implemented: true}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: true}{parameters: (int,String), implemented: true}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: true}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: true}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: true}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: true}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: true}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: true}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: true}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: true}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: true}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: true}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: true}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: true}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: true}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: true}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: true}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: true}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
     Scope: { id: @global, parent: @built-in, interfaces: map[Empty:{name: Empty} Result:{name: Result} Runner:{name: Runner}], structs: map[AlsoEmpty:{name: AlsoEmpty, size: 0} TestResult:{name: TestResult, size: 4, implements: [Result]} TestRunner:{name: TestRunner, size: 0, implements: [Runner]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
         Scope: { id: Empty, type: 1, parent: @global },
         Scope: { id: AlsoEmpty, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
@@ -1261,7 +1365,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
     Scope: { id: @global, parent: @built-in, structs: map[Sample:{name: Sample, size: 0}], children: [
         Scope: { id: Sample, type: 2, parent: @global, variables: map[i:{name: i, Type: int, isPrivate: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, interfaces: map[Backend:{name: Backend} DB:{name: DB} Device:{name: Device}], structs: map[A:{name: A, size: 0} App:{name: App, size: 0, implements: [DB, Backend]} Container:{name: Container, size: 8} Laptop:{name: Laptop, size: 0, implements: [Device]} Location:{name: Location, size: 0} MariaDB:{name: MariaDB, size: 0, implements: [DB]} Position2D:{name: Position2D, size: 8} PostgreSQL:{name: PostgreSQL, size: 0, implements: [DB]} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[Backend:{name: Backend} DB:{name: DB} Device:{name: Device}], structs: map[A:{name: A, size: 0} App:{name: App, size: 0, implements: [DB, Backend]} Container:{name: Container, size: 8} Laptop:{name: Laptop, size: 0, implements: [Device]} Location:{name: Location, size: 0} MariaDB:{name: MariaDB, size: 0, implements: [DB]} Position2D:{name: Position2D, size: 8} PostgreSQL:{name: PostgreSQL, size: 0, implements: [DB]} PrivateTester:{name: PrivateTester, size: 0} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
         Scope: { id: A, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: Device, type: 1, parent: @global, functions: map[powerOff:{name: powerOff, returns: None, overloads: [{parameters: (), implemented: false}]} powerOn:{name: powerOn, returns: None, overloads: [{parameters: (), implemented: false}]}] },
         Scope: { id: Server, type: 2, parent: @global, namedBlocks: map[Device:{name: Device}], variables: map[Device:{name: Device, Type: ScopeRef(Server,Device), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
@@ -1273,9 +1377,10 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: Location, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: Laptop, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: Container, type: 2, parent: @global, namedBlocks: map[cast:{name: cast} compare:{name: compare}], variables: map[id:{name: id, Type: String, Initialized: false} runTimeVersion:{name: runTimeVersion, Type: int, isPrivate: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
-            Scope: { id: cast@Container, type: 3, parent: Container, functions: map[toInterface:{name: toInterface, returns: Device, overloads: [{parameters: (), implemented: true}]} toNone:{name: toNone, returns: None, overloads: [{parameters: (), implemented: true}]} toSame:{name: toSame, returns: Container, overloads: [{parameters: (), implemented: true}]} toString:{name: toString, returns: String, overloads: [{parameters: (String), implemented: true}]}], children: [
+            Scope: { id: cast@Container, type: 3, parent: Container, functions: map[duplicateToString:{name: duplicateToString, returns: String, overloads: [{parameters: (), implemented: true}]} toInterface:{name: toInterface, returns: Device, overloads: [{parameters: (), implemented: true}]} toNone:{name: toNone, returns: None, overloads: [{parameters: (), implemented: true}]} toSame:{name: toSame, returns: Container, overloads: [{parameters: (), implemented: true}]} toString:{name: toString, returns: String, overloads: [{parameters: (String), implemented: true}]}], children: [
                 Scope: { id: toInterface()@cast@Container, type: 4, parent: cast@Container },
                 Scope: { id: toString(String)@cast@Container, type: 4, parent: cast@Container, variables: map[name:{name: name, Type: String, Initialized: false}] },
+                Scope: { id: duplicateToString()@cast@Container, type: 4, parent: cast@Container },
                 Scope: { id: toNone()@cast@Container, type: 4, parent: cast@Container },
                 Scope: { id: toSame()@cast@Container, type: 4, parent: cast@Container }
             ] },
@@ -1311,7 +1416,11 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
                 Scope: { id: connect()@DB@MariaDB, type: 4, parent: DB@MariaDB, variables: map[seconds:{name: seconds, Type: float, Initialized: true}] }
             ] }
         ] },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} one:{name: one, Type: Container, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
+        Scope: { id: PrivateTester, type: 2, parent: @global, functions: map[something:{name: something, returns: bool, overloads: [{parameters: (), isPrivate: true, implemented: true}]} test:{name: test, returns: None, overloads: [{parameters: (), isPrivate: true, implemented: false}]}], variables: map[j:{name: j, Type: None, isPrivate: true, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true} y:{name: y, Type: int, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: test()@PrivateTester, type: 4, parent: PrivateTester },
+            Scope: { id: something()@PrivateTester, type: 4, parent: PrivateTester }
+        ] },
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] }
 ] }
 Compiler messages:
@@ -1327,23 +1436,33 @@ Compiler messages:
     "IllegalStatementError: Variable declaration only allowed in struct or private block at line: 37, column: 9",
     "NamedBlockError: Functions in cast block cannot return an interface at line: 38, column: 9",
     "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 41, column: 9",
-    "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 44, column: 9",
+    "AmbiguityError: Cannot have more than one cast function that returns String at line: 44, column: 9",
+    "NameError: Variable 'name' not defined in this scope at line: 45, column: 20",
     "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 47, column: 9",
-    "IllegalStatementError: Variable declaration only allowed in struct or private block at line: 52, column: 9",
-    "NamedBlockError: Function signature 'fn greaterThanOrEqualTo(Container)->bool' not supported; only 'fn equals(Container)->bool,fn lessThan(Container)->bool,fn greaterThan(Container)->bool' supported at line: 53, column: 9",
-    "NamedBlockError: Function signature 'fn equals(Container,uint32)->bool' not supported; only 'fn equals(Container)->bool,fn lessThan(Container)->bool,fn greaterThan(Container)->bool' supported at line: 59, column: 9",
-    "NamedBlockError: Function signature 'fn lessThan(Container)' not supported; only 'fn equals(Container)->bool,fn lessThan(Container)->bool,fn greaterThan(Container)->bool' supported at line: 62, column: 9",
-    "ImplementationError: Named block DB contains function connect(bool) which its interface does not at line: 91, column: 5",
-    "IllegalStatementError: Function name 'connect' already defined without a return type; cannot overload with return type bool at line: 103, column: 9",
-    "ImplementationError: Implementation function connect returns float but interface DB returns None at line: 110, column: 5",
-    "AmbiguityError: Interfaces Backend,DB both contain function named connect. Change the function call to pick which one to use at line: 120, column: 9",
-    "IllegalStatementError: Cannot define struct property 'id' multiple times in struct literal at line: 121, column: 42",
-    "NameError: Could not find property 'image' in struct Container at line: 122, column: 42",
-    "TypeError: Property type String expected but found char at line: 123, column: 37",
-    "TypeError: Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(Container)->bool' to compare block in Container definition at line: 124, column: 9",
-    "CastError: Cannot typecast Container to float. To support this typecasting add a function returning target type to cast block at line: 125, column: 16",
-    "TypeError: Cannot use operator '*' between Container and Container at line: 126, column: 9",
-    "AccessError: Cannot access private property from outside struct definition at line: 127, column: 17"
+    "NamedBlockError: Functions in cast block must take no parameters and return a different type at line: 50, column: 9",
+    "IllegalStatementError: Variable declaration only allowed in struct or private block at line: 55, column: 9",
+    "NamedBlockError: Function signature 'fn greaterThanOrEqualTo(Container)->bool' not supported; only 'fn equals(Container)->bool,fn lessThan(Container)->bool,fn greaterThan(Container)->bool' supported at line: 56, column: 9",
+    "NamedBlockError: Function signature 'fn equals(Container,uint32)->bool' not supported; only 'fn equals(Container)->bool,fn lessThan(Container)->bool,fn greaterThan(Container)->bool' supported at line: 62, column: 9",
+    "NamedBlockError: Function signature 'fn lessThan(Container)' not supported; only 'fn equals(Container)->bool,fn lessThan(Container)->bool,fn greaterThan(Container)->bool' supported at line: 65, column: 9",
+    "ImplementationError: Named block DB contains function connect(bool) which its interface does not at line: 94, column: 5",
+    "IllegalStatementError: Function name 'connect' already defined without a return type; cannot overload with return type bool at line: 106, column: 9",
+    "ImplementationError: Implementation function connect returns float but interface DB returns None at line: 113, column: 5",
+    "Warning: Redundant use of private in private block at line: 123, column: 9",
+    "TypeError: Cannot assign type String to variable type int at line: 123, column: 25",
+    "TypeError: Invalid type 'TYPE' provided at line: 124, column: 13",
+    "IllegalStatementError: Function name 'test' already defined without a return type; cannot overload with return type int at line: 126, column: 9",
+    "TypeError: Function 'something()->bool' may not return a value at line: 127, column: 32",
+    "TypeError: Function 'something()->bool' expected return type bool but got int at line: 128, column: 13",
+    "AmbiguityError: Interfaces Backend,DB both contain function named connect. Change the function call to pick which one to use at line: 135, column: 9",
+    "IllegalStatementError: Cannot define struct property 'id' multiple times in struct literal at line: 136, column: 42",
+    "NameError: Could not find property 'image' in struct Container at line: 137, column: 42",
+    "TypeError: Property type String expected but found char at line: 138, column: 37",
+    "TypeError: Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(Container)->bool' to compare block in Container definition at line: 139, column: 9",
+    "CastError: Cannot typecast Container to float. To support this typecasting add a function returning target type to cast block at line: 140, column: 16",
+    "TypeError: Cannot use operator '*' between Container and Container at line: 141, column: 9",
+    "AccessError: Cannot access private property from outside struct definition at line: 142, column: 17",
+    "NameError: Struct StructLiteral not defined at line: 144, column: 5",
+    "TypeError: Invalid comparison between MariaDB and PostgreSQL at line: 147, column: 11"
 ]
 
 ---

@@ -139,12 +139,28 @@ func TestFunctions(t *testing.T) {
 	})
 }
 
-// func TestBranch(t *testing.T) {
-// 	subdir := "branch"
-// 	t.Run("should run valid.the and have no errors", func(t *testing.T) {
-// 		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
-// 	})
-// 	t.Run("should errors.the and have a mix of errors and warnings", func(t *testing.T) {
-// 		snapshotTestSemanticAnalyzer(t, "errors.json", subdir)
-// 	})
-// }
+func TestBranch(t *testing.T) {
+	subdir := "branch"
+	t.Run("should run valid.the and have no errors", func(t *testing.T) {
+		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
+	})
+	t.Run("should run warnings.the and have warnings", func(t *testing.T) {
+		snapshotTestSemanticAnalyzer(t, "warnings.json", subdir)
+	})
+	t.Run("should errors.the and have a mix of errors and warnings", func(t *testing.T) {
+		snapshotTestSemanticAnalyzer(t, "errors.json", subdir)
+	})
+}
+
+func TestTypeSystem(t *testing.T) {
+	subdir := "types"
+	t.Run("should run valid.the and have no errors", func(t *testing.T) {
+		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
+	})
+	t.Run("should run warnings.the and have warnings", func(t *testing.T) {
+		snapshotTestSemanticAnalyzer(t, "warnings.json", subdir)
+	})
+	t.Run("should errors.the and have a mix of errors and warnings", func(t *testing.T) {
+		snapshotTestSemanticAnalyzer(t, "errors.json", subdir)
+	})
+}

@@ -1,0 +1,11 @@
+mut int i;
+
+fn main() -> int {
+    i = 1;
+    println(i++);
+    --i;
+    uint64 u = 100000000;
+    float f = u as float;
+    uint32 smaller = u as uint32;
+    return 0;
+}

@@ -1,0 +1,26 @@
+fn overloads() -> bool {
+    return true;
+}
+
+fn overloads(int i) -> bool {
+    return i == 0;
+}
+
+fn overloads(int i, int j) -> bool {
+    bool eq = i == j;
+    return eq;
+}
+
+ fn caller() {
+    !overloads() || overloads(1) || overloads(1+1, 2);
+    return;
+}
+
+fn main() -> int {
+    forwardDeclaration();
+    return 0;
+}
+
+fn forwardDeclaration() {
+    println("Valid call");
+}

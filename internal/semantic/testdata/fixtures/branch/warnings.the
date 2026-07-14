@@ -1,0 +1,11 @@
+fn main() -> int {
+    return 0;
+    for (int i in 0 .. 200 .. 10) {
+        break;
+        println(i);
+    }
+    for (int i in 0 ..= 10) {
+        continue;
+        println(i - 1);
+    }
+}
