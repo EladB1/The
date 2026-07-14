@@ -39,7 +39,7 @@ func snapshotTestParser(t *testing.T, filename string, debug bool) {
 		}
 		msgBuilder.WriteString(formatStr)
 	}
-	results := fmt.Sprintf("AST:\n%v\n, Compiler messages:\n[%s]\n", ast, msgBuilder.String())
+	results := fmt.Sprintf("AST:\n%v\n, Compiler messages:\n[%s]\n", ast.String(fixture.Literals), msgBuilder.String())
 	if debug {
 		lexer.PrintTokens(fixture.Tokens, fixture.Literals)
 	}
