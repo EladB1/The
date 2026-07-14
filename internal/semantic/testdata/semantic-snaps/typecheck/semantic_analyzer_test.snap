@@ -1,7 +1,157 @@
 
 [TestTypeSystem/should_run_valid.the_and_have_no_errors - 1]
 AST:
-Node: { Label: "program" }
+Node: { Label: "program"
+children: [
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: uint32, Type: type keyword, Line: 0, Column: 0} },
+        Node: { Token: {Value: u, Type: identifier, Line: 0, Column: 7} },
+        Node: { Token: {Value: 0, Type: int literal, Line: 0, Column: 11}, Type: uint32 }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: uint64, Type: type keyword, Line: 1, Column: 0} },
+        Node: { Token: {Value: u2, Type: identifier, Line: 1, Column: 7} },
+        Node: { Token: {Value: 1, Type: int literal, Line: 1, Column: 12}, Type: uint64 }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 2, Column: 0} },
+        Node: { Token: {Value: i, Type: identifier, Line: 2, Column: 4} },
+        Node: { Token: {Value: 2, Type: int literal, Line: 2, Column: 8}, Type: int }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int64, Type: type keyword, Line: 3, Column: 0} },
+        Node: { Token: {Value: i2, Type: identifier, Line: 3, Column: 6} },
+        Node: { Token: {Value: 3, Type: int literal, Line: 3, Column: 11}, Type: int64 }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: float, Type: type keyword, Line: 4, Column: 0} },
+        Node: { Token: {Value: f, Type: identifier, Line: 4, Column: 6} },
+        Node: { Token: {Value: 3.1, Type: float literal, Line: 4, Column: 10}, Type: float }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: double, Type: type keyword, Line: 5, Column: 0} },
+        Node: { Token: {Value: d, Type: identifier, Line: 5, Column: 7} },
+        Node: { Token: {Value: 3.2, Type: float literal, Line: 5, Column: 11}, Type: double }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: char, Type: type keyword, Line: 6, Column: 0} },
+        Node: { Token: {Value: c, Type: identifier, Line: 6, Column: 5} },
+        Node: { Token: {Value: 'a', Type: char literal, Line: 6, Column: 9}, Type: char }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: String, Type: type keyword, Line: 7, Column: 0} },
+        Node: { Token: {Value: s, Type: identifier, Line: 7, Column: 7} },
+        Node: { Token: {Value: "hello, world!", Type: string literal, Line: 7, Column: 11}, Type: String }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: bool, Type: type keyword, Line: 8, Column: 0} },
+        Node: { Token: {Value: flag, Type: identifier, Line: 8, Column: 5} },
+        Node: { Token: {Value: &&, Type: operator, Line: 8, Column: 28}, Type: bool
+        children: [
+            Node: { Token: {Value: ||, Type: operator, Line: 8, Column: 18}, Type: bool
+            children: [
+                Node: { Token: {Value: true, Type: boolean value keyword, Line: 8, Column: 13}, Type: bool },
+                Node: { Token: {Value: false, Type: boolean value keyword, Line: 8, Column: 21}, Type: bool }
+            ] },
+            Node: { Token: {Value: <, Type: compare operator, Line: 8, Column: 33}, Type: bool
+            children: [
+                Node: { Token: {Value: u, Type: identifier, Line: 8, Column: 31}, Type: uint32 },
+                Node: { Token: {Value: u2, Type: identifier, Line: 8, Column: 35}, Type: uint64 }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: main, Type: identifier, Line: 10, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 10, Column: 13} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Token: {Value: +, Type: add operator, Line: 11, Column: 6}
+            children: [
+                Node: { Token: {Value: u, Type: identifier, Line: 11, Column: 4}, Type: uint32 },
+                Node: { Token: {Value: u2, Type: identifier, Line: 11, Column: 8}, Type: uint64 }
+            ] },
+            Node: { Token: {Value: +, Type: add operator, Line: 12, Column: 6}
+            children: [
+                Node: { Token: {Value: i, Type: identifier, Line: 12, Column: 4}, Type: int },
+                Node: { Token: {Value: i2, Type: identifier, Line: 12, Column: 8}, Type: int64 }
+            ] },
+            Node: { Token: {Value: +, Type: add operator, Line: 13, Column: 6}
+            children: [
+                Node: { Token: {Value: f, Type: identifier, Line: 13, Column: 4}, Type: float },
+                Node: { Token: {Value: d, Type: identifier, Line: 13, Column: 8}, Type: double }
+            ] },
+            Node: { Token: {Value: +, Type: add operator, Line: 14, Column: 6}
+            children: [
+                Node: { Token: {Value: f, Type: identifier, Line: 14, Column: 4}, Type: float },
+                Node: { Token: {Value: i, Type: identifier, Line: 14, Column: 8}, Type: int }
+            ] },
+            Node: { Token: {Value: +, Type: add operator, Line: 15, Column: 6}
+            children: [
+                Node: { Token: {Value: d, Type: identifier, Line: 15, Column: 4}, Type: double },
+                Node: { Token: {Value: i, Type: identifier, Line: 15, Column: 8}, Type: int }
+            ] },
+            Node: { Token: {Value: +, Type: add operator, Line: 16, Column: 7}
+            children: [
+                Node: { Token: {Value: i2, Type: identifier, Line: 16, Column: 4}, Type: int64 },
+                Node: { Token: {Value: d, Type: identifier, Line: 16, Column: 9}, Type: double }
+            ] },
+            Node: { Token: {Value: +, Type: add operator, Line: 17, Column: 6}
+            children: [
+                Node: { Token: {Value: u, Type: identifier, Line: 17, Column: 4}, Type: uint32 },
+                Node: { Token: {Value: 1, Type: int literal, Line: 17, Column: 8}, Type: uint32 }
+            ] },
+            Node: { Token: {Value: +, Type: add operator, Line: 18, Column: 6}
+            children: [
+                Node: { Token: {Value: u, Type: identifier, Line: 18, Column: 4}, Type: uint32 },
+                Node: { Token: {Value: *, Type: multiply operator, Line: 18, Column: 10}, Type: int
+                children: [
+                    Node: { Token: {Value: 1, Type: int literal, Line: 18, Column: 8}, Type: int },
+                    Node: { Token: {Value: i, Type: identifier, Line: 18, Column: 12}, Type: int }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: double, Type: type keyword, Line: 19, Column: 4} },
+                Node: { Token: {Value: sqrt, Type: identifier, Line: 19, Column: 11} },
+                Node: { Token: {Value: **, Type: operator, Line: 19, Column: 20}, Type: double
+                children: [
+                    Node: { Token: {Value: u, Type: identifier, Line: 19, Column: 18}, Type: uint32 },
+                    Node: { Token: {Value: 0.5, Type: float literal, Line: 19, Column: 23}, Type: double }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 20, Column: 4} },
+                Node: { Token: {Value: pow, Type: identifier, Line: 20, Column: 8} },
+                Node: { Token: {Value: **, Type: operator, Line: 20, Column: 16}, Type: int
+                children: [
+                    Node: { Token: {Value: i, Type: identifier, Line: 20, Column: 14}, Type: int },
+                    Node: { Token: {Value: u2, Type: identifier, Line: 20, Column: 19}, Type: uint64 }
+                ] }
+            ] },
+            Node: { Label: "typecast"
+            children: [
+                Node: { Token: {Value: u, Type: identifier, Line: 21, Column: 4}, Type: uint32 },
+                Node: { Token: {Value: int, Type: type keyword, Line: 21, Column: 9} }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 22, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 22, Column: 11}, Type: int }
+            ] }
+        ] }
+    ] }
+] }
 ScopeTree:
 Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: true}{parameters: (bool,String), implemented: true}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: true}{parameters: (String,String), implemented: true}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: true}{parameters: (int,String), implemented: true}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: true}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: true}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: true}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: true}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: true}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: true}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: true}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: true}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: true}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: true}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: true}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: true}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: true}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: true}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: true}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: true}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
     Scope: { id: @global, parent: @built-in, interfaces: map[Empty:{name: Empty} Result:{name: Result} Runner:{name: Runner}], structs: map[AlsoEmpty:{name: AlsoEmpty, size: 0} TestResult:{name: TestResult, size: 4, implements: [Result]} TestRunner:{name: TestRunner, size: 0, implements: [Runner]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
@@ -130,7 +280,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, isMutable: true, Initialized: false}], children: [
@@ -221,18 +372,65 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global }
     ] },
-    Scope: { id: @global, parent: @built-in }
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[c:{name: c, Type: char, Initialized: true} d:{name: d, Type: double, Initialized: true} f:{name: f, Type: float, Initialized: true} flag:{name: flag, Type: bool, Initialized: true} i:{name: i, Type: int, Initialized: true} i2:{name: i2, Type: int64, Initialized: true} s:{name: s, Type: String, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[pow:{name: pow, Type: int, Initialized: true} sqrt:{name: sqrt, Type: double, Initialized: true}] }
+    ] }
 ] }
 Compiler messages:
-[
-    "Error: Missing entrypoint function 'fn main()->int' "
-]
+[]
 
 ---
 
 [TestTypeSystem/should_run_warnings.the_and_have_warnings - 1]
 AST:
-Node: { Label: "program" }
+Node: { Label: "program"
+children: [
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: main, Type: identifier, Line: 0, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 0, Column: 13} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: double, Type: type keyword, Line: 1, Column: 4} },
+                Node: { Token: {Value: val, Type: identifier, Line: 1, Column: 11} },
+                Node: { Token: {Value: 0.01, Type: float literal, Line: 1, Column: 17}, Type: double }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: float, Type: type keyword, Line: 2, Column: 4} },
+                Node: { Token: {Value: f, Type: identifier, Line: 2, Column: 10} },
+                Node: { Label: "typecast"
+                children: [
+                    Node: { Token: {Value: val, Type: identifier, Line: 2, Column: 14}, Type: double },
+                    Node: { Token: {Value: float, Type: type keyword, Line: 2, Column: 21} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: int64, Type: type keyword, Line: 3, Column: 4} },
+                Node: { Token: {Value: i, Type: identifier, Line: 3, Column: 10} },
+                Node: { Token: {Value: 10, Type: int literal, Line: 3, Column: 14}, Type: int64 }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: float, Type: type keyword, Line: 4, Column: 4} },
+                Node: { Token: {Value: f2, Type: identifier, Line: 4, Column: 10} },
+                Node: { Label: "typecast"
+                children: [
+                    Node: { Token: {Value: i, Type: identifier, Line: 4, Column: 15}, Type: int64 },
+                    Node: { Token: {Value: float, Type: type keyword, Line: 4, Column: 20} }
+                ] }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 5, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 5, Column: 11}, Type: int }
+            ] }
+        ] }
+    ] }
+] }
 ScopeTree:
 Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: true}{parameters: (bool,String), implemented: true}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: true}{parameters: (String,String), implemented: true}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: true}{parameters: (int,String), implemented: true}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: true}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: true}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: true}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: true}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: true}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: true}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: true}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: true}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: true}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: true}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: true}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: true}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: true}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: true}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: true}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: true}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
     Scope: { id: @global, parent: @built-in, interfaces: map[Empty:{name: Empty} Result:{name: Result} Runner:{name: Runner}], structs: map[AlsoEmpty:{name: AlsoEmpty, size: 0} TestResult:{name: TestResult, size: 4, implements: [Result]} TestRunner:{name: TestRunner, size: 0, implements: [Runner]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
@@ -361,7 +559,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, isMutable: true, Initialized: false}], children: [
@@ -452,19 +651,235 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global }
     ] },
-    Scope: { id: @global, parent: @built-in },
-    Scope: { id: @global, parent: @built-in }
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[c:{name: c, Type: char, Initialized: true} d:{name: d, Type: double, Initialized: true} f:{name: f, Type: float, Initialized: true} flag:{name: flag, Type: bool, Initialized: true} i:{name: i, Type: int, Initialized: true} i2:{name: i2, Type: int64, Initialized: true} s:{name: s, Type: String, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[pow:{name: pow, Type: int, Initialized: true} sqrt:{name: sqrt, Type: double, Initialized: true}] }
+    ] },
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[f:{name: f, Type: float, Initialized: true} f2:{name: f2, Type: float, Initialized: true} i:{name: i, Type: int64, Initialized: true} val:{name: val, Type: double, Initialized: true}] }
+    ] }
 ] }
 Compiler messages:
 [
-    "Error: Missing entrypoint function 'fn main()->int' "
+    "Warning: Lossy conversion from double to float at line: 3, column: 15",
+    "Warning: Lossy conversion from int64 to float at line: 5, column: 16"
 ]
 
 ---
 
 [TestTypeSystem/should_errors.the_and_have_a_mix_of_errors_and_warnings - 1]
 AST:
-Node: { Label: "program" }
+Node: { Label: "program"
+children: [
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: uint32, Type: type keyword, Line: 0, Column: 0} },
+        Node: { Token: {Value: u, Type: identifier, Line: 0, Column: 7} },
+        Node: { Token: {Value: 0, Type: int literal, Line: 0, Column: 11}, Type: uint32 }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: uint64, Type: type keyword, Line: 1, Column: 0} },
+        Node: { Token: {Value: u2, Type: identifier, Line: 1, Column: 7} },
+        Node: { Token: {Value: 1, Type: int literal, Line: 1, Column: 12}, Type: uint64 }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int, Type: type keyword, Line: 2, Column: 0} },
+        Node: { Token: {Value: i, Type: identifier, Line: 2, Column: 4} },
+        Node: { Token: {Value: 2, Type: int literal, Line: 2, Column: 8}, Type: int }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: int64, Type: type keyword, Line: 3, Column: 0} },
+        Node: { Token: {Value: i2, Type: identifier, Line: 3, Column: 6} },
+        Node: { Token: {Value: 3, Type: int literal, Line: 3, Column: 11}, Type: int64 }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: float, Type: type keyword, Line: 4, Column: 0} },
+        Node: { Token: {Value: f, Type: identifier, Line: 4, Column: 6} },
+        Node: { Token: {Value: 3.1, Type: float literal, Line: 4, Column: 10}, Type: float }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: double, Type: type keyword, Line: 5, Column: 0} },
+        Node: { Token: {Value: d, Type: identifier, Line: 5, Column: 7} },
+        Node: { Token: {Value: 3.2, Type: float literal, Line: 5, Column: 11}, Type: double }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: char, Type: type keyword, Line: 6, Column: 0} },
+        Node: { Token: {Value: c, Type: identifier, Line: 6, Column: 5} },
+        Node: { Token: {Value: 'a', Type: char literal, Line: 6, Column: 9}, Type: char }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: String, Type: type keyword, Line: 7, Column: 0} },
+        Node: { Token: {Value: s, Type: identifier, Line: 7, Column: 7} },
+        Node: { Token: {Value: "hello, world!", Type: string literal, Line: 7, Column: 11}, Type: String }
+    ] },
+    Node: { Label: "Variable"
+    children: [
+        Node: { Token: {Value: bool, Type: type keyword, Line: 8, Column: 0} },
+        Node: { Token: {Value: flag, Type: identifier, Line: 8, Column: 5} },
+        Node: { Token: {Value: &&, Type: operator, Line: 8, Column: 28}, Type: bool
+        children: [
+            Node: { Token: {Value: ||, Type: operator, Line: 8, Column: 18}, Type: bool
+            children: [
+                Node: { Token: {Value: true, Type: boolean value keyword, Line: 8, Column: 13}, Type: bool },
+                Node: { Token: {Value: false, Type: boolean value keyword, Line: 8, Column: 21}, Type: bool }
+            ] },
+            Node: { Token: {Value: <, Type: compare operator, Line: 8, Column: 33}, Type: bool
+            children: [
+                Node: { Token: {Value: u, Type: identifier, Line: 8, Column: 31}, Type: uint32 },
+                Node: { Token: {Value: u2, Type: identifier, Line: 8, Column: 35}, Type: uint64 }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: main, Type: identifier, Line: 10, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 10, Column: 13} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Token: {Value: +, Type: add operator, Line: 11, Column: 6}
+            children: [
+                Node: { Token: {Value: u, Type: identifier, Line: 11, Column: 4}, Type: uint32 },
+                Node: { Token: {Value: d, Type: identifier, Line: 11, Column: 8}, Type: double }
+            ] },
+            Node: { Token: {Value: +, Type: add operator, Line: 12, Column: 6}
+            children: [
+                Node: { Token: {Value: u, Type: identifier, Line: 12, Column: 4}, Type: uint32 },
+                Node: { Token: {Value: i, Type: identifier, Line: 12, Column: 8}, Type: int }
+            ] },
+            Node: { Token: {Value: +, Type: add operator, Line: 13, Column: 7}
+            children: [
+                Node: { Token: {Value: u2, Type: identifier, Line: 13, Column: 4}, Type: uint64 },
+                Node: { Token: {Value: f, Type: identifier, Line: 13, Column: 9}, Type: float }
+            ] },
+            Node: { Token: {Value: +, Type: add operator, Line: 14, Column: 7}
+            children: [
+                Node: { Token: {Value: u2, Type: identifier, Line: 14, Column: 4}, Type: uint64 },
+                Node: { Token: {Value: i2, Type: identifier, Line: 14, Column: 9}, Type: int64 }
+            ] },
+            Node: { Label: "Unary"
+            children: [
+                Node: { Token: {Value: c, Type: identifier, Line: 15, Column: 4} },
+                Node: { Token: {Value: ++, Type: unary operator, Line: 15, Column: 5} }
+            ] },
+            Node: { Label: "Unary"
+            children: [
+                Node: { Token: {Value: --, Type: unary operator, Line: 16, Column: 4} },
+                Node: { Token: {Value: flag, Type: identifier, Line: 16, Column: 6}, Type: bool }
+            ] },
+            Node: { Label: "Unary"
+            children: [
+                Node: { Token: {Value: --, Type: unary operator, Line: 17, Column: 4} },
+                Node: { Token: {Value: i, Type: identifier, Line: 17, Column: 6}, Type: int }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 18, Column: 4} },
+                Node: { Token: {Value: i, Type: identifier, Line: 18, Column: 8} },
+                Node: { Label: "typecast"
+                children: [
+                    Node: { Token: {Value: c, Type: identifier, Line: 18, Column: 12} },
+                    Node: { Token: {Value: int, Type: type keyword, Line: 18, Column: 17} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 19, Column: 4} },
+                Node: { Token: {Value: fromString, Type: identifier, Line: 19, Column: 11} },
+                Node: { Label: "typecast"
+                children: [
+                    Node: { Token: {Value: s, Type: identifier, Line: 19, Column: 24}, Type: String },
+                    Node: { Token: {Value: uint32, Type: type keyword, Line: 19, Column: 29} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: char, Type: type keyword, Line: 20, Column: 4} },
+                Node: { Token: {Value: fromDouble, Type: identifier, Line: 20, Column: 9} },
+                Node: { Label: "typecast"
+                children: [
+                    Node: { Token: {Value: d, Type: identifier, Line: 20, Column: 22}, Type: double },
+                    Node: { Token: {Value: char, Type: type keyword, Line: 20, Column: 27} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: String, Type: type keyword, Line: 21, Column: 4} },
+                Node: { Token: {Value: fromLong, Type: identifier, Line: 21, Column: 11} },
+                Node: { Label: "typecast"
+                children: [
+                    Node: { Token: {Value: i2, Type: identifier, Line: 21, Column: 22}, Type: int64 },
+                    Node: { Token: {Value: String, Type: type keyword, Line: 21, Column: 28} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: char, Type: type keyword, Line: 22, Column: 4} },
+                Node: { Token: {Value: charFromLong, Type: identifier, Line: 22, Column: 9} },
+                Node: { Label: "typecast"
+                children: [
+                    Node: { Token: {Value: i2, Type: identifier, Line: 22, Column: 24}, Type: int64 },
+                    Node: { Token: {Value: char, Type: type keyword, Line: 22, Column: 30} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: bool, Type: type keyword, Line: 23, Column: 4} },
+                Node: { Token: {Value: isTrue, Type: identifier, Line: 23, Column: 9} },
+                Node: { Label: "typecast"
+                children: [
+                    Node: { Token: {Value: u2, Type: identifier, Line: 23, Column: 18}, Type: uint64 },
+                    Node: { Token: {Value: bool, Type: type keyword, Line: 23, Column: 24} }
+                ] }
+            ] },
+            Node: { Label: "typecast"
+            children: [
+                Node: { Token: {Value: i, Type: identifier, Line: 24, Column: 4}, Type: int },
+                Node: { Token: {Value: TYPE, Type: identifier, Line: 24, Column: 9} }
+            ] },
+            Node: { Label: "index"
+            children: [
+                Node: { Token: {Value: s, Type: identifier, Line: 25, Column: 4}, Type: String },
+                Node: { Token: {Value: "world", Type: string literal, Line: 25, Column: 6}, Type: String }
+            ] },
+            Node: { Label: "index"
+            children: [
+                Node: { Token: {Value: s, Type: identifier, Line: 26, Column: 4}, Type: String },
+                Node: { Label: "slice"
+                children: [
+                    Node: { Token: {Value: true, Type: boolean value keyword, Line: 26, Column: 6} },
+                    Node: { Token: {Value: .., Type: range operator, Line: 26, Column: 10} }
+                ] }
+            ] },
+            Node: { Label: "index"
+            children: [
+                Node: { Token: {Value: s, Type: identifier, Line: 27, Column: 4}, Type: String },
+                Node: { Label: "slice", Type: int
+                children: [
+                    Node: { Token: {Value: false, Type: boolean value keyword, Line: 27, Column: 8} }
+                ] }
+            ] },
+            Node: { Label: "index"
+            children: [
+                Node: { Token: {Value: s, Type: identifier, Line: 28, Column: 4}, Type: String },
+                Node: { Label: "ARR-END"
+                children: [
+                    Node: { Token: {Value: s, Type: identifier, Line: 28, Column: 7}, Type: String }
+                ] }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 29, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 29, Column: 11}, Type: int }
+            ] }
+        ] }
+    ] }
+] }
 ScopeTree:
 Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: true}{parameters: (bool,String), implemented: true}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: true}{parameters: (String,String), implemented: true}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: true}{parameters: (int,String), implemented: true}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: true}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: true}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: true}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: true}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: true}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: true}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: true}{parameters: (String,char,char), implemented: true}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: true}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: true}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: true}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: true}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: true}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: true}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: true}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: true}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: true}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: true}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: true}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
     Scope: { id: @global, parent: @built-in, interfaces: map[Empty:{name: Empty} Result:{name: Result} Runner:{name: Runner}], structs: map[AlsoEmpty:{name: AlsoEmpty, size: 0} TestResult:{name: TestResult, size: 4, implements: [Result]} TestRunner:{name: TestRunner, size: 0, implements: [Runner]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
@@ -593,7 +1008,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, isMutable: true, Initialized: false}], children: [
@@ -684,13 +1100,30 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global }
     ] },
-    Scope: { id: @global, parent: @built-in },
-    Scope: { id: @global, parent: @built-in },
-    Scope: { id: @global, parent: @built-in }
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[c:{name: c, Type: char, Initialized: true} d:{name: d, Type: double, Initialized: true} f:{name: f, Type: float, Initialized: true} flag:{name: flag, Type: bool, Initialized: true} i:{name: i, Type: int, Initialized: true} i2:{name: i2, Type: int64, Initialized: true} s:{name: s, Type: String, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[pow:{name: pow, Type: int, Initialized: true} sqrt:{name: sqrt, Type: double, Initialized: true}] }
+    ] },
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[f:{name: f, Type: float, Initialized: true} f2:{name: f2, Type: float, Initialized: true} i:{name: i, Type: int64, Initialized: true} val:{name: val, Type: double, Initialized: true}] }
+    ] },
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[c:{name: c, Type: char, Initialized: true} d:{name: d, Type: double, Initialized: true} f:{name: f, Type: float, Initialized: true} flag:{name: flag, Type: bool, Initialized: true} i:{name: i, Type: int, Initialized: true} i2:{name: i2, Type: int64, Initialized: true} s:{name: s, Type: String, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[charFromLong:{name: charFromLong, Type: char, Initialized: true} fromDouble:{name: fromDouble, Type: char, Initialized: true} fromLong:{name: fromLong, Type: String, Initialized: true} fromString:{name: fromString, Type: uint32, Initialized: true} isTrue:{name: isTrue, Type: bool, Initialized: true}] }
+    ] }
 ] }
 Compiler messages:
 [
-    "Error: Missing entrypoint function 'fn main()->int' "
+    "TypeError: Cannot use '++' with type char at line: 16, column: 5",
+    "TypeError: Cannot use '--' with type bool at line: 17, column: 7",
+    "AccessError: Cannot change value of immutable variable 'i' at line: 18, column: 7",
+    "NameError: Name: 'i' already defined at line: 19, column: 9",
+    "CastError: Typecasting from String to uint32 not allowed at line: 20, column: 25",
+    "CastError: Typecasting from double to char not allowed at line: 21, column: 23",
+    "CastError: Typecasting from int64 to char not allowed at line: 23, column: 25",
+    "CastError: Typecasting from uint64 to bool not allowed at line: 24, column: 19",
+    "CastError: Typecasting from int to None not allowed at line: 25, column: 5",
+    "TypeError: Invalid type 'TYPE' provided at line: 25, column: 10",
+    "TypeError: Invalid type bool used in range expression at line: 27, column: 7",
+    "TypeError: Cannot use String as array end value at line: 29, column: 7"
 ]
 
 ---

@@ -7,6 +7,14 @@ uint64 u2 = 3 ^ 1;
 bool is = (true || false) && true;
 char newLine = '\n';
 
+fn strings() {
+    String s = "hello";
+    int len = s.length;
+    bool isEnd = s[len-1] == s[^1];
+    String copy = s[..];
+    String slice = s[1..=3];
+}
+
 fn main() -> int {
     bool isNot = !is;
     mut uint64 u3 = -u2;

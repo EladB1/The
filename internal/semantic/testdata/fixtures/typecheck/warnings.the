@@ -1,0 +1,7 @@
+fn main() -> int {
+    double val = 0.01;
+    float f = val as float;
+    int64 i = 10;
+    float f2 = i as float;
+    return 0;
+}

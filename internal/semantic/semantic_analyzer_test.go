@@ -153,7 +153,7 @@ func TestBranch(t *testing.T) {
 }
 
 func TestTypeSystem(t *testing.T) {
-	subdir := "types"
+	subdir := "typecheck"
 	t.Run("should run valid.the and have no errors", func(t *testing.T) {
 		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
 	})

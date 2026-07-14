@@ -89,84 +89,160 @@ children: [
     ] },
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: main, Type: identifier, Line: 9, Column: 3} },
-        Node: { Token: {Value: int, Type: type keyword, Line: 9, Column: 13} },
+        Node: { Token: {Value: strings, Type: identifier, Line: 9, Column: 3} },
         Node: { Label: "fn-body"
         children: [
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: bool, Type: type keyword, Line: 10, Column: 4} },
-                Node: { Token: {Value: isNot, Type: identifier, Line: 10, Column: 9} },
+                Node: { Token: {Value: String, Type: type keyword, Line: 10, Column: 4} },
+                Node: { Token: {Value: s, Type: identifier, Line: 10, Column: 11} },
+                Node: { Token: {Value: "hello", Type: string literal, Line: 10, Column: 15}, Type: String }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 11, Column: 4} },
+                Node: { Token: {Value: len, Type: identifier, Line: 11, Column: 8} },
+                Node: { Label: "dot"
+                children: [
+                    Node: { Token: {Value: s, Type: identifier, Line: 11, Column: 14} },
+                    Node: { Token: {Value: length, Type: identifier, Line: 11, Column: 16} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: bool, Type: type keyword, Line: 12, Column: 4} },
+                Node: { Token: {Value: isEnd, Type: identifier, Line: 12, Column: 9} },
+                Node: { Token: {Value: ==, Type: compare operator, Line: 12, Column: 26}, Type: bool
+                children: [
+                    Node: { Label: "index", Type: char
+                    children: [
+                        Node: { Token: {Value: s, Type: identifier, Line: 12, Column: 17}, Type: String },
+                        Node: { Token: {Value: -, Type: add operator, Line: 12, Column: 22}, Type: int
+                        children: [
+                            Node: { Token: {Value: len, Type: identifier, Line: 12, Column: 19}, Type: int },
+                            Node: { Token: {Value: 1, Type: int literal, Line: 12, Column: 23}, Type: int }
+                        ] }
+                    ] },
+                    Node: { Label: "index", Type: char
+                    children: [
+                        Node: { Token: {Value: s, Type: identifier, Line: 12, Column: 29}, Type: String },
+                        Node: { Label: "ARR-END", Type: int
+                        children: [
+                            Node: { Token: {Value: 1, Type: int literal, Line: 12, Column: 32}, Type: int }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: String, Type: type keyword, Line: 13, Column: 4} },
+                Node: { Token: {Value: copy, Type: identifier, Line: 13, Column: 11} },
+                Node: { Label: "index", Type: String
+                children: [
+                    Node: { Token: {Value: s, Type: identifier, Line: 13, Column: 18}, Type: String },
+                    Node: { Label: "slice", Type: int
+                    children: [
+                        Node: { Token: {Value: .., Type: range operator, Line: 13, Column: 20} }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: String, Type: type keyword, Line: 14, Column: 4} },
+                Node: { Token: {Value: slice, Type: identifier, Line: 14, Column: 11} },
+                Node: { Label: "index", Type: String
+                children: [
+                    Node: { Token: {Value: s, Type: identifier, Line: 14, Column: 19}, Type: String },
+                    Node: { Label: "slice", Type: int
+                    children: [
+                        Node: { Token: {Value: 1, Type: int literal, Line: 14, Column: 21}, Type: int },
+                        Node: { Token: {Value: ..=, Type: range operator, Line: 14, Column: 22} },
+                        Node: { Token: {Value: 3, Type: int literal, Line: 14, Column: 25}, Type: int }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: main, Type: identifier, Line: 17, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 17, Column: 13} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: bool, Type: type keyword, Line: 18, Column: 4} },
+                Node: { Token: {Value: isNot, Type: identifier, Line: 18, Column: 9} },
                 Node: { Label: "Unary", Type: bool
                 children: [
-                    Node: { Token: {Value: !, Type: unary operator, Line: 10, Column: 17} },
-                    Node: { Token: {Value: is, Type: identifier, Line: 10, Column: 18}, Type: bool }
+                    Node: { Token: {Value: !, Type: unary operator, Line: 18, Column: 17} },
+                    Node: { Token: {Value: is, Type: identifier, Line: 18, Column: 18}, Type: bool }
                 ] }
             ] },
             Node: { Label: "Variable"
             children: [
                 Node: { Label: "modifiers"
                 children: [
-                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 11, Column: 4} }
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 19, Column: 4} }
                 ] },
-                Node: { Token: {Value: uint64, Type: type keyword, Line: 11, Column: 8} },
-                Node: { Token: {Value: u3, Type: identifier, Line: 11, Column: 15} },
+                Node: { Token: {Value: uint64, Type: type keyword, Line: 19, Column: 8} },
+                Node: { Token: {Value: u3, Type: identifier, Line: 19, Column: 15} },
                 Node: { Label: "Unary", Type: uint64
                 children: [
-                    Node: { Token: {Value: -, Type: add operator, Line: 11, Column: 20} },
-                    Node: { Token: {Value: u2, Type: identifier, Line: 11, Column: 21}, Type: uint64 }
+                    Node: { Token: {Value: -, Type: add operator, Line: 19, Column: 20} },
+                    Node: { Token: {Value: u2, Type: identifier, Line: 19, Column: 21}, Type: uint64 }
                 ] }
             ] },
-            Node: { Token: {Value: =, Type: assign operator, Line: 12, Column: 7}
+            Node: { Token: {Value: =, Type: assign operator, Line: 20, Column: 7}
             children: [
-                Node: { Token: {Value: u3, Type: identifier, Line: 12, Column: 4}, Type: uint64 },
+                Node: { Token: {Value: u3, Type: identifier, Line: 20, Column: 4}, Type: uint64 },
                 Node: { Label: "Unary", Type: uint64
                 children: [
-                    Node: { Token: {Value: ~, Type: unary operator, Line: 12, Column: 9} },
-                    Node: { Token: {Value: u3, Type: identifier, Line: 12, Column: 10}, Type: uint64 }
+                    Node: { Token: {Value: ~, Type: unary operator, Line: 20, Column: 9} },
+                    Node: { Token: {Value: u3, Type: identifier, Line: 20, Column: 10}, Type: uint64 }
                 ] }
             ] },
             Node: { Label: "Variable"
             children: [
                 Node: { Label: "modifiers"
                 children: [
-                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 13, Column: 4} }
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 21, Column: 4} }
                 ] },
-                Node: { Token: {Value: String, Type: type keyword, Line: 13, Column: 8} },
-                Node: { Token: {Value: greet, Type: identifier, Line: 13, Column: 15} },
-                Node: { Token: {Value: +, Type: add operator, Line: 13, Column: 37}, Type: String
+                Node: { Token: {Value: String, Type: type keyword, Line: 21, Column: 8} },
+                Node: { Token: {Value: greet, Type: identifier, Line: 21, Column: 15} },
+                Node: { Token: {Value: +, Type: add operator, Line: 21, Column: 37}, Type: String
                 children: [
-                    Node: { Token: {Value: +, Type: add operator, Line: 13, Column: 31}, Type: String
+                    Node: { Token: {Value: +, Type: add operator, Line: 21, Column: 31}, Type: String
                     children: [
-                        Node: { Token: {Value: "hello", Type: string literal, Line: 13, Column: 23}, Type: String },
-                        Node: { Token: {Value: ',', Type: char literal, Line: 13, Column: 33}, Type: char }
+                        Node: { Token: {Value: "hello", Type: string literal, Line: 21, Column: 23}, Type: String },
+                        Node: { Token: {Value: ',', Type: char literal, Line: 21, Column: 33}, Type: char }
                     ] },
-                    Node: { Token: {Value: " world", Type: string literal, Line: 13, Column: 39}, Type: String }
+                    Node: { Token: {Value: " world", Type: string literal, Line: 21, Column: 39}, Type: String }
                 ] }
             ] },
-            Node: { Token: {Value: +=, Type: assign operator, Line: 14, Column: 10}
+            Node: { Token: {Value: +=, Type: assign operator, Line: 22, Column: 10}
             children: [
-                Node: { Token: {Value: greet, Type: identifier, Line: 14, Column: 4}, Type: String },
-                Node: { Token: {Value: '!', Type: char literal, Line: 14, Column: 13}, Type: char }
+                Node: { Token: {Value: greet, Type: identifier, Line: 22, Column: 4}, Type: String },
+                Node: { Token: {Value: '!', Type: char literal, Line: 22, Column: 13}, Type: char }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: String, Type: type keyword, Line: 15, Column: 4} },
-                Node: { Token: {Value: withNum, Type: identifier, Line: 15, Column: 11} },
-                Node: { Token: {Value: +, Type: add operator, Line: 15, Column: 32}, Type: String
+                Node: { Token: {Value: String, Type: type keyword, Line: 23, Column: 4} },
+                Node: { Token: {Value: withNum, Type: identifier, Line: 23, Column: 11} },
+                Node: { Token: {Value: +, Type: add operator, Line: 23, Column: 32}, Type: String
                 children: [
-                    Node: { Token: {Value: "Number: ", Type: string literal, Line: 15, Column: 21}, Type: String },
+                    Node: { Token: {Value: "Number: ", Type: string literal, Line: 23, Column: 21}, Type: String },
                     Node: { Label: "typecast"
                     children: [
-                        Node: { Token: {Value: 2, Type: int literal, Line: 15, Column: 34}, Type: int },
-                        Node: { Token: {Value: String, Type: type keyword, Line: 15, Column: 39} }
+                        Node: { Token: {Value: 2, Type: int literal, Line: 23, Column: 34}, Type: int },
+                        Node: { Token: {Value: String, Type: type keyword, Line: 23, Column: 39} }
                     ] }
                 ] }
             ] },
             Node: { Label: "control-flow"
             children: [
-                Node: { Token: {Value: return, Type: flow keyword, Line: 16, Column: 4} },
-                Node: { Token: {Value: 0, Type: int literal, Line: 16, Column: 11}, Type: int }
+                Node: { Token: {Value: return, Type: flow keyword, Line: 24, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 24, Column: 11}, Type: int }
             ] }
         ] }
     ] }
@@ -299,7 +375,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] }
 ] }
@@ -511,7 +588,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, isMutable: true, Initialized: false}], children: [
@@ -566,7 +644,7 @@ children: [
     children: [
         Node: { Token: {Value: bool, Type: type keyword, Line: 4, Column: 0} },
         Node: { Token: {Value: isTrue, Type: identifier, Line: 4, Column: 5} },
-        Node: { Label: "Unary", Type: None
+        Node: { Label: "Unary"
         children: [
             Node: { Token: {Value: !, Type: unary operator, Line: 4, Column: 14} },
             Node: { Token: {Value: 1, Type: int literal, Line: 4, Column: 15}, Type: int }
@@ -586,13 +664,13 @@ children: [
             Node: { Label: "Unary"
             children: [
                 Node: { Token: {Value: --, Type: unary operator, Line: 8, Column: 4} },
-                Node: { Token: {Value: y, Type: identifier, Line: 8, Column: 6}, Type: None }
+                Node: { Token: {Value: y, Type: identifier, Line: 8, Column: 6} }
             ] },
             Node: { Label: "Variable"
             children: [
                 Node: { Token: {Value: bool, Type: type keyword, Line: 9, Column: 4} },
                 Node: { Token: {Value: value, Type: identifier, Line: 9, Column: 9} },
-                Node: { Label: "Unary", Type: None
+                Node: { Label: "Unary"
                 children: [
                     Node: { Token: {Value: true, Type: boolean value keyword, Line: 9, Column: 17} },
                     Node: { Token: {Value: ++, Type: unary operator, Line: 9, Column: 21} }
@@ -602,7 +680,7 @@ children: [
             children: [
                 Node: { Token: {Value: char, Type: type keyword, Line: 10, Column: 4} },
                 Node: { Token: {Value: notC, Type: identifier, Line: 10, Column: 9} },
-                Node: { Label: "Unary", Type: None
+                Node: { Label: "Unary"
                 children: [
                     Node: { Token: {Value: ~, Type: unary operator, Line: 10, Column: 16} },
                     Node: { Token: {Value: c, Type: identifier, Line: 10, Column: 17}, Type: char }
@@ -618,7 +696,7 @@ children: [
             children: [
                 Node: { Token: {Value: bool, Type: type keyword, Line: 12, Column: 4} },
                 Node: { Token: {Value: opposite, Type: identifier, Line: 12, Column: 9} },
-                Node: { Label: "Unary", Type: None
+                Node: { Label: "Unary"
                 children: [
                     Node: { Token: {Value: -, Type: add operator, Line: 12, Column: 20} },
                     Node: { Token: {Value: isTrue, Type: identifier, Line: 12, Column: 21}, Type: bool }
@@ -628,10 +706,10 @@ children: [
             children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 13, Column: 4} },
                 Node: { Token: {Value: result, Type: identifier, Line: 13, Column: 8} },
-                Node: { Token: {Value: +, Type: add operator, Line: 13, Column: 25}, Type: None
+                Node: { Token: {Value: +, Type: add operator, Line: 13, Column: 25}
                 children: [
                     Node: { Token: {Value: "hello", Type: string literal, Line: 13, Column: 17}, Type: String },
-                    Node: { Token: {Value: i, Type: identifier, Line: 13, Column: 27}, Type: None }
+                    Node: { Token: {Value: i, Type: identifier, Line: 13, Column: 27} }
                 ] }
             ] },
             Node: { Label: "Variable"
@@ -644,7 +722,7 @@ children: [
                     Node: { Token: {Value: &&, Type: operator, Line: 14, Column: 22}
                     children: [
                         Node: { Token: {Value: 0, Type: int literal, Line: 14, Column: 20}, Type: int },
-                        Node: { Token: {Value: &&, Type: operator, Line: 14, Column: 28}, Type: None
+                        Node: { Token: {Value: &&, Type: operator, Line: 14, Column: 28}
                         children: [
                             Node: { Token: {Value: 0, Type: int literal, Line: 14, Column: 26}, Type: int },
                             Node: { Token: {Value: 1, Type: int literal, Line: 14, Column: 31}, Type: int }
@@ -656,7 +734,7 @@ children: [
             children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 15, Column: 4} },
                 Node: { Token: {Value: repeat, Type: identifier, Line: 15, Column: 11} },
-                Node: { Token: {Value: **, Type: operator, Line: 15, Column: 24}, Type: None
+                Node: { Token: {Value: **, Type: operator, Line: 15, Column: 24}
                 children: [
                     Node: { Token: {Value: "a", Type: string literal, Line: 15, Column: 20}, Type: String },
                     Node: { Token: {Value: 2, Type: int literal, Line: 15, Column: 27}, Type: int }
@@ -666,7 +744,7 @@ children: [
             children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 16, Column: 4} },
                 Node: { Token: {Value: withNum, Type: identifier, Line: 16, Column: 11} },
-                Node: { Token: {Value: +, Type: add operator, Line: 16, Column: 32}, Type: None
+                Node: { Token: {Value: +, Type: add operator, Line: 16, Column: 32}
                 children: [
                     Node: { Token: {Value: "Number: ", Type: string literal, Line: 16, Column: 21}, Type: String },
                     Node: { Token: {Value: 2, Type: int literal, Line: 16, Column: 34}, Type: int }
@@ -676,11 +754,11 @@ children: [
             children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 17, Column: 4} },
                 Node: { Token: {Value: sum, Type: identifier, Line: 17, Column: 8} },
-                Node: { Token: {Value: *, Type: multiply operator, Line: 17, Column: 26}, Type: None
+                Node: { Token: {Value: *, Type: multiply operator, Line: 17, Column: 26}
                 children: [
-                    Node: { Token: {Value: +, Type: add operator, Line: 17, Column: 21}, Type: None
+                    Node: { Token: {Value: +, Type: add operator, Line: 17, Column: 21}
                     children: [
-                        Node: { Token: {Value: total, Type: identifier, Line: 17, Column: 15}, Type: None },
+                        Node: { Token: {Value: total, Type: identifier, Line: 17, Column: 15} },
                         Node: { Token: {Value: 0, Type: int literal, Line: 17, Column: 23}, Type: int }
                     ] },
                     Node: { Token: {Value: 1, Type: int literal, Line: 17, Column: 28}, Type: int }
@@ -690,7 +768,7 @@ children: [
             children: [
                 Node: { Token: {Value: bool, Type: type keyword, Line: 18, Column: 4} },
                 Node: { Token: {Value: eq, Type: identifier, Line: 18, Column: 9} },
-                Node: { Token: {Value: ==, Type: compare operator, Line: 18, Column: 18}, Type: None
+                Node: { Token: {Value: ==, Type: compare operator, Line: 18, Column: 18}
                 children: [
                     Node: { Token: {Value: "1", Type: string literal, Line: 18, Column: 14}, Type: String },
                     Node: { Token: {Value: 1, Type: int literal, Line: 18, Column: 21}, Type: int }
@@ -854,7 +932,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, isMutable: true, Initialized: false}], children: [

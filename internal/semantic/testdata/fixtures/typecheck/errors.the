@@ -1,0 +1,31 @@
+uint32 u = 0;
+uint64 u2 = 1;
+int i = 2;
+int64 i2 = 3;
+float f = 3.1;
+double d = 3.2;
+char c = 'a';
+String s = "hello, world!";
+bool flag = (true || false) && u < u2;
+
+fn main() -> int {
+    u + d;
+    u + i;
+    u2 + f;
+    u2 + i2;
+    c++;
+    --flag;
+    --i;
+    int i = c as int;
+    uint32 fromString = s as uint32;
+    char fromDouble = d as char;
+    String fromLong = i2 as String;
+    char charFromLong = i2 as char;
+    bool isTrue = u2 as bool;
+    i as TYPE;
+    s["world"];
+    s[true..];
+    s[..false];
+    s[^s];
+    return 0;
+}

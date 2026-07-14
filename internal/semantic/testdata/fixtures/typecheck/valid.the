@@ -1,0 +1,24 @@
+uint32 u = 0;
+uint64 u2 = 1;
+int i = 2;
+int64 i2 = 3;
+float f = 3.1;
+double d = 3.2;
+char c = 'a';
+String s = "hello, world!";
+bool flag = (true || false) && u < u2;
+
+fn main() -> int {
+    u + u2;
+    i + i2;
+    f + d;
+    f + i;
+    d + i;
+    i2 + d;
+    u + 1;
+    u + 1 * i; // BUG: should not be valid
+    double sqrt = u ** 0.5;
+    int pow = i ** u2;
+    u as int;
+    return 0;
+}

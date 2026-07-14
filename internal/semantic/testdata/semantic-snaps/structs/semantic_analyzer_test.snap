@@ -690,11 +690,11 @@ children: [
                             Node: { Label: "control-flow"
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 44, Column: 12} },
-                                Node: { Token: {Value: +, Type: add operator, Line: 44, Column: 29}, Type: None
+                                Node: { Token: {Value: +, Type: add operator, Line: 44, Column: 29}
                                 children: [
-                                    Node: { Token: {Value: +, Type: add operator, Line: 44, Column: 24}, Type: None
+                                    Node: { Token: {Value: +, Type: add operator, Line: 44, Column: 24}
                                     children: [
-                                        Node: { Token: {Value: name, Type: identifier, Line: 44, Column: 19}, Type: None },
+                                        Node: { Token: {Value: name, Type: identifier, Line: 44, Column: 19} },
                                         Node: { Token: {Value: id, Type: identifier, Line: 44, Column: 26}, Type: String }
                                     ] },
                                     Node: { Token: {Value: "dup", Type: string literal, Line: 44, Column: 31}, Type: String }
@@ -1231,7 +1231,7 @@ children: [
             ] },
             Node: { Token: {Value: +, Type: add operator, Line: 140, Column: 14}
             children: [
-                Node: { Token: {Value: *, Type: multiply operator, Line: 140, Column: 8}, Type: None
+                Node: { Token: {Value: *, Type: multiply operator, Line: 140, Column: 8}
                 children: [
                     Node: { Token: {Value: one, Type: identifier, Line: 140, Column: 4}, Type: Container },
                     Node: { Token: {Value: two, Type: identifier, Line: 140, Column: 10}, Type: Container }

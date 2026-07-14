@@ -19,7 +19,6 @@ func evalLiteral(ast *parser.AST, expectedType datatypes.DataType) datatypes.Dat
 	}
 	switch ast.Token.Kind {
 	case lexer.LIT_CHAR:
-		ast.Type = datatypes.Char
 		return datatypes.Char
 	case lexer.LIT_STRING:
 		return datatypes.String
@@ -358,7 +357,10 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 			hasError = hasErr
 		}
 	}
-	ast.Type = nodeType
+	if !hasError {
+		// BUG: Type not being set for root node
+		ast.Type = nodeType
+	}
 	return nodeType, hasError
 }
 
@@ -375,7 +377,7 @@ func evalAdd(left *parser.AST, right *parser.AST, operator lexer.Token, expected
 		if lhs == rhs {
 			return lhs, hasError
 		} else {
-			nodeType, err := decideNumberType(lhs, rhs, operator.Value)
+			nodeType, err := handleBinaryNumberExpression(left, right, operator.Value, expectedType)
 			if err != nil {
 				messages.Complain(diagnostic.TypeError, operator.Location, "%s", err.Error())
 				hasError = true
@@ -401,7 +403,7 @@ func evalMult(left *parser.AST, right *parser.AST, operator lexer.Token, expecte
 		messages.Complain(diagnostic.TypeError, operator.Location, "Cannot use operator '%s' between %s and %s", operator.Value, lhs, rhs)
 		hasError = true
 	} else {
-		nodeType, err := decideNumberType(lhs, rhs, operator.Value)
+		nodeType, err := handleBinaryNumberExpression(left, right, operator.Value, expectedType)
 		if err != nil {
 			if slices.Contains(datatypes.UnsignedTypes, lhs) && slices.Contains(datatypes.SignedIntTypes, rhs) && left.Token.Kind == lexer.ID && right.IsLiteral() {
 				nodeType = lhs

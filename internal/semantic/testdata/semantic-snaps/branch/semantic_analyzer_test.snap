@@ -419,9 +419,9 @@ children: [
             children: [
                 Node: { Label: "if"
                 children: [
-                    Node: { Token: {Value: ==, Type: compare operator, Line: 58, Column: 20}, Type: None
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 58, Column: 20}
                     children: [
-                        Node: { Label: "dot", Type: int
+                        Node: { Label: "dot"
                         children: [
                             Node: { Token: {Value: type, Type: identifier, Line: 58, Column: 8} },
                             Node: { Token: {Value: length, Type: identifier, Line: 58, Column: 13} }
@@ -524,9 +524,9 @@ children: [
                     children: [
                         Node: { Label: "if"
                         children: [
-                            Node: { Token: {Value: >=, Type: compare operator, Line: 68, Column: 26}, Type: bool
+                            Node: { Token: {Value: >=, Type: compare operator, Line: 68, Column: 26}
                             children: [
-                                Node: { Token: {Value: /, Type: multiply operator, Line: 68, Column: 20}, Type: int
+                                Node: { Token: {Value: /, Type: multiply operator, Line: 68, Column: 20}
                                 children: [
                                     Node: { Token: {Value: INT_MAX, Type: identifier, Line: 68, Column: 12}, Type: int },
                                     Node: { Token: {Value: sum, Type: identifier, Line: 68, Column: 22}, Type: int }
@@ -739,7 +739,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, isMutable: true, Initialized: false}], children: [
@@ -794,7 +795,9 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
     ] }
 ] }
 Compiler messages:
-[]
+[
+    "TypeError: Invalid comparison between %!s(<nil>) and int at line: 69, column: 27"
+]
 
 ---
 
@@ -895,7 +898,7 @@ children: [
                         Node: { Token: {Value: i, Type: identifier, Line: 5, Column: 20}, Type: int },
                         Node: { Token: {Value: 10, Type: int literal, Line: 5, Column: 24}, Type: int }
                     ] },
-                    Node: { Label: "Unary", Type: None
+                    Node: { Label: "Unary"
                     children: [
                         Node: { Token: {Value: i, Type: identifier, Line: 5, Column: 28} },
                         Node: { Token: {Value: ++, Type: unary operator, Line: 5, Column: 29} }
@@ -970,7 +973,7 @@ children: [
                             Node: { Token: {Value: i, Type: identifier, Line: 9, Column: 28} }
                         ] }
                     ] },
-                    Node: { Label: "Unary", Type: None
+                    Node: { Label: "Unary"
                     children: [
                         Node: { Token: {Value: i, Type: identifier, Line: 9, Column: 32} },
                         Node: { Token: {Value: ++, Type: unary operator, Line: 9, Column: 33} }
@@ -1107,7 +1110,7 @@ children: [
             ] },
             Node: { Label: "while"
             children: [
-                Node: { Token: {Value: keepLooping, Type: identifier, Line: 20, Column: 11}, Type: None },
+                Node: { Token: {Value: keepLooping, Type: identifier, Line: 20, Column: 11} },
                 Node: { Label: "loop-body" }
             ] }
         ] }
@@ -1121,7 +1124,7 @@ children: [
             children: [
                 Node: { Label: "if"
                 children: [
-                    Node: { Token: {Value: x, Type: identifier, Line: 24, Column: 8}, Type: None },
+                    Node: { Token: {Value: x, Type: identifier, Line: 24, Column: 8} },
                     Node: { Label: "conditional_body" }
                 ] }
             ] },
@@ -1137,9 +1140,9 @@ children: [
             children: [
                 Node: { Label: "if"
                 children: [
-                    Node: { Token: {Value: ==, Type: compare operator, Line: 26, Column: 10}, Type: None
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 26, Column: 10}
                     children: [
-                        Node: { Token: {Value: i, Type: identifier, Line: 26, Column: 8}, Type: None },
+                        Node: { Token: {Value: i, Type: identifier, Line: 26, Column: 8} },
                         Node: { Token: {Value: 1, Type: int literal, Line: 26, Column: 13}, Type: int }
                     ] },
                     Node: { Label: "conditional_body" }
@@ -1324,7 +1327,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, isMutable: true, Initialized: false}], children: [
@@ -1423,8 +1427,8 @@ Compiler messages:
     "TypeError: Cannot use float as range end at line: 3, column: 22",
     "TypeError: Cannot use char as range start at line: 4, column: 20",
     "TypeError: Cannot use char as range end at line: 4, column: 24",
-    "TypeError: Cannot use char as range start at line: 5, column: 20",
     "TypeError: Variable of type char not compatible with range expression of type None at line: 5, column: 20",
+    "TypeError: Cannot use char as range start at line: 5, column: 20",
     "TypeError: Cannot use char as range end at line: 5, column: 24",
     "TypeError: Cannot use operator '..' between char and int at line: 5, column: 35",
     "AccessError: Cannot change value of immutable variable 'i' at line: 6, column: 29",
@@ -1667,7 +1671,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
+        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
         Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, isMutable: true, Initialized: false}], children: [
