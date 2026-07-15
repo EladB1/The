@@ -232,7 +232,7 @@ children: [
                 Node: { Token: {Value: +, Type: add operator, Line: 23, Column: 32}, Type: String
                 children: [
                     Node: { Token: {Value: "Number: ", Type: string literal, Line: 23, Column: 21}, Type: String },
-                    Node: { Label: "typecast"
+                    Node: { Label: "typecast", Type: String
                     children: [
                         Node: { Token: {Value: 2, Type: int literal, Line: 23, Column: 34}, Type: int },
                         Node: { Token: {Value: String, Type: type keyword, Line: 23, Column: 39} }
@@ -436,7 +436,7 @@ children: [
             children: [
                 Node: { Token: {Value: float, Type: type keyword, Line: 7, Column: 4} },
                 Node: { Token: {Value: f, Type: identifier, Line: 7, Column: 10} },
-                Node: { Label: "typecast"
+                Node: { Label: "typecast", Type: float
                 children: [
                     Node: { Token: {Value: u, Type: identifier, Line: 7, Column: 14}, Type: uint64 },
                     Node: { Token: {Value: float, Type: type keyword, Line: 7, Column: 19} }
@@ -446,7 +446,7 @@ children: [
             children: [
                 Node: { Token: {Value: uint32, Type: type keyword, Line: 8, Column: 4} },
                 Node: { Token: {Value: smaller, Type: identifier, Line: 8, Column: 11} },
-                Node: { Label: "typecast"
+                Node: { Label: "typecast", Type: uint32
                 children: [
                     Node: { Token: {Value: u, Type: identifier, Line: 8, Column: 21}, Type: uint64 },
                     Node: { Token: {Value: uint32, Type: type keyword, Line: 8, Column: 26} }
@@ -599,8 +599,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
 Compiler messages:
 [
     "Warning: Mutable global variable declared at line: 1, column: 1",
-    "Warning: Lossy conversion from uint64 to float at line: 8, column: 15",
-    "Warning: Lossy conversion from uint64 to uint32 at line: 9, column: 22"
+    "Warning: Lossy conversion from uint64 to float at line: 8, column: 20",
+    "Warning: Lossy conversion from uint64 to uint32 at line: 9, column: 27"
 ]
 
 ---
@@ -950,16 +950,16 @@ Compiler messages:
     "Warning: Mutable global variable declared at line: 2, column: 1",
     "TypeError: Cannot assign type String to variable type uint32 at line: 2, column: 16",
     "NameError: Name: 'c' already defined at line: 4, column: 6",
-    "TypeError: Must use bool value with unary '!' at line: 5, column: 15",
+    "TypeError: Must use bool value with unary '!' at line: 5, column: 16",
     "NameError: Variable 'x' is not defined in this scope at line: 8, column: 5",
     "NameError: Variable 'y' not defined in this scope at line: 9, column: 7",
     "NameError: Could not find variable with name y at line: 9, column: 7",
     "NameError: Could not find variable with name true at line: 10, column: 18",
-    "TypeError: Cannot negate value of type char at line: 11, column: 17",
-    "TypeError: Cannot use unary '-' with type bool at line: 13, column: 21",
+    "TypeError: Cannot negate value of type char at line: 11, column: 18",
+    "TypeError: Cannot use unary '-' with type bool at line: 13, column: 22",
     "NameError: Variable 'i' not defined in this scope at line: 14, column: 28",
     "TypeError: Cannot use operator '&&' between int and int at line: 15, column: 29",
-    "TypeError: Cannot use exponent with types String and int at line: 16, column: 25",
+    "TypeError: Cannot use exponent with types String and int at line: 16, column: 28",
     "TypeError: Cannot use operator '+' between String and int at line: 17, column: 33",
     "NameError: Variable 'total' not defined in this scope at line: 18, column: 16",
     "TypeError: Invalid comparison between String and int at line: 19, column: 19",

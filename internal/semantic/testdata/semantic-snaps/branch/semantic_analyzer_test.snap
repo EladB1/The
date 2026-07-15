@@ -834,7 +834,7 @@ children: [
                         Node: { Token: {Value: f, Type: identifier, Line: 2, Column: 15} }
                     ] },
                     Node: { Token: {Value: in, Type: operator keyword, Line: 2, Column: 17} },
-                    Node: { Label: "range", Type: float
+                    Node: { Label: "range"
                     children: [
                         Node: { Token: {Value: 0, Type: int literal, Line: 2, Column: 20}, Type: float },
                         Node: { Token: {Value: .., Type: range operator, Line: 2, Column: 21} },
@@ -853,7 +853,7 @@ children: [
                         Node: { Token: {Value: c, Type: identifier, Line: 3, Column: 14} }
                     ] },
                     Node: { Token: {Value: in, Type: operator keyword, Line: 3, Column: 16} },
-                    Node: { Label: "range", Type: char
+                    Node: { Label: "range"
                     children: [
                         Node: { Token: {Value: 'a', Type: char literal, Line: 3, Column: 19}, Type: char },
                         Node: { Token: {Value: ..=, Type: range operator, Line: 3, Column: 23} },
@@ -872,7 +872,7 @@ children: [
                         Node: { Token: {Value: c, Type: identifier, Line: 4, Column: 14} }
                     ] },
                     Node: { Token: {Value: in, Type: operator keyword, Line: 4, Column: 16} },
-                    Node: { Label: "range", Type: None
+                    Node: { Label: "range"
                     children: [
                         Node: { Token: {Value: 'a', Type: char literal, Line: 4, Column: 19}, Type: char },
                         Node: { Token: {Value: ..=, Type: range operator, Line: 4, Column: 23} },
@@ -1427,7 +1427,6 @@ Compiler messages:
     "TypeError: Cannot use float as range end at line: 3, column: 22",
     "TypeError: Cannot use char as range start at line: 4, column: 20",
     "TypeError: Cannot use char as range end at line: 4, column: 24",
-    "TypeError: Variable of type char not compatible with range expression of type None at line: 5, column: 20",
     "TypeError: Cannot use char as range start at line: 5, column: 20",
     "TypeError: Cannot use char as range end at line: 5, column: 24",
     "TypeError: Cannot use operator '..' between char and int at line: 5, column: 35",

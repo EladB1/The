@@ -401,7 +401,7 @@ children: [
             children: [
                 Node: { Token: {Value: float, Type: type keyword, Line: 2, Column: 4} },
                 Node: { Token: {Value: f, Type: identifier, Line: 2, Column: 10} },
-                Node: { Label: "typecast"
+                Node: { Label: "typecast", Type: float
                 children: [
                     Node: { Token: {Value: val, Type: identifier, Line: 2, Column: 14}, Type: double },
                     Node: { Token: {Value: float, Type: type keyword, Line: 2, Column: 21} }
@@ -417,7 +417,7 @@ children: [
             children: [
                 Node: { Token: {Value: float, Type: type keyword, Line: 4, Column: 4} },
                 Node: { Token: {Value: f2, Type: identifier, Line: 4, Column: 10} },
-                Node: { Label: "typecast"
+                Node: { Label: "typecast", Type: float
                 children: [
                     Node: { Token: {Value: i, Type: identifier, Line: 4, Column: 15}, Type: int64 },
                     Node: { Token: {Value: float, Type: type keyword, Line: 4, Column: 20} }
@@ -660,8 +660,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
 ] }
 Compiler messages:
 [
-    "Warning: Lossy conversion from double to float at line: 3, column: 15",
-    "Warning: Lossy conversion from int64 to float at line: 5, column: 16"
+    "Warning: Lossy conversion from double to float at line: 3, column: 22",
+    "Warning: Lossy conversion from int64 to float at line: 5, column: 21"
 ]
 
 ---
@@ -811,7 +811,7 @@ children: [
             children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 21, Column: 4} },
                 Node: { Token: {Value: fromLong, Type: identifier, Line: 21, Column: 11} },
-                Node: { Label: "typecast"
+                Node: { Label: "typecast", Type: String
                 children: [
                     Node: { Token: {Value: i2, Type: identifier, Line: 21, Column: 22}, Type: int64 },
                     Node: { Token: {Value: String, Type: type keyword, Line: 21, Column: 28} }
@@ -1116,14 +1116,13 @@ Compiler messages:
     "TypeError: Cannot use '--' with type bool at line: 17, column: 7",
     "AccessError: Cannot change value of immutable variable 'i' at line: 18, column: 7",
     "NameError: Name: 'i' already defined at line: 19, column: 9",
-    "CastError: Typecasting from String to uint32 not allowed at line: 20, column: 25",
-    "CastError: Typecasting from double to char not allowed at line: 21, column: 23",
-    "CastError: Typecasting from int64 to char not allowed at line: 23, column: 25",
-    "CastError: Typecasting from uint64 to bool not allowed at line: 24, column: 19",
-    "CastError: Typecasting from int to None not allowed at line: 25, column: 5",
+    "CastError: Typecasting from String to uint32 not allowed at line: 20, column: 30",
+    "CastError: Typecasting from double to char not allowed at line: 21, column: 28",
+    "CastError: Typecasting from int64 to char not allowed at line: 23, column: 31",
+    "CastError: Typecasting from uint64 to bool not allowed at line: 24, column: 25",
     "TypeError: Invalid type 'TYPE' provided at line: 25, column: 10",
     "TypeError: Invalid type bool used in range expression at line: 27, column: 7",
-    "TypeError: Cannot use String as array end value at line: 29, column: 7"
+    "TypeError: Cannot use String as array end value at line: 29, column: 8"
 ]
 
 ---

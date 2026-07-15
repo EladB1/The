@@ -1458,7 +1458,7 @@ Compiler messages:
     "NameError: Could not find property 'image' in struct Container at line: 137, column: 42",
     "TypeError: Property type String expected but found char at line: 138, column: 37",
     "TypeError: Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(Container)->bool' to compare block in Container definition at line: 139, column: 9",
-    "CastError: Cannot typecast Container to float. To support this typecasting add a function returning target type to cast block at line: 140, column: 16",
+    "CastError: Cannot typecast Container to float. To support this typecasting add a function returning target type to cast block at line: 140, column: 23",
     "TypeError: Cannot use operator '*' between Container and Container at line: 141, column: 9",
     "AccessError: Cannot access private property from outside struct definition at line: 142, column: 17",
     "NameError: Struct StructLiteral not defined at line: 144, column: 5",
