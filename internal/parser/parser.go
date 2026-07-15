@@ -619,6 +619,9 @@ func parseRange() AST {
 	ast.AddChildren(expr, nodeFromToken(consume()), parseExpression())
 	if checkValue("..") {
 		ast.AddChildren(nodeFromToken(consume()), parseExpression())
+	} else if checkValue("..=") {
+		state.addError("Cannot use inclusive range operator for range step value")
+		sync(forSignatureCtx)
 	}
 	return ast
 }

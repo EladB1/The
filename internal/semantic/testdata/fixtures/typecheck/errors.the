@@ -13,6 +13,8 @@ fn main() -> int {
     u + i;
     u2 + f;
     u2 + i2;
+    u * f;
+    "2" * 2;
     c++;
     --flag;
     --i;
@@ -27,5 +29,10 @@ fn main() -> int {
     s[true..];
     s[..false];
     s[^s];
+    true[0];
+    0["hello"];
+    u *= c;
+    u *= undefined;
+    undefined.something;
     return 0;
 }

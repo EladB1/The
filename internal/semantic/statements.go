@@ -376,7 +376,7 @@ func evalTypecast(original *parser.AST, targetType *parser.AST, expectedType dat
 					hasError = true
 				}
 			}
-		} else if !slices.Contains(datatypes.NumericTypes, lhs) && slices.Contains(datatypes.NumericTypes, target) {
+		} else if !slices.Contains(datatypes.NumericTypes, lhs) && !slices.Contains(datatypes.NumericTypes, target) {
 			messages.Complain(diagnostic.CastError, targetType.Location, typeCastError, lhs, target)
 			hasError = true
 		}

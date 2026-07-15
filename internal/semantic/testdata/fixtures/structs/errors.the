@@ -110,6 +110,7 @@ struct PostgreSQL impl DB {
 }
 
 struct MariaDB impl DB {
+    fn getVersion() -> String;
     DB {
         fn connect() -> float {
             float seconds = 0.025;
@@ -140,10 +141,20 @@ fn main() -> int {
     float f1 = one as float;
     one * two + three;
     println(one.runTimeVersion);
+    println(one.madeup.not.there);
     two.id = "2"; // TODO: Fix mutability for this case
     StructLiteral{};
     MariaDB maria = MariaDB{};
     PostgreSQL pgsql = PostgreSQL{};
     maria <= pgsql;
+    pgsql.disconnect();
+    pgsql.Server.connect();
+    pgsql.DB.getTLSVersion();
+    PrivateTester pt = PrivateTester{};
+    pt.test();
+    pt.y;
+    maria.getVersion();
+    PrivateTester pt2 = maria as PrivateTester;
+    PrivateTester mariaPT = maria;
     return 0;
 }

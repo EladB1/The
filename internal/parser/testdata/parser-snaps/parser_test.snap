@@ -1623,7 +1623,7 @@ Node: { Label: "program" }
     "SyntaxError: Expected expression but got 'for' at line: 21, column: 12",
     "SyntaxError: Expected '(' but got '{' at line: 22, column: 11",
     "SyntaxError: Expected expression but got '{' at line: 22, column: 11",
-    "SyntaxError: Expected ')' but got EOF at line: 50, column: 2"
+    "SyntaxError: Expected ')' but got EOF at line: 51, column: 2"
 ]
 
 ---

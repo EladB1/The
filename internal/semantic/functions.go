@@ -106,6 +106,7 @@ func analyzeFunctionBody(fn FunctionSymbol) {
 		hasReturn := analyzeBlockAndCheckForReturn(overload.Body.Children, fn, sig)
 		if !hasReturn && fn.returnType != datatypes.None {
 			messages.Complain(diagnostic.TypeError, overload.Body.Location, "Function '%s' may not return a value", sig)
+			// BUG: This message shows if the return types don't match
 		}
 	}
 	currentScope = scope

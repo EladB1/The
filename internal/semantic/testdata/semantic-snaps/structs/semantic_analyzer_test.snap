@@ -289,16 +289,230 @@ children: [
             ] }
         ] }
     ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 62, Column: 0}
+    children: [
+        Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 62, Column: 7} },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Label: "modifiers"
+                children: [
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 63, Column: 4} }
+                ] },
+                Node: { Token: {Value: bool, Type: type keyword, Line: 63, Column: 8} },
+                Node: { Token: {Value: employed, Type: identifier, Line: 63, Column: 13} }
+            ] }
+        ] }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 66, Column: 0}
+    children: [
+        Node: { Token: {Value: Person, Type: identifier, Line: 66, Column: 7} },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: String, Type: type keyword, Line: 67, Column: 4} },
+                Node: { Token: {Value: first, Type: identifier, Line: 67, Column: 11} }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: String, Type: type keyword, Line: 68, Column: 4} },
+                Node: { Token: {Value: last, Type: identifier, Line: 68, Column: 11} }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 69, Column: 4} },
+                Node: { Token: {Value: age, Type: identifier, Line: 69, Column: 11} }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Label: "modifiers"
+                children: [
+                    Node: { Token: {Value: private, Type: modifier keyword, Line: 70, Column: 4} }
+                ] },
+                Node: { Token: {Value: String, Type: type keyword, Line: 70, Column: 12} },
+                Node: { Token: {Value: ssn, Type: identifier, Line: 70, Column: 19} }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 71, Column: 4} },
+                Node: { Token: {Value: status, Type: identifier, Line: 71, Column: 21} }
+            ] }
+        ] }
+    ] },
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: main, Type: identifier, Line: 62, Column: 3} },
-        Node: { Token: {Value: int, Type: type keyword, Line: 62, Column: 13} },
+        Node: { Token: {Value: main, Type: identifier, Line: 74, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 74, Column: 13} },
         Node: { Label: "fn-body"
         children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: Person, Type: identifier, Line: 75, Column: 4} },
+                Node: { Token: {Value: p1, Type: identifier, Line: 75, Column: 11} },
+                Node: { Label: "struct_literal", Type: Person
+                children: [
+                    Node: { Token: {Value: Person, Type: identifier, Line: 75, Column: 16} },
+                    Node: { Label: "properties"
+                    children: [
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: first, Type: identifier, Line: 76, Column: 8} },
+                            Node: { Token: {Value: "name", Type: string literal, Line: 76, Column: 15} }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: last, Type: identifier, Line: 77, Column: 8} },
+                            Node: { Token: {Value: "othername", Type: string literal, Line: 77, Column: 14} }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: age, Type: identifier, Line: 78, Column: 8} },
+                            Node: { Token: {Value: 25, Type: int literal, Line: 78, Column: 13} }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: ssn, Type: identifier, Line: 79, Column: 8} },
+                            Node: { Token: {Value: "000000000", Type: string literal, Line: 79, Column: 13} }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: status, Type: identifier, Line: 80, Column: 8} },
+                            Node: { Label: "struct_literal"
+                            children: [
+                                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 80, Column: 16} },
+                                Node: { Label: "properties"
+                                children: [
+                                    Node: { Label: "property"
+                                    children: [
+                                        Node: { Token: {Value: employed, Type: identifier, Line: 80, Column: 34} },
+                                        Node: { Token: {Value: true, Type: boolean value keyword, Line: 80, Column: 44} }
+                                    ] }
+                                ] }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: Person, Type: identifier, Line: 82, Column: 4} },
+                Node: { Token: {Value: p2, Type: identifier, Line: 82, Column: 11} },
+                Node: { Label: "struct_literal", Type: Person
+                children: [
+                    Node: { Token: {Value: Person, Type: identifier, Line: 82, Column: 16} },
+                    Node: { Label: "properties"
+                    children: [
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: first, Type: identifier, Line: 83, Column: 8} },
+                            Node: { Token: {Value: "name", Type: string literal, Line: 83, Column: 15} }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: last, Type: identifier, Line: 84, Column: 8} },
+                            Node: { Token: {Value: "othername", Type: string literal, Line: 84, Column: 14} }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: age, Type: identifier, Line: 85, Column: 8} },
+                            Node: { Token: {Value: 12, Type: int literal, Line: 85, Column: 13} }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: status, Type: identifier, Line: 86, Column: 8} },
+                            Node: { Label: "struct_literal"
+                            children: [
+                                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 86, Column: 16} },
+                                Node: { Label: "properties"
+                                children: [
+                                    Node: { Label: "property"
+                                    children: [
+                                        Node: { Token: {Value: employed, Type: identifier, Line: 86, Column: 34} },
+                                        Node: { Token: {Value: false, Type: boolean value keyword, Line: 86, Column: 44} }
+                                    ] }
+                                ] }
+                            ] }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: ssn, Type: identifier, Line: 87, Column: 8} },
+                            Node: { Token: {Value: "000000001", Type: string literal, Line: 87, Column: 13} }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: String, Type: type keyword, Line: 89, Column: 4} },
+                Node: { Token: {Value: personString, Type: identifier, Line: 89, Column: 11} },
+                Node: { Label: "typecast", Type: String
+                children: [
+                    Node: { Token: {Value: p1, Type: identifier, Line: 89, Column: 26}, Type: Person },
+                    Node: { Token: {Value: String, Type: type keyword, Line: 89, Column: 32} }
+                ] }
+            ] },
+            Node: { Token: {Value: ==, Type: compare operator, Line: 90, Column: 7}
+            children: [
+                Node: { Token: {Value: p1, Type: identifier, Line: 90, Column: 4}, Type: Person },
+                Node: { Token: {Value: p2, Type: identifier, Line: 90, Column: 10}, Type: Person }
+            ] },
+            Node: { Token: {Value: ==, Type: compare operator, Line: 91, Column: 13}
+            children: [
+                Node: { Label: "dot"
+                children: [
+                    Node: { Token: {Value: p1, Type: identifier, Line: 91, Column: 4} },
+                    Node: { Token: {Value: first, Type: identifier, Line: 91, Column: 7} }
+                ] },
+                Node: { Label: "dot"
+                children: [
+                    Node: { Token: {Value: p2, Type: identifier, Line: 91, Column: 16} },
+                    Node: { Token: {Value: first, Type: identifier, Line: 91, Column: 19} }
+                ] }
+            ] },
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: &&, Type: operator, Line: 92, Column: 27}
+                    children: [
+                        Node: { Label: "dot"
+                        children: [
+                            Node: { Label: "dot"
+                            children: [
+                                Node: { Token: {Value: p1, Type: identifier, Line: 92, Column: 8} },
+                                Node: { Token: {Value: status, Type: identifier, Line: 92, Column: 11} }
+                            ] },
+                            Node: { Token: {Value: employed, Type: identifier, Line: 92, Column: 18} }
+                        ] },
+                        Node: { Label: "dot"
+                        children: [
+                            Node: { Label: "dot"
+                            children: [
+                                Node: { Token: {Value: p2, Type: identifier, Line: 92, Column: 30} },
+                                Node: { Token: {Value: status, Type: identifier, Line: 92, Column: 33} }
+                            ] },
+                            Node: { Token: {Value: employed, Type: identifier, Line: 92, Column: 40} }
+                        ] }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Token: {Value: println, Type: identifier, Line: 93, Column: 8} },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: "woot", Type: string literal, Line: 93, Column: 16} }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] },
             Node: { Label: "control-flow"
             children: [
-                Node: { Token: {Value: return, Type: flow keyword, Line: 64, Column: 4} },
-                Node: { Token: {Value: 0, Type: int literal, Line: 64, Column: 11}, Type: int }
+                Node: { Token: {Value: return, Type: flow keyword, Line: 94, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 94, Column: 11}, Type: int }
             ] }
         ] }
     ] }
@@ -342,7 +556,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
             Scope: { id: undo()@D, type: 4, parent: D, variables: map[a:{name: a, Type: A, Initialized: true}] }
         ] }
     ] },
-    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} Empty:{name: Empty, size: 0} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} EmploymentStatus:{name: EmploymentStatus, size: 4} Empty:{name: Empty, size: 0} Person:{name: Person, size: 20} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
         Scope: { id: Empty, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: Device, type: 1, parent: @global, functions: map[powerOff:{name: powerOff, returns: None, overloads: [{parameters: (), implemented: false}]} powerOn:{name: powerOn, returns: bool, overloads: [{parameters: (), implemented: false}]} restart:{name: restart, returns: bool, overloads: [{parameters: (), implemented: true}]} uptimeHours:{name: uptimeHours, returns: uint32, overloads: [{parameters: (), implemented: true}]}], children: [
             Scope: { id: restart()@Device, type: 4, parent: Device },
@@ -368,8 +582,12 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
                 Scope: { id: help()@App@CompilerApp, type: 4, parent: App@CompilerApp }
             ] }
         ] },
+        Scope: { id: EmploymentStatus, type: 2, parent: @global, variables: map[employed:{name: employed, Type: bool, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Person, type: 2, parent: @global, variables: map[age:{name: age, Type: uint32, Initialized: false} first:{name: first, Type: String, Initialized: false} last:{name: last, Type: String, Initialized: false} ssn:{name: ssn, Type: String, isPrivate: true, Initialized: false} status:{name: status, Type: EmploymentStatus, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: @resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
-        Scope: { id: @main(), type: 4, parent: @global }
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, Initialized: true} personString:{name: personString, Type: String, Initialized: true}], children: [
+            Scope: { id: if#0@@main(), type: 6, parent: @main() }
+        ] }
     ] }
 ] }
 Compiler messages:
@@ -444,7 +662,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
             Scope: { id: undo()@D, type: 4, parent: D, variables: map[a:{name: a, Type: A, Initialized: true}] }
         ] }
     ] },
-    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} Empty:{name: Empty, size: 0} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} EmploymentStatus:{name: EmploymentStatus, size: 4} Empty:{name: Empty, size: 0} Person:{name: Person, size: 20} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
         Scope: { id: Empty, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: Device, type: 1, parent: @global, functions: map[powerOff:{name: powerOff, returns: None, overloads: [{parameters: (), implemented: false}]} powerOn:{name: powerOn, returns: bool, overloads: [{parameters: (), implemented: false}]} restart:{name: restart, returns: bool, overloads: [{parameters: (), implemented: true}]} uptimeHours:{name: uptimeHours, returns: uint32, overloads: [{parameters: (), implemented: true}]}], children: [
             Scope: { id: restart()@Device, type: 4, parent: Device },
@@ -470,8 +688,12 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
                 Scope: { id: help()@App@CompilerApp, type: 4, parent: App@CompilerApp }
             ] }
         ] },
+        Scope: { id: EmploymentStatus, type: 2, parent: @global, variables: map[employed:{name: employed, Type: bool, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Person, type: 2, parent: @global, variables: map[age:{name: age, Type: uint32, Initialized: false} first:{name: first, Type: String, Initialized: false} last:{name: last, Type: String, Initialized: false} ssn:{name: ssn, Type: String, isPrivate: true, Initialized: false} status:{name: status, Type: EmploymentStatus, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: @resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
-        Scope: { id: @main(), type: 4, parent: @global }
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, Initialized: true} personString:{name: personString, Type: String, Initialized: true}], children: [
+            Scope: { id: if#0@@main(), type: 6, parent: @main() }
+        ] }
     ] },
     Scope: { id: @global, parent: @built-in, structs: map[Sample:{name: Sample, size: 0}], children: [
         Scope: { id: Sample, type: 2, parent: @global, variables: map[i:{name: i, Type: int, isPrivate: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] }
@@ -1046,27 +1268,32 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: getVersion, Type: identifier, Line: 112, Column: 7} },
+                Node: { Token: {Value: String, Type: type keyword, Line: 112, Column: 23} }
+            ] },
             Node: { Label: "named-block"
             children: [
-                Node: { Token: {Value: DB, Type: identifier, Line: 112, Column: 4} },
+                Node: { Token: {Value: DB, Type: identifier, Line: 113, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: connect, Type: identifier, Line: 113, Column: 11} },
-                        Node: { Token: {Value: float, Type: type keyword, Line: 113, Column: 24} },
+                        Node: { Token: {Value: connect, Type: identifier, Line: 114, Column: 11} },
+                        Node: { Token: {Value: float, Type: type keyword, Line: 114, Column: 24} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "Variable"
                             children: [
-                                Node: { Token: {Value: float, Type: type keyword, Line: 114, Column: 12} },
-                                Node: { Token: {Value: seconds, Type: identifier, Line: 114, Column: 18} },
-                                Node: { Token: {Value: 0.025, Type: float literal, Line: 114, Column: 28}, Type: float }
+                                Node: { Token: {Value: float, Type: type keyword, Line: 115, Column: 12} },
+                                Node: { Token: {Value: seconds, Type: identifier, Line: 115, Column: 18} },
+                                Node: { Token: {Value: 0.025, Type: float literal, Line: 115, Column: 28}, Type: float }
                             ] },
                             Node: { Label: "control-flow"
                             children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 115, Column: 12} },
-                                Node: { Token: {Value: seconds, Type: identifier, Line: 115, Column: 19}, Type: float }
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 116, Column: 12} },
+                                Node: { Token: {Value: seconds, Type: identifier, Line: 116, Column: 19}, Type: float }
                             ] }
                         ] }
                     ] }
@@ -1074,55 +1301,55 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 120, Column: 0}
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 121, Column: 0}
     children: [
-        Node: { Token: {Value: PrivateTester, Type: identifier, Line: 120, Column: 7} },
+        Node: { Token: {Value: PrivateTester, Type: identifier, Line: 121, Column: 7} },
         Node: { Label: "struct-body"
         children: [
             Node: { Label: "named-block"
             children: [
-                Node: { Token: {Value: private, Type: modifier keyword, Line: 121, Column: 4} },
+                Node: { Token: {Value: private, Type: modifier keyword, Line: 122, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
                     Node: { Label: "Variable"
                     children: [
                         Node: { Label: "modifiers"
                         children: [
-                            Node: { Token: {Value: private, Type: modifier keyword, Line: 122, Column: 8} }
+                            Node: { Token: {Value: private, Type: modifier keyword, Line: 123, Column: 8} }
                         ] },
-                        Node: { Token: {Value: int, Type: type keyword, Line: 122, Column: 16} },
-                        Node: { Token: {Value: y, Type: identifier, Line: 122, Column: 20} },
-                        Node: { Token: {Value: "y", Type: string literal, Line: 122, Column: 24}, Type: String }
+                        Node: { Token: {Value: int, Type: type keyword, Line: 123, Column: 16} },
+                        Node: { Token: {Value: y, Type: identifier, Line: 123, Column: 20} },
+                        Node: { Token: {Value: "y", Type: string literal, Line: 123, Column: 24}, Type: String }
                     ] },
                     Node: { Label: "Variable"
                     children: [
                         Node: { Label: "modifiers"
                         children: [
-                            Node: { Token: {Value: mut, Type: modifier keyword, Line: 123, Column: 8} }
+                            Node: { Token: {Value: mut, Type: modifier keyword, Line: 124, Column: 8} }
                         ] },
-                        Node: { Token: {Value: TYPE, Type: identifier, Line: 123, Column: 12} },
-                        Node: { Token: {Value: j, Type: identifier, Line: 123, Column: 17} }
+                        Node: { Token: {Value: TYPE, Type: identifier, Line: 124, Column: 12} },
+                        Node: { Token: {Value: j, Type: identifier, Line: 124, Column: 17} }
                     ] },
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: test, Type: identifier, Line: 124, Column: 11} }
+                        Node: { Token: {Value: test, Type: identifier, Line: 125, Column: 11} }
                     ] },
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: test, Type: identifier, Line: 125, Column: 11} },
-                        Node: { Token: {Value: int, Type: type keyword, Line: 125, Column: 19} },
+                        Node: { Token: {Value: test, Type: identifier, Line: 126, Column: 11} },
+                        Node: { Token: {Value: int, Type: type keyword, Line: 126, Column: 19} },
                         Node: { Label: "fn-body" }
                     ] },
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: something, Type: identifier, Line: 126, Column: 11} },
-                        Node: { Token: {Value: bool, Type: type keyword, Line: 126, Column: 26} },
+                        Node: { Token: {Value: something, Type: identifier, Line: 127, Column: 11} },
+                        Node: { Token: {Value: bool, Type: type keyword, Line: 127, Column: 26} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "control-flow"
                             children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 127, Column: 12} },
-                                Node: { Token: {Value: 0, Type: int literal, Line: 127, Column: 19}, Type: int }
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 128, Column: 12} },
+                                Node: { Token: {Value: 0, Type: int literal, Line: 128, Column: 19}, Type: int }
                             ] }
                         ] }
                     ] }
@@ -1132,53 +1359,31 @@ children: [
     ] },
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: main, Type: identifier, Line: 132, Column: 3} },
-        Node: { Token: {Value: int, Type: type keyword, Line: 132, Column: 13} },
+        Node: { Token: {Value: main, Type: identifier, Line: 133, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 133, Column: 13} },
         Node: { Label: "fn-body"
         children: [
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: App, Type: identifier, Line: 133, Column: 4} },
-                Node: { Token: {Value: app, Type: identifier, Line: 133, Column: 8} },
+                Node: { Token: {Value: App, Type: identifier, Line: 134, Column: 4} },
+                Node: { Token: {Value: app, Type: identifier, Line: 134, Column: 8} },
                 Node: { Label: "struct_literal", Type: App
                 children: [
-                    Node: { Token: {Value: App, Type: identifier, Line: 133, Column: 14} }
+                    Node: { Token: {Value: App, Type: identifier, Line: 134, Column: 14} }
                 ] }
             ] },
             Node: { Label: "call"
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: app, Type: identifier, Line: 134, Column: 4} },
-                    Node: { Token: {Value: connect, Type: identifier, Line: 134, Column: 8} }
-                ] }
-            ] },
-            Node: { Label: "Variable"
-            children: [
-                Node: { Token: {Value: Container, Type: identifier, Line: 135, Column: 4} },
-                Node: { Token: {Value: one, Type: identifier, Line: 135, Column: 14} },
-                Node: { Label: "struct_literal", Type: Container
-                children: [
-                    Node: { Token: {Value: Container, Type: identifier, Line: 135, Column: 20} },
-                    Node: { Label: "properties"
-                    children: [
-                        Node: { Label: "property"
-                        children: [
-                            Node: { Token: {Value: id, Type: identifier, Line: 135, Column: 30} },
-                            Node: { Token: {Value: "one", Type: string literal, Line: 135, Column: 34} }
-                        ] },
-                        Node: { Label: "property"
-                        children: [
-                            Node: { Token: {Value: id, Type: identifier, Line: 135, Column: 41} },
-                            Node: { Token: {Value: "1", Type: string literal, Line: 135, Column: 45} }
-                        ] }
-                    ] }
+                    Node: { Token: {Value: app, Type: identifier, Line: 135, Column: 4} },
+                    Node: { Token: {Value: connect, Type: identifier, Line: 135, Column: 8} }
                 ] }
             ] },
             Node: { Label: "Variable"
             children: [
                 Node: { Token: {Value: Container, Type: identifier, Line: 136, Column: 4} },
-                Node: { Token: {Value: two, Type: identifier, Line: 136, Column: 14} },
+                Node: { Token: {Value: one, Type: identifier, Line: 136, Column: 14} },
                 Node: { Label: "struct_literal", Type: Container
                 children: [
                     Node: { Token: {Value: Container, Type: identifier, Line: 136, Column: 20} },
@@ -1187,12 +1392,12 @@ children: [
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: id, Type: identifier, Line: 136, Column: 30} },
-                            Node: { Token: {Value: "two", Type: string literal, Line: 136, Column: 34} }
+                            Node: { Token: {Value: "one", Type: string literal, Line: 136, Column: 34} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: image, Type: identifier, Line: 136, Column: 41} },
-                            Node: { Token: {Value: "alpine-linux@latest", Type: string literal, Line: 136, Column: 48} }
+                            Node: { Token: {Value: id, Type: identifier, Line: 136, Column: 41} },
+                            Node: { Token: {Value: "1", Type: string literal, Line: 136, Column: 45} }
                         ] }
                     ] }
                 ] }
@@ -1200,96 +1405,216 @@ children: [
             Node: { Label: "Variable"
             children: [
                 Node: { Token: {Value: Container, Type: identifier, Line: 137, Column: 4} },
-                Node: { Token: {Value: three, Type: identifier, Line: 137, Column: 14} },
+                Node: { Token: {Value: two, Type: identifier, Line: 137, Column: 14} },
                 Node: { Label: "struct_literal", Type: Container
                 children: [
-                    Node: { Token: {Value: Container, Type: identifier, Line: 137, Column: 22} },
+                    Node: { Token: {Value: Container, Type: identifier, Line: 137, Column: 20} },
                     Node: { Label: "properties"
                     children: [
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: id, Type: identifier, Line: 137, Column: 32} },
-                            Node: { Token: {Value: '3', Type: char literal, Line: 137, Column: 36} }
+                            Node: { Token: {Value: id, Type: identifier, Line: 137, Column: 30} },
+                            Node: { Token: {Value: "two", Type: string literal, Line: 137, Column: 34} }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: image, Type: identifier, Line: 137, Column: 41} },
+                            Node: { Token: {Value: "alpine-linux@latest", Type: string literal, Line: 137, Column: 48} }
                         ] }
                     ] }
                 ] }
             ] },
-            Node: { Token: {Value: >, Type: compare operator, Line: 138, Column: 8}
+            Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: one, Type: identifier, Line: 138, Column: 4}, Type: Container },
-                Node: { Token: {Value: two, Type: identifier, Line: 138, Column: 10}, Type: Container }
+                Node: { Token: {Value: Container, Type: identifier, Line: 138, Column: 4} },
+                Node: { Token: {Value: three, Type: identifier, Line: 138, Column: 14} },
+                Node: { Label: "struct_literal", Type: Container
+                children: [
+                    Node: { Token: {Value: Container, Type: identifier, Line: 138, Column: 22} },
+                    Node: { Label: "properties"
+                    children: [
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: id, Type: identifier, Line: 138, Column: 32} },
+                            Node: { Token: {Value: '3', Type: char literal, Line: 138, Column: 36} }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Token: {Value: >, Type: compare operator, Line: 139, Column: 8}
+            children: [
+                Node: { Token: {Value: one, Type: identifier, Line: 139, Column: 4}, Type: Container },
+                Node: { Token: {Value: two, Type: identifier, Line: 139, Column: 10}, Type: Container }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: float, Type: type keyword, Line: 139, Column: 4} },
-                Node: { Token: {Value: f1, Type: identifier, Line: 139, Column: 10} },
+                Node: { Token: {Value: float, Type: type keyword, Line: 140, Column: 4} },
+                Node: { Token: {Value: f1, Type: identifier, Line: 140, Column: 10} },
                 Node: { Label: "typecast"
                 children: [
-                    Node: { Token: {Value: one, Type: identifier, Line: 139, Column: 15}, Type: Container },
-                    Node: { Token: {Value: float, Type: type keyword, Line: 139, Column: 22} }
+                    Node: { Token: {Value: one, Type: identifier, Line: 140, Column: 15}, Type: Container },
+                    Node: { Token: {Value: float, Type: type keyword, Line: 140, Column: 22} }
                 ] }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 140, Column: 14}
+            Node: { Token: {Value: +, Type: add operator, Line: 141, Column: 14}
             children: [
-                Node: { Token: {Value: *, Type: multiply operator, Line: 140, Column: 8}
+                Node: { Token: {Value: *, Type: multiply operator, Line: 141, Column: 8}
                 children: [
-                    Node: { Token: {Value: one, Type: identifier, Line: 140, Column: 4}, Type: Container },
-                    Node: { Token: {Value: two, Type: identifier, Line: 140, Column: 10}, Type: Container }
+                    Node: { Token: {Value: one, Type: identifier, Line: 141, Column: 4}, Type: Container },
+                    Node: { Token: {Value: two, Type: identifier, Line: 141, Column: 10}, Type: Container }
                 ] },
-                Node: { Token: {Value: three, Type: identifier, Line: 140, Column: 16}, Type: Container }
+                Node: { Token: {Value: three, Type: identifier, Line: 141, Column: 16}, Type: Container }
             ] },
             Node: { Label: "call"
             children: [
-                Node: { Token: {Value: println, Type: identifier, Line: 141, Column: 4} },
+                Node: { Token: {Value: println, Type: identifier, Line: 142, Column: 4} },
                 Node: { Label: "params"
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Token: {Value: one, Type: identifier, Line: 141, Column: 12} },
-                        Node: { Token: {Value: runTimeVersion, Type: identifier, Line: 141, Column: 16} }
+                        Node: { Token: {Value: one, Type: identifier, Line: 142, Column: 12} },
+                        Node: { Token: {Value: runTimeVersion, Type: identifier, Line: 142, Column: 16} }
                     ] }
                 ] }
             ] },
-            Node: { Token: {Value: =, Type: assign operator, Line: 142, Column: 11}
+            Node: { Label: "call"
+            children: [
+                Node: { Token: {Value: println, Type: identifier, Line: 143, Column: 4} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Label: "dot"
+                    children: [
+                        Node: { Label: "dot"
+                        children: [
+                            Node: { Label: "dot"
+                            children: [
+                                Node: { Token: {Value: one, Type: identifier, Line: 143, Column: 12} },
+                                Node: { Token: {Value: madeup, Type: identifier, Line: 143, Column: 16} }
+                            ] },
+                            Node: { Token: {Value: not, Type: identifier, Line: 143, Column: 23} }
+                        ] },
+                        Node: { Token: {Value: there, Type: identifier, Line: 143, Column: 27} }
+                    ] }
+                ] }
+            ] },
+            Node: { Token: {Value: =, Type: assign operator, Line: 144, Column: 11}
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: two, Type: identifier, Line: 142, Column: 4} },
-                    Node: { Token: {Value: id, Type: identifier, Line: 142, Column: 8} }
+                    Node: { Token: {Value: two, Type: identifier, Line: 144, Column: 4} },
+                    Node: { Token: {Value: id, Type: identifier, Line: 144, Column: 8} }
                 ] },
-                Node: { Token: {Value: "2", Type: string literal, Line: 142, Column: 13} }
+                Node: { Token: {Value: "2", Type: string literal, Line: 144, Column: 13} }
             ] },
             Node: { Label: "struct_literal"
             children: [
-                Node: { Token: {Value: StructLiteral, Type: identifier, Line: 143, Column: 4} }
+                Node: { Token: {Value: StructLiteral, Type: identifier, Line: 145, Column: 4} }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: MariaDB, Type: identifier, Line: 144, Column: 4} },
-                Node: { Token: {Value: maria, Type: identifier, Line: 144, Column: 12} },
+                Node: { Token: {Value: MariaDB, Type: identifier, Line: 146, Column: 4} },
+                Node: { Token: {Value: maria, Type: identifier, Line: 146, Column: 12} },
                 Node: { Label: "struct_literal", Type: MariaDB
                 children: [
-                    Node: { Token: {Value: MariaDB, Type: identifier, Line: 144, Column: 20} }
+                    Node: { Token: {Value: MariaDB, Type: identifier, Line: 146, Column: 20} }
                 ] }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 145, Column: 4} },
-                Node: { Token: {Value: pgsql, Type: identifier, Line: 145, Column: 15} },
+                Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 147, Column: 4} },
+                Node: { Token: {Value: pgsql, Type: identifier, Line: 147, Column: 15} },
                 Node: { Label: "struct_literal", Type: PostgreSQL
                 children: [
-                    Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 145, Column: 23} }
+                    Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 147, Column: 23} }
                 ] }
             ] },
-            Node: { Token: {Value: <=, Type: compare operator, Line: 146, Column: 10}
+            Node: { Token: {Value: <=, Type: compare operator, Line: 148, Column: 10}
             children: [
-                Node: { Token: {Value: maria, Type: identifier, Line: 146, Column: 4}, Type: MariaDB },
-                Node: { Token: {Value: pgsql, Type: identifier, Line: 146, Column: 13}, Type: PostgreSQL }
+                Node: { Token: {Value: maria, Type: identifier, Line: 148, Column: 4}, Type: MariaDB },
+                Node: { Token: {Value: pgsql, Type: identifier, Line: 148, Column: 13}, Type: PostgreSQL }
+            ] },
+            Node: { Label: "call"
+            children: [
+                Node: { Label: "dot"
+                children: [
+                    Node: { Token: {Value: pgsql, Type: identifier, Line: 149, Column: 4} },
+                    Node: { Token: {Value: disconnect, Type: identifier, Line: 149, Column: 10} }
+                ] }
+            ] },
+            Node: { Label: "call"
+            children: [
+                Node: { Label: "dot"
+                children: [
+                    Node: { Label: "dot"
+                    children: [
+                        Node: { Token: {Value: pgsql, Type: identifier, Line: 150, Column: 4} },
+                        Node: { Token: {Value: Server, Type: identifier, Line: 150, Column: 10} }
+                    ] },
+                    Node: { Token: {Value: connect, Type: identifier, Line: 150, Column: 17} }
+                ] }
+            ] },
+            Node: { Label: "call"
+            children: [
+                Node: { Label: "dot"
+                children: [
+                    Node: { Label: "dot"
+                    children: [
+                        Node: { Token: {Value: pgsql, Type: identifier, Line: 151, Column: 4} },
+                        Node: { Token: {Value: DB, Type: identifier, Line: 151, Column: 10} }
+                    ] },
+                    Node: { Token: {Value: getTLSVersion, Type: identifier, Line: 151, Column: 13} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 152, Column: 4} },
+                Node: { Token: {Value: pt, Type: identifier, Line: 152, Column: 18} },
+                Node: { Label: "struct_literal", Type: PrivateTester
+                children: [
+                    Node: { Token: {Value: PrivateTester, Type: identifier, Line: 152, Column: 23} }
+                ] }
+            ] },
+            Node: { Label: "call"
+            children: [
+                Node: { Label: "dot"
+                children: [
+                    Node: { Token: {Value: pt, Type: identifier, Line: 153, Column: 4} },
+                    Node: { Token: {Value: test, Type: identifier, Line: 153, Column: 7} }
+                ] }
+            ] },
+            Node: { Label: "dot"
+            children: [
+                Node: { Token: {Value: pt, Type: identifier, Line: 154, Column: 4} },
+                Node: { Token: {Value: y, Type: identifier, Line: 154, Column: 7} }
+            ] },
+            Node: { Label: "call"
+            children: [
+                Node: { Label: "dot"
+                children: [
+                    Node: { Token: {Value: maria, Type: identifier, Line: 155, Column: 4} },
+                    Node: { Token: {Value: getVersion, Type: identifier, Line: 155, Column: 10} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 156, Column: 4} },
+                Node: { Token: {Value: pt2, Type: identifier, Line: 156, Column: 18} },
+                Node: { Label: "typecast"
+                children: [
+                    Node: { Token: {Value: maria, Type: identifier, Line: 156, Column: 24}, Type: MariaDB },
+                    Node: { Token: {Value: PrivateTester, Type: identifier, Line: 156, Column: 33} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 157, Column: 4} },
+                Node: { Token: {Value: mariaPT, Type: identifier, Line: 157, Column: 18} },
+                Node: { Token: {Value: maria, Type: identifier, Line: 157, Column: 28}, Type: MariaDB }
             ] },
             Node: { Label: "control-flow"
             children: [
-                Node: { Token: {Value: return, Type: flow keyword, Line: 147, Column: 4} },
-                Node: { Token: {Value: 0, Type: int literal, Line: 147, Column: 11}, Type: int }
+                Node: { Token: {Value: return, Type: flow keyword, Line: 158, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 158, Column: 11}, Type: int }
             ] }
         ] }
     ] }
@@ -1333,7 +1658,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
             Scope: { id: undo()@D, type: 4, parent: D, variables: map[a:{name: a, Type: A, Initialized: true}] }
         ] }
     ] },
-    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} Empty:{name: Empty, size: 0} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} EmploymentStatus:{name: EmploymentStatus, size: 4} Empty:{name: Empty, size: 0} Person:{name: Person, size: 20} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
         Scope: { id: Empty, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: Device, type: 1, parent: @global, functions: map[powerOff:{name: powerOff, returns: None, overloads: [{parameters: (), implemented: false}]} powerOn:{name: powerOn, returns: bool, overloads: [{parameters: (), implemented: false}]} restart:{name: restart, returns: bool, overloads: [{parameters: (), implemented: true}]} uptimeHours:{name: uptimeHours, returns: uint32, overloads: [{parameters: (), implemented: true}]}], children: [
             Scope: { id: restart()@Device, type: 4, parent: Device },
@@ -1359,8 +1684,12 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
                 Scope: { id: help()@App@CompilerApp, type: 4, parent: App@CompilerApp }
             ] }
         ] },
+        Scope: { id: EmploymentStatus, type: 2, parent: @global, variables: map[employed:{name: employed, Type: bool, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Person, type: 2, parent: @global, variables: map[age:{name: age, Type: uint32, Initialized: false} first:{name: first, Type: String, Initialized: false} last:{name: last, Type: String, Initialized: false} ssn:{name: ssn, Type: String, isPrivate: true, Initialized: false} status:{name: status, Type: EmploymentStatus, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: @resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
-        Scope: { id: @main(), type: 4, parent: @global }
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, Initialized: true} personString:{name: personString, Type: String, Initialized: true}], children: [
+            Scope: { id: if#0@@main(), type: 6, parent: @main() }
+        ] }
     ] },
     Scope: { id: @global, parent: @built-in, structs: map[Sample:{name: Sample, size: 0}], children: [
         Scope: { id: Sample, type: 2, parent: @global, variables: map[i:{name: i, Type: int, isPrivate: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] }
@@ -1411,7 +1740,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
                 Scope: { id: connect()@DB@PostgreSQL, type: 4, parent: DB@PostgreSQL }
             ] }
         ] },
-        Scope: { id: MariaDB, type: 2, parent: @global, namedBlocks: map[DB:{name: DB}], variables: map[DB:{name: DB, Type: ScopeRef(MariaDB,DB), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+        Scope: { id: MariaDB, type: 2, parent: @global, namedBlocks: map[DB:{name: DB}], functions: map[getVersion:{name: getVersion, returns: String, overloads: [{parameters: (), implemented: false}]}], variables: map[DB:{name: DB, Type: ScopeRef(MariaDB,DB), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
             Scope: { id: DB@MariaDB, type: 3, parent: MariaDB, functions: map[connect:{name: connect, returns: float, overloads: [{parameters: (), implemented: true}]}], children: [
                 Scope: { id: connect()@DB@MariaDB, type: 4, parent: DB@MariaDB, variables: map[seconds:{name: seconds, Type: float, Initialized: true}] }
             ] }
@@ -1420,7 +1749,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
             Scope: { id: test()@PrivateTester, type: 4, parent: PrivateTester },
             Scope: { id: something()@PrivateTester, type: 4, parent: PrivateTester }
         ] },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} mariaPT:{name: mariaPT, Type: PrivateTester, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} pt:{name: pt, Type: PrivateTester, Initialized: true} pt2:{name: pt2, Type: PrivateTester, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] }
 ] }
 Compiler messages:
@@ -1446,23 +1775,35 @@ Compiler messages:
     "NamedBlockError: Function signature 'fn lessThan(Container)' not supported; only 'fn equals(Container)->bool,fn lessThan(Container)->bool,fn greaterThan(Container)->bool' supported at line: 65, column: 9",
     "ImplementationError: Named block DB contains function connect(bool) which its interface does not at line: 94, column: 5",
     "IllegalStatementError: Function name 'connect' already defined without a return type; cannot overload with return type bool at line: 106, column: 9",
-    "ImplementationError: Implementation function connect returns float but interface DB returns None at line: 113, column: 5",
-    "Warning: Redundant use of private in private block at line: 123, column: 9",
-    "TypeError: Cannot assign type String to variable type int at line: 123, column: 25",
-    "TypeError: Invalid type 'TYPE' provided at line: 124, column: 13",
-    "IllegalStatementError: Function name 'test' already defined without a return type; cannot overload with return type int at line: 126, column: 9",
-    "TypeError: Function 'something()->bool' may not return a value at line: 127, column: 32",
-    "TypeError: Function 'something()->bool' expected return type bool but got int at line: 128, column: 13",
-    "AmbiguityError: Interfaces Backend,DB both contain function named connect. Change the function call to pick which one to use at line: 135, column: 9",
-    "IllegalStatementError: Cannot define struct property 'id' multiple times in struct literal at line: 136, column: 42",
-    "NameError: Could not find property 'image' in struct Container at line: 137, column: 42",
-    "TypeError: Property type String expected but found char at line: 138, column: 37",
-    "TypeError: Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(Container)->bool' to compare block in Container definition at line: 139, column: 9",
-    "CastError: Cannot typecast Container to float. To support this typecasting add a function returning target type to cast block at line: 140, column: 23",
-    "TypeError: Cannot use operator '*' between Container and Container at line: 141, column: 9",
-    "AccessError: Cannot access private property from outside struct definition at line: 142, column: 17",
-    "NameError: Struct StructLiteral not defined at line: 144, column: 5",
-    "TypeError: Invalid comparison between MariaDB and PostgreSQL at line: 147, column: 11"
+    "ImplementationError: Implementation function connect returns float but interface DB returns None at line: 114, column: 5",
+    "Warning: Redundant use of private in private block at line: 124, column: 9",
+    "TypeError: Cannot assign type String to variable type int at line: 124, column: 25",
+    "TypeError: Invalid type 'TYPE' provided at line: 125, column: 13",
+    "IllegalStatementError: Function name 'test' already defined without a return type; cannot overload with return type int at line: 127, column: 9",
+    "TypeError: Function 'something()->bool' may not return a value at line: 128, column: 32",
+    "TypeError: Function 'something()->bool' expected return type bool but got int at line: 129, column: 13",
+    "AmbiguityError: Interfaces Backend,DB both contain function named connect. Change the function call to pick which one to use at line: 136, column: 9",
+    "IllegalStatementError: Cannot define struct property 'id' multiple times in struct literal at line: 137, column: 42",
+    "NameError: Could not find property 'image' in struct Container at line: 138, column: 42",
+    "TypeError: Property type String expected but found char at line: 139, column: 37",
+    "TypeError: Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(Container)->bool' to compare block in Container definition at line: 140, column: 9",
+    "CastError: Cannot typecast Container to float. To support this typecasting add a function returning target type to cast block at line: 141, column: 23",
+    "TypeError: Cannot use operator '*' between Container and Container at line: 142, column: 9",
+    "AccessError: Cannot access private property from outside struct definition at line: 143, column: 17",
+    "NameError: Could not find property madeup in type Container at line: 144, column: 17",
+    "TypeError: Cannot access property not of type None at line: 144, column: 24",
+    "TypeError: Cannot access property there of type None at line: 144, column: 28",
+    "NameError: Struct StructLiteral not defined at line: 146, column: 5",
+    "TypeError: Invalid comparison between MariaDB and PostgreSQL at line: 149, column: 11",
+    "NameError: Could not find function disconnect in scope at line: 150, column: 11",
+    "NameError: Could not find property Server in type PostgreSQL at line: 151, column: 11",
+    "NameError: Could not find type None at line: 151, column: 18",
+    "NameError: Could not find function getTLSVersion in scope at line: 152, column: 14",
+    "AccessError: Cannot access private function 'test' from outside struct definition at line: 154, column: 7",
+    "AccessError: Cannot access private property from outside struct definition at line: 155, column: 8",
+    "CallError: Function without body cannot be called at line: 156, column: 10",
+    "CastError: Cannot typecast MariaDB to PrivateTester. To support typecasting add a cast block with a function returning the target type at line: 157, column: 34",
+    "TypeError: Cannot assign type MariaDB to variable type PrivateTester at line: 158, column: 29"
 ]
 
 ---

@@ -1,0 +1,27 @@
+fn test();
+
+fn test() {}
+
+fn overloads(int i) -> bool {
+    return 0;
+}
+
+fn overloads(int i) -> bool {
+    return 0 as String;
+}
+
+fn overloads(int i, int j) -> char {
+    return;
+}
+
+fn plusOne(int n) -> int {
+    return n + 1;
+}
+
+fn caller() {
+    plusOne(PI);
+    plusOne(1, 1);
+    plusOne();
+}
+
+fn badReturn() -> TYPE;
