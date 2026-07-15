@@ -52,7 +52,6 @@ func analyzeForCondition(condition []parser.AST) {
 				if !hasErr && cond != datatypes.Bool {
 					messages.Complain(diagnostic.TypeError, condition[1].Location, "Expected bool as loop condition but got %s", cond.String())
 				}
-				// TODO: Add support for assignment as end part
 				var expr datatypes.DataType
 				if condition[2].Token.Kind == lexer.OPERATOR_ASSIGN {
 					expr, hasErr = analyzeAssignment(&condition[2])
@@ -93,11 +92,10 @@ func analyzeAssignment(stmt *parser.AST) (datatypes.DataType, bool) {
 	var lhs datatypes.DataType
 	var lHasErr bool
 	if left.Label == "dot" {
-		lhs, lHasErr = handleDot(left.Children[0], left.Children[1], false)
+		lhs, lHasErr = handleDot(left.Children[0], left.Children[1], false, true)
 		if lHasErr {
 			return datatypes.None, true
 		}
-		// TODO: Fix mutability for this case
 	} else {
 		symbol := currentScope.lookupVariable(left.Token.Value)
 		if symbol == nil {
@@ -543,7 +541,7 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 	scope := currentScope
 	var name lexer.Token
 	if details[0].Label == "dot" {
-		lhs, hasErr := handleDot(details[0].Children[0], details[0].Children[1], true)
+		lhs, hasErr := handleDot(details[0].Children[0], details[0].Children[1], true, false)
 		if hasErr {
 			hasError = hasErr
 		}
@@ -628,7 +626,7 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 	return datatypes.None, hasError
 }
 
-func handleDot(left parser.AST, right parser.AST, isFnCall bool) (datatypes.DataType, bool) {
+func handleDot(left parser.AST, right parser.AST, isFnCall bool, isAssignment bool) (datatypes.DataType, bool) {
 	hasError := true
 	hasErr := false
 	var lhs datatypes.DataType = datatypes.None
@@ -638,13 +636,17 @@ func handleDot(left parser.AST, right parser.AST, isFnCall bool) (datatypes.Data
 			hasError = hasErr
 		}
 	} else {
-		lhs, hasErr = handleDot(left.Children[0], left.Children[1], isFnCall)
+		lhs, hasErr = handleDot(left.Children[0], left.Children[1], isFnCall, isAssignment)
 	}
 	if isFnCall {
 		return lhs, hasError
 	}
 	rname := right.Token.Value
 	if lhs == datatypes.String && rname == "length" {
+		if isAssignment {
+			messages.Complain(diagnostic.AccessError, left.Location, "Cannot assign value to string length")
+			hasError = true
+		}
 		return datatypes.Int32, hasError
 	} else if !lhs.IsPrimitive() {
 		symbol := globalScope.lookupType(lhs.String())
@@ -656,6 +658,10 @@ func handleDot(left parser.AST, right parser.AST, isFnCall bool) (datatypes.Data
 			if prop := scope.lookupVariable(rname); prop != nil {
 				if prop.isPrivate && !currentScope.HasParentScope(symbol.getInnerScope()) {
 					messages.Complain(diagnostic.AccessError, right.Location, "Cannot access private property from outside struct definition")
+					hasError = true
+				} else if isAssignment && !prop.isMutable {
+					messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable property or variable")
+					hasError = true
 				} else {
 					return prop.Type, hasError
 				}

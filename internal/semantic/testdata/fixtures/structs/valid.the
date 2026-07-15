@@ -22,7 +22,7 @@ struct Server impl Device {
         fn powerOn() -> bool {
             lastStartTime = now;
             println("Powering on...");
-            sleep(2.0); // TODO: remove need for casting
+            sleep(2.0);
             return true;
         }
         fn powerOff() {

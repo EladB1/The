@@ -142,7 +142,8 @@ fn main() -> int {
     one * two + three;
     println(one.runTimeVersion);
     println(one.madeup.not.there);
-    two.id = "2"; // TODO: Fix mutability for this case
+    two.id = "2";
+    "hello".length = 0;
     StructLiteral{};
     MariaDB maria = MariaDB{};
     PostgreSQL pgsql = PostgreSQL{};

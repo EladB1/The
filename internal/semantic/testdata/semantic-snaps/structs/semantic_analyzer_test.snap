@@ -1506,51 +1506,48 @@ children: [
                 ] },
                 Node: { Token: {Value: "2", Type: string literal, Line: 144, Column: 13} }
             ] },
+            Node: { Token: {Value: =, Type: assign operator, Line: 145, Column: 19}
+            children: [
+                Node: { Label: "dot"
+                children: [
+                    Node: { Token: {Value: "hello", Type: string literal, Line: 145, Column: 4} },
+                    Node: { Token: {Value: length, Type: identifier, Line: 145, Column: 12} }
+                ] },
+                Node: { Token: {Value: 0, Type: int literal, Line: 145, Column: 21} }
+            ] },
             Node: { Label: "struct_literal"
             children: [
-                Node: { Token: {Value: StructLiteral, Type: identifier, Line: 145, Column: 4} }
+                Node: { Token: {Value: StructLiteral, Type: identifier, Line: 146, Column: 4} }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: MariaDB, Type: identifier, Line: 146, Column: 4} },
-                Node: { Token: {Value: maria, Type: identifier, Line: 146, Column: 12} },
+                Node: { Token: {Value: MariaDB, Type: identifier, Line: 147, Column: 4} },
+                Node: { Token: {Value: maria, Type: identifier, Line: 147, Column: 12} },
                 Node: { Label: "struct_literal", Type: MariaDB
                 children: [
-                    Node: { Token: {Value: MariaDB, Type: identifier, Line: 146, Column: 20} }
+                    Node: { Token: {Value: MariaDB, Type: identifier, Line: 147, Column: 20} }
                 ] }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 147, Column: 4} },
-                Node: { Token: {Value: pgsql, Type: identifier, Line: 147, Column: 15} },
+                Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 148, Column: 4} },
+                Node: { Token: {Value: pgsql, Type: identifier, Line: 148, Column: 15} },
                 Node: { Label: "struct_literal", Type: PostgreSQL
                 children: [
-                    Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 147, Column: 23} }
+                    Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 148, Column: 23} }
                 ] }
             ] },
-            Node: { Token: {Value: <=, Type: compare operator, Line: 148, Column: 10}
+            Node: { Token: {Value: <=, Type: compare operator, Line: 149, Column: 10}
             children: [
-                Node: { Token: {Value: maria, Type: identifier, Line: 148, Column: 4}, Type: MariaDB },
-                Node: { Token: {Value: pgsql, Type: identifier, Line: 148, Column: 13}, Type: PostgreSQL }
+                Node: { Token: {Value: maria, Type: identifier, Line: 149, Column: 4}, Type: MariaDB },
+                Node: { Token: {Value: pgsql, Type: identifier, Line: 149, Column: 13}, Type: PostgreSQL }
             ] },
             Node: { Label: "call"
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: pgsql, Type: identifier, Line: 149, Column: 4} },
-                    Node: { Token: {Value: disconnect, Type: identifier, Line: 149, Column: 10} }
-                ] }
-            ] },
-            Node: { Label: "call"
-            children: [
-                Node: { Label: "dot"
-                children: [
-                    Node: { Label: "dot"
-                    children: [
-                        Node: { Token: {Value: pgsql, Type: identifier, Line: 150, Column: 4} },
-                        Node: { Token: {Value: Server, Type: identifier, Line: 150, Column: 10} }
-                    ] },
-                    Node: { Token: {Value: connect, Type: identifier, Line: 150, Column: 17} }
+                    Node: { Token: {Value: pgsql, Type: identifier, Line: 150, Column: 4} },
+                    Node: { Token: {Value: disconnect, Type: identifier, Line: 150, Column: 10} }
                 ] }
             ] },
             Node: { Label: "call"
@@ -1560,61 +1557,73 @@ children: [
                     Node: { Label: "dot"
                     children: [
                         Node: { Token: {Value: pgsql, Type: identifier, Line: 151, Column: 4} },
-                        Node: { Token: {Value: DB, Type: identifier, Line: 151, Column: 10} }
+                        Node: { Token: {Value: Server, Type: identifier, Line: 151, Column: 10} }
                     ] },
-                    Node: { Token: {Value: getTLSVersion, Type: identifier, Line: 151, Column: 13} }
-                ] }
-            ] },
-            Node: { Label: "Variable"
-            children: [
-                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 152, Column: 4} },
-                Node: { Token: {Value: pt, Type: identifier, Line: 152, Column: 18} },
-                Node: { Label: "struct_literal", Type: PrivateTester
-                children: [
-                    Node: { Token: {Value: PrivateTester, Type: identifier, Line: 152, Column: 23} }
+                    Node: { Token: {Value: connect, Type: identifier, Line: 151, Column: 17} }
                 ] }
             ] },
             Node: { Label: "call"
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: pt, Type: identifier, Line: 153, Column: 4} },
-                    Node: { Token: {Value: test, Type: identifier, Line: 153, Column: 7} }
+                    Node: { Label: "dot"
+                    children: [
+                        Node: { Token: {Value: pgsql, Type: identifier, Line: 152, Column: 4} },
+                        Node: { Token: {Value: DB, Type: identifier, Line: 152, Column: 10} }
+                    ] },
+                    Node: { Token: {Value: getTLSVersion, Type: identifier, Line: 152, Column: 13} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 153, Column: 4} },
+                Node: { Token: {Value: pt, Type: identifier, Line: 153, Column: 18} },
+                Node: { Label: "struct_literal", Type: PrivateTester
+                children: [
+                    Node: { Token: {Value: PrivateTester, Type: identifier, Line: 153, Column: 23} }
+                ] }
+            ] },
+            Node: { Label: "call"
+            children: [
+                Node: { Label: "dot"
+                children: [
+                    Node: { Token: {Value: pt, Type: identifier, Line: 154, Column: 4} },
+                    Node: { Token: {Value: test, Type: identifier, Line: 154, Column: 7} }
                 ] }
             ] },
             Node: { Label: "dot"
             children: [
-                Node: { Token: {Value: pt, Type: identifier, Line: 154, Column: 4} },
-                Node: { Token: {Value: y, Type: identifier, Line: 154, Column: 7} }
+                Node: { Token: {Value: pt, Type: identifier, Line: 155, Column: 4} },
+                Node: { Token: {Value: y, Type: identifier, Line: 155, Column: 7} }
             ] },
             Node: { Label: "call"
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: maria, Type: identifier, Line: 155, Column: 4} },
-                    Node: { Token: {Value: getVersion, Type: identifier, Line: 155, Column: 10} }
-                ] }
-            ] },
-            Node: { Label: "Variable"
-            children: [
-                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 156, Column: 4} },
-                Node: { Token: {Value: pt2, Type: identifier, Line: 156, Column: 18} },
-                Node: { Label: "typecast"
-                children: [
-                    Node: { Token: {Value: maria, Type: identifier, Line: 156, Column: 24}, Type: MariaDB },
-                    Node: { Token: {Value: PrivateTester, Type: identifier, Line: 156, Column: 33} }
+                    Node: { Token: {Value: maria, Type: identifier, Line: 156, Column: 4} },
+                    Node: { Token: {Value: getVersion, Type: identifier, Line: 156, Column: 10} }
                 ] }
             ] },
             Node: { Label: "Variable"
             children: [
                 Node: { Token: {Value: PrivateTester, Type: identifier, Line: 157, Column: 4} },
-                Node: { Token: {Value: mariaPT, Type: identifier, Line: 157, Column: 18} },
-                Node: { Token: {Value: maria, Type: identifier, Line: 157, Column: 28}, Type: MariaDB }
+                Node: { Token: {Value: pt2, Type: identifier, Line: 157, Column: 18} },
+                Node: { Label: "typecast"
+                children: [
+                    Node: { Token: {Value: maria, Type: identifier, Line: 157, Column: 24}, Type: MariaDB },
+                    Node: { Token: {Value: PrivateTester, Type: identifier, Line: 157, Column: 33} }
+                ] }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 158, Column: 4} },
+                Node: { Token: {Value: mariaPT, Type: identifier, Line: 158, Column: 18} },
+                Node: { Token: {Value: maria, Type: identifier, Line: 158, Column: 28}, Type: MariaDB }
             ] },
             Node: { Label: "control-flow"
             children: [
-                Node: { Token: {Value: return, Type: flow keyword, Line: 158, Column: 4} },
-                Node: { Token: {Value: 0, Type: int literal, Line: 158, Column: 11}, Type: int }
+                Node: { Token: {Value: return, Type: flow keyword, Line: 159, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 159, Column: 11}, Type: int }
             ] }
         ] }
     ] }
@@ -1793,17 +1802,19 @@ Compiler messages:
     "NameError: Could not find property madeup in type Container at line: 144, column: 17",
     "TypeError: Cannot access property not of type None at line: 144, column: 24",
     "TypeError: Cannot access property there of type None at line: 144, column: 28",
-    "NameError: Struct StructLiteral not defined at line: 146, column: 5",
-    "TypeError: Invalid comparison between MariaDB and PostgreSQL at line: 149, column: 11",
-    "NameError: Could not find function disconnect in scope at line: 150, column: 11",
-    "NameError: Could not find property Server in type PostgreSQL at line: 151, column: 11",
-    "NameError: Could not find type None at line: 151, column: 18",
-    "NameError: Could not find function getTLSVersion in scope at line: 152, column: 14",
-    "AccessError: Cannot access private function 'test' from outside struct definition at line: 154, column: 7",
-    "AccessError: Cannot access private property from outside struct definition at line: 155, column: 8",
-    "CallError: Function without body cannot be called at line: 156, column: 10",
-    "CastError: Cannot typecast MariaDB to PrivateTester. To support typecasting add a cast block with a function returning the target type at line: 157, column: 34",
-    "TypeError: Cannot assign type MariaDB to variable type PrivateTester at line: 158, column: 29"
+    "AccessError: Cannot change value of immutable property or variable at line: 145, column: 5",
+    "AccessError: Cannot assign value to string length at line: 146, column: 5",
+    "NameError: Struct StructLiteral not defined at line: 147, column: 5",
+    "TypeError: Invalid comparison between MariaDB and PostgreSQL at line: 150, column: 11",
+    "NameError: Could not find function disconnect in scope at line: 151, column: 11",
+    "NameError: Could not find property Server in type PostgreSQL at line: 152, column: 11",
+    "NameError: Could not find type None at line: 152, column: 18",
+    "NameError: Could not find function getTLSVersion in scope at line: 153, column: 14",
+    "AccessError: Cannot access private function 'test' from outside struct definition at line: 155, column: 7",
+    "AccessError: Cannot access private property from outside struct definition at line: 156, column: 8",
+    "CallError: Function without body cannot be called at line: 157, column: 10",
+    "CastError: Cannot typecast MariaDB to PrivateTester. To support typecasting add a cast block with a function returning the target type at line: 158, column: 34",
+    "TypeError: Cannot assign type MariaDB to variable type PrivateTester at line: 159, column: 29"
 ]
 
 ---
