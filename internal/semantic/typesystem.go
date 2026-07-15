@@ -75,7 +75,6 @@ func evalStructLiteral(ast *parser.AST) datatypes.DataType {
 
 func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataType, bool) {
 	hasError := false
-	hasErr := false
 	var nodeType datatypes.DataType = datatypes.None
 	if ast.IsLiteral() {
 		nodeType = evalLiteral(ast, expectedType)
@@ -88,54 +87,35 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 			hasError = true
 		}
 	} else if ast.Label == "Unary" {
-		nodeType, hasErr = evalUnary(&ast.Children[0], &ast.Children[1], expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalUnary(&ast.Children[0], &ast.Children[1], expectedType)
 	} else if ast.Label == "typecast" {
-		nodeType, hasErr = evalTypecast(&ast.Children[0], &ast.Children[1], expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalTypecast(&ast.Children[0], &ast.Children[1], expectedType)
 	} else if ast.Label == "index" {
-		nodeType, hasErr = evalIndex(&ast.Children[0], &ast.Children[1], expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalIndex(&ast.Children[0], &ast.Children[1], expectedType)
 	} else if ast.Label == "slice" {
-		nodeType, hasErr = evalSlice(ast, expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalSlice(ast, expectedType)
 	} else if ast.Label == "ARR-END" {
-		nodeType, hasErr = evalArrayEnd(&ast.Children[0], expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalArrayEnd(&ast.Children[0], expectedType)
 	} else if ast.Label == "range" {
-		nodeType, hasErr = evalRange(ast, expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalRange(ast, expectedType)
 	} else if ast.Label == "call" {
-		hasErr := false
-		nodeType, hasErr = handleFunctionCall(ast.Children)
-		hasError = hasError || hasErr
+		nodeType, hasError = handleFunctionCall(ast.Children)
 	} else if ast.Token.Kind == lexer.OPERATOR_ADD {
-		nodeType, hasErr = evalAdd(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalAdd(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
 	} else if ast.Token.Kind == lexer.OPERATOR_MULT {
-		nodeType, hasErr = evalMult(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalMult(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
 	} else if ast.Token.Kind == lexer.OPERATOR_BS || ast.Token.Kind == lexer.OPERATOR_BW {
-		nodeType, hasErr = evalBitOperation(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalBitOperation(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
 	} else if ast.Token.Kind == lexer.OPERATOR_COMPARE {
-		nodeType, hasErr = evalCompare(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalCompare(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
 	} else if ast.Token.Value == "&&" || ast.Token.Value == "||" {
-		nodeType, hasErr = evalLogicalOperation(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalLogicalOperation(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
 	} else if ast.Token.Value == "**" {
-		nodeType, hasErr = evalExponent(&ast.Children[0], &ast.Children[1], expectedType)
-		hasError = hasError || hasErr
+		nodeType, hasError = evalExponent(&ast.Children[0], &ast.Children[1], expectedType)
 	} else if ast.Label == "dot" {
-		hasErr := false
-		nodeType, hasErr = handleDot(ast.Children[0], ast.Children[1], false)
-		if hasErr {
-			hasError = hasErr
-		}
+		nodeType, hasError = handleDot(ast.Children[0], ast.Children[1], false)
 	}
 	if !hasError {
-		// BUG: Type not being set for root node
 		ast.Type = nodeType
 	}
 	return nodeType, hasError
