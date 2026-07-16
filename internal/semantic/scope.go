@@ -246,3 +246,18 @@ func ImplementsInterface(possibleIntf, type_ datatypes.DataType) bool {
 	}
 	return false
 }
+
+func FindAncestorScopeById(id string) *Scope {
+	if id == globalScope.id {
+		return globalScope
+	}
+	if id == currentScope.id {
+		return currentScope
+	}
+	for scope := currentScope; scope.id != rootScope.id; scope = scope.parent {
+		if id == scope.id {
+			return scope
+		}
+	}
+	return nil
+}

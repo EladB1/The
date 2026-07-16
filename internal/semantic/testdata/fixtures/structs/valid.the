@@ -88,8 +88,14 @@ int x = 0;
 fn getX() {}
 
 struct TestName {
-    int x;
-    fn getX() {}
+    mut int x;
+    fn getX() -> bool {
+        global.x;
+        global.getX();
+        this.x = global.x - 1;
+        println(x);
+        return false;
+    }
 }
 
 fn main() -> int {

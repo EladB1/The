@@ -381,7 +381,9 @@ struct Account {
 
 A `struct` can also have functions embedded within its definition. Struct functions can be in the same `private` blocks as properties or be explicitly marked with `private`. All struct properties are in scope and can be referenced with their names or the developer can explicitly use `this.propertyName`.
 
-> **NOTE**: `this` is a reserved variable in every struct so it cannot be used as a variable/function/property name
+If a struct has a property or method with the same name as something global declared, the default behavior is to check the struct's inner scope first so `property` and `method()` (also `this.property` and `this.method()`) would only come from within the struct. To be able to call the global versions, you can use `global.propety` and `global.method()`
+
+> **NOTE**: `this` and `global` are reserved variables in every struct so it cannot be used as a variable/function/property name
 
 ```
     struct File {

@@ -131,6 +131,19 @@ struct PrivateTester {
     }
 }
 
+mut int x = 0;
+fn getX() {}
+
+struct TestName {
+    int x;
+    fn getX() {
+        global.xyz;
+        global.getXY();
+        x = global.x;
+        this.x -= global.x;
+    }
+}
+
 fn main() -> int {
     App app = App{};
     app.connect();
@@ -155,6 +168,7 @@ fn main() -> int {
     pt.test();
     pt.y;
     maria.getVersion();
+    maria.this.y;
     PrivateTester pt2 = maria as PrivateTester;
     PrivateTester mariaPT = maria;
     return 0;

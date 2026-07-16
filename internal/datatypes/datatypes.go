@@ -10,6 +10,7 @@ type DataType interface {
 	String() string
 	IsPrimitive() bool
 	IsScopeRef() bool
+	IsRef() bool
 	GetScopes() []string
 	GetSizeInBytes() int
 }
@@ -18,6 +19,9 @@ type PrimitiveType string
 type DynamicType string
 type ScopeRef struct {
 	Scopes []string
+}
+type Ref struct {
+	Scope string
 }
 
 const (
@@ -30,7 +34,6 @@ const (
 	Bool   PrimitiveType = "bool"
 	Char   PrimitiveType = "char"
 	String PrimitiveType = "String"
-	Ref    PrimitiveType = "Ref"
 	None   PrimitiveType = "None"
 	Any    PrimitiveType = "any"
 )
@@ -44,6 +47,10 @@ func (type_ PrimitiveType) IsPrimitive() bool {
 }
 
 func (type_ PrimitiveType) IsScopeRef() bool {
+	return false
+}
+
+func (type_ PrimitiveType) IsRef() bool {
 	return false
 }
 
@@ -77,6 +84,10 @@ func (type_ DynamicType) IsScopeRef() bool {
 	return false
 }
 
+func (type_ DynamicType) IsRef() bool {
+	return false
+}
+
 func (type_ DynamicType) GetScopes() []string {
 	return nil
 }
@@ -97,11 +108,39 @@ func (type_ ScopeRef) IsScopeRef() bool {
 	return true
 }
 
+func (type_ ScopeRef) IsRef() bool {
+	return false
+}
+
 func (type_ ScopeRef) GetScopes() []string {
 	return type_.Scopes
 }
 
 func (type_ ScopeRef) GetSizeInBytes() int {
+	return 0
+}
+
+func (type_ Ref) String() string {
+	return fmt.Sprintf("Ref(%s)", type_.Scope)
+}
+
+func (type_ Ref) IsPrimitive() bool {
+	return false
+}
+
+func (type_ Ref) IsScopeRef() bool {
+	return false
+}
+
+func (type_ Ref) IsRef() bool {
+	return true
+}
+
+func (type_ Ref) GetScopes() []string {
+	return []string{type_.Scope}
+}
+
+func (type_ Ref) GetSizeInBytes() int {
 	return 0
 }
 

@@ -86,9 +86,17 @@ func collectTypeNames(ast parser.AST) {
 			childScope := globalScope.addChild(name, Struct)
 			childScope.variables["this"] = VariableSymbol{
 				name:        "this",
-				Type:        datatypes.Ref,
+				Type:        datatypes.Ref{Scope: childScope.id},
 				isPrivate:   true,
-				isMutable:   false,
+				isMutable:   true,
+				Initialized: true,
+				Def:         nil,
+			}
+			childScope.variables["global"] = VariableSymbol{
+				name:        "global",
+				Type:        datatypes.Ref{Scope: globalScope.id},
+				isPrivate:   true,
+				isMutable:   true,
 				Initialized: true,
 				Def:         nil,
 			}

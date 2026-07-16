@@ -541,6 +541,7 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 	scope := currentScope
 	var name lexer.Token
 	if details[0].Label == "dot" {
+		name = details[0].Children[1].Token
 		lhs, hasErr := handleDot(details[0].Children[0], details[0].Children[1], true, false, false)
 		if hasErr {
 			hasError = hasErr
@@ -562,15 +563,16 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 					hasError = true
 				}
 				scope = nb.innerScope
-				name = details[0].Children[1].Token
 			}
+		} else if lhs.IsRef() {
+			scope = FindAncestorScopeById(lhs.GetScopes()[0])
 		} else {
 			symbol := globalScope.lookupType(lhs.String())
 			if symbol == nil {
 				messages.Complain(diagnostic.NameError, details[0].Children[1].Location, "Could not find type %s", lhs)
 				return datatypes.None, true
 			}
-			name = details[0].Children[1].Token
+
 			scope = symbol.getInnerScope()
 			if symbol.getSymbolType() == "struct" {
 				if conflicts := symbol.getConflicts(name.Value); len(conflicts) > 1 {
@@ -644,7 +646,7 @@ func handleDot(left parser.AST, right parser.AST, isFnCall bool, isAssignment bo
 			hasError = true
 		}
 		return datatypes.Int32, hasError
-	} else if isFnCall && lhs.IsScopeRef() {
+	} else if isFnCall && (lhs.IsScopeRef() || lhs.IsRef()) {
 		return lhs, hasError
 	} else if !lhs.IsPrimitive() {
 		variable := currentScope.lookupVariable(left.Token.Value)
@@ -652,6 +654,20 @@ func handleDot(left parser.AST, right parser.AST, isFnCall bool, isAssignment bo
 			if isAssignment && !variable.isMutable {
 				messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable property or variable")
 				hasError = true
+			}
+		}
+		if lhs.IsRef() {
+			scope := FindAncestorScopeById(lhs.GetScopes()[0])
+			if prop := scope.lookupVariable(rname); prop != nil {
+				if isAssignment && !prop.isMutable && !hasError {
+					messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", prop.name)
+					hasError = true
+				} else {
+					return prop.Type, hasError
+				}
+			} else {
+				messages.Complain(diagnostic.NameError, right.Location, "Could not find variable %s", rname)
+				return datatypes.None, hasError
 			}
 		}
 		symbol := globalScope.lookupType(lhs.String())
