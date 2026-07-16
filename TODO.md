@@ -144,15 +144,20 @@ Imports/Exports
 The ability to share code between multiple files. Thinking of something like this:
 
 ```
-    importUrl("https://website.com/packageA") alias A;
-    importRelative("helpers/packageB") alias B;
-    importAbsolute("/usr/shared/utils/packageC") alias C;
+    import something, otherthing from package;
+    import thirdthing from "../data/types.the";
+    import otherpackage;
 
-    C.useConstants(A.constant, B.constant);
-
-    export struct MyStruct {};
-
-    export fn MyFunc() {};
+    export int constant = 1001 + something;
+    export fn func() {}
+    export interface Template {}
+    export struct Structure {}
+    export {
+        String key = "" + otherpackage.exportedValue;
+        fn otherFunc() {}
+        interface OtherInterface {}
+        struct OtherStruct {}
+    }
 ```
 
 Package/Dependency Management
