@@ -84,6 +84,14 @@ struct Outer {
     mut Inner inner;
 }
 
+int x = 0;
+fn getX() {}
+
+struct TestName {
+    int x;
+    fn getX() {}
+}
+
 fn main() -> int {
     Person p1 = Person {
         first: "name",
