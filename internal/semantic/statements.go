@@ -92,7 +92,7 @@ func analyzeAssignment(stmt *parser.AST) (datatypes.DataType, bool) {
 	var lhs datatypes.DataType
 	var lHasErr bool
 	if left.Label == "dot" {
-		lhs, lHasErr = handleDot(left.Children[0], left.Children[1], false, true)
+		lhs, lHasErr = handleDot(left.Children[0], left.Children[1], false, true, false)
 		if lHasErr {
 			return datatypes.None, true
 		}
@@ -541,7 +541,7 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 	scope := currentScope
 	var name lexer.Token
 	if details[0].Label == "dot" {
-		lhs, hasErr := handleDot(details[0].Children[0], details[0].Children[1], true, false)
+		lhs, hasErr := handleDot(details[0].Children[0], details[0].Children[1], true, false, false)
 		if hasErr {
 			hasError = hasErr
 		}
@@ -626,20 +626,16 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 	return datatypes.None, hasError
 }
 
-func handleDot(left parser.AST, right parser.AST, isFnCall bool, isAssignment bool) (datatypes.DataType, bool) {
-	hasError := true
-	hasErr := false
+func handleDot(left parser.AST, right parser.AST, isFnCall bool, isAssignment bool, recursed bool) (datatypes.DataType, bool) {
+	hasError := false
 	var lhs datatypes.DataType = datatypes.None
-	if left.Token.Value != "dot" {
-		lhs, hasErr = evalType(&left, datatypes.None)
-		if hasErr {
-			hasError = hasErr
+	if left.Label != "dot" {
+		lhs, hasError = evalType(&left, datatypes.None)
+		if isFnCall && !recursed {
+			return lhs, hasError
 		}
 	} else {
-		lhs, hasErr = handleDot(left.Children[0], left.Children[1], isFnCall, isAssignment)
-	}
-	if isFnCall {
-		return lhs, hasError
+		lhs, hasError = handleDot(left.Children[0], left.Children[1], isFnCall, isAssignment, true)
 	}
 	rname := right.Token.Value
 	if lhs == datatypes.String && rname == "length" {
@@ -648,7 +644,16 @@ func handleDot(left parser.AST, right parser.AST, isFnCall bool, isAssignment bo
 			hasError = true
 		}
 		return datatypes.Int32, hasError
+	} else if isFnCall && lhs.IsScopeRef() {
+		return lhs, hasError
 	} else if !lhs.IsPrimitive() {
+		variable := currentScope.lookupVariable(left.Token.Value)
+		if variable != nil {
+			if isAssignment && !variable.isMutable {
+				messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable property or variable")
+				hasError = true
+			}
+		}
 		symbol := globalScope.lookupType(lhs.String())
 		if symbol == nil {
 			messages.Complain(diagnostic.NameError, left.Location, "Could not find type %s", lhs)
@@ -659,20 +664,20 @@ func handleDot(left parser.AST, right parser.AST, isFnCall bool, isAssignment bo
 				if prop.isPrivate && !currentScope.HasParentScope(symbol.getInnerScope()) {
 					messages.Complain(diagnostic.AccessError, right.Location, "Cannot access private property from outside struct definition")
 					hasError = true
-				} else if isAssignment && !prop.isMutable {
+				} else if isAssignment && !prop.isMutable && !hasError {
 					messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable property or variable")
 					hasError = true
 				} else {
 					return prop.Type, hasError
 				}
-			} else {
+			} else if !hasError {
 				messages.Complain(diagnostic.NameError, right.Location, "Could not find property %s in type %s", rname, lhs)
 				hasError = true
 			}
 		}
-	} else {
+	} else if !hasError {
 		messages.Complain(diagnostic.TypeError, right.Location, "Cannot access property %s of type %s", rname, lhs)
 		hasError = true
 	}
-	return datatypes.None, hasError
+	return lhs, hasError
 }

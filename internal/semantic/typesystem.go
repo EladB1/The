@@ -113,7 +113,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 	} else if ast.Token.Value == "**" {
 		nodeType, hasError = evalExponent(&ast.Children[0], &ast.Children[1], expectedType)
 	} else if ast.Label == "dot" {
-		nodeType, hasError = handleDot(ast.Children[0], ast.Children[1], false, false)
+		nodeType, hasError = handleDot(ast.Children[0], ast.Children[1], false, false, false)
 	}
 	if !hasError {
 		ast.Type = nodeType

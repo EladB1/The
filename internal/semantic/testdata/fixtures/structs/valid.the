@@ -45,6 +45,9 @@ interface Compiler {
 }
 
 struct CompilerApp impl App, Compiler {
+    fn do() -> String {
+        return "";
+    }
     // implementation conflict: both have `help` function
     Compiler {}
     App {
@@ -56,6 +59,7 @@ struct CompilerApp impl App, Compiler {
 
 fn resolveImplementationConflict() { // Disambiguation
     CompilerApp ca = CompilerApp{};
+    println(ca.do());
     println(ca.Compiler.help());
     println(ca.App.help());
 }
@@ -69,7 +73,15 @@ struct Person {
     String last;
     uint32 age;
     private String ssn;
-    EmploymentStatus status;
+    mut EmploymentStatus status;
+}
+
+struct Inner {
+    mut String value;
+}
+
+struct Outer {
+    mut Inner inner;
 }
 
 fn main() -> int {
@@ -80,7 +92,7 @@ fn main() -> int {
         ssn: "000000000",
         status: EmploymentStatus {employed: true},
     };
-    Person p2 = Person {
+    mut Person p2 = Person {
         first: "name",
         last: "othername",
         age: 12,
@@ -92,5 +104,13 @@ fn main() -> int {
     p1.first == p2.first;
     if (p1.status.employed && p2.status.employed)
         println("woot");
+    mut EmploymentStatus status;
+    p2.status.employed = true;
+    mut Outer outer = Outer{
+        inner: Inner {
+            value: "asdf"
+        }
+    };
+    outer.inner.value = "wasd";
     return 0;
 }

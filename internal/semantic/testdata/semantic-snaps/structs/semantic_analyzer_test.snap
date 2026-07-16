@@ -208,26 +208,39 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: do, Type: identifier, Line: 47, Column: 7} },
+                Node: { Token: {Value: String, Type: type keyword, Line: 47, Column: 15} },
+                Node: { Label: "fn-body"
+                children: [
+                    Node: { Label: "control-flow"
+                    children: [
+                        Node: { Token: {Value: return, Type: flow keyword, Line: 48, Column: 8} },
+                        Node: { Token: {Value: "", Type: string literal, Line: 48, Column: 15}, Type: String }
+                    ] }
+                ] }
+            ] },
             Node: { Label: "named-block"
             children: [
-                Node: { Token: {Value: Compiler, Type: identifier, Line: 48, Column: 4} },
+                Node: { Token: {Value: Compiler, Type: identifier, Line: 51, Column: 4} },
                 Node: { Label: "named-block-body" }
             ] },
             Node: { Label: "named-block"
             children: [
-                Node: { Token: {Value: App, Type: identifier, Line: 49, Column: 4} },
+                Node: { Token: {Value: App, Type: identifier, Line: 52, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
                     Node: { Label: "fn"
                     children: [
-                        Node: { Token: {Value: help, Type: identifier, Line: 50, Column: 11} },
-                        Node: { Token: {Value: String, Type: type keyword, Line: 50, Column: 21} },
+                        Node: { Token: {Value: help, Type: identifier, Line: 53, Column: 11} },
+                        Node: { Token: {Value: String, Type: type keyword, Line: 53, Column: 21} },
                         Node: { Label: "fn-body"
                         children: [
                             Node: { Label: "control-flow"
                             children: [
-                                Node: { Token: {Value: return, Type: flow keyword, Line: 51, Column: 12} },
-                                Node: { Token: {Value: "./compiler-app [source_file] [OPTIONS]", Type: string literal, Line: 51, Column: 19}, Type: String }
+                                Node: { Token: {Value: return, Type: flow keyword, Line: 54, Column: 12} },
+                                Node: { Token: {Value: "./compiler-app [source_file] [OPTIONS]", Type: string literal, Line: 54, Column: 19}, Type: String }
                             ] }
                         ] }
                     ] }
@@ -237,21 +250,36 @@ children: [
     ] },
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: resolveImplementationConflict, Type: identifier, Line: 56, Column: 3} },
+        Node: { Token: {Value: resolveImplementationConflict, Type: identifier, Line: 59, Column: 3} },
         Node: { Label: "fn-body"
         children: [
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: CompilerApp, Type: identifier, Line: 57, Column: 4} },
-                Node: { Token: {Value: ca, Type: identifier, Line: 57, Column: 16} },
+                Node: { Token: {Value: CompilerApp, Type: identifier, Line: 60, Column: 4} },
+                Node: { Token: {Value: ca, Type: identifier, Line: 60, Column: 16} },
                 Node: { Label: "struct_literal", Type: CompilerApp
                 children: [
-                    Node: { Token: {Value: CompilerApp, Type: identifier, Line: 57, Column: 21} }
+                    Node: { Token: {Value: CompilerApp, Type: identifier, Line: 60, Column: 21} }
                 ] }
             ] },
             Node: { Label: "call"
             children: [
-                Node: { Token: {Value: println, Type: identifier, Line: 58, Column: 4} },
+                Node: { Token: {Value: println, Type: identifier, Line: 61, Column: 4} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Label: "call"
+                    children: [
+                        Node: { Label: "dot"
+                        children: [
+                            Node: { Token: {Value: ca, Type: identifier, Line: 61, Column: 12} },
+                            Node: { Token: {Value: do, Type: identifier, Line: 61, Column: 15} }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "call"
+            children: [
+                Node: { Token: {Value: println, Type: identifier, Line: 62, Column: 4} },
                 Node: { Label: "params"
                 children: [
                     Node: { Label: "call"
@@ -260,17 +288,17 @@ children: [
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: ca, Type: identifier, Line: 58, Column: 12} },
-                                Node: { Token: {Value: Compiler, Type: identifier, Line: 58, Column: 15} }
+                                Node: { Token: {Value: ca, Type: identifier, Line: 62, Column: 12} },
+                                Node: { Token: {Value: Compiler, Type: identifier, Line: 62, Column: 15} }
                             ] },
-                            Node: { Token: {Value: help, Type: identifier, Line: 58, Column: 24} }
+                            Node: { Token: {Value: help, Type: identifier, Line: 62, Column: 24} }
                         ] }
                     ] }
                 ] }
             ] },
             Node: { Label: "call"
             children: [
-                Node: { Token: {Value: println, Type: identifier, Line: 59, Column: 4} },
+                Node: { Token: {Value: println, Type: identifier, Line: 63, Column: 4} },
                 Node: { Label: "params"
                 children: [
                     Node: { Label: "call"
@@ -279,115 +307,151 @@ children: [
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: ca, Type: identifier, Line: 59, Column: 12} },
-                                Node: { Token: {Value: App, Type: identifier, Line: 59, Column: 15} }
+                                Node: { Token: {Value: ca, Type: identifier, Line: 63, Column: 12} },
+                                Node: { Token: {Value: App, Type: identifier, Line: 63, Column: 15} }
                             ] },
-                            Node: { Token: {Value: help, Type: identifier, Line: 59, Column: 19} }
+                            Node: { Token: {Value: help, Type: identifier, Line: 63, Column: 19} }
                         ] }
                     ] }
                 ] }
-            ] }
-        ] }
-    ] },
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 62, Column: 0}
-    children: [
-        Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 62, Column: 7} },
-        Node: { Label: "struct-body"
-        children: [
-            Node: { Label: "Variable"
-            children: [
-                Node: { Label: "modifiers"
-                children: [
-                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 63, Column: 4} }
-                ] },
-                Node: { Token: {Value: bool, Type: type keyword, Line: 63, Column: 8} },
-                Node: { Token: {Value: employed, Type: identifier, Line: 63, Column: 13} }
             ] }
         ] }
     ] },
     Node: { Token: {Value: struct, Type: structure keyword, Line: 66, Column: 0}
     children: [
-        Node: { Token: {Value: Person, Type: identifier, Line: 66, Column: 7} },
+        Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 66, Column: 7} },
         Node: { Label: "struct-body"
         children: [
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: String, Type: type keyword, Line: 67, Column: 4} },
-                Node: { Token: {Value: first, Type: identifier, Line: 67, Column: 11} }
+                Node: { Label: "modifiers"
+                children: [
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 67, Column: 4} }
+                ] },
+                Node: { Token: {Value: bool, Type: type keyword, Line: 67, Column: 8} },
+                Node: { Token: {Value: employed, Type: identifier, Line: 67, Column: 13} }
+            ] }
+        ] }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 70, Column: 0}
+    children: [
+        Node: { Token: {Value: Person, Type: identifier, Line: 70, Column: 7} },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Token: {Value: String, Type: type keyword, Line: 71, Column: 4} },
+                Node: { Token: {Value: first, Type: identifier, Line: 71, Column: 11} }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: String, Type: type keyword, Line: 68, Column: 4} },
-                Node: { Token: {Value: last, Type: identifier, Line: 68, Column: 11} }
+                Node: { Token: {Value: String, Type: type keyword, Line: 72, Column: 4} },
+                Node: { Token: {Value: last, Type: identifier, Line: 72, Column: 11} }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: uint32, Type: type keyword, Line: 69, Column: 4} },
-                Node: { Token: {Value: age, Type: identifier, Line: 69, Column: 11} }
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 73, Column: 4} },
+                Node: { Token: {Value: age, Type: identifier, Line: 73, Column: 11} }
             ] },
             Node: { Label: "Variable"
             children: [
                 Node: { Label: "modifiers"
                 children: [
-                    Node: { Token: {Value: private, Type: modifier keyword, Line: 70, Column: 4} }
+                    Node: { Token: {Value: private, Type: modifier keyword, Line: 74, Column: 4} }
                 ] },
-                Node: { Token: {Value: String, Type: type keyword, Line: 70, Column: 12} },
-                Node: { Token: {Value: ssn, Type: identifier, Line: 70, Column: 19} }
+                Node: { Token: {Value: String, Type: type keyword, Line: 74, Column: 12} },
+                Node: { Token: {Value: ssn, Type: identifier, Line: 74, Column: 19} }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 71, Column: 4} },
-                Node: { Token: {Value: status, Type: identifier, Line: 71, Column: 21} }
+                Node: { Label: "modifiers"
+                children: [
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 75, Column: 4} }
+                ] },
+                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 75, Column: 8} },
+                Node: { Token: {Value: status, Type: identifier, Line: 75, Column: 25} }
+            ] }
+        ] }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 78, Column: 0}
+    children: [
+        Node: { Token: {Value: Inner, Type: identifier, Line: 78, Column: 7} },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Label: "modifiers"
+                children: [
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 79, Column: 4} }
+                ] },
+                Node: { Token: {Value: String, Type: type keyword, Line: 79, Column: 8} },
+                Node: { Token: {Value: value, Type: identifier, Line: 79, Column: 15} }
+            ] }
+        ] }
+    ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 82, Column: 0}
+    children: [
+        Node: { Token: {Value: Outer, Type: identifier, Line: 82, Column: 7} },
+        Node: { Label: "struct-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Label: "modifiers"
+                children: [
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 83, Column: 4} }
+                ] },
+                Node: { Token: {Value: Inner, Type: identifier, Line: 83, Column: 8} },
+                Node: { Token: {Value: inner, Type: identifier, Line: 83, Column: 14} }
             ] }
         ] }
     ] },
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: main, Type: identifier, Line: 74, Column: 3} },
-        Node: { Token: {Value: int, Type: type keyword, Line: 74, Column: 13} },
+        Node: { Token: {Value: main, Type: identifier, Line: 86, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 86, Column: 13} },
         Node: { Label: "fn-body"
         children: [
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: Person, Type: identifier, Line: 75, Column: 4} },
-                Node: { Token: {Value: p1, Type: identifier, Line: 75, Column: 11} },
+                Node: { Token: {Value: Person, Type: identifier, Line: 87, Column: 4} },
+                Node: { Token: {Value: p1, Type: identifier, Line: 87, Column: 11} },
                 Node: { Label: "struct_literal", Type: Person
                 children: [
-                    Node: { Token: {Value: Person, Type: identifier, Line: 75, Column: 16} },
+                    Node: { Token: {Value: Person, Type: identifier, Line: 87, Column: 16} },
                     Node: { Label: "properties"
                     children: [
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: first, Type: identifier, Line: 76, Column: 8} },
-                            Node: { Token: {Value: "name", Type: string literal, Line: 76, Column: 15} }
+                            Node: { Token: {Value: first, Type: identifier, Line: 88, Column: 8} },
+                            Node: { Token: {Value: "name", Type: string literal, Line: 88, Column: 15} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: last, Type: identifier, Line: 77, Column: 8} },
-                            Node: { Token: {Value: "othername", Type: string literal, Line: 77, Column: 14} }
+                            Node: { Token: {Value: last, Type: identifier, Line: 89, Column: 8} },
+                            Node: { Token: {Value: "othername", Type: string literal, Line: 89, Column: 14} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: age, Type: identifier, Line: 78, Column: 8} },
-                            Node: { Token: {Value: 25, Type: int literal, Line: 78, Column: 13} }
+                            Node: { Token: {Value: age, Type: identifier, Line: 90, Column: 8} },
+                            Node: { Token: {Value: 25, Type: int literal, Line: 90, Column: 13} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: ssn, Type: identifier, Line: 79, Column: 8} },
-                            Node: { Token: {Value: "000000000", Type: string literal, Line: 79, Column: 13} }
+                            Node: { Token: {Value: ssn, Type: identifier, Line: 91, Column: 8} },
+                            Node: { Token: {Value: "000000000", Type: string literal, Line: 91, Column: 13} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: status, Type: identifier, Line: 80, Column: 8} },
+                            Node: { Token: {Value: status, Type: identifier, Line: 92, Column: 8} },
                             Node: { Label: "struct_literal"
                             children: [
-                                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 80, Column: 16} },
+                                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 92, Column: 16} },
                                 Node: { Label: "properties"
                                 children: [
                                     Node: { Label: "property"
                                     children: [
-                                        Node: { Token: {Value: employed, Type: identifier, Line: 80, Column: 34} },
-                                        Node: { Token: {Value: true, Type: boolean value keyword, Line: 80, Column: 44} }
+                                        Node: { Token: {Value: employed, Type: identifier, Line: 92, Column: 34} },
+                                        Node: { Token: {Value: true, Type: boolean value keyword, Line: 92, Column: 44} }
                                     ] }
                                 ] }
                             ] }
@@ -397,122 +461,193 @@ children: [
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: Person, Type: identifier, Line: 82, Column: 4} },
-                Node: { Token: {Value: p2, Type: identifier, Line: 82, Column: 11} },
+                Node: { Label: "modifiers"
+                children: [
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 94, Column: 4} }
+                ] },
+                Node: { Token: {Value: Person, Type: identifier, Line: 94, Column: 8} },
+                Node: { Token: {Value: p2, Type: identifier, Line: 94, Column: 15} },
                 Node: { Label: "struct_literal", Type: Person
                 children: [
-                    Node: { Token: {Value: Person, Type: identifier, Line: 82, Column: 16} },
+                    Node: { Token: {Value: Person, Type: identifier, Line: 94, Column: 20} },
                     Node: { Label: "properties"
                     children: [
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: first, Type: identifier, Line: 83, Column: 8} },
-                            Node: { Token: {Value: "name", Type: string literal, Line: 83, Column: 15} }
+                            Node: { Token: {Value: first, Type: identifier, Line: 95, Column: 8} },
+                            Node: { Token: {Value: "name", Type: string literal, Line: 95, Column: 15} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: last, Type: identifier, Line: 84, Column: 8} },
-                            Node: { Token: {Value: "othername", Type: string literal, Line: 84, Column: 14} }
+                            Node: { Token: {Value: last, Type: identifier, Line: 96, Column: 8} },
+                            Node: { Token: {Value: "othername", Type: string literal, Line: 96, Column: 14} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: age, Type: identifier, Line: 85, Column: 8} },
-                            Node: { Token: {Value: 12, Type: int literal, Line: 85, Column: 13} }
+                            Node: { Token: {Value: age, Type: identifier, Line: 97, Column: 8} },
+                            Node: { Token: {Value: 12, Type: int literal, Line: 97, Column: 13} }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: status, Type: identifier, Line: 86, Column: 8} },
+                            Node: { Token: {Value: status, Type: identifier, Line: 98, Column: 8} },
                             Node: { Label: "struct_literal"
                             children: [
-                                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 86, Column: 16} },
+                                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 98, Column: 16} },
                                 Node: { Label: "properties"
                                 children: [
                                     Node: { Label: "property"
                                     children: [
-                                        Node: { Token: {Value: employed, Type: identifier, Line: 86, Column: 34} },
-                                        Node: { Token: {Value: false, Type: boolean value keyword, Line: 86, Column: 44} }
+                                        Node: { Token: {Value: employed, Type: identifier, Line: 98, Column: 34} },
+                                        Node: { Token: {Value: false, Type: boolean value keyword, Line: 98, Column: 44} }
                                     ] }
                                 ] }
                             ] }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: ssn, Type: identifier, Line: 87, Column: 8} },
-                            Node: { Token: {Value: "000000001", Type: string literal, Line: 87, Column: 13} }
+                            Node: { Token: {Value: ssn, Type: identifier, Line: 99, Column: 8} },
+                            Node: { Token: {Value: "000000001", Type: string literal, Line: 99, Column: 13} }
                         ] }
                     ] }
                 ] }
             ] },
             Node: { Label: "Variable"
             children: [
-                Node: { Token: {Value: String, Type: type keyword, Line: 89, Column: 4} },
-                Node: { Token: {Value: personString, Type: identifier, Line: 89, Column: 11} },
+                Node: { Token: {Value: String, Type: type keyword, Line: 101, Column: 4} },
+                Node: { Token: {Value: personString, Type: identifier, Line: 101, Column: 11} },
                 Node: { Label: "typecast", Type: String
                 children: [
-                    Node: { Token: {Value: p1, Type: identifier, Line: 89, Column: 26}, Type: Person },
-                    Node: { Token: {Value: String, Type: type keyword, Line: 89, Column: 32} }
+                    Node: { Token: {Value: p1, Type: identifier, Line: 101, Column: 26}, Type: Person },
+                    Node: { Token: {Value: String, Type: type keyword, Line: 101, Column: 32} }
                 ] }
             ] },
-            Node: { Token: {Value: ==, Type: compare operator, Line: 90, Column: 7}
+            Node: { Token: {Value: ==, Type: compare operator, Line: 102, Column: 7}
             children: [
-                Node: { Token: {Value: p1, Type: identifier, Line: 90, Column: 4}, Type: Person },
-                Node: { Token: {Value: p2, Type: identifier, Line: 90, Column: 10}, Type: Person }
+                Node: { Token: {Value: p1, Type: identifier, Line: 102, Column: 4}, Type: Person },
+                Node: { Token: {Value: p2, Type: identifier, Line: 102, Column: 10}, Type: Person }
             ] },
-            Node: { Token: {Value: ==, Type: compare operator, Line: 91, Column: 13}
+            Node: { Token: {Value: ==, Type: compare operator, Line: 103, Column: 13}
             children: [
-                Node: { Label: "dot"
+                Node: { Label: "dot", Type: String
                 children: [
-                    Node: { Token: {Value: p1, Type: identifier, Line: 91, Column: 4} },
-                    Node: { Token: {Value: first, Type: identifier, Line: 91, Column: 7} }
+                    Node: { Token: {Value: p1, Type: identifier, Line: 103, Column: 4} },
+                    Node: { Token: {Value: first, Type: identifier, Line: 103, Column: 7} }
                 ] },
-                Node: { Label: "dot"
+                Node: { Label: "dot", Type: String
                 children: [
-                    Node: { Token: {Value: p2, Type: identifier, Line: 91, Column: 16} },
-                    Node: { Token: {Value: first, Type: identifier, Line: 91, Column: 19} }
+                    Node: { Token: {Value: p2, Type: identifier, Line: 103, Column: 16} },
+                    Node: { Token: {Value: first, Type: identifier, Line: 103, Column: 19} }
                 ] }
             ] },
             Node: { Label: "if-block"
             children: [
                 Node: { Label: "if"
                 children: [
-                    Node: { Token: {Value: &&, Type: operator, Line: 92, Column: 27}
+                    Node: { Token: {Value: &&, Type: operator, Line: 104, Column: 27}, Type: bool
                     children: [
-                        Node: { Label: "dot"
+                        Node: { Label: "dot", Type: bool
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: p1, Type: identifier, Line: 92, Column: 8} },
-                                Node: { Token: {Value: status, Type: identifier, Line: 92, Column: 11} }
+                                Node: { Token: {Value: p1, Type: identifier, Line: 104, Column: 8} },
+                                Node: { Token: {Value: status, Type: identifier, Line: 104, Column: 11} }
                             ] },
-                            Node: { Token: {Value: employed, Type: identifier, Line: 92, Column: 18} }
+                            Node: { Token: {Value: employed, Type: identifier, Line: 104, Column: 18} }
                         ] },
-                        Node: { Label: "dot"
+                        Node: { Label: "dot", Type: bool
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: p2, Type: identifier, Line: 92, Column: 30} },
-                                Node: { Token: {Value: status, Type: identifier, Line: 92, Column: 33} }
+                                Node: { Token: {Value: p2, Type: identifier, Line: 104, Column: 30} },
+                                Node: { Token: {Value: status, Type: identifier, Line: 104, Column: 33} }
                             ] },
-                            Node: { Token: {Value: employed, Type: identifier, Line: 92, Column: 40} }
+                            Node: { Token: {Value: employed, Type: identifier, Line: 104, Column: 40} }
                         ] }
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
                         Node: { Label: "call"
                         children: [
-                            Node: { Token: {Value: println, Type: identifier, Line: 93, Column: 8} },
+                            Node: { Token: {Value: println, Type: identifier, Line: 105, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: "woot", Type: string literal, Line: 93, Column: 16} }
+                                Node: { Token: {Value: "woot", Type: string literal, Line: 105, Column: 16} }
                             ] }
                         ] }
                     ] }
                 ] }
             ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Label: "modifiers"
+                children: [
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 106, Column: 4} }
+                ] },
+                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 106, Column: 8} },
+                Node: { Token: {Value: status, Type: identifier, Line: 106, Column: 25} }
+            ] },
+            Node: { Token: {Value: =, Type: assign operator, Line: 107, Column: 23}
+            children: [
+                Node: { Label: "dot", Type: bool
+                children: [
+                    Node: { Label: "dot"
+                    children: [
+                        Node: { Token: {Value: p2, Type: identifier, Line: 107, Column: 4} },
+                        Node: { Token: {Value: status, Type: identifier, Line: 107, Column: 7} }
+                    ] },
+                    Node: { Token: {Value: employed, Type: identifier, Line: 107, Column: 14} }
+                ] },
+                Node: { Token: {Value: true, Type: boolean value keyword, Line: 107, Column: 25}, Type: bool }
+            ] },
+            Node: { Label: "Variable"
+            children: [
+                Node: { Label: "modifiers"
+                children: [
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 108, Column: 4} }
+                ] },
+                Node: { Token: {Value: Outer, Type: identifier, Line: 108, Column: 8} },
+                Node: { Token: {Value: outer, Type: identifier, Line: 108, Column: 14} },
+                Node: { Label: "struct_literal", Type: Outer
+                children: [
+                    Node: { Token: {Value: Outer, Type: identifier, Line: 108, Column: 22} },
+                    Node: { Label: "properties"
+                    children: [
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: inner, Type: identifier, Line: 109, Column: 8} },
+                            Node: { Label: "struct_literal"
+                            children: [
+                                Node: { Token: {Value: Inner, Type: identifier, Line: 109, Column: 15} },
+                                Node: { Label: "properties"
+                                children: [
+                                    Node: { Label: "property"
+                                    children: [
+                                        Node: { Token: {Value: value, Type: identifier, Line: 110, Column: 12} },
+                                        Node: { Token: {Value: "asdf", Type: string literal, Line: 110, Column: 19} }
+                                    ] }
+                                ] }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Token: {Value: =, Type: assign operator, Line: 113, Column: 22}
+            children: [
+                Node: { Label: "dot", Type: String
+                children: [
+                    Node: { Label: "dot"
+                    children: [
+                        Node: { Token: {Value: outer, Type: identifier, Line: 113, Column: 4} },
+                        Node: { Token: {Value: inner, Type: identifier, Line: 113, Column: 10} }
+                    ] },
+                    Node: { Token: {Value: value, Type: identifier, Line: 113, Column: 16} }
+                ] },
+                Node: { Token: {Value: "wasd", Type: string literal, Line: 113, Column: 24}, Type: String }
+            ] },
             Node: { Label: "control-flow"
             children: [
-                Node: { Token: {Value: return, Type: flow keyword, Line: 94, Column: 4} },
-                Node: { Token: {Value: 0, Type: int literal, Line: 94, Column: 11}, Type: int }
+                Node: { Token: {Value: return, Type: flow keyword, Line: 114, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 114, Column: 11}, Type: int }
             ] }
         ] }
     ] }
@@ -556,7 +691,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
             Scope: { id: undo()@D, type: 4, parent: D, variables: map[a:{name: a, Type: A, Initialized: true}] }
         ] }
     ] },
-    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} EmploymentStatus:{name: EmploymentStatus, size: 4} Empty:{name: Empty, size: 0} Person:{name: Person, size: 20} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} EmploymentStatus:{name: EmploymentStatus, size: 4} Empty:{name: Empty, size: 0} Inner:{name: Inner, size: 4} Outer:{name: Outer, size: 4} Person:{name: Person, size: 20} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
         Scope: { id: Empty, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: Device, type: 1, parent: @global, functions: map[powerOff:{name: powerOff, returns: None, overloads: [{parameters: (), implemented: false}]} powerOn:{name: powerOn, returns: bool, overloads: [{parameters: (), implemented: false}]} restart:{name: restart, returns: bool, overloads: [{parameters: (), implemented: true}]} uptimeHours:{name: uptimeHours, returns: uint32, overloads: [{parameters: (), implemented: true}]}], children: [
             Scope: { id: restart()@Device, type: 4, parent: Device },
@@ -574,7 +709,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: Compiler, type: 1, parent: @global, functions: map[help:{name: help, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
             Scope: { id: help()@Compiler, type: 4, parent: Compiler }
         ] },
-        Scope: { id: CompilerApp, type: 2, parent: @global, namedBlocks: map[App:{name: App} Compiler:{name: Compiler}], variables: map[App:{name: App, Type: ScopeRef(CompilerApp,App), Initialized: true} Compiler:{name: Compiler, Type: ScopeRef(CompilerApp,Compiler), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+        Scope: { id: CompilerApp, type: 2, parent: @global, namedBlocks: map[App:{name: App} Compiler:{name: Compiler}], functions: map[do:{name: do, returns: String, overloads: [{parameters: (), implemented: true}]}], variables: map[App:{name: App, Type: ScopeRef(CompilerApp,App), Initialized: true} Compiler:{name: Compiler, Type: ScopeRef(CompilerApp,Compiler), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: do()@CompilerApp, type: 4, parent: CompilerApp },
             Scope: { id: Compiler@CompilerApp, type: 3, parent: CompilerApp, functions: map[help:{name: help, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
                 Scope: { id: help@Compiler@CompilerApp, type: 4, parent: Compiler@CompilerApp }
             ] },
@@ -583,9 +719,11 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
             ] }
         ] },
         Scope: { id: EmploymentStatus, type: 2, parent: @global, variables: map[employed:{name: employed, Type: bool, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
-        Scope: { id: Person, type: 2, parent: @global, variables: map[age:{name: age, Type: uint32, Initialized: false} first:{name: first, Type: String, Initialized: false} last:{name: last, Type: String, Initialized: false} ssn:{name: ssn, Type: String, isPrivate: true, Initialized: false} status:{name: status, Type: EmploymentStatus, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Person, type: 2, parent: @global, variables: map[age:{name: age, Type: uint32, Initialized: false} first:{name: first, Type: String, Initialized: false} last:{name: last, Type: String, Initialized: false} ssn:{name: ssn, Type: String, isPrivate: true, Initialized: false} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Inner, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true} value:{name: value, Type: String, isMutable: true, Initialized: false}] },
+        Scope: { id: Outer, type: 2, parent: @global, variables: map[inner:{name: inner, Type: Inner, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: @resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, Initialized: true} personString:{name: personString, Type: String, Initialized: true}], children: [
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[outer:{name: outer, Type: Outer, isMutable: true, Initialized: true} p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, isMutable: true, Initialized: true} personString:{name: personString, Type: String, Initialized: true} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false}], children: [
             Scope: { id: if#0@@main(), type: 6, parent: @main() }
         ] }
     ] }
@@ -662,7 +800,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
             Scope: { id: undo()@D, type: 4, parent: D, variables: map[a:{name: a, Type: A, Initialized: true}] }
         ] }
     ] },
-    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} EmploymentStatus:{name: EmploymentStatus, size: 4} Empty:{name: Empty, size: 0} Person:{name: Person, size: 20} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} EmploymentStatus:{name: EmploymentStatus, size: 4} Empty:{name: Empty, size: 0} Inner:{name: Inner, size: 4} Outer:{name: Outer, size: 4} Person:{name: Person, size: 20} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
         Scope: { id: Empty, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: Device, type: 1, parent: @global, functions: map[powerOff:{name: powerOff, returns: None, overloads: [{parameters: (), implemented: false}]} powerOn:{name: powerOn, returns: bool, overloads: [{parameters: (), implemented: false}]} restart:{name: restart, returns: bool, overloads: [{parameters: (), implemented: true}]} uptimeHours:{name: uptimeHours, returns: uint32, overloads: [{parameters: (), implemented: true}]}], children: [
             Scope: { id: restart()@Device, type: 4, parent: Device },
@@ -680,7 +818,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: Compiler, type: 1, parent: @global, functions: map[help:{name: help, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
             Scope: { id: help()@Compiler, type: 4, parent: Compiler }
         ] },
-        Scope: { id: CompilerApp, type: 2, parent: @global, namedBlocks: map[App:{name: App} Compiler:{name: Compiler}], variables: map[App:{name: App, Type: ScopeRef(CompilerApp,App), Initialized: true} Compiler:{name: Compiler, Type: ScopeRef(CompilerApp,Compiler), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+        Scope: { id: CompilerApp, type: 2, parent: @global, namedBlocks: map[App:{name: App} Compiler:{name: Compiler}], functions: map[do:{name: do, returns: String, overloads: [{parameters: (), implemented: true}]}], variables: map[App:{name: App, Type: ScopeRef(CompilerApp,App), Initialized: true} Compiler:{name: Compiler, Type: ScopeRef(CompilerApp,Compiler), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: do()@CompilerApp, type: 4, parent: CompilerApp },
             Scope: { id: Compiler@CompilerApp, type: 3, parent: CompilerApp, functions: map[help:{name: help, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
                 Scope: { id: help@Compiler@CompilerApp, type: 4, parent: Compiler@CompilerApp }
             ] },
@@ -689,9 +828,11 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
             ] }
         ] },
         Scope: { id: EmploymentStatus, type: 2, parent: @global, variables: map[employed:{name: employed, Type: bool, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
-        Scope: { id: Person, type: 2, parent: @global, variables: map[age:{name: age, Type: uint32, Initialized: false} first:{name: first, Type: String, Initialized: false} last:{name: last, Type: String, Initialized: false} ssn:{name: ssn, Type: String, isPrivate: true, Initialized: false} status:{name: status, Type: EmploymentStatus, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Person, type: 2, parent: @global, variables: map[age:{name: age, Type: uint32, Initialized: false} first:{name: first, Type: String, Initialized: false} last:{name: last, Type: String, Initialized: false} ssn:{name: ssn, Type: String, isPrivate: true, Initialized: false} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Inner, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true} value:{name: value, Type: String, isMutable: true, Initialized: false}] },
+        Scope: { id: Outer, type: 2, parent: @global, variables: map[inner:{name: inner, Type: Inner, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: @resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, Initialized: true} personString:{name: personString, Type: String, Initialized: true}], children: [
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[outer:{name: outer, Type: Outer, isMutable: true, Initialized: true} p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, isMutable: true, Initialized: true} personString:{name: personString, Type: String, Initialized: true} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false}], children: [
             Scope: { id: if#0@@main(), type: 6, parent: @main() }
         ] }
     ] },
@@ -1667,7 +1808,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
             Scope: { id: undo()@D, type: 4, parent: D, variables: map[a:{name: a, Type: A, Initialized: true}] }
         ] }
     ] },
-    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} EmploymentStatus:{name: EmploymentStatus, size: 4} Empty:{name: Empty, size: 0} Person:{name: Person, size: 20} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[App:{name: App} Compiler:{name: Compiler} Device:{name: Device}], structs: map[CompilerApp:{name: CompilerApp, size: 0, implements: [App, Compiler]} EmploymentStatus:{name: EmploymentStatus, size: 4} Empty:{name: Empty, size: 0} Inner:{name: Inner, size: 4} Outer:{name: Outer, size: 4} Person:{name: Person, size: 20} Server:{name: Server, size: 0, implements: [Device]}], functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} resolveImplementationConflict:{name: resolveImplementationConflict, returns: None, overloads: [{parameters: (), implemented: true}]}], children: [
         Scope: { id: Empty, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: Device, type: 1, parent: @global, functions: map[powerOff:{name: powerOff, returns: None, overloads: [{parameters: (), implemented: false}]} powerOn:{name: powerOn, returns: bool, overloads: [{parameters: (), implemented: false}]} restart:{name: restart, returns: bool, overloads: [{parameters: (), implemented: true}]} uptimeHours:{name: uptimeHours, returns: uint32, overloads: [{parameters: (), implemented: true}]}], children: [
             Scope: { id: restart()@Device, type: 4, parent: Device },
@@ -1685,7 +1826,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: Compiler, type: 1, parent: @global, functions: map[help:{name: help, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
             Scope: { id: help()@Compiler, type: 4, parent: Compiler }
         ] },
-        Scope: { id: CompilerApp, type: 2, parent: @global, namedBlocks: map[App:{name: App} Compiler:{name: Compiler}], variables: map[App:{name: App, Type: ScopeRef(CompilerApp,App), Initialized: true} Compiler:{name: Compiler, Type: ScopeRef(CompilerApp,Compiler), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+        Scope: { id: CompilerApp, type: 2, parent: @global, namedBlocks: map[App:{name: App} Compiler:{name: Compiler}], functions: map[do:{name: do, returns: String, overloads: [{parameters: (), implemented: true}]}], variables: map[App:{name: App, Type: ScopeRef(CompilerApp,App), Initialized: true} Compiler:{name: Compiler, Type: ScopeRef(CompilerApp,Compiler), Initialized: true} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}], children: [
+            Scope: { id: do()@CompilerApp, type: 4, parent: CompilerApp },
             Scope: { id: Compiler@CompilerApp, type: 3, parent: CompilerApp, functions: map[help:{name: help, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
                 Scope: { id: help@Compiler@CompilerApp, type: 4, parent: Compiler@CompilerApp }
             ] },
@@ -1694,9 +1836,11 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
             ] }
         ] },
         Scope: { id: EmploymentStatus, type: 2, parent: @global, variables: map[employed:{name: employed, Type: bool, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
-        Scope: { id: Person, type: 2, parent: @global, variables: map[age:{name: age, Type: uint32, Initialized: false} first:{name: first, Type: String, Initialized: false} last:{name: last, Type: String, Initialized: false} ssn:{name: ssn, Type: String, isPrivate: true, Initialized: false} status:{name: status, Type: EmploymentStatus, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Person, type: 2, parent: @global, variables: map[age:{name: age, Type: uint32, Initialized: false} first:{name: first, Type: String, Initialized: false} last:{name: last, Type: String, Initialized: false} ssn:{name: ssn, Type: String, isPrivate: true, Initialized: false} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
+        Scope: { id: Inner, type: 2, parent: @global, variables: map[this:{name: this, Type: Ref, isPrivate: true, Initialized: true} value:{name: value, Type: String, isMutable: true, Initialized: false}] },
+        Scope: { id: Outer, type: 2, parent: @global, variables: map[inner:{name: inner, Type: Inner, isMutable: true, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true}] },
         Scope: { id: @resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, Initialized: true} personString:{name: personString, Type: String, Initialized: true}], children: [
+        Scope: { id: @main(), type: 4, parent: @global, variables: map[outer:{name: outer, Type: Outer, isMutable: true, Initialized: true} p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, isMutable: true, Initialized: true} personString:{name: personString, Type: String, Initialized: true} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false}], children: [
             Scope: { id: if#0@@main(), type: 6, parent: @main() }
         ] }
     ] },
@@ -1800,15 +1944,12 @@ Compiler messages:
     "TypeError: Cannot use operator '*' between Container and Container at line: 142, column: 9",
     "AccessError: Cannot access private property from outside struct definition at line: 143, column: 17",
     "NameError: Could not find property madeup in type Container at line: 144, column: 17",
-    "TypeError: Cannot access property not of type None at line: 144, column: 24",
-    "TypeError: Cannot access property there of type None at line: 144, column: 28",
     "AccessError: Cannot change value of immutable property or variable at line: 145, column: 5",
     "AccessError: Cannot assign value to string length at line: 146, column: 5",
     "NameError: Struct StructLiteral not defined at line: 147, column: 5",
     "TypeError: Invalid comparison between MariaDB and PostgreSQL at line: 150, column: 11",
     "NameError: Could not find function disconnect in scope at line: 151, column: 11",
     "NameError: Could not find property Server in type PostgreSQL at line: 152, column: 11",
-    "NameError: Could not find type None at line: 152, column: 18",
     "NameError: Could not find function getTLSVersion in scope at line: 153, column: 14",
     "AccessError: Cannot access private function 'test' from outside struct definition at line: 155, column: 7",
     "AccessError: Cannot access private property from outside struct definition at line: 156, column: 8",
