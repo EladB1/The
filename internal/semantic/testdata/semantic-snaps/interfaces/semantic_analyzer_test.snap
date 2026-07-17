@@ -232,7 +232,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
                 Scope: { id: startup@Runner@TestRunner, type: 4, parent: Runner@TestRunner }
             ] }
         ] },
-        Scope: { id: @main(), type: 4, parent: @global }
+        Scope: { id: main(), type: 4, parent: @global }
     ] }
 ] }
 Compiler messages:
@@ -421,7 +421,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
                 Scope: { id: startup@Runner@TestRunner, type: 4, parent: Runner@TestRunner }
             ] }
         ] },
-        Scope: { id: @main(), type: 4, parent: @global }
+        Scope: { id: main(), type: 4, parent: @global }
     ] },
     Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B} D:{name: D} Empty:{name: Empty}], structs: map[C:{name: C, size: 0, implements: [A, B, A]}], children: [
         Scope: { id: Empty, type: 1, parent: @global },
@@ -449,7 +449,6 @@ Compiler messages:
     "IllegalStatementError: Function name 'do' already defined without a return type; cannot overload with return type bool at line: 21, column: 9",
     "IllegalStatementError: Function name 'do' already defined without a return type; cannot overload with return type bool at line: 27, column: 5",
     "IllegalStatementError: Function with signature 'fn do()' cannot be redefined at line: 28, column: 5",
-    "TypeError: Function 'undo()->uint32' may not return a value at line: 29, column: 25",
     "IllegalStatementError: Cannot create interface literal value at line: 30, column: 15",
     "TypeError: Cannot assign type None to variable type A at line: 30, column: 15",
     "TypeError: Function 'undo()->uint32' expected return type uint32 but got bool at line: 31, column: 9",

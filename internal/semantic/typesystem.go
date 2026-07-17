@@ -141,6 +141,9 @@ func handleBinaryNumberExpression(left *parser.AST, right *parser.AST, operator 
 	} else if inferRight {
 		lhs, lHasErr = evalType(left, expectedType)
 		rhs, rHasErr = evalType(right, lhs)
+	} else {
+		lhs, lHasErr = evalType(left, expectedType)
+		rhs, rHasErr = evalType(right, expectedType)
 	}
 	if lHasErr || rHasErr {
 		return datatypes.None, nil

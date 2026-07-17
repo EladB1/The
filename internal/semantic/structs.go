@@ -38,6 +38,9 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 				if !slices.Contains(supported, symbol.getSignature()) {
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Function signature '%s' not supported; only '%s' supported", symbol.getSignature(), strings.Join(supported, ","))
 				}
+				if !symbol.hasDefaultImplementation {
+					messages.Complain(diagnostic.NamedBlockError, node.Location, "Compare block function '%s' must be defined with a function body", symbol.getSignature())
+				}
 			case "cast":
 				if len(symbol.parameters) > 0 || symbol.returnType == datatypes.None || symbol.returnType == datatypes.DynamicType(structName) {
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block must take no parameters and return a different type")
@@ -45,6 +48,8 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block cannot return an interface")
 				} else if matches := newScope.lookupFunctionsByReturnType(symbol.returnType); len(matches) > 0 {
 					messages.Complain(diagnostic.AmbiguityError, node.Location, "Cannot have more than one cast function that returns %s", symbol.returnType)
+				} else if !symbol.hasDefaultImplementation {
+					messages.Complain(diagnostic.NamedBlockError, node.Location, "Cast block function '%s' must be defined with a function body", symbol.getSignature())
 				}
 			case "private":
 				symbol.isPrivate = true

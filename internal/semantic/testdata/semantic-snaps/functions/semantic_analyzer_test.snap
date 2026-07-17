@@ -154,6 +154,379 @@ children: [
                 ] }
             ] }
         ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: returns, Type: identifier, Line: 27, Column: 3} },
+        Node: { Token: {Value: bool, Type: type keyword, Line: 27, Column: 16} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: <, Type: compare operator, Line: 28, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: 1, Type: int literal, Line: 28, Column: 8}, Type: int },
+                        Node: { Token: {Value: 5, Type: int literal, Line: 28, Column: 12}, Type: int }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 29, Column: 8} },
+                            Node: { Token: {Value: true, Type: boolean value keyword, Line: 29, Column: 15}, Type: bool }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else"
+                children: [
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 31, Column: 8} },
+                            Node: { Token: {Value: false, Type: boolean value keyword, Line: 31, Column: 15}, Type: bool }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: returns, Type: identifier, Line: 34, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 34, Column: 11} },
+                Node: { Token: {Value: i, Type: identifier, Line: 34, Column: 15} }
+            ] }
+        ] },
+        Node: { Token: {Value: bool, Type: type keyword, Line: 34, Column: 21} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: <, Type: compare operator, Line: 35, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 35, Column: 8}, Type: int },
+                        Node: { Token: {Value: 5, Type: int literal, Line: 35, Column: 12}, Type: int }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 36, Column: 8} },
+                            Node: { Token: {Value: true, Type: boolean value keyword, Line: 36, Column: 15}, Type: bool }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 37, Column: 4} },
+                Node: { Token: {Value: false, Type: boolean value keyword, Line: 37, Column: 11}, Type: bool }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: returns, Type: identifier, Line: 40, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 40, Column: 11} },
+                Node: { Token: {Value: i, Type: identifier, Line: 40, Column: 15} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 40, Column: 18} },
+                Node: { Token: {Value: j, Type: identifier, Line: 40, Column: 22} }
+            ] }
+        ] },
+        Node: { Token: {Value: bool, Type: type keyword, Line: 40, Column: 28} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: <, Type: compare operator, Line: 41, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 41, Column: 8}, Type: int },
+                        Node: { Token: {Value: j, Type: identifier, Line: 41, Column: 12}, Type: int }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 42, Column: 8} },
+                            Node: { Token: {Value: true, Type: boolean value keyword, Line: 42, Column: 15}, Type: bool }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else if"
+                children: [
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 43, Column: 15}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 43, Column: 13}, Type: int },
+                        Node: { Token: {Value: j, Type: identifier, Line: 43, Column: 18}, Type: int }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 44, Column: 8} },
+                            Node: { Token: {Value: true, Type: boolean value keyword, Line: 44, Column: 15}, Type: bool }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else"
+                children: [
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 46, Column: 8} },
+                            Node: { Token: {Value: false, Type: boolean value keyword, Line: 46, Column: 15}, Type: bool }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: returns, Type: identifier, Line: 49, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 49, Column: 11} },
+                Node: { Token: {Value: i, Type: identifier, Line: 49, Column: 18} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 49, Column: 21} },
+                Node: { Token: {Value: j, Type: identifier, Line: 49, Column: 28} }
+            ] }
+        ] },
+        Node: { Token: {Value: bool, Type: type keyword, Line: 49, Column: 34} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: <, Type: compare operator, Line: 50, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 50, Column: 8}, Type: uint32 },
+                        Node: { Token: {Value: j, Type: identifier, Line: 50, Column: 12}, Type: uint32 }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 51, Column: 8} },
+                            Node: { Token: {Value: true, Type: boolean value keyword, Line: 51, Column: 15}, Type: bool }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else if"
+                children: [
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 52, Column: 15}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 52, Column: 13}, Type: uint32 },
+                        Node: { Token: {Value: j, Type: identifier, Line: 52, Column: 18}, Type: uint32 }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Token: {Value: println, Type: identifier, Line: 53, Column: 8} },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: j, Type: identifier, Line: 53, Column: 16} }
+                            ] }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else"
+                children: [
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 55, Column: 8} },
+                            Node: { Token: {Value: false, Type: boolean value keyword, Line: 55, Column: 15}, Type: bool }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 56, Column: 4} },
+                Node: { Token: {Value: false, Type: boolean value keyword, Line: 56, Column: 11}, Type: bool }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: returns, Type: identifier, Line: 59, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 59, Column: 11} },
+                Node: { Token: {Value: i, Type: identifier, Line: 59, Column: 18} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 59, Column: 21} },
+                Node: { Token: {Value: j, Type: identifier, Line: 59, Column: 28} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 59, Column: 31} },
+                Node: { Token: {Value: k, Type: identifier, Line: 59, Column: 38} }
+            ] }
+        ] },
+        Node: { Token: {Value: bool, Type: type keyword, Line: 59, Column: 44} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "Variable"
+            children: [
+                Node: { Label: "modifiers"
+                children: [
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 60, Column: 4} }
+                ] },
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 60, Column: 8} },
+                Node: { Token: {Value: count, Type: identifier, Line: 60, Column: 15} },
+                Node: { Token: {Value: i, Type: identifier, Line: 60, Column: 23}, Type: uint32 }
+            ] },
+            Node: { Label: "while"
+            children: [
+                Node: { Token: {Value: true, Type: boolean value keyword, Line: 61, Column: 11}, Type: bool },
+                Node: { Label: "loop-body"
+                children: [
+                    Node: { Label: "if-block"
+                    children: [
+                        Node: { Label: "if"
+                        children: [
+                            Node: { Token: {Value: ==, Type: compare operator, Line: 62, Column: 18}, Type: bool
+                            children: [
+                                Node: { Token: {Value: count, Type: identifier, Line: 62, Column: 12}, Type: uint32 },
+                                Node: { Token: {Value: +, Type: add operator, Line: 62, Column: 23}, Type: uint32
+                                children: [
+                                    Node: { Token: {Value: j, Type: identifier, Line: 62, Column: 21}, Type: uint32 },
+                                    Node: { Token: {Value: k, Type: identifier, Line: 62, Column: 25}, Type: uint32 }
+                                ] }
+                            ] },
+                            Node: { Label: "conditional-body"
+                            children: [
+                                Node: { Label: "control-flow"
+                                children: [
+                                    Node: { Token: {Value: return, Type: flow keyword, Line: 63, Column: 12} },
+                                    Node: { Token: {Value: true, Type: boolean value keyword, Line: 63, Column: 19}, Type: bool }
+                                ] }
+                            ] }
+                        ] }
+                    ] },
+                    Node: { Label: "Unary"
+                    children: [
+                        Node: { Token: {Value: count, Type: identifier, Line: 64, Column: 8} },
+                        Node: { Token: {Value: ++, Type: unary operator, Line: 64, Column: 13} }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 66, Column: 4} },
+                Node: { Token: {Value: false, Type: boolean value keyword, Line: 66, Column: 11}, Type: bool }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: returns, Type: identifier, Line: 69, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: uint64, Type: type keyword, Line: 69, Column: 11} },
+                Node: { Token: {Value: i, Type: identifier, Line: 69, Column: 18} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: uint64, Type: type keyword, Line: 69, Column: 21} },
+                Node: { Token: {Value: j, Type: identifier, Line: 69, Column: 28} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: uint64, Type: type keyword, Line: 69, Column: 31} },
+                Node: { Token: {Value: k, Type: identifier, Line: 69, Column: 38} }
+            ] }
+        ] },
+        Node: { Token: {Value: bool, Type: type keyword, Line: 69, Column: 44} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "for"
+            children: [
+                Node: { Label: "loop-condition"
+                children: [
+                    Node: { Label: "Variable"
+                    children: [
+                        Node: { Token: {Value: uint64, Type: type keyword, Line: 70, Column: 9} },
+                        Node: { Token: {Value: n, Type: identifier, Line: 70, Column: 16} }
+                    ] },
+                    Node: { Token: {Value: in, Type: operator keyword, Line: 70, Column: 18} },
+                    Node: { Label: "range", Type: uint64
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 70, Column: 21}, Type: uint64 },
+                        Node: { Token: {Value: ..=, Type: range operator, Line: 70, Column: 23} },
+                        Node: { Token: {Value: j, Type: identifier, Line: 70, Column: 27}, Type: uint64 },
+                        Node: { Token: {Value: .., Type: range operator, Line: 70, Column: 29} },
+                        Node: { Token: {Value: k, Type: identifier, Line: 70, Column: 32}, Type: uint64 }
+                    ] }
+                ] },
+                Node: { Label: "loop-body"
+                children: [
+                    Node: { Label: "if-block"
+                    children: [
+                        Node: { Label: "if"
+                        children: [
+                            Node: { Token: {Value: ==, Type: compare operator, Line: 71, Column: 14}, Type: bool
+                            children: [
+                                Node: { Token: {Value: n, Type: identifier, Line: 71, Column: 12}, Type: uint64 },
+                                Node: { Token: {Value: /, Type: multiply operator, Line: 71, Column: 19}, Type: uint64
+                                children: [
+                                    Node: { Token: {Value: j, Type: identifier, Line: 71, Column: 17}, Type: uint64 },
+                                    Node: { Token: {Value: 2, Type: int literal, Line: 71, Column: 21}, Type: uint64 }
+                                ] }
+                            ] },
+                            Node: { Label: "conditional_body"
+                            children: [
+                                Node: { Label: "control-flow"
+                                children: [
+                                    Node: { Token: {Value: return, Type: flow keyword, Line: 72, Column: 12} },
+                                    Node: { Token: {Value: true, Type: boolean value keyword, Line: 72, Column: 19}, Type: bool }
+                                ] }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 75, Column: 4} },
+                Node: { Token: {Value: false, Type: boolean value keyword, Line: 75, Column: 11}, Type: bool }
+            ] }
+        ] }
     ] }
 ] }
 ScopeTree:
@@ -179,7 +552,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
                 Scope: { id: startup@Runner@TestRunner, type: 4, parent: Runner@TestRunner }
             ] }
         ] },
-        Scope: { id: @main(), type: 4, parent: @global }
+        Scope: { id: main(), type: 4, parent: @global }
     ] },
     Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B} D:{name: D} Empty:{name: Empty}], structs: map[C:{name: C, size: 0, implements: [A, B, A]}], children: [
         Scope: { id: Empty, type: 1, parent: @global },
@@ -229,10 +602,10 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: TestName, type: 2, parent: @global, functions: map[getX:{name: getX, returns: bool, overloads: [{parameters: (), implemented: true}]}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(TestName), isPrivate: true, isMutable: true, Initialized: true} x:{name: x, Type: int, isMutable: true, Initialized: false}], children: [
             Scope: { id: getX()@TestName, type: 4, parent: TestName }
         ] },
-        Scope: { id: @resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
-        Scope: { id: @getX(), type: 4, parent: @global },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[outer:{name: outer, Type: Outer, isMutable: true, Initialized: true} p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, isMutable: true, Initialized: true} personString:{name: personString, Type: String, Initialized: true} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false}], children: [
-            Scope: { id: if#0@@main(), type: 6, parent: @main() }
+        Scope: { id: resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
+        Scope: { id: getX(), type: 4, parent: @global },
+        Scope: { id: main(), type: 4, parent: @global, variables: map[outer:{name: outer, Type: Outer, isMutable: true, Initialized: true} p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, isMutable: true, Initialized: true} personString:{name: personString, Type: String, Initialized: true} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false}], children: [
+            Scope: { id: if#0@main(), type: 6, parent: main() }
         ] }
     ] },
     Scope: { id: @global, parent: @built-in, structs: map[Sample:{name: Sample, size: 0}], children: [
@@ -250,7 +623,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: Location, type: 2, parent: @global, variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(Location), isPrivate: true, isMutable: true, Initialized: true}] },
         Scope: { id: Laptop, type: 2, parent: @global, variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(Laptop), isPrivate: true, isMutable: true, Initialized: true}] },
         Scope: { id: Container, type: 2, parent: @global, namedBlocks: map[cast:{name: cast} compare:{name: compare}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} id:{name: id, Type: String, Initialized: false} runTimeVersion:{name: runTimeVersion, Type: int, isPrivate: true, Initialized: false} this:{name: this, Type: Ref(Container), isPrivate: true, isMutable: true, Initialized: true}], children: [
-            Scope: { id: cast@Container, type: 3, parent: Container, functions: map[duplicateToString:{name: duplicateToString, returns: String, overloads: [{parameters: (), implemented: true}]} toInterface:{name: toInterface, returns: Device, overloads: [{parameters: (), implemented: true}]} toNone:{name: toNone, returns: None, overloads: [{parameters: (), implemented: true}]} toSame:{name: toSame, returns: Container, overloads: [{parameters: (), implemented: true}]} toString:{name: toString, returns: String, overloads: [{parameters: (String), implemented: true}]}], children: [
+            Scope: { id: cast@Container, type: 3, parent: Container, functions: map[createInt:{name: createInt, returns: int, overloads: [{parameters: (), implemented: false}]} duplicateToString:{name: duplicateToString, returns: String, overloads: [{parameters: (), implemented: true}]} toInterface:{name: toInterface, returns: Device, overloads: [{parameters: (), implemented: true}]} toNone:{name: toNone, returns: None, overloads: [{parameters: (), implemented: true}]} toSame:{name: toSame, returns: Container, overloads: [{parameters: (), implemented: true}]} toString:{name: toString, returns: String, overloads: [{parameters: (String), implemented: true}]}], children: [
                 Scope: { id: toInterface()@cast@Container, type: 4, parent: cast@Container },
                 Scope: { id: toString(String)@cast@Container, type: 4, parent: cast@Container, variables: map[name:{name: name, Type: String, Initialized: false}] },
                 Scope: { id: duplicateToString()@cast@Container, type: 4, parent: cast@Container },
@@ -296,30 +669,60 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: TestName, type: 2, parent: @global, functions: map[getX:{name: getX, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(TestName), isPrivate: true, isMutable: true, Initialized: true} x:{name: x, Type: int, Initialized: false}], children: [
             Scope: { id: getX()@TestName, type: 4, parent: TestName }
         ] },
-        Scope: { id: @getX(), type: 4, parent: @global },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} mariaPT:{name: mariaPT, Type: PrivateTester, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} pt:{name: pt, Type: PrivateTester, Initialized: true} pt2:{name: pt2, Type: PrivateTester, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
+        Scope: { id: getX(), type: 4, parent: @global },
+        Scope: { id: main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} mariaPT:{name: mariaPT, Type: PrivateTester, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} pt:{name: pt, Type: PrivateTester, Initialized: true} pt2:{name: pt2, Type: PrivateTester, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
-        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
+        Scope: { id: strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
+        Scope: { id: main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, isMutable: true, Initialized: false}], children: [
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[f:{name: f, Type: float, Initialized: true} smaller:{name: smaller, Type: uint32, Initialized: true} u:{name: u, Type: uint64, Initialized: true}] }
+        Scope: { id: main(), type: 4, parent: @global, variables: map[f:{name: f, Type: float, Initialized: true} smaller:{name: smaller, Type: uint32, Initialized: true} u:{name: u, Type: uint64, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[c:{name: c, Type: char, Initialized: true} isTrue:{name: isTrue, Type: bool, Initialized: true} j:{name: j, Type: uint32, isMutable: true, Initialized: true}], children: [
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} name:{name: name, Type: None, Initialized: false} notC:{name: notC, Type: char, Initialized: true} opposite:{name: opposite, Type: bool, Initialized: true} pick:{name: pick, Type: int, Initialized: true} repeat:{name: repeat, Type: String, Initialized: true} result:{name: result, Type: int, Initialized: true} sum:{name: sum, Type: int, Initialized: true} u:{name: u, Type: uint32, Initialized: true} value:{name: value, Type: bool, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true} x:{name: x, Type: int, Initialized: true} xorChar:{name: xorChar, Type: char, Initialized: true}] }
+        Scope: { id: main(), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} name:{name: name, Type: None, Initialized: false} notC:{name: notC, Type: char, Initialized: true} opposite:{name: opposite, Type: bool, Initialized: true} pick:{name: pick, Type: int, Initialized: true} repeat:{name: repeat, Type: String, Initialized: true} result:{name: result, Type: int, Initialized: true} sum:{name: sum, Type: int, Initialized: true} u:{name: u, Type: uint32, Initialized: true} value:{name: value, Type: bool, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true} x:{name: x, Type: int, Initialized: true} xorChar:{name: xorChar, Type: char, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[caller:{name: caller, returns: None, overloads: [{parameters: (), implemented: true}]} forwardDeclaration:{name: forwardDeclaration, returns: None, overloads: [{parameters: (), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} overloads:{name: overloads, returns: bool, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,int), implemented: true}]}], children: [
-        Scope: { id: @overloads(), type: 4, parent: @global },
-        Scope: { id: @overloads(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
-        Scope: { id: @overloads(int,int), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}] },
-        Scope: { id: @caller(), type: 4, parent: @global },
-        Scope: { id: @main(), type: 4, parent: @global },
-        Scope: { id: @forwardDeclaration(), type: 4, parent: @global }
+    Scope: { id: @global, parent: @built-in, functions: map[caller:{name: caller, returns: None, overloads: [{parameters: (), implemented: true}]} forwardDeclaration:{name: forwardDeclaration, returns: None, overloads: [{parameters: (), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} overloads:{name: overloads, returns: bool, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,int), implemented: true}]} returns:{name: returns, returns: bool, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,int), implemented: true}{parameters: (uint32,uint32), implemented: true}{parameters: (uint32,uint32,uint32), implemented: true}{parameters: (uint64,uint64,uint64), implemented: true}]}], children: [
+        Scope: { id: overloads(), type: 4, parent: @global },
+        Scope: { id: overloads(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
+        Scope: { id: overloads(int,int), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}] },
+        Scope: { id: caller(), type: 4, parent: @global },
+        Scope: { id: main(), type: 4, parent: @global },
+        Scope: { id: forwardDeclaration(), type: 4, parent: @global },
+        Scope: { id: returns(), type: 4, parent: @global, children: [
+            Scope: { id: if#0@returns(), type: 6, parent: returns() },
+            Scope: { id: else#0@returns(), type: 6, parent: returns() }
+        ] },
+        Scope: { id: returns(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@returns(int), type: 6, parent: returns(int) }
+        ] },
+        Scope: { id: returns(int,int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@returns(int,int), type: 6, parent: returns(int,int) },
+            Scope: { id: else if#0.0@returns(int,int), type: 6, parent: returns(int,int) },
+            Scope: { id: else#0@returns(int,int), type: 6, parent: returns(int,int) }
+        ] },
+        Scope: { id: returns(uint32,uint32), type: 4, parent: @global, variables: map[i:{name: i, Type: uint32, Initialized: false} j:{name: j, Type: uint32, Initialized: false}], children: [
+            Scope: { id: if#0@returns(uint32,uint32), type: 6, parent: returns(uint32,uint32) },
+            Scope: { id: else if#0.0@returns(uint32,uint32), type: 6, parent: returns(uint32,uint32) },
+            Scope: { id: else#0@returns(uint32,uint32), type: 6, parent: returns(uint32,uint32) }
+        ] },
+        Scope: { id: returns(uint32,uint32,uint32), type: 4, parent: @global, variables: map[count:{name: count, Type: uint32, isMutable: true, Initialized: true} i:{name: i, Type: uint32, Initialized: false} j:{name: j, Type: uint32, Initialized: false} k:{name: k, Type: uint32, Initialized: false}], children: [
+            Scope: { id: while#0@returns(uint32,uint32,uint32), type: 5, parent: returns(uint32,uint32,uint32), children: [
+                Scope: { id: if#0@while#0@returns(uint32,uint32,uint32), type: 6, parent: while#0@returns(uint32,uint32,uint32) }
+            ] }
+        ] },
+        Scope: { id: returns(uint64,uint64,uint64), type: 4, parent: @global, variables: map[i:{name: i, Type: uint64, Initialized: false} j:{name: j, Type: uint64, Initialized: false} k:{name: k, Type: uint64, Initialized: false}], children: [
+            Scope: { id: for#0@returns(uint64,uint64,uint64), type: 5, parent: returns(uint64,uint64,uint64), variables: map[n:{name: n, Type: uint64, Initialized: false}], children: [
+                Scope: { id: if#0@for#0@returns(uint64,uint64,uint64), type: 6, parent: for#0@returns(uint64,uint64,uint64) }
+            ] }
+        ] }
     ] }
 ] }
 Compiler messages:
-[]
+[
+    "Warning: Unreachable code at line: 38, column: 5",
+    "Warning: Unreachable code at line: 65, column: 9"
+]
 
 ---
 
@@ -329,19 +732,86 @@ Node: { Label: "program"
 children: [
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: main, Type: identifier, Line: 0, Column: 3} },
-        Node: { Token: {Value: int, Type: type keyword, Line: 0, Column: 13} },
+        Node: { Token: {Value: ifBlock, Type: identifier, Line: 0, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 0, Column: 11} },
+                Node: { Token: {Value: i, Type: identifier, Line: 0, Column: 15} }
+            ] }
+        ] },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 1, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 1, Column: 8}, Type: int },
+                        Node: { Token: {Value: 0, Type: int literal, Line: 1, Column: 13}, Type: int }
+                    ] },
+                    Node: { Label: "conditional_body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 2, Column: 8} }
+                        ] },
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Token: {Value: println, Type: identifier, Line: 3, Column: 8} },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: i, Type: identifier, Line: 3, Column: 16} }
+                            ] }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else"
+                children: [
+                    Node: { Label: "conditional_body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 5, Column: 8} }
+                        ] },
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Token: {Value: println, Type: identifier, Line: 6, Column: 8} },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: "not zero", Type: string literal, Line: 6, Column: 16} }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "call"
+            children: [
+                Node: { Token: {Value: println, Type: identifier, Line: 8, Column: 4} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Token: {Value: "after if block", Type: string literal, Line: 8, Column: 12} }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: main, Type: identifier, Line: 11, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 11, Column: 13} },
         Node: { Label: "fn-body"
         children: [
             Node: { Label: "control-flow"
             children: [
-                Node: { Token: {Value: return, Type: flow keyword, Line: 1, Column: 4} },
-                Node: { Token: {Value: 0, Type: int literal, Line: 1, Column: 11}, Type: int }
+                Node: { Token: {Value: return, Type: flow keyword, Line: 12, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 12, Column: 11}, Type: int }
             ] },
             Node: { Label: "control-flow"
             children: [
-                Node: { Token: {Value: return, Type: flow keyword, Line: 2, Column: 4} },
-                Node: { Token: {Value: 1, Type: int literal, Line: 2, Column: 11}, Type: int }
+                Node: { Token: {Value: return, Type: flow keyword, Line: 13, Column: 4} },
+                Node: { Token: {Value: 1, Type: int literal, Line: 13, Column: 11}, Type: int }
             ] }
         ] }
     ] }
@@ -369,7 +839,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
                 Scope: { id: startup@Runner@TestRunner, type: 4, parent: Runner@TestRunner }
             ] }
         ] },
-        Scope: { id: @main(), type: 4, parent: @global }
+        Scope: { id: main(), type: 4, parent: @global }
     ] },
     Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B} D:{name: D} Empty:{name: Empty}], structs: map[C:{name: C, size: 0, implements: [A, B, A]}], children: [
         Scope: { id: Empty, type: 1, parent: @global },
@@ -419,10 +889,10 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: TestName, type: 2, parent: @global, functions: map[getX:{name: getX, returns: bool, overloads: [{parameters: (), implemented: true}]}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(TestName), isPrivate: true, isMutable: true, Initialized: true} x:{name: x, Type: int, isMutable: true, Initialized: false}], children: [
             Scope: { id: getX()@TestName, type: 4, parent: TestName }
         ] },
-        Scope: { id: @resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
-        Scope: { id: @getX(), type: 4, parent: @global },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[outer:{name: outer, Type: Outer, isMutable: true, Initialized: true} p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, isMutable: true, Initialized: true} personString:{name: personString, Type: String, Initialized: true} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false}], children: [
-            Scope: { id: if#0@@main(), type: 6, parent: @main() }
+        Scope: { id: resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
+        Scope: { id: getX(), type: 4, parent: @global },
+        Scope: { id: main(), type: 4, parent: @global, variables: map[outer:{name: outer, Type: Outer, isMutable: true, Initialized: true} p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, isMutable: true, Initialized: true} personString:{name: personString, Type: String, Initialized: true} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false}], children: [
+            Scope: { id: if#0@main(), type: 6, parent: main() }
         ] }
     ] },
     Scope: { id: @global, parent: @built-in, structs: map[Sample:{name: Sample, size: 0}], children: [
@@ -440,7 +910,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: Location, type: 2, parent: @global, variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(Location), isPrivate: true, isMutable: true, Initialized: true}] },
         Scope: { id: Laptop, type: 2, parent: @global, variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(Laptop), isPrivate: true, isMutable: true, Initialized: true}] },
         Scope: { id: Container, type: 2, parent: @global, namedBlocks: map[cast:{name: cast} compare:{name: compare}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} id:{name: id, Type: String, Initialized: false} runTimeVersion:{name: runTimeVersion, Type: int, isPrivate: true, Initialized: false} this:{name: this, Type: Ref(Container), isPrivate: true, isMutable: true, Initialized: true}], children: [
-            Scope: { id: cast@Container, type: 3, parent: Container, functions: map[duplicateToString:{name: duplicateToString, returns: String, overloads: [{parameters: (), implemented: true}]} toInterface:{name: toInterface, returns: Device, overloads: [{parameters: (), implemented: true}]} toNone:{name: toNone, returns: None, overloads: [{parameters: (), implemented: true}]} toSame:{name: toSame, returns: Container, overloads: [{parameters: (), implemented: true}]} toString:{name: toString, returns: String, overloads: [{parameters: (String), implemented: true}]}], children: [
+            Scope: { id: cast@Container, type: 3, parent: Container, functions: map[createInt:{name: createInt, returns: int, overloads: [{parameters: (), implemented: false}]} duplicateToString:{name: duplicateToString, returns: String, overloads: [{parameters: (), implemented: true}]} toInterface:{name: toInterface, returns: Device, overloads: [{parameters: (), implemented: true}]} toNone:{name: toNone, returns: None, overloads: [{parameters: (), implemented: true}]} toSame:{name: toSame, returns: Container, overloads: [{parameters: (), implemented: true}]} toString:{name: toString, returns: String, overloads: [{parameters: (String), implemented: true}]}], children: [
                 Scope: { id: toInterface()@cast@Container, type: 4, parent: cast@Container },
                 Scope: { id: toString(String)@cast@Container, type: 4, parent: cast@Container, variables: map[name:{name: name, Type: String, Initialized: false}] },
                 Scope: { id: duplicateToString()@cast@Container, type: 4, parent: cast@Container },
@@ -486,34 +956,68 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: TestName, type: 2, parent: @global, functions: map[getX:{name: getX, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(TestName), isPrivate: true, isMutable: true, Initialized: true} x:{name: x, Type: int, Initialized: false}], children: [
             Scope: { id: getX()@TestName, type: 4, parent: TestName }
         ] },
-        Scope: { id: @getX(), type: 4, parent: @global },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} mariaPT:{name: mariaPT, Type: PrivateTester, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} pt:{name: pt, Type: PrivateTester, Initialized: true} pt2:{name: pt2, Type: PrivateTester, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
+        Scope: { id: getX(), type: 4, parent: @global },
+        Scope: { id: main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} mariaPT:{name: mariaPT, Type: PrivateTester, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} pt:{name: pt, Type: PrivateTester, Initialized: true} pt2:{name: pt2, Type: PrivateTester, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
-        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
+        Scope: { id: strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
+        Scope: { id: main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, isMutable: true, Initialized: false}], children: [
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[f:{name: f, Type: float, Initialized: true} smaller:{name: smaller, Type: uint32, Initialized: true} u:{name: u, Type: uint64, Initialized: true}] }
+        Scope: { id: main(), type: 4, parent: @global, variables: map[f:{name: f, Type: float, Initialized: true} smaller:{name: smaller, Type: uint32, Initialized: true} u:{name: u, Type: uint64, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[c:{name: c, Type: char, Initialized: true} isTrue:{name: isTrue, Type: bool, Initialized: true} j:{name: j, Type: uint32, isMutable: true, Initialized: true}], children: [
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} name:{name: name, Type: None, Initialized: false} notC:{name: notC, Type: char, Initialized: true} opposite:{name: opposite, Type: bool, Initialized: true} pick:{name: pick, Type: int, Initialized: true} repeat:{name: repeat, Type: String, Initialized: true} result:{name: result, Type: int, Initialized: true} sum:{name: sum, Type: int, Initialized: true} u:{name: u, Type: uint32, Initialized: true} value:{name: value, Type: bool, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true} x:{name: x, Type: int, Initialized: true} xorChar:{name: xorChar, Type: char, Initialized: true}] }
+        Scope: { id: main(), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} name:{name: name, Type: None, Initialized: false} notC:{name: notC, Type: char, Initialized: true} opposite:{name: opposite, Type: bool, Initialized: true} pick:{name: pick, Type: int, Initialized: true} repeat:{name: repeat, Type: String, Initialized: true} result:{name: result, Type: int, Initialized: true} sum:{name: sum, Type: int, Initialized: true} u:{name: u, Type: uint32, Initialized: true} value:{name: value, Type: bool, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true} x:{name: x, Type: int, Initialized: true} xorChar:{name: xorChar, Type: char, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[caller:{name: caller, returns: None, overloads: [{parameters: (), implemented: true}]} forwardDeclaration:{name: forwardDeclaration, returns: None, overloads: [{parameters: (), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} overloads:{name: overloads, returns: bool, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,int), implemented: true}]}], children: [
-        Scope: { id: @overloads(), type: 4, parent: @global },
-        Scope: { id: @overloads(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
-        Scope: { id: @overloads(int,int), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}] },
-        Scope: { id: @caller(), type: 4, parent: @global },
-        Scope: { id: @main(), type: 4, parent: @global },
-        Scope: { id: @forwardDeclaration(), type: 4, parent: @global }
+    Scope: { id: @global, parent: @built-in, functions: map[caller:{name: caller, returns: None, overloads: [{parameters: (), implemented: true}]} forwardDeclaration:{name: forwardDeclaration, returns: None, overloads: [{parameters: (), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} overloads:{name: overloads, returns: bool, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,int), implemented: true}]} returns:{name: returns, returns: bool, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,int), implemented: true}{parameters: (uint32,uint32), implemented: true}{parameters: (uint32,uint32,uint32), implemented: true}{parameters: (uint64,uint64,uint64), implemented: true}]}], children: [
+        Scope: { id: overloads(), type: 4, parent: @global },
+        Scope: { id: overloads(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
+        Scope: { id: overloads(int,int), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}] },
+        Scope: { id: caller(), type: 4, parent: @global },
+        Scope: { id: main(), type: 4, parent: @global },
+        Scope: { id: forwardDeclaration(), type: 4, parent: @global },
+        Scope: { id: returns(), type: 4, parent: @global, children: [
+            Scope: { id: if#0@returns(), type: 6, parent: returns() },
+            Scope: { id: else#0@returns(), type: 6, parent: returns() }
+        ] },
+        Scope: { id: returns(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@returns(int), type: 6, parent: returns(int) }
+        ] },
+        Scope: { id: returns(int,int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@returns(int,int), type: 6, parent: returns(int,int) },
+            Scope: { id: else if#0.0@returns(int,int), type: 6, parent: returns(int,int) },
+            Scope: { id: else#0@returns(int,int), type: 6, parent: returns(int,int) }
+        ] },
+        Scope: { id: returns(uint32,uint32), type: 4, parent: @global, variables: map[i:{name: i, Type: uint32, Initialized: false} j:{name: j, Type: uint32, Initialized: false}], children: [
+            Scope: { id: if#0@returns(uint32,uint32), type: 6, parent: returns(uint32,uint32) },
+            Scope: { id: else if#0.0@returns(uint32,uint32), type: 6, parent: returns(uint32,uint32) },
+            Scope: { id: else#0@returns(uint32,uint32), type: 6, parent: returns(uint32,uint32) }
+        ] },
+        Scope: { id: returns(uint32,uint32,uint32), type: 4, parent: @global, variables: map[count:{name: count, Type: uint32, isMutable: true, Initialized: true} i:{name: i, Type: uint32, Initialized: false} j:{name: j, Type: uint32, Initialized: false} k:{name: k, Type: uint32, Initialized: false}], children: [
+            Scope: { id: while#0@returns(uint32,uint32,uint32), type: 5, parent: returns(uint32,uint32,uint32), children: [
+                Scope: { id: if#0@while#0@returns(uint32,uint32,uint32), type: 6, parent: while#0@returns(uint32,uint32,uint32) }
+            ] }
+        ] },
+        Scope: { id: returns(uint64,uint64,uint64), type: 4, parent: @global, variables: map[i:{name: i, Type: uint64, Initialized: false} j:{name: j, Type: uint64, Initialized: false} k:{name: k, Type: uint64, Initialized: false}], children: [
+            Scope: { id: for#0@returns(uint64,uint64,uint64), type: 5, parent: returns(uint64,uint64,uint64), variables: map[n:{name: n, Type: uint64, Initialized: false}], children: [
+                Scope: { id: if#0@for#0@returns(uint64,uint64,uint64), type: 6, parent: for#0@returns(uint64,uint64,uint64) }
+            ] }
+        ] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
-        Scope: { id: @main(), type: 4, parent: @global }
+    Scope: { id: @global, parent: @built-in, functions: map[ifBlock:{name: ifBlock, returns: None, overloads: [{parameters: (int), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
+        Scope: { id: ifBlock(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@ifBlock(int), type: 6, parent: ifBlock(int) },
+            Scope: { id: else#0@ifBlock(int), type: 6, parent: ifBlock(int) }
+        ] },
+        Scope: { id: main(), type: 4, parent: @global }
     ] }
 ] }
 Compiler messages:
 [
-    "Warning: Unreachable code found after statement at line: 2, column: 5"
+    "Warning: Unreachable code at line: 4, column: 16",
+    "Warning: Unreachable code at line: 7, column: 16",
+    "Warning: Unreachable code at line: 9, column: 12",
+    "Warning: Unreachable code at line: 14, column: 5"
 ]
 
 ---
@@ -659,6 +1163,511 @@ children: [
     children: [
         Node: { Token: {Value: badReturn, Type: identifier, Line: 26, Column: 3} },
         Node: { Token: {Value: TYPE, Type: identifier, Line: 26, Column: 18} }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: missingReturn, Type: identifier, Line: 28, Column: 3} },
+        Node: { Token: {Value: uint32, Type: type keyword, Line: 28, Column: 22} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "call"
+            children: [
+                Node: { Token: {Value: println, Type: identifier, Line: 29, Column: 4} },
+                Node: { Label: "params"
+                children: [
+                    Node: { Token: {Value: "hi", Type: string literal, Line: 29, Column: 12} }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: missingReturn, Type: identifier, Line: 32, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 32, Column: 17} },
+                Node: { Token: {Value: u, Type: identifier, Line: 32, Column: 24} }
+            ] }
+        ] },
+        Node: { Token: {Value: uint32, Type: type keyword, Line: 32, Column: 30} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 33, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: u, Type: identifier, Line: 33, Column: 8}, Type: uint32 },
+                        Node: { Token: {Value: 1, Type: int literal, Line: 33, Column: 13}, Type: uint32 }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Token: {Value: println, Type: identifier, Line: 34, Column: 8} },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: u, Type: identifier, Line: 34, Column: 16} }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: missingReturn, Type: identifier, Line: 37, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 37, Column: 17} },
+                Node: { Token: {Value: u, Type: identifier, Line: 37, Column: 24} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: uint32, Type: type keyword, Line: 37, Column: 27} },
+                Node: { Token: {Value: u2, Type: identifier, Line: 37, Column: 34} }
+            ] }
+        ] },
+        Node: { Token: {Value: uint32, Type: type keyword, Line: 37, Column: 41} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 38, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: u, Type: identifier, Line: 38, Column: 8}, Type: uint32 },
+                        Node: { Token: {Value: u2, Type: identifier, Line: 38, Column: 13}, Type: uint32 }
+                    ] },
+                    Node: { Label: "conditional_body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 39, Column: 8} },
+                            Node: { Token: {Value: u, Type: identifier, Line: 39, Column: 15}, Type: uint32 }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else if"
+                children: [
+                    Node: { Token: {Value: <, Type: compare operator, Line: 41, Column: 15}, Type: bool
+                    children: [
+                        Node: { Token: {Value: u, Type: identifier, Line: 41, Column: 13}, Type: uint32 },
+                        Node: { Token: {Value: u2, Type: identifier, Line: 41, Column: 17}, Type: uint32 }
+                    ] },
+                    Node: { Label: "conditional_body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 42, Column: 8} },
+                            Node: { Token: {Value: u, Type: identifier, Line: 42, Column: 15}, Type: uint32 }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else"
+                children: [
+                    Node: { Label: "conditional_body"
+                    children: [
+                        Node: { Label: "call"
+                        children: [
+                            Node: { Token: {Value: println, Type: identifier, Line: 45, Column: 8} },
+                            Node: { Label: "params"
+                            children: [
+                                Node: { Token: {Value: "greater", Type: string literal, Line: 45, Column: 16} }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: missingReturn, Type: identifier, Line: 50, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 50, Column: 17} },
+                Node: { Token: {Value: i, Type: identifier, Line: 50, Column: 21} }
+            ] }
+        ] },
+        Node: { Token: {Value: uint32, Type: type keyword, Line: 50, Column: 27} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "while"
+            children: [
+                Node: { Token: {Value: true, Type: boolean value keyword, Line: 52, Column: 11}, Type: bool },
+                Node: { Label: "loop-body"
+                children: [
+                    Node: { Label: "control-flow"
+                    children: [
+                        Node: { Token: {Value: return, Type: flow keyword, Line: 53, Column: 8} },
+                        Node: { Label: "typecast", Type: uint32
+                        children: [
+                            Node: { Token: {Value: i, Type: identifier, Line: 53, Column: 15}, Type: int },
+                            Node: { Token: {Value: uint32, Type: type keyword, Line: 53, Column: 20} }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: missingReturn, Type: identifier, Line: 58, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 58, Column: 17} },
+                Node: { Token: {Value: i, Type: identifier, Line: 58, Column: 21} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 58, Column: 24} },
+                Node: { Token: {Value: j, Type: identifier, Line: 58, Column: 28} }
+            ] }
+        ] },
+        Node: { Token: {Value: uint32, Type: type keyword, Line: 58, Column: 34} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "for"
+            children: [
+                Node: { Label: "loop-condition"
+                children: [
+                    Node: { Label: "Variable"
+                    children: [
+                        Node: { Token: {Value: int, Type: type keyword, Line: 60, Column: 9} },
+                        Node: { Token: {Value: n, Type: identifier, Line: 60, Column: 13} }
+                    ] },
+                    Node: { Token: {Value: in, Type: operator keyword, Line: 60, Column: 15} },
+                    Node: { Label: "range", Type: int
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 60, Column: 18}, Type: int },
+                        Node: { Token: {Value: ..=, Type: range operator, Line: 60, Column: 20} },
+                        Node: { Token: {Value: j, Type: identifier, Line: 60, Column: 24}, Type: int }
+                    ] }
+                ] },
+                Node: { Label: "loop-body"
+                children: [
+                    Node: { Label: "control-flow"
+                    children: [
+                        Node: { Token: {Value: return, Type: flow keyword, Line: 61, Column: 8} },
+                        Node: { Label: "typecast", Type: uint32
+                        children: [
+                            Node: { Token: {Value: +, Type: add operator, Line: 61, Column: 18}, Type: int
+                            children: [
+                                Node: { Token: {Value: i, Type: identifier, Line: 61, Column: 16}, Type: int },
+                                Node: { Token: {Value: j, Type: identifier, Line: 61, Column: 20}, Type: int }
+                            ] },
+                            Node: { Token: {Value: uint32, Type: type keyword, Line: 61, Column: 26} }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: missingReturnNestedIfBlocks, Type: identifier, Line: 66, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 66, Column: 31} },
+                Node: { Token: {Value: i, Type: identifier, Line: 66, Column: 35} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 66, Column: 38} },
+                Node: { Token: {Value: j, Type: identifier, Line: 66, Column: 42} }
+            ] }
+        ] },
+        Node: { Token: {Value: bool, Type: type keyword, Line: 66, Column: 48} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: <, Type: compare operator, Line: 67, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 67, Column: 8}, Type: int },
+                        Node: { Token: {Value: j, Type: identifier, Line: 67, Column: 12}, Type: int }
+                    ] },
+                    Node: { Label: "conditional_body"
+                    children: [
+                        Node: { Label: "if-block"
+                        children: [
+                            Node: { Label: "if"
+                            children: [
+                                Node: { Token: {Value: ==, Type: compare operator, Line: 68, Column: 18}, Type: bool
+                                children: [
+                                    Node: { Token: {Value: %, Type: multiply operator, Line: 68, Column: 14}, Type: int
+                                    children: [
+                                        Node: { Token: {Value: i, Type: identifier, Line: 68, Column: 12}, Type: int },
+                                        Node: { Token: {Value: 2, Type: int literal, Line: 68, Column: 16}, Type: int }
+                                    ] },
+                                    Node: { Token: {Value: 0, Type: int literal, Line: 68, Column: 21}, Type: int }
+                                ] },
+                                Node: { Label: "conditional_body"
+                                children: [
+                                    Node: { Label: "control-flow"
+                                    children: [
+                                        Node: { Token: {Value: return, Type: flow keyword, Line: 69, Column: 12} },
+                                        Node: { Token: {Value: /, Type: multiply operator, Line: 69, Column: 21}, Type: int
+                                        children: [
+                                            Node: { Token: {Value: i, Type: identifier, Line: 69, Column: 19}, Type: int },
+                                            Node: { Token: {Value: 2, Type: int literal, Line: 69, Column: 23}, Type: int }
+                                        ] }
+                                    ] }
+                                ] }
+                            ] }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else"
+                children: [
+                    Node: { Label: "conditional_body"
+                    children: [
+                        Node: { Label: "if-block"
+                        children: [
+                            Node: { Label: "if"
+                            children: [
+                                Node: { Token: {Value: ==, Type: compare operator, Line: 73, Column: 18}, Type: bool
+                                children: [
+                                    Node: { Token: {Value: %, Type: multiply operator, Line: 73, Column: 14}, Type: int
+                                    children: [
+                                        Node: { Token: {Value: j, Type: identifier, Line: 73, Column: 12}, Type: int },
+                                        Node: { Token: {Value: 2, Type: int literal, Line: 73, Column: 16}, Type: int }
+                                    ] },
+                                    Node: { Token: {Value: 0, Type: int literal, Line: 73, Column: 21}, Type: int }
+                                ] },
+                                Node: { Label: "conditional_body"
+                                children: [
+                                    Node: { Label: "control-flow"
+                                    children: [
+                                        Node: { Token: {Value: return, Type: flow keyword, Line: 74, Column: 12} },
+                                        Node: { Token: {Value: /, Type: multiply operator, Line: 74, Column: 21}, Type: int
+                                        children: [
+                                            Node: { Token: {Value: j, Type: identifier, Line: 74, Column: 19}, Type: int },
+                                            Node: { Token: {Value: 2, Type: int literal, Line: 74, Column: 23}, Type: int }
+                                        ] }
+                                    ] }
+                                ] }
+                            ] },
+                            Node: { Label: "else if"
+                            children: [
+                                Node: { Token: {Value: ==, Type: compare operator, Line: 76, Column: 23}, Type: bool
+                                children: [
+                                    Node: { Token: {Value: %, Type: multiply operator, Line: 76, Column: 19}, Type: int
+                                    children: [
+                                        Node: { Token: {Value: j, Type: identifier, Line: 76, Column: 17}, Type: int },
+                                        Node: { Token: {Value: 3, Type: int literal, Line: 76, Column: 21}, Type: int }
+                                    ] },
+                                    Node: { Token: {Value: 0, Type: int literal, Line: 76, Column: 26}, Type: int }
+                                ] },
+                                Node: { Label: "conditional_body"
+                                children: [
+                                    Node: { Label: "control-flow"
+                                    children: [
+                                        Node: { Token: {Value: return, Type: flow keyword, Line: 77, Column: 12} },
+                                        Node: { Token: {Value: /, Type: multiply operator, Line: 77, Column: 21}, Type: int
+                                        children: [
+                                            Node: { Token: {Value: j, Type: identifier, Line: 77, Column: 19}, Type: int },
+                                            Node: { Token: {Value: 3, Type: int literal, Line: 77, Column: 23}, Type: int }
+                                        ] }
+                                    ] }
+                                ] }
+                            ] },
+                            Node: { Label: "else"
+                            children: [
+                                Node: { Label: "conditional-body"
+                                children: [
+                                    Node: { Label: "control-flow"
+                                    children: [
+                                        Node: { Token: {Value: return, Type: flow keyword, Line: 80, Column: 12} },
+                                        Node: { Token: {Value: j, Type: identifier, Line: 80, Column: 19}, Type: int }
+                                    ] }
+                                ] }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: wrongReturnValue, Type: identifier, Line: 84, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 84, Column: 25} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 85, Column: 4} },
+                Node: { Token: {Value: '0', Type: char literal, Line: 85, Column: 11}, Type: char }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: wrongReturnValue, Type: identifier, Line: 88, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 88, Column: 20} },
+                Node: { Token: {Value: i, Type: identifier, Line: 88, Column: 24} }
+            ] }
+        ] },
+        Node: { Token: {Value: int, Type: type keyword, Line: 88, Column: 30} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 89, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 89, Column: 8}, Type: int },
+                        Node: { Token: {Value: 0, Type: int literal, Line: 89, Column: 13}, Type: int }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 90, Column: 8} },
+                            Node: { Token: {Value: i, Type: identifier, Line: 90, Column: 15}, Type: int }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "control-flow"
+            children: [
+                Node: { Token: {Value: return, Type: flow keyword, Line: 91, Column: 4} },
+                Node: { Token: {Value: "i", Type: string literal, Line: 91, Column: 11}, Type: String }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: wrongReturnValue, Type: identifier, Line: 94, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 94, Column: 20} },
+                Node: { Token: {Value: i, Type: identifier, Line: 94, Column: 24} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 94, Column: 27} },
+                Node: { Token: {Value: j, Type: identifier, Line: 94, Column: 31} }
+            ] }
+        ] },
+        Node: { Token: {Value: int, Type: type keyword, Line: 94, Column: 37} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 95, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 95, Column: 8}, Type: int },
+                        Node: { Token: {Value: 0, Type: int literal, Line: 95, Column: 13}, Type: int }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 96, Column: 8} },
+                            Node: { Token: {Value: i, Type: identifier, Line: 96, Column: 15}, Type: int }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else"
+                children: [
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 98, Column: 8} },
+                            Node: { Label: "typecast", Type: double
+                            children: [
+                                Node: { Token: {Value: j, Type: identifier, Line: 98, Column: 15}, Type: int },
+                                Node: { Token: {Value: double, Type: type keyword, Line: 98, Column: 20} }
+                            ] }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
+    ] },
+    Node: { Label: "fn"
+    children: [
+        Node: { Token: {Value: wrongAndMissingReturnValue, Type: identifier, Line: 101, Column: 3} },
+        Node: { Label: "params"
+        children: [
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: int, Type: type keyword, Line: 101, Column: 30} },
+                Node: { Token: {Value: i, Type: identifier, Line: 101, Column: 34} }
+            ] },
+            Node: { Label: "param"
+            children: [
+                Node: { Token: {Value: char, Type: type keyword, Line: 101, Column: 37} },
+                Node: { Token: {Value: curr, Type: identifier, Line: 101, Column: 42} }
+            ] }
+        ] },
+        Node: { Token: {Value: int, Type: type keyword, Line: 101, Column: 51} },
+        Node: { Label: "fn-body"
+        children: [
+            Node: { Label: "if-block"
+            children: [
+                Node: { Label: "if"
+                children: [
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 102, Column: 10}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 102, Column: 8}, Type: int },
+                        Node: { Token: {Value: 0, Type: int literal, Line: 102, Column: 13}, Type: int }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 103, Column: 8} },
+                            Node: { Token: {Value: i, Type: identifier, Line: 103, Column: 15}, Type: int }
+                        ] }
+                    ] }
+                ] },
+                Node: { Label: "else if"
+                children: [
+                    Node: { Token: {Value: ==, Type: compare operator, Line: 104, Column: 15}, Type: bool
+                    children: [
+                        Node: { Token: {Value: i, Type: identifier, Line: 104, Column: 13}, Type: int },
+                        Node: { Token: {Value: 1, Type: int literal, Line: 104, Column: 18}, Type: int }
+                    ] },
+                    Node: { Label: "conditional-body"
+                    children: [
+                        Node: { Label: "control-flow"
+                        children: [
+                            Node: { Token: {Value: return, Type: flow keyword, Line: 105, Column: 8} },
+                            Node: { Token: {Value: curr, Type: identifier, Line: 105, Column: 15}, Type: char }
+                        ] }
+                    ] }
+                ] }
+            ] }
+        ] }
     ] }
 ] }
 ScopeTree:
@@ -684,7 +1693,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
                 Scope: { id: startup@Runner@TestRunner, type: 4, parent: Runner@TestRunner }
             ] }
         ] },
-        Scope: { id: @main(), type: 4, parent: @global }
+        Scope: { id: main(), type: 4, parent: @global }
     ] },
     Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B} D:{name: D} Empty:{name: Empty}], structs: map[C:{name: C, size: 0, implements: [A, B, A]}], children: [
         Scope: { id: Empty, type: 1, parent: @global },
@@ -734,10 +1743,10 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: TestName, type: 2, parent: @global, functions: map[getX:{name: getX, returns: bool, overloads: [{parameters: (), implemented: true}]}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(TestName), isPrivate: true, isMutable: true, Initialized: true} x:{name: x, Type: int, isMutable: true, Initialized: false}], children: [
             Scope: { id: getX()@TestName, type: 4, parent: TestName }
         ] },
-        Scope: { id: @resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
-        Scope: { id: @getX(), type: 4, parent: @global },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[outer:{name: outer, Type: Outer, isMutable: true, Initialized: true} p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, isMutable: true, Initialized: true} personString:{name: personString, Type: String, Initialized: true} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false}], children: [
-            Scope: { id: if#0@@main(), type: 6, parent: @main() }
+        Scope: { id: resolveImplementationConflict(), type: 4, parent: @global, variables: map[ca:{name: ca, Type: CompilerApp, Initialized: true}] },
+        Scope: { id: getX(), type: 4, parent: @global },
+        Scope: { id: main(), type: 4, parent: @global, variables: map[outer:{name: outer, Type: Outer, isMutable: true, Initialized: true} p1:{name: p1, Type: Person, Initialized: true} p2:{name: p2, Type: Person, isMutable: true, Initialized: true} personString:{name: personString, Type: String, Initialized: true} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false}], children: [
+            Scope: { id: if#0@main(), type: 6, parent: main() }
         ] }
     ] },
     Scope: { id: @global, parent: @built-in, structs: map[Sample:{name: Sample, size: 0}], children: [
@@ -755,7 +1764,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: Location, type: 2, parent: @global, variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(Location), isPrivate: true, isMutable: true, Initialized: true}] },
         Scope: { id: Laptop, type: 2, parent: @global, variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(Laptop), isPrivate: true, isMutable: true, Initialized: true}] },
         Scope: { id: Container, type: 2, parent: @global, namedBlocks: map[cast:{name: cast} compare:{name: compare}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} id:{name: id, Type: String, Initialized: false} runTimeVersion:{name: runTimeVersion, Type: int, isPrivate: true, Initialized: false} this:{name: this, Type: Ref(Container), isPrivate: true, isMutable: true, Initialized: true}], children: [
-            Scope: { id: cast@Container, type: 3, parent: Container, functions: map[duplicateToString:{name: duplicateToString, returns: String, overloads: [{parameters: (), implemented: true}]} toInterface:{name: toInterface, returns: Device, overloads: [{parameters: (), implemented: true}]} toNone:{name: toNone, returns: None, overloads: [{parameters: (), implemented: true}]} toSame:{name: toSame, returns: Container, overloads: [{parameters: (), implemented: true}]} toString:{name: toString, returns: String, overloads: [{parameters: (String), implemented: true}]}], children: [
+            Scope: { id: cast@Container, type: 3, parent: Container, functions: map[createInt:{name: createInt, returns: int, overloads: [{parameters: (), implemented: false}]} duplicateToString:{name: duplicateToString, returns: String, overloads: [{parameters: (), implemented: true}]} toInterface:{name: toInterface, returns: Device, overloads: [{parameters: (), implemented: true}]} toNone:{name: toNone, returns: None, overloads: [{parameters: (), implemented: true}]} toSame:{name: toSame, returns: Container, overloads: [{parameters: (), implemented: true}]} toString:{name: toString, returns: String, overloads: [{parameters: (String), implemented: true}]}], children: [
                 Scope: { id: toInterface()@cast@Container, type: 4, parent: cast@Container },
                 Scope: { id: toString(String)@cast@Container, type: 4, parent: cast@Container, variables: map[name:{name: name, Type: String, Initialized: false}] },
                 Scope: { id: duplicateToString()@cast@Container, type: 4, parent: cast@Container },
@@ -801,43 +1810,110 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: TestName, type: 2, parent: @global, functions: map[getX:{name: getX, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(TestName), isPrivate: true, isMutable: true, Initialized: true} x:{name: x, Type: int, Initialized: false}], children: [
             Scope: { id: getX()@TestName, type: 4, parent: TestName }
         ] },
-        Scope: { id: @getX(), type: 4, parent: @global },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} mariaPT:{name: mariaPT, Type: PrivateTester, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} pt:{name: pt, Type: PrivateTester, Initialized: true} pt2:{name: pt2, Type: PrivateTester, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
+        Scope: { id: getX(), type: 4, parent: @global },
+        Scope: { id: main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} mariaPT:{name: mariaPT, Type: PrivateTester, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} pt:{name: pt, Type: PrivateTester, Initialized: true} pt2:{name: pt2, Type: PrivateTester, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} strings:{name: strings, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[description:{name: description, Type: String, Initialized: true} g:{name: g, Type: double, Initialized: true} i:{name: i, Type: int, Initialized: true} is:{name: is, Type: bool, Initialized: true} j:{name: j, Type: int64, Initialized: true} newLine:{name: newLine, Type: char, Initialized: true} u:{name: u, Type: uint32, Initialized: true} u2:{name: u2, Type: uint64, Initialized: true}], children: [
-        Scope: { id: @strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
+        Scope: { id: strings(), type: 4, parent: @global, variables: map[copy:{name: copy, Type: String, Initialized: true} isEnd:{name: isEnd, Type: bool, Initialized: true} len:{name: len, Type: int, Initialized: true} s:{name: s, Type: String, Initialized: true} slice:{name: slice, Type: String, Initialized: true}] },
+        Scope: { id: main(), type: 4, parent: @global, variables: map[greet:{name: greet, Type: String, isMutable: true, Initialized: true} isNot:{name: isNot, Type: bool, Initialized: true} u3:{name: u3, Type: uint64, isMutable: true, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, isMutable: true, Initialized: false}], children: [
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[f:{name: f, Type: float, Initialized: true} smaller:{name: smaller, Type: uint32, Initialized: true} u:{name: u, Type: uint64, Initialized: true}] }
+        Scope: { id: main(), type: 4, parent: @global, variables: map[f:{name: f, Type: float, Initialized: true} smaller:{name: smaller, Type: uint32, Initialized: true} u:{name: u, Type: uint64, Initialized: true}] }
     ] },
     Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[c:{name: c, Type: char, Initialized: true} isTrue:{name: isTrue, Type: bool, Initialized: true} j:{name: j, Type: uint32, isMutable: true, Initialized: true}], children: [
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} name:{name: name, Type: None, Initialized: false} notC:{name: notC, Type: char, Initialized: true} opposite:{name: opposite, Type: bool, Initialized: true} pick:{name: pick, Type: int, Initialized: true} repeat:{name: repeat, Type: String, Initialized: true} result:{name: result, Type: int, Initialized: true} sum:{name: sum, Type: int, Initialized: true} u:{name: u, Type: uint32, Initialized: true} value:{name: value, Type: bool, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true} x:{name: x, Type: int, Initialized: true} xorChar:{name: xorChar, Type: char, Initialized: true}] }
+        Scope: { id: main(), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} name:{name: name, Type: None, Initialized: false} notC:{name: notC, Type: char, Initialized: true} opposite:{name: opposite, Type: bool, Initialized: true} pick:{name: pick, Type: int, Initialized: true} repeat:{name: repeat, Type: String, Initialized: true} result:{name: result, Type: int, Initialized: true} sum:{name: sum, Type: int, Initialized: true} u:{name: u, Type: uint32, Initialized: true} value:{name: value, Type: bool, Initialized: true} withNum:{name: withNum, Type: String, Initialized: true} x:{name: x, Type: int, Initialized: true} xorChar:{name: xorChar, Type: char, Initialized: true}] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[caller:{name: caller, returns: None, overloads: [{parameters: (), implemented: true}]} forwardDeclaration:{name: forwardDeclaration, returns: None, overloads: [{parameters: (), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} overloads:{name: overloads, returns: bool, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,int), implemented: true}]}], children: [
-        Scope: { id: @overloads(), type: 4, parent: @global },
-        Scope: { id: @overloads(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
-        Scope: { id: @overloads(int,int), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}] },
-        Scope: { id: @caller(), type: 4, parent: @global },
-        Scope: { id: @main(), type: 4, parent: @global },
-        Scope: { id: @forwardDeclaration(), type: 4, parent: @global }
+    Scope: { id: @global, parent: @built-in, functions: map[caller:{name: caller, returns: None, overloads: [{parameters: (), implemented: true}]} forwardDeclaration:{name: forwardDeclaration, returns: None, overloads: [{parameters: (), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]} overloads:{name: overloads, returns: bool, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,int), implemented: true}]} returns:{name: returns, returns: bool, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,int), implemented: true}{parameters: (uint32,uint32), implemented: true}{parameters: (uint32,uint32,uint32), implemented: true}{parameters: (uint64,uint64,uint64), implemented: true}]}], children: [
+        Scope: { id: overloads(), type: 4, parent: @global },
+        Scope: { id: overloads(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
+        Scope: { id: overloads(int,int), type: 4, parent: @global, variables: map[eq:{name: eq, Type: bool, Initialized: true} i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}] },
+        Scope: { id: caller(), type: 4, parent: @global },
+        Scope: { id: main(), type: 4, parent: @global },
+        Scope: { id: forwardDeclaration(), type: 4, parent: @global },
+        Scope: { id: returns(), type: 4, parent: @global, children: [
+            Scope: { id: if#0@returns(), type: 6, parent: returns() },
+            Scope: { id: else#0@returns(), type: 6, parent: returns() }
+        ] },
+        Scope: { id: returns(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@returns(int), type: 6, parent: returns(int) }
+        ] },
+        Scope: { id: returns(int,int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@returns(int,int), type: 6, parent: returns(int,int) },
+            Scope: { id: else if#0.0@returns(int,int), type: 6, parent: returns(int,int) },
+            Scope: { id: else#0@returns(int,int), type: 6, parent: returns(int,int) }
+        ] },
+        Scope: { id: returns(uint32,uint32), type: 4, parent: @global, variables: map[i:{name: i, Type: uint32, Initialized: false} j:{name: j, Type: uint32, Initialized: false}], children: [
+            Scope: { id: if#0@returns(uint32,uint32), type: 6, parent: returns(uint32,uint32) },
+            Scope: { id: else if#0.0@returns(uint32,uint32), type: 6, parent: returns(uint32,uint32) },
+            Scope: { id: else#0@returns(uint32,uint32), type: 6, parent: returns(uint32,uint32) }
+        ] },
+        Scope: { id: returns(uint32,uint32,uint32), type: 4, parent: @global, variables: map[count:{name: count, Type: uint32, isMutable: true, Initialized: true} i:{name: i, Type: uint32, Initialized: false} j:{name: j, Type: uint32, Initialized: false} k:{name: k, Type: uint32, Initialized: false}], children: [
+            Scope: { id: while#0@returns(uint32,uint32,uint32), type: 5, parent: returns(uint32,uint32,uint32), children: [
+                Scope: { id: if#0@while#0@returns(uint32,uint32,uint32), type: 6, parent: while#0@returns(uint32,uint32,uint32) }
+            ] }
+        ] },
+        Scope: { id: returns(uint64,uint64,uint64), type: 4, parent: @global, variables: map[i:{name: i, Type: uint64, Initialized: false} j:{name: j, Type: uint64, Initialized: false} k:{name: k, Type: uint64, Initialized: false}], children: [
+            Scope: { id: for#0@returns(uint64,uint64,uint64), type: 5, parent: returns(uint64,uint64,uint64), variables: map[n:{name: n, Type: uint64, Initialized: false}], children: [
+                Scope: { id: if#0@for#0@returns(uint64,uint64,uint64), type: 6, parent: for#0@returns(uint64,uint64,uint64) }
+            ] }
+        ] }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
-        Scope: { id: @main(), type: 4, parent: @global }
+    Scope: { id: @global, parent: @built-in, functions: map[ifBlock:{name: ifBlock, returns: None, overloads: [{parameters: (int), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], children: [
+        Scope: { id: ifBlock(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@ifBlock(int), type: 6, parent: ifBlock(int) },
+            Scope: { id: else#0@ifBlock(int), type: 6, parent: ifBlock(int) }
+        ] },
+        Scope: { id: main(), type: 4, parent: @global }
     ] },
-    Scope: { id: @global, parent: @built-in, functions: map[badReturn:{name: badReturn, returns: None, overloads: [{parameters: (), implemented: false}]} caller:{name: caller, returns: None, overloads: [{parameters: (), implemented: true}]} overloads:{name: overloads, returns: bool, overloads: [{parameters: (int), implemented: true}]} plusOne:{name: plusOne, returns: int, overloads: [{parameters: (int), implemented: true}]} test:{name: test, returns: None, overloads: [{parameters: (), implemented: false}]}], children: [
-        Scope: { id: @test(), type: 4, parent: @global },
-        Scope: { id: @overloads(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
-        Scope: { id: @overloads(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
-        Scope: { id: @overloads(int,int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}] },
-        Scope: { id: @plusOne(int), type: 4, parent: @global, variables: map[n:{name: n, Type: int, Initialized: false}] },
-        Scope: { id: @caller(), type: 4, parent: @global }
+    Scope: { id: @global, parent: @built-in, functions: map[badReturn:{name: badReturn, returns: None, overloads: [{parameters: (), implemented: false}]} caller:{name: caller, returns: None, overloads: [{parameters: (), implemented: true}]} missingReturn:{name: missingReturn, returns: uint32, overloads: [{parameters: (), implemented: true}{parameters: (uint32), implemented: true}{parameters: (uint32,uint32), implemented: true}{parameters: (int), implemented: true}{parameters: (int,int), implemented: true}]} missingReturnNestedIfBlocks:{name: missingReturnNestedIfBlocks, returns: bool, overloads: [{parameters: (int,int), implemented: true}]} overloads:{name: overloads, returns: bool, overloads: [{parameters: (int), implemented: true}]} plusOne:{name: plusOne, returns: int, overloads: [{parameters: (int), implemented: true}]} test:{name: test, returns: None, overloads: [{parameters: (), implemented: false}]} wrongAndMissingReturnValue:{name: wrongAndMissingReturnValue, returns: int, overloads: [{parameters: (int,char), implemented: true}]} wrongReturnValue:{name: wrongReturnValue, returns: int, overloads: [{parameters: (), implemented: true}{parameters: (int), implemented: true}{parameters: (int,int), implemented: true}]}], children: [
+        Scope: { id: test(), type: 4, parent: @global },
+        Scope: { id: overloads(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
+        Scope: { id: overloads(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}] },
+        Scope: { id: overloads(int,int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}] },
+        Scope: { id: plusOne(int), type: 4, parent: @global, variables: map[n:{name: n, Type: int, Initialized: false}] },
+        Scope: { id: caller(), type: 4, parent: @global },
+        Scope: { id: missingReturn(), type: 4, parent: @global },
+        Scope: { id: missingReturn(uint32), type: 4, parent: @global, variables: map[u:{name: u, Type: uint32, Initialized: false}], children: [
+            Scope: { id: if#0@missingReturn(uint32), type: 6, parent: missingReturn(uint32) }
+        ] },
+        Scope: { id: missingReturn(uint32,uint32), type: 4, parent: @global, variables: map[u:{name: u, Type: uint32, Initialized: false} u2:{name: u2, Type: uint32, Initialized: false}], children: [
+            Scope: { id: if#0@missingReturn(uint32,uint32), type: 6, parent: missingReturn(uint32,uint32) },
+            Scope: { id: else if#0.0@missingReturn(uint32,uint32), type: 6, parent: missingReturn(uint32,uint32) },
+            Scope: { id: else#0@missingReturn(uint32,uint32), type: 6, parent: missingReturn(uint32,uint32) }
+        ] },
+        Scope: { id: missingReturn(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}], children: [
+            Scope: { id: while#0@missingReturn(int), type: 5, parent: missingReturn(int) }
+        ] },
+        Scope: { id: missingReturn(int,int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}], children: [
+            Scope: { id: for#0@missingReturn(int,int), type: 5, parent: missingReturn(int,int), variables: map[n:{name: n, Type: int, Initialized: false}] }
+        ] },
+        Scope: { id: missingReturnNestedIfBlocks(int,int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@missingReturnNestedIfBlocks(int,int), type: 6, parent: missingReturnNestedIfBlocks(int,int), children: [
+                Scope: { id: if#0@if#0@missingReturnNestedIfBlocks(int,int), type: 6, parent: if#0@missingReturnNestedIfBlocks(int,int) }
+            ] },
+            Scope: { id: else#0@missingReturnNestedIfBlocks(int,int), type: 6, parent: missingReturnNestedIfBlocks(int,int), children: [
+                Scope: { id: if#0@else#0@missingReturnNestedIfBlocks(int,int), type: 6, parent: else#0@missingReturnNestedIfBlocks(int,int) },
+                Scope: { id: else if#0.0@else#0@missingReturnNestedIfBlocks(int,int), type: 6, parent: else#0@missingReturnNestedIfBlocks(int,int) },
+                Scope: { id: else#0@else#0@missingReturnNestedIfBlocks(int,int), type: 6, parent: else#0@missingReturnNestedIfBlocks(int,int) }
+            ] }
+        ] },
+        Scope: { id: wrongReturnValue(), type: 4, parent: @global },
+        Scope: { id: wrongReturnValue(int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@wrongReturnValue(int), type: 6, parent: wrongReturnValue(int) }
+        ] },
+        Scope: { id: wrongReturnValue(int,int), type: 4, parent: @global, variables: map[i:{name: i, Type: int, Initialized: false} j:{name: j, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@wrongReturnValue(int,int), type: 6, parent: wrongReturnValue(int,int) },
+            Scope: { id: else#0@wrongReturnValue(int,int), type: 6, parent: wrongReturnValue(int,int) }
+        ] },
+        Scope: { id: wrongAndMissingReturnValue(int,char), type: 4, parent: @global, variables: map[curr:{name: curr, Type: char, Initialized: false} i:{name: i, Type: int, Initialized: false}], children: [
+            Scope: { id: if#0@wrongAndMissingReturnValue(int,char), type: 6, parent: wrongAndMissingReturnValue(int,char) },
+            Scope: { id: else if#0.0@wrongAndMissingReturnValue(int,char), type: 6, parent: wrongAndMissingReturnValue(int,char) }
+        ] }
     ] }
 ] }
 Compiler messages:
 [
     "IllegalStatementError: Function with signature 'fn test()' cannot be redefined at line: 3, column: 1",
-    "TypeError: Function 'overloads(int)->bool' may not return a value at line: 5, column: 29",
     "TypeError: Function 'overloads(int)->bool' expected return type bool but got int at line: 6, column: 5",
     "IllegalStatementError: Function with signature 'fn overloads(int)->bool' cannot be redefined at line: 9, column: 1",
     "IllegalStatementError: Function name 'overloads' can only be overloaded with return type bool. Found: char at line: 13, column: 1",
@@ -845,6 +1921,21 @@ Compiler messages:
     "CallError: Could not find function 'plusOne(int,int)->int' at line: 23, column: 5",
     "CallError: Could not find function 'plusOne()->int' at line: 24, column: 5",
     "TypeError: Invalid type 'TYPE' provided at line: 27, column: 19",
+    "TypeError: Function 'missingReturn()->uint32' may not return a value at line: 29, column: 30",
+    "TypeError: Function 'missingReturn(uint32)->uint32' may not return a value at line: 33, column: 38",
+    "TypeError: Function 'missingReturn(uint32,uint32)->uint32' may not return a value at line: 38, column: 49",
+    "TypeError: Function 'missingReturn(int)->uint32' may not return a value at line: 51, column: 35",
+    "TypeError: Function 'missingReturn(int,int)->uint32' may not return a value at line: 59, column: 42",
+    "TypeError: Function 'missingReturnNestedIfBlocks(int,int)->bool' expected return type bool but got int at line: 70, column: 13",
+    "TypeError: Function 'missingReturnNestedIfBlocks(int,int)->bool' expected return type bool but got int at line: 75, column: 13",
+    "TypeError: Function 'missingReturnNestedIfBlocks(int,int)->bool' expected return type bool but got int at line: 78, column: 13",
+    "TypeError: Function 'missingReturnNestedIfBlocks(int,int)->bool' expected return type bool but got int at line: 81, column: 13",
+    "TypeError: Function 'wrongReturnValue()->int' expected return type int but got char at line: 86, column: 5",
+    "TypeError: Function 'wrongReturnValue(int)->int' expected return type int but got String at line: 92, column: 5",
+    "Warning: Unreachable code at line: 92, column: 5",
+    "TypeError: Function 'wrongReturnValue(int,int)->int' expected return type int but got double at line: 99, column: 9",
+    "TypeError: Function 'wrongAndMissingReturnValue(int,char)->int' may not return a value at line: 102, column: 56",
+    "TypeError: Function 'wrongAndMissingReturnValue(int,char)->int' expected return type int but got char at line: 106, column: 9",
     "Error: Missing entrypoint function 'fn main()->int' "
 ]
 

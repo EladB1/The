@@ -24,3 +24,54 @@ fn main() -> int {
 fn forwardDeclaration() {
     println("Valid call");
 }
+
+fn returns() -> bool {
+    if (1 < 5)
+        return true;
+    else
+        return false;
+}
+
+fn returns(int i) -> bool {
+    if (i < 5)
+        return true;
+    return false;
+}
+
+fn returns(int i, int j) -> bool {
+    if (i < j)
+        return true;
+    else if (i == j)
+        return true;
+    else
+        return false;
+}
+
+fn returns(uint32 i, uint32 j) -> bool {
+    if (i < j)
+        return true;
+    else if (i == j)
+        println(j);
+    else
+        return false;
+    return false;
+}
+
+fn returns(uint32 i, uint32 j, uint32 k) -> bool {
+    mut uint32 count = i;
+    while (true) {
+        if (count == j + k)
+            return true;
+        count++;
+    }
+    return false;
+}
+
+fn returns(uint64 i, uint64 j, uint64 k) -> bool {
+    for (uint64 n in i ..= j .. k) {
+        if (n == j / 2) {
+            return true;
+        }
+    }
+    return false;
+}

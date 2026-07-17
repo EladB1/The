@@ -16,7 +16,6 @@ fn main() -> int {
     d + i;
     i2 + d;
     u + 1;
-    u + 1 * i; // BUG: should not be valid
     double sqrt = u ** 0.5;
     int pow = i ** u2;
     u as int;

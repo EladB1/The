@@ -25,3 +25,84 @@ fn caller() {
 }
 
 fn badReturn() -> TYPE;
+
+fn missingReturn() -> uint32 {
+    println("hi");
+}
+
+fn missingReturn(uint32 u) -> uint32 {
+    if (u == 1)
+        println(u);
+}
+
+fn missingReturn(uint32 u, uint32 u2) -> uint32 {
+    if (u == u2) {
+        return u;
+    }
+    else if (u < u2) {
+        return u;
+    }
+    else {
+        println("greater");
+    }
+    // must either return outside of if/else block or have each part return
+}
+
+fn missingReturn(int i) -> uint32 {
+    // Currently, SA doesn't know if this loop will be entered so considering it no return
+    while (true) { 
+        return i as uint32;
+    }
+    // add return here to make this valid
+}
+
+fn missingReturn(int i, int j) -> uint32 {
+    // Currently, SA doesn't know if this loop will be entered so considering it no return
+    for (int n in i ..= j) { 
+        return (i + j) as uint32;
+    }
+    // add return here to make this valid
+}
+
+fn missingReturnNestedIfBlocks(int i, int j) -> bool {
+    if (i < j) {
+        if (i % 2 == 0) {
+            return i / 2;
+        }
+        // missing return for the above if statement condition being false
+    } else {
+        if (j % 2 == 0) {
+            return j / 2;
+        }
+        else if (j % 3 == 0) {
+            return j / 3;
+        }
+        else
+            return j;
+    }
+}
+
+fn wrongReturnValue() -> int {
+    return '0';
+}
+
+fn wrongReturnValue(int i) -> int {
+    if (i == 0)
+        return i;
+    return "i";
+}
+
+fn wrongReturnValue(int i, int j) -> int {
+    if (i == 0)
+        return i;
+    else
+        return j as double;
+}
+
+fn wrongAndMissingReturnValue(int i, char curr) -> int {
+    if (i == 0)
+        return i;
+    else if (i == 1)
+        return curr;
+}
+

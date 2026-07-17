@@ -9,19 +9,10 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-var (
-	ifBlockCounter int
-	whileCounter   int
-	forCounter     int
-)
-
 func processFunctionSignature(fnNode parser.AST) FnCreateSymbol {
 	details := fnNode.Children
 	length := len(details)
 	name := details[0].Token.Value
-	ifBlockCounter = 0
-	whileCounter = 0
-	forCounter = 0
 	var paramNode *parser.AST = nil
 	var returnTypeNode *parser.AST = nil
 	var bodyNode *parser.AST = nil
@@ -67,7 +58,7 @@ func processFunctionSignature(fnNode parser.AST) FnCreateSymbol {
 	}
 	if bodyNode != nil {
 		paramList := datatypes.Join(paramTypes)
-		scopeId := fmt.Sprintf("@%s(%s)", name, paramList)
+		scopeId := fmt.Sprintf("%s(%s)", name, paramList)
 		if currentScope.id != "@global" {
 			scopeId = fmt.Sprintf("%s(%s)@%s", name, paramList, currentScope.id)
 		}
@@ -106,16 +97,23 @@ func analyzeFunctionBody(fn FunctionSymbol) {
 		hasReturn := analyzeBlockAndCheckForReturn(overload.Body.Children, fn, sig)
 		if !hasReturn && fn.returnType != datatypes.None {
 			messages.Complain(diagnostic.TypeError, overload.Body.Location, "Function '%s' may not return a value", sig)
-			// BUG: This message shows if the return types don't match
 		}
 	}
 	currentScope = scope
 }
 
 func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig string) bool {
-	hasValidReturn := false
+	hasReturn := false
 	length := len(body)
+	unreachable := false
+	ifBlockCounter := 0
+	whileCounter := 0
+	forCounter := 0
 	for i, stmt := range body {
+		if unreachable {
+			messages.Warn(stmt.Location, "Unreachable code")
+			unreachable = false // reset it so this warning doesn't get repeated
+		}
 		if stmt.Label == "Variable" {
 			symbol := analyzeVariable(stmt)
 			if symbol != nil {
@@ -129,15 +127,15 @@ func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig str
 			analyzeAssignment(&stmt)
 		} else if stmt.Label == "control-flow" {
 			if i != length-1 {
-				messages.Warn(stmt.Location, "Unreachable code found after statement")
+				unreachable = true
 			}
 			if len(stmt.Children) == 1 && stmt.Children[0].Token.Value == "return" {
 				if fn.returnType != datatypes.None {
 					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' missing return value, expected: %s", sig, fn.returnType)
 				} else {
 					stmt.Type = datatypes.None
-					hasValidReturn = true
 				}
+				hasReturn = true
 			} else if len(stmt.Children) == 1 { // continue and break
 				if !currentScope.HasScopeTypeAncestor(Loop) {
 					messages.Complain(diagnostic.IllegalStatementError, stmt.Location, "Cannot use %s outside of loop", stmt.Children[0].Token.Value)
@@ -148,8 +146,8 @@ func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig str
 					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' expected return type %s but got %s", sig, fn.returnType, rhs)
 				} else {
 					stmt.Type = rhs
-					hasValidReturn = true
 				}
+				hasReturn = true
 			}
 		} else if stmt.Label == "if-block" {
 			scope := currentScope
@@ -175,14 +173,18 @@ func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig str
 				}
 				returns := analyzeBlockAndCheckForReturn(branch.Children[block_index].Children, fn, sig)
 				if i == 0 {
-					hasValidReturn = returns
+					hasReturn = returns
+				} else if i == len(stmt.Children)-1 && branch.Label != "else" {
+					hasReturn = false
 				} else {
-					hasValidReturn = hasValidReturn && returns
+					hasReturn = hasReturn && returns
 				}
 			}
 			currentScope = scope
 			ifBlockCounter++
-
+			if hasReturn && i != length-1 {
+				unreachable = true
+			}
 		} else if stmt.Label == "for" {
 			scope := currentScope
 			newScope := currentScope.addChild(fmt.Sprintf("for#%d@%s", forCounter, currentScope.id), Loop)
@@ -207,5 +209,5 @@ func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig str
 			stmt.Type, _ = evalType(&stmt, datatypes.None) // expressions
 		}
 	}
-	return hasValidReturn
+	return hasReturn
 }

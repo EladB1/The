@@ -15,6 +15,7 @@ fn main() -> int {
     u2 + i2;
     u * f;
     "2" * 2;
+    u + 1 * i;
     c++;
     --flag;
     --i;

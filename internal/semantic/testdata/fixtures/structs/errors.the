@@ -50,6 +50,7 @@ struct Container {
         fn toSame() -> Container {
             return Container{id: id};
         }
+        fn createInt() -> int;
     }
     compare {
         int wrongPlace2;

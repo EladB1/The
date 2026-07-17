@@ -1,3 +1,14 @@
+fn ifBlock(int i) {
+    if (i == 0) {
+        return;
+        println(i);
+    } else {
+        return;
+        println("not zero");
+    }
+    println("after if block");
+}
+
 fn main() -> int {
     return 0;
     return 1;

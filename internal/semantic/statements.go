@@ -369,7 +369,6 @@ func evalTypecast(original *parser.AST, targetType *parser.AST, expectedType dat
 					messages.Complain(diagnostic.CastError, targetType.Location, "Cannot typecast %s to %s. To support typecasting add a cast block with a function returning the target type", lhs, target)
 					hasError = true
 				} else if !castBlock.HasReturnType(target) {
-					// TODO: check if the matching function has a body
 					messages.Complain(diagnostic.CastError, targetType.Location, "Cannot typecast %s to %s. To support this typecasting add a function returning target type to cast block", lhs, target)
 					hasError = true
 				}
