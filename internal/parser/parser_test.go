@@ -30,14 +30,12 @@ func snapshotTestParser(t *testing.T, filename string, debug bool) {
 	fixture := loadFixture(t, filename)
 	ast, messages := Parse(fixture.Tokens, fixture.Literals)
 	var msgBuilder strings.Builder
-	var formatStr string
+	delim := ","
 	for i, msg := range messages.Messages {
-		if i != len(messages.Messages)-1 {
-			formatStr = fmt.Sprintf("\n\t\"%v\",", msg)
-		} else {
-			formatStr = fmt.Sprintf("\n\t\"%v\"\n", msg)
+		if i == len(messages.Messages)-1 {
+			delim = "\n"
 		}
-		msgBuilder.WriteString(formatStr)
+		msgBuilder.WriteString(fmt.Sprintf("\n\t\"%v\"%s", msg, delim))
 	}
 	results := fmt.Sprintf("AST:\n%v\n, Compiler messages:\n[%s]\n", ast.String(fixture.Literals), msgBuilder.String())
 	if debug {

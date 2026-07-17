@@ -21,22 +21,19 @@ func snapshotTestLexer(t *testing.T, filename string) {
 	tokens, pool, messages := Lex(src, false)
 	var tokenBuilder strings.Builder
 	var messagesBuilder strings.Builder
-	var formatStr string
+	delim := ","
 	for i, token := range tokens {
-		if i != len(tokens)-1 {
-			formatStr = fmt.Sprintf("\n\t%v,", token.String(pool))
-		} else {
-			formatStr = fmt.Sprintf("\n\t%v\n", token.String(pool))
+		if i == len(tokens)-1 {
+			delim = "\n"
 		}
-		tokenBuilder.WriteString(formatStr)
+		tokenBuilder.WriteString(fmt.Sprintf("\n\t%v%s", token.String(pool), delim))
 	}
+	delim = ","
 	for i, msg := range messages.Messages {
-		if i != len(messages.Messages)-1 {
-			formatStr = fmt.Sprintf("\n\t\"%v\",", msg)
-		} else {
-			formatStr = fmt.Sprintf("\n\t\"%v\"\n", msg)
+		if i == len(messages.Messages)-1 {
+			delim = "\n"
 		}
-		messagesBuilder.WriteString(formatStr)
+		messagesBuilder.WriteString(fmt.Sprintf("\n\t\"%v\"%s", msg, delim))
 	}
 	results := fmt.Sprintf("Tokens:\n[%s]\nCompiler messages:\n[%s]\n", tokenBuilder.String(), messagesBuilder.String())
 	snapshots.MatchSnapshot(t, results)

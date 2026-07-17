@@ -77,14 +77,12 @@ func snapshotTestSemanticAnalyzer(t *testing.T, filename string, subdir string) 
 	fixture := loadFixture(t, testdir, filename)
 	result, scopeTree, messages := Analyze(fixture.AST)
 	var msgBuilder strings.Builder
-	var formatStr string
+	delim := ","
 	for i, msg := range messages.Messages {
-		if i != len(messages.Messages)-1 {
-			formatStr = fmt.Sprintf("\n\t\"%v\",", msg)
-		} else {
-			formatStr = fmt.Sprintf("\n\t\"%v\"\n", msg)
+		if i == len(messages.Messages)-1 {
+			delim = "\n"
 		}
-		msgBuilder.WriteString(formatStr)
+		msgBuilder.WriteString(fmt.Sprintf("\n\t\"%v\"%s", msg, delim))
 	}
 	results := fmt.Sprintf("AST:\n%v\nScopeTree:\n%v\nCompiler messages:\n[%s]\n", result.String(fixture.Literals), scopeTree, msgBuilder.String())
 	snapshots.MatchSnapshot(t, results)
