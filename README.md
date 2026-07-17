@@ -747,8 +747,8 @@ Phases:
 
     1. Lexical Analysis
     2. Parsing
-    3. Semantic Analysis <- WIP
-    4. IR Generation
+    3. Semantic Analysis
+    4. IR Generation <- WIP
     5. Code Generation (WAT)
     6. Execution via wasmtime
 
@@ -798,10 +798,10 @@ The passes will be:
 2. Analyze interface function signatures: Collect function signatures from each interface
 3. Analyze struct function signatures: Collect function signatures from each struct
 4. Collect function signatures
-5. Analyze global variables
-6. Analyze interface function bodies
-7. Analyze struct function bodies
-8. Analyze interface implementation: Make any structs that claim to implement an interface actually do
+5. Analyze interface implementation: Make any structs that claim to implement an interface actually do
+6. Analyze global variables
+7. Analyze interface function bodies
+8. Analyze struct function bodies
 9. Analyze function bodies
 
 Scopes will be a tree of scope where each node contains the following:
@@ -810,6 +810,7 @@ Scopes will be a tree of scope where each node contains the following:
     - struct symbol table
     - function symbol table
     - variable symbol table
+    - named block symbol table
 
 The top two levels of the scope tree are the built-in scope and the global scope; interfaces and structs are only valid on those two levels. The built-in scope will contain anything that's part of the language standard library. The global scope will contain any top level declarations (interfaces, structs, functions, global variables). 
 
@@ -857,3 +858,29 @@ Will produce this scope tree:
 ```
 
 > The `while#0` and `if#0` are internal scope names used by the compiler to different various scopes which could have the same name
+
+#### Type inferencing
+
+The compiler has to do some guess work to handle different literal types. For instance:
+
+```
+uint32 value = 1;
+```
+
+This would be an error if we treat `1` as an int, so we have to give the type checker and expected type.
+
+For something with a mix of variables and literals, like this:
+
+```
+value += 1;
+```
+
+We have to use the left hand side of the assignment to infer the right hand side (it works the same the other way too). It works the same way for more complicated statements like this:
+
+```
+(1 + 1) * value + 10
+```
+
+The type checker will recursively apply this inference logic using the variable side type to inference the literal side types.
+
+If both sides contain a variable, then no inferencing is needed and those types are directly applied
