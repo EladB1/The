@@ -40,7 +40,7 @@ func evalStructLiteral(ast *parser.AST) datatypes.DataType {
 	name := ast.Children[0].Token.Value
 	symbol := globalScope.lookupStruct(name)
 	if symbol == nil {
-		if intf := globalScope.lookupInterface(name); intf != nil {
+		if intf := globalScope.LookupInterface(name); intf != nil {
 			messages.Complain(diagnostic.IllegalStatementError, ast.Location, "Cannot create interface literal value")
 		} else {
 			messages.Complain(diagnostic.NameError, ast.Location, "Struct %s not defined", name)
@@ -54,10 +54,10 @@ func evalStructLiteral(ast *parser.AST) datatypes.DataType {
 	visited := ds.HashSet{}
 	for _, prop := range properties {
 		propId := prop.Children[0].Token.Value
-		innerScope := symbol.innerScope
-		property := innerScope.lookupVariable(propId)
+		innerScope := symbol.InnerScope
+		property := innerScope.LookupVariable(propId)
 		if property == nil {
-			messages.Complain(diagnostic.NameError, prop.Location, "Could not find property '%s' in struct %s", propId, symbol.name)
+			messages.Complain(diagnostic.NameError, prop.Location, "Could not find property '%s' in struct %s", propId, symbol.Name)
 			continue
 		}
 		if _, ok := visited[propId]; ok {
@@ -79,7 +79,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 	if ast.IsLiteral() {
 		nodeType = evalLiteral(ast, expectedType)
 	} else if ast.Token.Kind == lexer.ID {
-		symbol := currentScope.lookupVariable(ast.Token.Value)
+		symbol := currentScope.LookupVariable(ast.Token.Value)
 		if symbol != nil {
 			nodeType = symbol.Type
 		} else {
@@ -174,8 +174,8 @@ func decideNumberType(lhs datatypes.DataType, rhs datatypes.DataType, operator s
 
 func nodeToType(node *parser.AST) datatypes.DataType {
 	if node.Token.Kind == lexer.ID {
-		symbol := globalScope.lookupType(node.Token.Value)
-		if symbol == nil || (symbol.getSymbolType() != "interface" && symbol.getSymbolType() != "struct") {
+		symbol := globalScope.LookupType(node.Token.Value)
+		if symbol == nil || (symbol.GetSymbolType() != "interface" && symbol.GetSymbolType() != "struct") {
 			messages.Complain(diagnostic.TypeError, node.Location, "Invalid type '%s' provided", node.Token.Value)
 			return datatypes.None
 		}

@@ -21,7 +21,7 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *Na
 	scope := currentScope
 	var newScope *Scope = nil
 	if name != "private" {
-		newScope = currentScope.addChild(fmt.Sprintf("%s@%s", name, currentScope.id), NamedBlock)
+		newScope = currentScope.addChild(fmt.Sprintf("%s@%s", name, currentScope.Id), NamedBlock)
 		currentScope = newScope
 	}
 	for _, node := range body {
@@ -44,9 +44,9 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *Na
 			case "cast":
 				if len(symbol.parameters) > 0 || symbol.returnType == datatypes.None || symbol.returnType == datatypes.DynamicType(structName) {
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block must take no parameters and return a different type")
-				} else if intf := globalScope.lookupInterface(symbol.returnType.String()); intf != nil {
+				} else if intf := globalScope.LookupInterface(symbol.returnType.String()); intf != nil {
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block cannot return an interface")
-				} else if matches := newScope.lookupFunctionsByReturnType(symbol.returnType); len(matches) > 0 {
+				} else if matches := newScope.LookupFunctionsByReturnType(symbol.returnType); len(matches) > 0 {
 					messages.Complain(diagnostic.AmbiguityError, node.Location, "Cannot have more than one cast function that returns %s", symbol.returnType)
 				} else if !symbol.hasDefaultImplementation {
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Cast block function '%s' must be defined with a function body", symbol.getSignature())
@@ -55,12 +55,12 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *Na
 				symbol.isPrivate = true
 				currentScope = scope
 				// private is not a real named block; it is only a shortcut to mark everything in it as private
-				if err := currentScope.functions.add(symbol); err != nil {
+				if err := currentScope.Functions.add(symbol); err != nil {
 					messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 				}
 				continue
 			}
-			if err := currentScope.functions.add(symbol); err != nil {
+			if err := currentScope.Functions.add(symbol); err != nil {
 				messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 			}
 		case "Variable":
@@ -74,7 +74,7 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *Na
 						messages.Complain(diagnostic.Warning, node.Location, "Redundant use of private in private block")
 					}
 					symbol.isPrivate = true
-					currentScope.variables[symbol.name] = *symbol
+					currentScope.Variables[symbol.Name] = *symbol
 				}
 				continue
 			}
@@ -85,9 +85,9 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *Na
 		return nil
 	}
 	return &NamedBlockSymbol{
-		name:           name,
+		Name:           name,
 		isSpecialBlock: slices.Contains(specialBlocks, name),
 		Def:            nbNode,
-		innerScope:     newScope,
+		InnerScope:     newScope,
 	}
 }

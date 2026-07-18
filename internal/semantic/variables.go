@@ -33,7 +33,7 @@ func analyzeVariable(varNode *parser.AST) *VariableSymbol {
 		}
 	}
 	varType := nodeToType(typeNode)
-	if currentScope.lookupVariable(name.Value) != nil {
+	if currentScope.LookupVariable(name.Value) != nil {
 		messages.Complain(diagnostic.NameError, name.Location, "Name: '%s' already defined", name.Value)
 		return nil
 	}
@@ -44,7 +44,7 @@ func analyzeVariable(varNode *parser.AST) *VariableSymbol {
 	}
 	varNode.Type = varType
 	return &VariableSymbol{
-		name:        name.Value,
+		Name:        name.Value,
 		Type:        varType,
 		isPrivate:   isPrivate,
 		isMutable:   isMutable,

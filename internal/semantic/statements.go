@@ -16,13 +16,13 @@ func analyzeForCondition(condition []*parser.AST) {
 	if condition[0].Label == "Variable" {
 		symbol := analyzeVariable(condition[0])
 		if symbol != nil {
-			currentScope.variables[symbol.name] = *symbol
+			currentScope.Variables[symbol.Name] = *symbol
 		}
 		if condition[parts-2].Token.Value == "in" {
 			if parts == 4 { // int i, char c in string
 				symbol2 := analyzeVariable(condition[1])
 				if symbol2 != nil {
-					currentScope.variables[symbol2.name] = *symbol2
+					currentScope.Variables[symbol2.Name] = *symbol2
 				}
 				if symbol != nil && symbol2 != nil && !((slices.Contains(datatypes.IntTypes, symbol.Type) && symbol2.Type == datatypes.Char) || (symbol.Type == datatypes.Char && slices.Contains(datatypes.IntTypes, symbol2.Type))) {
 					messages.Complain(diagnostic.TypeError, condition[2].Location, "Cannot use %s and %s as loop variables", symbol.Type.String(), symbol2.Type.String())
@@ -97,7 +97,7 @@ func analyzeAssignment(stmt *parser.AST) (datatypes.DataType, bool) {
 			return datatypes.None, true
 		}
 	} else {
-		symbol := currentScope.lookupVariable(left.Token.Value)
+		symbol := currentScope.LookupVariable(left.Token.Value)
 		if symbol == nil {
 			messages.Complain(diagnostic.NameError, left.Location, "Variable '%s' is not defined in this scope", left.Token.Value)
 			return datatypes.None, true
@@ -154,7 +154,7 @@ func analyzeAssignment(stmt *parser.AST) (datatypes.DataType, bool) {
 				messages.Complain(diagnostic.TypeError, stmt.Children[1].Location, "Cannot assign %s to %s", rhs, lhs)
 				hasError = true
 			}
-		} else if intf := globalScope.lookupInterface(rhs.String()); intf != nil {
+		} else if intf := globalScope.LookupInterface(rhs.String()); intf != nil {
 			messages.Complain(diagnostic.IllegalStatementError, stmt.Children[1].Location, "Cannot use interface type as value")
 		}
 
@@ -260,18 +260,18 @@ func evalCompare(left *parser.AST, right *parser.AST, operator lexer.Token, expe
 		if str == nil {
 			messages.Complain(diagnostic.NameError, operator.Location, "Cannot find struct definition for %s", lhs.String())
 		} else {
-			compareBlock := str.innerScope.lookupNamedBlock("compare")
+			compareBlock := str.InnerScope.LookupNamedBlock("compare")
 			if compareBlock == nil {
 				messages.Complain(diagnostic.TypeError, operator.Location, "Cannot compare %s using operator '%s'. To support this comparison add a compare block with the appropriate functions", lhs, operator.Value)
 			} else {
 				switch operator.Value {
 				case "<", "<=":
-					if symbol := compareBlock.innerScope.lookupFunctionByName("lessThan"); symbol == nil || symbol.returnType != datatypes.Bool || !symbol.overloads[0].hasDefaultImplementation {
+					if symbol := compareBlock.InnerScope.LookupFunctionByName("lessThan"); symbol == nil || symbol.ReturnType != datatypes.Bool || !symbol.Overloads[0].HasDefaultImplementation {
 						messages.Complain(diagnostic.TypeError, operator.Location, "Unsupported comparison. To support operators '<' and '<=', add function 'fn lessThan(%s)->bool' to compare block in %s definition", lhs, lhs)
 						hasError = true
 					}
 				case ">", ">=":
-					if symbol := compareBlock.innerScope.lookupFunctionByName("greaterThan"); symbol == nil || symbol.returnType != datatypes.Bool || !symbol.overloads[0].hasDefaultImplementation {
+					if symbol := compareBlock.InnerScope.LookupFunctionByName("greaterThan"); symbol == nil || symbol.ReturnType != datatypes.Bool || !symbol.Overloads[0].HasDefaultImplementation {
 						messages.Complain(diagnostic.TypeError, operator.Location, "Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(%s)->bool' to compare block in %s definition", lhs, lhs)
 						hasError = true
 					}
@@ -325,13 +325,13 @@ func evalUnary(left *parser.AST, right *parser.AST, expectedType datatypes.DataT
 func checkIncrementOperator(operand lexer.Token, operator lexer.Token) (datatypes.DataType, bool) {
 	hasError := false
 	var nodeType datatypes.DataType = datatypes.None
-	symbol := currentScope.lookupVariable(operand.Value)
+	symbol := currentScope.LookupVariable(operand.Value)
 	if symbol != nil {
 		if !slices.Contains(datatypes.NumericTypes, symbol.Type) {
 			messages.Complain(diagnostic.TypeError, operand.Location, "Cannot use '%s' with type %s", operator.Value, symbol.Type)
 			hasError = true
 		} else if !symbol.isMutable {
-			messages.Complain(diagnostic.AccessError, operand.Location, "Cannot change value of immutable variable '%s'", symbol.name)
+			messages.Complain(diagnostic.AccessError, operand.Location, "Cannot change value of immutable variable '%s'", symbol.Name)
 			hasError = true
 		} else {
 			nodeType = symbol.Type
@@ -365,7 +365,7 @@ func evalTypecast(original *parser.AST, targetType *parser.AST, expectedType dat
 				messages.Complain(diagnostic.CastError, original.Location, "Cannot typecast %s to %s. Could not find definition of '%s'", lhs, target, lhs)
 				hasError = true
 			} else {
-				castBlock := str.innerScope.lookupNamedBlock("cast")
+				castBlock := str.InnerScope.LookupNamedBlock("cast")
 				if castBlock == nil {
 					messages.Complain(diagnostic.CastError, targetType.Location, "Cannot typecast %s to %s. To support typecasting add a cast block with a function returning the target type", lhs, target)
 					hasError = true
@@ -557,31 +557,31 @@ func handleFunctionCall(details []*parser.AST) (datatypes.DataType, bool) {
 					messages.Complain(diagnostic.NameError, details[0].Location, "Could not find struct %s", scopes[0])
 					hasError = true
 				}
-				nb := str.innerScope.lookupNamedBlock(scopes[1])
+				nb := str.InnerScope.LookupNamedBlock(scopes[1])
 				if nb == nil {
 					messages.Complain(diagnostic.NameError, details[0].Location, "Could not find named block %s in struct %s", scopes[1], scopes[0])
 					hasError = true
 				}
-				scope = nb.innerScope
+				scope = nb.InnerScope
 			}
 		} else if lhs.IsRef() {
 			scope = FindAncestorScopeById(lhs.GetScopes()[0])
 		} else {
-			symbol := globalScope.lookupType(lhs.String())
+			symbol := globalScope.LookupType(lhs.String())
 			if symbol == nil {
 				messages.Complain(diagnostic.NameError, details[0].Children[1].Location, "Could not find type %s", lhs)
 				return datatypes.None, true
 			}
 
-			scope = symbol.getInnerScope()
-			if symbol.getSymbolType() == "struct" {
+			scope = symbol.GetInnerScope()
+			if symbol.GetSymbolType() == "struct" {
 				if conflicts := symbol.getConflicts(name.Value); len(conflicts) > 1 {
 					sort.Strings(conflicts)
 					messages.Complain(diagnostic.AmbiguityError, name.Location, "Interfaces %s both contain function named %s. Change the function call to pick which one to use", strings.Join(conflicts, ","), name.Value)
 					return datatypes.None, true
 				} else if len(conflicts) == 1 {
-					if nb := scope.lookupNamedBlock(conflicts[0]); nb != nil {
-						scope = nb.innerScope
+					if nb := scope.LookupNamedBlock(conflicts[0]); nb != nil {
+						scope = nb.InnerScope
 					} else {
 						messages.Complain(diagnostic.NameError, details[0].Location, "Could not find function %s", name.Value)
 						hasError = true
@@ -592,7 +592,7 @@ func handleFunctionCall(details []*parser.AST) (datatypes.DataType, bool) {
 	} else {
 		name = details[0].Token
 	}
-	symbol := scope.lookupFunctionByName(name.Value)
+	symbol := scope.LookupFunctionByName(name.Value)
 	if symbol == nil {
 		messages.Complain(diagnostic.NameError, name.Location, "Could not find function %s in scope", name.Value)
 		return datatypes.None, true
@@ -610,19 +610,19 @@ func handleFunctionCall(details []*parser.AST) (datatypes.DataType, bool) {
 	}
 	paramList := datatypes.Join(params)
 	if fn := symbol.getMatchingOverload(params); fn != nil {
-		if fn.isPrivate {
+		if fn.IsPrivate {
 			messages.Complain(diagnostic.AccessError, details[0].Location, "Cannot access private function '%s' from outside struct definition", name.Value)
 			hasError = true
 		} else {
-			if !fn.hasDefaultImplementation && !currentScope.HasScopeTypeAncestor(Interface) && symbol.returnType != datatypes.None {
+			if !fn.HasDefaultImplementation && !currentScope.HasScopeTypeAncestor(Interface) && symbol.ReturnType != datatypes.None {
 				messages.Complain(diagnostic.CallError, details[0].Location, "Function without body cannot be called")
 				hasError = true
 			}
-			return symbol.returnType, hasError
+			return symbol.ReturnType, hasError
 		}
 	} else {
 		// TODO: find closest error
-		messages.Complain(diagnostic.CallError, details[0].Location, "Could not find function '%s(%s)->%s'", name.Value, paramList, symbol.returnType)
+		messages.Complain(diagnostic.CallError, details[0].Location, "Could not find function '%s(%s)->%s'", name.Value, paramList, symbol.ReturnType)
 		hasError = true
 	}
 	return datatypes.None, hasError
@@ -649,7 +649,7 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 	} else if isFnCall && (lhs.IsScopeRef() || lhs.IsRef()) {
 		return lhs, hasError
 	} else if !lhs.IsPrimitive() {
-		variable := currentScope.lookupVariable(left.Token.Value)
+		variable := currentScope.LookupVariable(left.Token.Value)
 		if variable != nil {
 			if isAssignment && !variable.isMutable {
 				messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable property or variable")
@@ -658,9 +658,9 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 		}
 		if lhs.IsRef() {
 			scope := FindAncestorScopeById(lhs.GetScopes()[0])
-			if prop := scope.lookupVariable(rname); prop != nil {
+			if prop := scope.LookupVariable(rname); prop != nil {
 				if isAssignment && !prop.isMutable && !hasError {
-					messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", prop.name)
+					messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", prop.Name)
 					hasError = true
 				} else {
 					return prop.Type, hasError
@@ -670,14 +670,14 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 				return datatypes.None, hasError
 			}
 		}
-		symbol := globalScope.lookupType(lhs.String())
+		symbol := globalScope.LookupType(lhs.String())
 		if symbol == nil {
 			messages.Complain(diagnostic.NameError, left.Location, "Could not find type %s", lhs)
 			hasError = true
 		} else {
-			scope := symbol.getInnerScope()
-			if prop := scope.lookupVariable(rname); prop != nil {
-				if prop.isPrivate && !currentScope.HasParentScope(symbol.getInnerScope()) {
+			scope := symbol.GetInnerScope()
+			if prop := scope.LookupVariable(rname); prop != nil {
+				if prop.isPrivate && !currentScope.HasParentScope(symbol.GetInnerScope()) {
 					messages.Complain(diagnostic.AccessError, right.Location, "Cannot access private property from outside struct definition")
 					hasError = true
 				} else if isAssignment && !prop.isMutable && !hasError {

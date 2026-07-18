@@ -10,22 +10,22 @@ import (
 
 type (
 	TypeSymbol interface {
-		getSymbolType() string
-		getInnerScope() *Scope
-		getNamedBlockIfExists(string) *NamedBlockSymbol
+		GetSymbolType() string
+		GetInnerScope() *Scope
+		GetNamedBlockIfExists(string) *NamedBlockSymbol
 		getConflicts(string) []string
 	}
 	FunctionSymbol struct {
-		name       string
-		returnType datatypes.DataType
-		overloads  []FnOverloadSymbol
+		Name       string
+		ReturnType datatypes.DataType
+		Overloads  []FnOverloadSymbol
 	}
 	FnOverloadSymbol struct {
-		parameters               []datatypes.DataType
-		isPrivate                bool
-		hasDefaultImplementation bool
+		Parameters               []datatypes.DataType
+		IsPrivate                bool
+		HasDefaultImplementation bool
 		Body                     *parser.AST
-		innerScope               *Scope
+		InnerScope               *Scope
 	}
 	FnCreateSymbol struct {
 		name                     string
@@ -37,7 +37,7 @@ type (
 		innerScope               *Scope
 	}
 	VariableSymbol struct {
-		name        string
+		Name        string
 		Type        datatypes.DataType
 		isPrivate   bool
 		isMutable   bool
@@ -50,18 +50,18 @@ type (
 		innerScope *Scope
 	}
 	StructSymbol struct {
-		name        string
-		implements  []string
-		sizeInBytes int
+		Name        string
+		Implements  []string
+		SizeInBytes int
 		Def         *parser.AST
-		innerScope  *Scope
+		InnerScope  *Scope
 		implFnNames map[string][]string
 	}
 	NamedBlockSymbol struct {
-		name           string
+		Name           string
 		isSpecialBlock bool
 		Def            *parser.AST
-		innerScope     *Scope
+		InnerScope     *Scope
 	}
 
 	FunctionSymbolTable   map[string]FunctionSymbol
@@ -72,18 +72,18 @@ type (
 )
 
 /* TypeSymbol interface functions */
-func (intf InterfaceSymbol) getSymbolType() string {
+func (intf InterfaceSymbol) GetSymbolType() string {
 	return "interface"
 }
-func (str StructSymbol) getSymbolType() string {
+func (str StructSymbol) GetSymbolType() string {
 	return "struct"
 }
 
-func (intf InterfaceSymbol) getInnerScope() *Scope {
+func (intf InterfaceSymbol) GetInnerScope() *Scope {
 	return intf.innerScope
 }
-func (str StructSymbol) getInnerScope() *Scope {
-	return str.innerScope
+func (str StructSymbol) GetInnerScope() *Scope {
+	return str.InnerScope
 }
 
 func (intf InterfaceSymbol) getConflicts(fn string) []string {
@@ -105,12 +105,12 @@ func (str StructSymbol) UpdateImplFnNames(fn string, intf string) {
 	}
 }
 
-func (intf InterfaceSymbol) getNamedBlockIfExists(name string) *NamedBlockSymbol {
+func (intf InterfaceSymbol) GetNamedBlockIfExists(name string) *NamedBlockSymbol {
 	return nil
 }
 
-func (str StructSymbol) getNamedBlockIfExists(name string) *NamedBlockSymbol {
-	return str.innerScope.lookupNamedBlock(name)
+func (str StructSymbol) GetNamedBlockIfExists(name string) *NamedBlockSymbol {
+	return str.InnerScope.LookupNamedBlock(name)
 }
 
 func (intf InterfaceSymbol) String() string {
@@ -119,29 +119,29 @@ func (intf InterfaceSymbol) String() string {
 
 func (str StructSymbol) String() string {
 	impl := strings.Builder{}
-	if len(str.implements) != 0 {
+	if len(str.Implements) != 0 {
 		impl.WriteString(", implements: [")
-		for i, intf := range str.implements {
+		for i, intf := range str.Implements {
 			impl.WriteString(intf)
-			if i != len(str.implements)-1 {
+			if i != len(str.Implements)-1 {
 				impl.WriteString(", ")
 			}
 		}
 		impl.WriteRune(']')
 	}
-	return fmt.Sprintf("{name: %s, size: %d%s}", str.name, str.sizeInBytes, impl.String())
+	return fmt.Sprintf("{name: %s, size: %d%s}", str.Name, str.SizeInBytes, impl.String())
 }
 
 func (fn FunctionSymbol) String() string {
 	overloads := strings.Builder{}
-	for _, symbol := range fn.overloads {
+	for _, symbol := range fn.Overloads {
 		priv := ""
-		if symbol.isPrivate {
+		if symbol.IsPrivate {
 			priv = ", isPrivate: true"
 		}
-		overloads.WriteString(fmt.Sprintf("{parameters: (%s)%s, implemented: %v}", datatypes.Join(symbol.parameters), priv, symbol.hasDefaultImplementation))
+		overloads.WriteString(fmt.Sprintf("{parameters: (%s)%s, implemented: %v}", datatypes.Join(symbol.Parameters), priv, symbol.HasDefaultImplementation))
 	}
-	return fmt.Sprintf("{name: %s, returns: %s, overloads: [%s]}", fn.name, fn.returnType, overloads.String())
+	return fmt.Sprintf("{name: %s, returns: %s, overloads: [%s]}", fn.Name, fn.ReturnType, overloads.String())
 }
 
 func (variable VariableSymbol) String() string {
@@ -153,11 +153,11 @@ func (variable VariableSymbol) String() string {
 	if variable.isMutable {
 		mut = ", isMutable: true"
 	}
-	return fmt.Sprintf("{name: %s, Type: %s%s%s, Initialized: %v}", variable.name, variable.Type, priv, mut, variable.Initialized)
+	return fmt.Sprintf("{name: %s, Type: %s%s%s, Initialized: %v}", variable.Name, variable.Type, priv, mut, variable.Initialized)
 }
 
 func (nb NamedBlockSymbol) String() string {
-	return fmt.Sprintf("{name: %s}", nb.name)
+	return fmt.Sprintf("{name: %s}", nb.Name)
 }
 
 func (symbol FnCreateSymbol) getSignature() string {
@@ -170,24 +170,24 @@ func (symbol FnCreateSymbol) getSignature() string {
 
 func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
 	return FnOverloadSymbol{
-		parameters:               symbol.parameters,
-		hasDefaultImplementation: symbol.hasDefaultImplementation,
-		isPrivate:                symbol.isPrivate,
+		Parameters:               symbol.parameters,
+		HasDefaultImplementation: symbol.hasDefaultImplementation,
+		IsPrivate:                symbol.isPrivate,
 		Body:                     symbol.Body,
-		innerScope:               symbol.innerScope,
+		InnerScope:               symbol.innerScope,
 	}
 }
 
 func (fn FunctionSymbol) getMatchingOverload(params []datatypes.DataType) *FnOverloadSymbol {
 	count := len(params)
-	for _, overload := range fn.overloads {
+	for _, overload := range fn.Overloads {
 		matches := false
-		if count == len(overload.parameters) {
+		if count == len(overload.Parameters) {
 			if count == 0 {
 				return &overload
 			}
 			for i := range count {
-				param := overload.parameters[i]
+				param := overload.Parameters[i]
 				if params[i] == param || param == datatypes.Any || ImplementsInterface(param, params[i]) {
 					matches = true
 				} else {

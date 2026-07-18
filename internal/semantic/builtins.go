@@ -3,315 +3,315 @@ package semantic
 import "github.com/EladB1/The/internal/datatypes"
 
 var rootScope *Scope = &Scope{
-	id:          "@built-in",
-	kind:        Default,
-	parent:      nil,
-	interfaces:  InterfaceSymbolTable{},
-	structs:     StructSymbolTable{},
-	namedBlocks: NamedBlockSymbolTable{},
-	functions: FunctionSymbolTable{
+	Id:          "@built-in",
+	Kind:        Default,
+	Parent:      nil,
+	Interfaces:  InterfaceSymbolTable{},
+	Structs:     StructSymbolTable{},
+	NamedBlocks: NamedBlockSymbolTable{},
+	Functions: FunctionSymbolTable{
 		"print": FunctionSymbol{
-			name: "print",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.Any},
-				hasDefaultImplementation: true,
+			Name: "print",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.Any},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.None,
+			ReturnType: datatypes.None,
 		},
 		"println": FunctionSymbol{
-			name: "println",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.Any},
-				hasDefaultImplementation: true,
+			Name: "println",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.Any},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.None,
+			ReturnType: datatypes.None,
 		},
 		"printerr": FunctionSymbol{
-			name: "printerr",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.Any},
-				hasDefaultImplementation: true,
+			Name: "printerr",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.Any},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.None,
+			ReturnType: datatypes.None,
 		},
 		"typeOf": FunctionSymbol{
-			name: "typeOf",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.Any},
-				hasDefaultImplementation: true,
+			Name: "typeOf",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.Any},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 		"exit": FunctionSymbol{
-			name: "exit",
-			overloads: []FnOverloadSymbol{
+			Name: "exit",
+			Overloads: []FnOverloadSymbol{
 				{
-					parameters:               []datatypes.DataType{datatypes.Int32},
-					hasDefaultImplementation: true,
+					Parameters:               []datatypes.DataType{datatypes.Int32},
+					HasDefaultImplementation: true,
 				},
 				{
-					parameters:               []datatypes.DataType{datatypes.Int32, datatypes.String},
-					hasDefaultImplementation: true,
+					Parameters:               []datatypes.DataType{datatypes.Int32, datatypes.String},
+					HasDefaultImplementation: true,
 				},
 			},
-			returnType: datatypes.None,
+			ReturnType: datatypes.None,
 		},
 		"sleep": FunctionSymbol{
-			name: "sleep",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.Double},
-				hasDefaultImplementation: true,
+			Name: "sleep",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.Double},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.None,
+			ReturnType: datatypes.None,
 		},
 		"getEnv": FunctionSymbol{
-			name: "getEnv",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "getEnv",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 		"setEnv": FunctionSymbol{
-			name: "setEnv",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "setEnv",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.None,
+			ReturnType: datatypes.None,
 		},
 		"indexOf": FunctionSymbol{
-			name: "indexOf",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String, datatypes.Char},
-				hasDefaultImplementation: true,
+			Name: "indexOf",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String, datatypes.Char},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.Int32,
+			ReturnType: datatypes.Int32,
 		},
 		"contains": FunctionSymbol{
-			name: "contains",
-			overloads: []FnOverloadSymbol{
+			Name: "contains",
+			Overloads: []FnOverloadSymbol{
 				{
-					parameters:               []datatypes.DataType{datatypes.String, datatypes.Char},
-					hasDefaultImplementation: true,
+					Parameters:               []datatypes.DataType{datatypes.String, datatypes.Char},
+					HasDefaultImplementation: true,
 				},
 				{
-					parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
-					hasDefaultImplementation: true,
+					Parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
+					HasDefaultImplementation: true,
 				},
 			},
-			returnType: datatypes.Bool,
+			ReturnType: datatypes.Bool,
 		},
 		"startsWith": FunctionSymbol{
-			name: "startsWith",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "startsWith",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.Bool,
+			ReturnType: datatypes.Bool,
 		},
 		"endsWith": FunctionSymbol{
-			name: "endsWith",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "endsWith",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.Bool,
+			ReturnType: datatypes.Bool,
 		},
 		"replace": FunctionSymbol{
-			name: "replace",
-			overloads: []FnOverloadSymbol{
+			Name: "replace",
+			Overloads: []FnOverloadSymbol{
 				{
-					parameters:               []datatypes.DataType{datatypes.String, datatypes.String, datatypes.String},
-					hasDefaultImplementation: true,
+					Parameters:               []datatypes.DataType{datatypes.String, datatypes.String, datatypes.String},
+					HasDefaultImplementation: true,
 				},
 				{
-					parameters:               []datatypes.DataType{datatypes.String, datatypes.Char, datatypes.Char},
-					hasDefaultImplementation: true,
+					Parameters:               []datatypes.DataType{datatypes.String, datatypes.Char, datatypes.Char},
+					HasDefaultImplementation: true,
 				},
 			},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 		"replaceAll": FunctionSymbol{
-			name: "replace",
-			overloads: []FnOverloadSymbol{
+			Name: "replace",
+			Overloads: []FnOverloadSymbol{
 				{
-					parameters:               []datatypes.DataType{datatypes.String, datatypes.String, datatypes.String},
-					hasDefaultImplementation: true,
+					Parameters:               []datatypes.DataType{datatypes.String, datatypes.String, datatypes.String},
+					HasDefaultImplementation: true,
 				},
 				{
-					parameters:               []datatypes.DataType{datatypes.String, datatypes.Char, datatypes.Char},
-					hasDefaultImplementation: true,
+					Parameters:               []datatypes.DataType{datatypes.String, datatypes.Char, datatypes.Char},
+					HasDefaultImplementation: true,
 				},
 			},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 		"reverse": FunctionSymbol{
-			name: "reverse",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "reverse",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 		"toUpper": FunctionSymbol{
-			name: "toUpper",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "toUpper",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 		"toLower": FunctionSymbol{
-			name: "toLower",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "toLower",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 		"trim": FunctionSymbol{
-			name: "trim",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "trim",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 		"trimStart": FunctionSymbol{
-			name: "trimStart",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "trimStart",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 		"trimEnd": FunctionSymbol{
-			name: "trimEnd",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "trimEnd",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 		"assert": FunctionSymbol{
-			name: "assert",
-			overloads: []FnOverloadSymbol{
+			Name: "assert",
+			Overloads: []FnOverloadSymbol{
 				{
-					parameters:               []datatypes.DataType{datatypes.Bool},
-					hasDefaultImplementation: true,
+					Parameters:               []datatypes.DataType{datatypes.Bool},
+					HasDefaultImplementation: true,
 				},
 				{
-					parameters:               []datatypes.DataType{datatypes.Bool, datatypes.String},
-					hasDefaultImplementation: true,
+					Parameters:               []datatypes.DataType{datatypes.Bool, datatypes.String},
+					HasDefaultImplementation: true,
 				},
 			},
-			returnType: datatypes.None,
+			ReturnType: datatypes.None,
 		},
 		"prompt": FunctionSymbol{
-			name: "prompt",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "prompt",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 		"secretPrompt": FunctionSymbol{
-			name: "secretPrompt",
-			overloads: []FnOverloadSymbol{{
-				parameters:               []datatypes.DataType{datatypes.String},
-				hasDefaultImplementation: true,
+			Name: "secretPrompt",
+			Overloads: []FnOverloadSymbol{{
+				Parameters:               []datatypes.DataType{datatypes.String},
+				HasDefaultImplementation: true,
 			}},
-			returnType: datatypes.String,
+			ReturnType: datatypes.String,
 		},
 	},
-	variables: VariableSymbolTable{
+	Variables: VariableSymbolTable{
 		"INT_MIN": VariableSymbol{
-			name: "INT_MIN",
+			Name: "INT_MIN",
 			Type: datatypes.Int32,
 		},
 		"INT_MAX": VariableSymbol{
-			name: "INT_MAX",
+			Name: "INT_MAX",
 			Type: datatypes.Int32,
 		},
 		"INT64_MIN": VariableSymbol{
-			name: "INT64_MIN",
+			Name: "INT64_MIN",
 			Type: datatypes.Int64,
 		},
 		"INT64_MAX": VariableSymbol{
-			name: "INT64_MAX",
+			Name: "INT64_MAX",
 			Type: datatypes.Int64,
 		},
 		"UINT32_MAX": VariableSymbol{
-			name: "UINT32_MAX",
+			Name: "UINT32_MAX",
 			Type: datatypes.Uint32,
 		},
 		"UINT64_MAX": VariableSymbol{
-			name: "UINT64_MAX",
+			Name: "UINT64_MAX",
 			Type: datatypes.Uint64,
 		},
 		"FLOAT_MIN": VariableSymbol{
-			name: "FLOAT_MIN",
+			Name: "FLOAT_MIN",
 			Type: datatypes.Float,
 		},
 		"FLOAT_MIN_POSITIVE": VariableSymbol{
-			name: "FLOAT_MIN_POSITIVE",
+			Name: "FLOAT_MIN_POSITIVE",
 			Type: datatypes.Float,
 		},
 		"FLOAT_MAX": VariableSymbol{
-			name: "FLOAT_MAX",
+			Name: "FLOAT_MAX",
 			Type: datatypes.Float,
 		},
 		"FLOAT_EPSILON": VariableSymbol{
-			name: "FLOAT_EPSILON",
+			Name: "FLOAT_EPSILON",
 			Type: datatypes.Float,
 		},
 		"FLOAT_NaN": VariableSymbol{
-			name: "FLOAT_NaN",
+			Name: "FLOAT_NaN",
 			Type: datatypes.Float,
 		},
 		"FLOAT_INF": VariableSymbol{
-			name: "FLOAT_INF",
+			Name: "FLOAT_INF",
 			Type: datatypes.Float,
 		},
 		"FLOAT_NEG_INF": VariableSymbol{
-			name: "FLOAT_NEG_INF",
+			Name: "FLOAT_NEG_INF",
 			Type: datatypes.Float,
 		},
 		"DOUBLE_MIN": VariableSymbol{
-			name: "DOUBLE_MIN",
+			Name: "DOUBLE_MIN",
 			Type: datatypes.Double,
 		},
 		"DOUBLE_MIN_POSITIVE": VariableSymbol{
-			name: "DOUBLE_MIN_POSITIVE",
+			Name: "DOUBLE_MIN_POSITIVE",
 			Type: datatypes.Double,
 		},
 		"DOUBLE_MAX": VariableSymbol{
-			name: "DOUBLE_MAX",
+			Name: "DOUBLE_MAX",
 			Type: datatypes.Double,
 		},
 		"DOUBLE_EPSILON": VariableSymbol{
-			name: "DOUBLE_EPSILON",
+			Name: "DOUBLE_EPSILON",
 			Type: datatypes.Double,
 		},
 		"DOUBLE_NaN": VariableSymbol{
-			name: "DOUBLE_NaN",
+			Name: "DOUBLE_NaN",
 			Type: datatypes.Double,
 		},
 		"DOUBLE_INF": VariableSymbol{
-			name: "DOUBLE_INF",
+			Name: "DOUBLE_INF",
 			Type: datatypes.Double,
 		},
 		"DOUBLE_NEG_INF": VariableSymbol{
-			name: "DOUBLE_NEG_INF",
+			Name: "DOUBLE_NEG_INF",
 			Type: datatypes.Double,
 		},
 		"PI": VariableSymbol{
-			name: "PI",
+			Name: "PI",
 			Type: datatypes.Double,
 		},
 		"E": VariableSymbol{
-			name: "E",
+			Name: "E",
 			Type: datatypes.Double,
 		},
 	},

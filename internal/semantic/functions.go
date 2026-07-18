@@ -59,13 +59,13 @@ func processFunctionSignature(fnNode *parser.AST) FnCreateSymbol {
 	if bodyNode != nil {
 		paramList := datatypes.Join(paramTypes)
 		scopeId := fmt.Sprintf("%s(%s)", name, paramList)
-		if currentScope.id != "@global" {
-			scopeId = fmt.Sprintf("%s(%s)@%s", name, paramList, currentScope.id)
+		if currentScope.Id != "@global" {
+			scopeId = fmt.Sprintf("%s(%s)@%s", name, paramList, currentScope.Id)
 		}
 		newScope = currentScope.addChild(scopeId, Function)
 		for i := range len(paramNames) {
-			newScope.variables[paramNames[i]] = VariableSymbol{
-				name: paramNames[i],
+			newScope.Variables[paramNames[i]] = VariableSymbol{
+				Name: paramNames[i],
 				Type: paramTypes[i],
 			}
 		}
@@ -83,19 +83,19 @@ func processFunctionSignature(fnNode *parser.AST) FnCreateSymbol {
 
 func analyzeFunctionBody(fn FunctionSymbol) {
 	scope := currentScope
-	for _, overload := range fn.overloads {
-		if !overload.hasDefaultImplementation {
+	for _, overload := range fn.Overloads {
+		if !overload.HasDefaultImplementation {
 			continue
 		}
-		currentScope = overload.innerScope
-		params := datatypes.Join(overload.parameters)
+		currentScope = overload.InnerScope
+		params := datatypes.Join(overload.Parameters)
 		returnStr := ""
-		if fn.returnType != datatypes.None {
-			returnStr = fmt.Sprintf("->%s", fn.returnType)
+		if fn.ReturnType != datatypes.None {
+			returnStr = fmt.Sprintf("->%s", fn.ReturnType)
 		}
-		sig := fmt.Sprintf("%s(%s)%s", fn.name, params, returnStr)
+		sig := fmt.Sprintf("%s(%s)%s", fn.Name, params, returnStr)
 		hasReturn := analyzeBlockAndCheckForReturn(overload.Body.Children, fn, sig)
-		if !hasReturn && fn.returnType != datatypes.None {
+		if !hasReturn && fn.ReturnType != datatypes.None {
 			messages.Complain(diagnostic.TypeError, overload.Body.Location, "Function '%s' may not return a value", sig)
 		}
 	}
@@ -120,7 +120,7 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 				if symbol.isPrivate {
 					messages.Complain(diagnostic.IllegalStatementError, stmt.Location, "Cannot set private variable in function body")
 				} else {
-					currentScope.variables[symbol.name] = *symbol
+					currentScope.Variables[symbol.Name] = *symbol
 				}
 			}
 		} else if stmt.Token.Kind == lexer.OPERATOR_ASSIGN {
@@ -130,8 +130,8 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 				unreachable = true
 			}
 			if len(stmt.Children) == 1 && stmt.Children[0].Token.Value == "return" {
-				if fn.returnType != datatypes.None {
-					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' missing return value, expected: %s", sig, fn.returnType)
+				if fn.ReturnType != datatypes.None {
+					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' missing return value, expected: %s", sig, fn.ReturnType)
 				} else {
 					stmt.Type = datatypes.None
 				}
@@ -141,9 +141,9 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 					messages.Complain(diagnostic.IllegalStatementError, stmt.Location, "Cannot use %s outside of loop", stmt.Children[0].Token.Value)
 				}
 			} else { // return something
-				rhs, rHasErr := evalType(stmt.Children[1], fn.returnType)
-				if !rHasErr && rhs != fn.returnType && !ImplementsInterface(fn.returnType, rhs) {
-					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' expected return type %s but got %s", sig, fn.returnType, rhs)
+				rhs, rHasErr := evalType(stmt.Children[1], fn.ReturnType)
+				if !rHasErr && rhs != fn.ReturnType && !ImplementsInterface(fn.ReturnType, rhs) {
+					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' expected return type %s but got %s", sig, fn.ReturnType, rhs)
 				} else {
 					stmt.Type = rhs
 				}
@@ -156,10 +156,10 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 				currentScope = scope
 				var id string
 				if branch.Label == "else if" {
-					id = fmt.Sprintf("%s#%d.%d@%s", branch.Label, ifBlockCounter, elseIfCounter, currentScope.id)
+					id = fmt.Sprintf("%s#%d.%d@%s", branch.Label, ifBlockCounter, elseIfCounter, currentScope.Id)
 					elseIfCounter++
 				} else {
-					id = fmt.Sprintf("%s#%d@%s", branch.Label, ifBlockCounter, currentScope.id)
+					id = fmt.Sprintf("%s#%d@%s", branch.Label, ifBlockCounter, currentScope.Id)
 				}
 				branchScope := currentScope.addChild(id, Branch)
 				currentScope = branchScope
@@ -187,7 +187,7 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 			}
 		} else if stmt.Label == "for" {
 			scope := currentScope
-			newScope := currentScope.addChild(fmt.Sprintf("for#%d@%s", forCounter, currentScope.id), Loop)
+			newScope := currentScope.addChild(fmt.Sprintf("for#%d@%s", forCounter, currentScope.Id), Loop)
 			forCounter++
 			currentScope = newScope
 			analyzeForCondition(stmt.Children[0].Children)
@@ -195,7 +195,7 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 			currentScope = scope
 		} else if stmt.Label == "while" {
 			scope := currentScope
-			newScope := currentScope.addChild(fmt.Sprintf("while#%d@%s", whileCounter, currentScope.id), Loop)
+			newScope := currentScope.addChild(fmt.Sprintf("while#%d@%s", whileCounter, currentScope.Id), Loop)
 			whileCounter++
 			currentScope = newScope
 			cond, hasError := evalType(stmt.Children[0], datatypes.Bool)
