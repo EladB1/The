@@ -63,7 +63,7 @@ func compile(source []string) {
 	}
 	ir, irDiagnostics := irgen.Generate(ast, scopeTree)
 	compilerDiagnostics.Combine(irDiagnostics)
-	fmt.Println(ir)
+	fmt.Println(ir.String())
 	if irDiagnostics.HasError {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)

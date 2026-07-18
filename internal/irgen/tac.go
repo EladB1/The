@@ -1,5 +1,10 @@
 package irgen
 
+import (
+	"fmt"
+	"strings"
+)
+
 type (
 	Datatype      string
 	VariableScope string
@@ -15,11 +20,12 @@ type (
 		Type     Datatype
 		Var      Variable
 		Constant any
+		Unsigned bool
 		Label    string // use for JMP/JMPIF
 	}
 	Instruction struct {
 		Destination Variable
-		Operation   string
+		Operation   Operation
 		Operand1    Operand
 		Operand2    Operand
 	}
@@ -80,6 +86,7 @@ const (
 	Call         Operation = "CALL"
 	JMP          Operation = "JMP"
 	JMPIF        Operation = "JMPIF"
+	Malloc       Operation = "Malloc"
 	Addi32       Operation = "i32.add"
 	Subi32       Operation = "i32.sub"
 	Muli32       Operation = "i32.mul"
@@ -125,4 +132,53 @@ func (loop Loop) getTACType() string {
 
 func (fn Function) getTACType() string {
 	return "Function"
+}
+
+func (prog *Program) appendCode(code []TAC) {
+	prog.Code = append(prog.Code, code...)
+}
+
+func (prog *Program) String() string {
+	output := strings.Builder{}
+	for _, line := range prog.Code {
+		switch line.getTACType() {
+		case "Instruction":
+			inst, ok := line.(Instruction)
+			if !ok {
+				break
+			}
+			if (inst.Destination != Variable{}) {
+				output.WriteString(fmt.Sprintf("%s: %s =", inst.Destination.Name, inst.Destination.DataType))
+			}
+			output.WriteString(string(inst.Operation))
+			if (inst.Operand1 != Operand{}) {
+				output.WriteString(inst.Operand1.String())
+			}
+			if (inst.Operand2 != Operand{}) {
+				output.WriteString(inst.Operand2.String())
+			}
+
+		case "IfBlock":
+			//
+		case "Block":
+			//
+		case "Loop":
+			//
+		}
+		output.WriteRune('\n')
+	}
+	return output.String()
+}
+
+func (op Operand) String() string {
+	output := strings.Builder{}
+	if op.Label != "" {
+		output.WriteString(op.Label)
+	}
+	if (op.Var != Variable{}) {
+		output.WriteString(fmt.Sprintf(" %s.%s", op.Var.Visibility, op.Var.Name))
+	} else {
+		output.WriteString(fmt.Sprintf(" %s(%v)", op.Type, op.Constant))
+	}
+	return output.String()
 }
