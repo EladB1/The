@@ -28,11 +28,11 @@ children: [
                 Node: { Token: {Value: bool, Type: type keyword, Line: 5, Column: 20} },
                 Node: { Label: "fn-body"
                 children: [
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: None
                     children: [
                         Node: { Token: {Value: powerOff, Type: identifier, Line: 6, Column: 8} }
                     ] },
-                    Node: { Label: "control-flow"
+                    Node: { Label: "control-flow", Type: bool
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 7, Column: 8} },
                         Node: { Label: "call", Type: bool
@@ -48,7 +48,7 @@ children: [
                 Node: { Token: {Value: uint32, Type: type keyword, Line: 9, Column: 24} },
                 Node: { Label: "fn-body"
                 children: [
-                    Node: { Label: "control-flow"
+                    Node: { Label: "control-flow", Type: uint32
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 10, Column: 8} },
                         Node: { Token: {Value: 0, Type: int literal, Line: 10, Column: 15}, Type: uint32 }
@@ -71,7 +71,7 @@ children: [
                 Node: { Token: {Value: private, Type: modifier keyword, Line: 15, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: uint32
                     children: [
                         Node: { Label: "modifiers"
                         children: [
@@ -80,7 +80,7 @@ children: [
                         Node: { Token: {Value: uint32, Type: type keyword, Line: 17, Column: 12} },
                         Node: { Token: {Value: lastStartTime, Type: identifier, Line: 17, Column: 19} }
                     ] },
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: uint32
                     children: [
                         Node: { Label: "modifiers"
                         children: [
@@ -102,28 +102,28 @@ children: [
                         Node: { Token: {Value: bool, Type: type keyword, Line: 21, Column: 24} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Token: {Value: =, Type: assign operator, Line: 22, Column: 26}
+                            Node: { Token: {Value: =, Type: assign operator, Line: 22, Column: 26}, Type: uint32
                             children: [
                                 Node: { Token: {Value: lastStartTime, Type: identifier, Line: 22, Column: 12}, Type: uint32 },
                                 Node: { Token: {Value: now, Type: identifier, Line: 22, Column: 28}, Type: uint32 }
                             ] },
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 23, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: "Powering on...", Type: string literal, Line: 23, Column: 20} }
+                                    Node: { Token: {Value: "Powering on...", Type: string literal, Line: 23, Column: 20}, Type: String }
                                 ] }
                             ] },
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: sleep, Type: identifier, Line: 24, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: 2, Type: float literal, Line: 24, Column: 18} }
+                                    Node: { Token: {Value: 2, Type: float literal, Line: 24, Column: 18}, Type: double }
                                 ] }
                             ] },
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: bool
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 25, Column: 12} },
                                 Node: { Token: {Value: true, Type: boolean value keyword, Line: 25, Column: 19}, Type: bool }
@@ -135,12 +135,12 @@ children: [
                         Node: { Token: {Value: powerOff, Type: identifier, Line: 27, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 28, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: "powering off...", Type: string literal, Line: 28, Column: 20} }
+                                    Node: { Token: {Value: "powering off...", Type: string literal, Line: 28, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -151,7 +151,7 @@ children: [
                         Node: { Token: {Value: uint32, Type: type keyword, Line: 30, Column: 28} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: uint32
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 31, Column: 12} },
                                 Node: { Token: {Value: -, Type: add operator, Line: 31, Column: 23}, Type: uint32
@@ -189,7 +189,7 @@ children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 41, Column: 17} },
                 Node: { Label: "fn-body"
                 children: [
-                    Node: { Label: "control-flow"
+                    Node: { Label: "control-flow", Type: String
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 42, Column: 8} },
                         Node: { Token: {Value: "./compiler [source_file]", Type: string literal, Line: 42, Column: 15}, Type: String }
@@ -214,7 +214,7 @@ children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 47, Column: 15} },
                 Node: { Label: "fn-body"
                 children: [
-                    Node: { Label: "control-flow"
+                    Node: { Label: "control-flow", Type: String
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 48, Column: 8} },
                         Node: { Token: {Value: "", Type: string literal, Line: 48, Column: 15}, Type: String }
@@ -237,7 +237,7 @@ children: [
                         Node: { Token: {Value: String, Type: type keyword, Line: 53, Column: 21} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: String
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 54, Column: 12} },
                                 Node: { Token: {Value: "./compiler-app [source_file] [OPTIONS]", Type: string literal, Line: 54, Column: 19}, Type: String }
@@ -253,7 +253,7 @@ children: [
         Node: { Token: {Value: resolveImplementationConflict, Type: identifier, Line: 59, Column: 3} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: CompilerApp
             children: [
                 Node: { Token: {Value: CompilerApp, Type: identifier, Line: 60, Column: 4} },
                 Node: { Token: {Value: ca, Type: identifier, Line: 60, Column: 16} },
@@ -262,33 +262,33 @@ children: [
                     Node: { Token: {Value: CompilerApp, Type: identifier, Line: 60, Column: 21} }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: println, Type: identifier, Line: 61, Column: 4} },
                 Node: { Label: "params"
                 children: [
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: String
                     children: [
                         Node: { Label: "dot"
                         children: [
-                            Node: { Token: {Value: ca, Type: identifier, Line: 61, Column: 12} },
+                            Node: { Token: {Value: ca, Type: identifier, Line: 61, Column: 12}, Type: CompilerApp },
                             Node: { Token: {Value: do, Type: identifier, Line: 61, Column: 15} }
                         ] }
                     ] }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: println, Type: identifier, Line: 62, Column: 4} },
                 Node: { Label: "params"
                 children: [
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: String
                     children: [
                         Node: { Label: "dot"
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: ca, Type: identifier, Line: 62, Column: 12} },
+                                Node: { Token: {Value: ca, Type: identifier, Line: 62, Column: 12}, Type: CompilerApp },
                                 Node: { Token: {Value: Compiler, Type: identifier, Line: 62, Column: 15} }
                             ] },
                             Node: { Token: {Value: help, Type: identifier, Line: 62, Column: 24} }
@@ -296,18 +296,18 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: println, Type: identifier, Line: 63, Column: 4} },
                 Node: { Label: "params"
                 children: [
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: String
                     children: [
                         Node: { Label: "dot"
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: ca, Type: identifier, Line: 63, Column: 12} },
+                                Node: { Token: {Value: ca, Type: identifier, Line: 63, Column: 12}, Type: CompilerApp },
                                 Node: { Token: {Value: App, Type: identifier, Line: 63, Column: 15} }
                             ] },
                             Node: { Token: {Value: help, Type: identifier, Line: 63, Column: 19} }
@@ -322,7 +322,7 @@ children: [
         Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 66, Column: 7} },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: bool
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -338,22 +338,22 @@ children: [
         Node: { Token: {Value: Person, Type: identifier, Line: 70, Column: 7} },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: String
             children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 71, Column: 4} },
                 Node: { Token: {Value: first, Type: identifier, Line: 71, Column: 11} }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: String
             children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 72, Column: 4} },
                 Node: { Token: {Value: last, Type: identifier, Line: 72, Column: 11} }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: uint32
             children: [
                 Node: { Token: {Value: uint32, Type: type keyword, Line: 73, Column: 4} },
                 Node: { Token: {Value: age, Type: identifier, Line: 73, Column: 11} }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: String
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -362,7 +362,7 @@ children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 74, Column: 12} },
                 Node: { Token: {Value: ssn, Type: identifier, Line: 74, Column: 19} }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: EmploymentStatus
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -378,7 +378,7 @@ children: [
         Node: { Token: {Value: Inner, Type: identifier, Line: 78, Column: 7} },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: String
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -394,7 +394,7 @@ children: [
         Node: { Token: {Value: Outer, Type: identifier, Line: 82, Column: 7} },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: Inner
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -405,7 +405,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: int
     children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 86, Column: 0} },
         Node: { Token: {Value: x, Type: identifier, Line: 86, Column: 4} },
@@ -421,7 +421,7 @@ children: [
         Node: { Token: {Value: TestName, Type: identifier, Line: 89, Column: 7} },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -436,45 +436,45 @@ children: [
                 Node: { Token: {Value: bool, Type: type keyword, Line: 91, Column: 17} },
                 Node: { Label: "fn-body"
                 children: [
-                    Node: { Label: "dot"
+                    Node: { Label: "dot", Type: int
                     children: [
-                        Node: { Token: {Value: global, Type: identifier, Line: 92, Column: 8} },
+                        Node: { Token: {Value: global, Type: identifier, Line: 92, Column: 8}, Type: Ref(@global) },
                         Node: { Token: {Value: x, Type: identifier, Line: 92, Column: 15} }
                     ] },
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: None
                     children: [
                         Node: { Label: "dot"
                         children: [
-                            Node: { Token: {Value: global, Type: identifier, Line: 93, Column: 8} },
+                            Node: { Token: {Value: global, Type: identifier, Line: 93, Column: 8}, Type: Ref(@global) },
                             Node: { Token: {Value: getX, Type: identifier, Line: 93, Column: 15} }
                         ] }
                     ] },
-                    Node: { Token: {Value: =, Type: assign operator, Line: 94, Column: 15}
+                    Node: { Token: {Value: =, Type: assign operator, Line: 94, Column: 15}, Type: int
                     children: [
                         Node: { Label: "dot", Type: int
                         children: [
-                            Node: { Token: {Value: this, Type: identifier, Line: 94, Column: 8} },
+                            Node: { Token: {Value: this, Type: identifier, Line: 94, Column: 8}, Type: Ref(TestName) },
                             Node: { Token: {Value: x, Type: identifier, Line: 94, Column: 13} }
                         ] },
                         Node: { Token: {Value: -, Type: add operator, Line: 94, Column: 26}, Type: int
                         children: [
                             Node: { Label: "dot", Type: int
                             children: [
-                                Node: { Token: {Value: global, Type: identifier, Line: 94, Column: 17} },
+                                Node: { Token: {Value: global, Type: identifier, Line: 94, Column: 17}, Type: Ref(@global) },
                                 Node: { Token: {Value: x, Type: identifier, Line: 94, Column: 24} }
                             ] },
                             Node: { Token: {Value: 1, Type: int literal, Line: 94, Column: 28}, Type: int }
                         ] }
                     ] },
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: None
                     children: [
                         Node: { Token: {Value: println, Type: identifier, Line: 95, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: x, Type: identifier, Line: 95, Column: 16} }
+                            Node: { Token: {Value: x, Type: identifier, Line: 95, Column: 16}, Type: int }
                         ] }
                     ] },
-                    Node: { Label: "control-flow"
+                    Node: { Label: "control-flow", Type: bool
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 96, Column: 8} },
                         Node: { Token: {Value: false, Type: boolean value keyword, Line: 96, Column: 15}, Type: bool }
@@ -489,7 +489,7 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 100, Column: 13} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: Person
             children: [
                 Node: { Token: {Value: Person, Type: identifier, Line: 101, Column: 4} },
                 Node: { Token: {Value: p1, Type: identifier, Line: 101, Column: 11} },
@@ -501,27 +501,27 @@ children: [
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: first, Type: identifier, Line: 102, Column: 8} },
-                            Node: { Token: {Value: "name", Type: string literal, Line: 102, Column: 15} }
+                            Node: { Token: {Value: "name", Type: string literal, Line: 102, Column: 15}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: last, Type: identifier, Line: 103, Column: 8} },
-                            Node: { Token: {Value: "othername", Type: string literal, Line: 103, Column: 14} }
+                            Node: { Token: {Value: "othername", Type: string literal, Line: 103, Column: 14}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: age, Type: identifier, Line: 104, Column: 8} },
-                            Node: { Token: {Value: 25, Type: int literal, Line: 104, Column: 13} }
+                            Node: { Token: {Value: 25, Type: int literal, Line: 104, Column: 13}, Type: uint32 }
                         ] },
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: ssn, Type: identifier, Line: 105, Column: 8} },
-                            Node: { Token: {Value: "000000000", Type: string literal, Line: 105, Column: 13} }
+                            Node: { Token: {Value: "000000000", Type: string literal, Line: 105, Column: 13}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: status, Type: identifier, Line: 106, Column: 8} },
-                            Node: { Label: "struct_literal"
+                            Node: { Label: "struct_literal", Type: EmploymentStatus
                             children: [
                                 Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 106, Column: 16} },
                                 Node: { Label: "properties"
@@ -529,7 +529,7 @@ children: [
                                     Node: { Label: "property"
                                     children: [
                                         Node: { Token: {Value: employed, Type: identifier, Line: 106, Column: 34} },
-                                        Node: { Token: {Value: true, Type: boolean value keyword, Line: 106, Column: 44} }
+                                        Node: { Token: {Value: true, Type: boolean value keyword, Line: 106, Column: 44}, Type: bool }
                                     ] }
                                 ] }
                             ] }
@@ -537,7 +537,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: Person
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -553,22 +553,22 @@ children: [
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: first, Type: identifier, Line: 109, Column: 8} },
-                            Node: { Token: {Value: "name", Type: string literal, Line: 109, Column: 15} }
+                            Node: { Token: {Value: "name", Type: string literal, Line: 109, Column: 15}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: last, Type: identifier, Line: 110, Column: 8} },
-                            Node: { Token: {Value: "othername", Type: string literal, Line: 110, Column: 14} }
+                            Node: { Token: {Value: "othername", Type: string literal, Line: 110, Column: 14}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: age, Type: identifier, Line: 111, Column: 8} },
-                            Node: { Token: {Value: 12, Type: int literal, Line: 111, Column: 13} }
+                            Node: { Token: {Value: 12, Type: int literal, Line: 111, Column: 13}, Type: uint32 }
                         ] },
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: status, Type: identifier, Line: 112, Column: 8} },
-                            Node: { Label: "struct_literal"
+                            Node: { Label: "struct_literal", Type: EmploymentStatus
                             children: [
                                 Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 112, Column: 16} },
                                 Node: { Label: "properties"
@@ -576,7 +576,7 @@ children: [
                                     Node: { Label: "property"
                                     children: [
                                         Node: { Token: {Value: employed, Type: identifier, Line: 112, Column: 34} },
-                                        Node: { Token: {Value: false, Type: boolean value keyword, Line: 112, Column: 44} }
+                                        Node: { Token: {Value: false, Type: boolean value keyword, Line: 112, Column: 44}, Type: bool }
                                     ] }
                                 ] }
                             ] }
@@ -584,12 +584,12 @@ children: [
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: ssn, Type: identifier, Line: 113, Column: 8} },
-                            Node: { Token: {Value: "000000001", Type: string literal, Line: 113, Column: 13} }
+                            Node: { Token: {Value: "000000001", Type: string literal, Line: 113, Column: 13}, Type: String }
                         ] }
                     ] }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: String
             children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 115, Column: 4} },
                 Node: { Token: {Value: personString, Type: identifier, Line: 115, Column: 11} },
@@ -599,21 +599,21 @@ children: [
                     Node: { Token: {Value: String, Type: type keyword, Line: 115, Column: 32} }
                 ] }
             ] },
-            Node: { Token: {Value: ==, Type: compare operator, Line: 116, Column: 7}
+            Node: { Token: {Value: ==, Type: compare operator, Line: 116, Column: 7}, Type: bool
             children: [
                 Node: { Token: {Value: p1, Type: identifier, Line: 116, Column: 4}, Type: Person },
                 Node: { Token: {Value: p2, Type: identifier, Line: 116, Column: 10}, Type: Person }
             ] },
-            Node: { Token: {Value: ==, Type: compare operator, Line: 117, Column: 13}
+            Node: { Token: {Value: ==, Type: compare operator, Line: 117, Column: 13}, Type: bool
             children: [
                 Node: { Label: "dot", Type: String
                 children: [
-                    Node: { Token: {Value: p1, Type: identifier, Line: 117, Column: 4} },
+                    Node: { Token: {Value: p1, Type: identifier, Line: 117, Column: 4}, Type: Person },
                     Node: { Token: {Value: first, Type: identifier, Line: 117, Column: 7} }
                 ] },
                 Node: { Label: "dot", Type: String
                 children: [
-                    Node: { Token: {Value: p2, Type: identifier, Line: 117, Column: 16} },
+                    Node: { Token: {Value: p2, Type: identifier, Line: 117, Column: 16}, Type: Person },
                     Node: { Token: {Value: first, Type: identifier, Line: 117, Column: 19} }
                 ] }
             ] },
@@ -627,7 +627,7 @@ children: [
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: p1, Type: identifier, Line: 118, Column: 8} },
+                                Node: { Token: {Value: p1, Type: identifier, Line: 118, Column: 8}, Type: Person },
                                 Node: { Token: {Value: status, Type: identifier, Line: 118, Column: 11} }
                             ] },
                             Node: { Token: {Value: employed, Type: identifier, Line: 118, Column: 18} }
@@ -636,7 +636,7 @@ children: [
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: p2, Type: identifier, Line: 118, Column: 30} },
+                                Node: { Token: {Value: p2, Type: identifier, Line: 118, Column: 30}, Type: Person },
                                 Node: { Token: {Value: status, Type: identifier, Line: 118, Column: 33} }
                             ] },
                             Node: { Token: {Value: employed, Type: identifier, Line: 118, Column: 40} }
@@ -644,18 +644,18 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "call"
+                        Node: { Label: "call", Type: None
                         children: [
                             Node: { Token: {Value: println, Type: identifier, Line: 119, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: "woot", Type: string literal, Line: 119, Column: 16} }
+                                Node: { Token: {Value: "woot", Type: string literal, Line: 119, Column: 16}, Type: String }
                             ] }
                         ] }
                     ] }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: EmploymentStatus
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -664,20 +664,20 @@ children: [
                 Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 120, Column: 8} },
                 Node: { Token: {Value: status, Type: identifier, Line: 120, Column: 25} }
             ] },
-            Node: { Token: {Value: =, Type: assign operator, Line: 121, Column: 23}
+            Node: { Token: {Value: =, Type: assign operator, Line: 121, Column: 23}, Type: bool
             children: [
                 Node: { Label: "dot", Type: bool
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Token: {Value: p2, Type: identifier, Line: 121, Column: 4} },
+                        Node: { Token: {Value: p2, Type: identifier, Line: 121, Column: 4}, Type: Person },
                         Node: { Token: {Value: status, Type: identifier, Line: 121, Column: 7} }
                     ] },
                     Node: { Token: {Value: employed, Type: identifier, Line: 121, Column: 14} }
                 ] },
                 Node: { Token: {Value: true, Type: boolean value keyword, Line: 121, Column: 25}, Type: bool }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: Outer
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -693,7 +693,7 @@ children: [
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: inner, Type: identifier, Line: 123, Column: 8} },
-                            Node: { Label: "struct_literal"
+                            Node: { Label: "struct_literal", Type: Inner
                             children: [
                                 Node: { Token: {Value: Inner, Type: identifier, Line: 123, Column: 15} },
                                 Node: { Label: "properties"
@@ -701,7 +701,7 @@ children: [
                                     Node: { Label: "property"
                                     children: [
                                         Node: { Token: {Value: value, Type: identifier, Line: 124, Column: 12} },
-                                        Node: { Token: {Value: "asdf", Type: string literal, Line: 124, Column: 19} }
+                                        Node: { Token: {Value: "asdf", Type: string literal, Line: 124, Column: 19}, Type: String }
                                     ] }
                                 ] }
                             ] }
@@ -709,20 +709,20 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Token: {Value: =, Type: assign operator, Line: 127, Column: 22}
+            Node: { Token: {Value: =, Type: assign operator, Line: 127, Column: 22}, Type: String
             children: [
                 Node: { Label: "dot", Type: String
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Token: {Value: outer, Type: identifier, Line: 127, Column: 4} },
+                        Node: { Token: {Value: outer, Type: identifier, Line: 127, Column: 4}, Type: Outer },
                         Node: { Token: {Value: inner, Type: identifier, Line: 127, Column: 10} }
                     ] },
                     Node: { Token: {Value: value, Type: identifier, Line: 127, Column: 16} }
                 ] },
                 Node: { Token: {Value: "wasd", Type: string literal, Line: 127, Column: 24}, Type: String }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 128, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 128, Column: 11}, Type: int }
@@ -829,7 +829,7 @@ children: [
                 Node: { Token: {Value: private, Type: modifier keyword, Line: 1, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Label: "modifiers"
                         children: [
@@ -983,12 +983,12 @@ children: [
                         Node: { Token: {Value: powerOn, Type: identifier, Line: 10, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 11, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: "Server online", Type: string literal, Line: 11, Column: 20} }
+                                    Node: { Token: {Value: "Server online", Type: string literal, Line: 11, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -1012,12 +1012,12 @@ children: [
         Node: { Token: {Value: Position2D, Type: identifier, Line: 18, Column: 7} },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 19, Column: 4} },
                 Node: { Token: {Value: x, Type: identifier, Line: 19, Column: 8} }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 20, Column: 4} },
                 Node: { Token: {Value: y, Type: identifier, Line: 20, Column: 8} }
@@ -1047,12 +1047,12 @@ children: [
         Node: { Token: {Value: Container, Type: identifier, Line: 27, Column: 7} },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: String
             children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 28, Column: 4} },
                 Node: { Token: {Value: id, Type: identifier, Line: 28, Column: 11} }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -1095,7 +1095,7 @@ children: [
                         Node: { Token: {Value: Device, Type: identifier, Line: 37, Column: 28} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: Server
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 38, Column: 12} },
                                 Node: { Label: "struct_literal", Type: Server
@@ -1119,7 +1119,7 @@ children: [
                         Node: { Token: {Value: String, Type: type keyword, Line: 40, Column: 36} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: String
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 41, Column: 12} },
                                 Node: { Token: {Value: +, Type: add operator, Line: 41, Column: 24}, Type: String
@@ -1136,7 +1136,7 @@ children: [
                         Node: { Token: {Value: String, Type: type keyword, Line: 43, Column: 34} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: None
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 44, Column: 12} },
                                 Node: { Token: {Value: +, Type: add operator, Line: 44, Column: 29}
@@ -1156,7 +1156,7 @@ children: [
                         Node: { Token: {Value: toNone, Type: identifier, Line: 46, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: None
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 47, Column: 12} }
                             ] }
@@ -1168,7 +1168,7 @@ children: [
                         Node: { Token: {Value: Container, Type: identifier, Line: 49, Column: 23} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: Container
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 50, Column: 12} },
                                 Node: { Label: "struct_literal", Type: Container
@@ -1179,7 +1179,7 @@ children: [
                                         Node: { Label: "property"
                                         children: [
                                             Node: { Token: {Value: id, Type: identifier, Line: 50, Column: 29} },
-                                            Node: { Token: {Value: id, Type: identifier, Line: 50, Column: 33} }
+                                            Node: { Token: {Value: id, Type: identifier, Line: 50, Column: 33}, Type: String }
                                         ] }
                                     ] }
                                 ] }
@@ -1217,7 +1217,7 @@ children: [
                         Node: { Token: {Value: bool, Type: type keyword, Line: 56, Column: 52} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: bool
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 57, Column: 12} },
                                 Node: { Token: {Value: true, Type: boolean value keyword, Line: 57, Column: 19}, Type: bool }
@@ -1238,7 +1238,7 @@ children: [
                         Node: { Token: {Value: bool, Type: type keyword, Line: 59, Column: 38} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: bool
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 60, Column: 12} },
                                 Node: { Token: {Value: false, Type: boolean value keyword, Line: 60, Column: 19}, Type: bool }
@@ -1264,7 +1264,7 @@ children: [
                         Node: { Token: {Value: bool, Type: type keyword, Line: 62, Column: 61} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: bool
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 63, Column: 12} },
                                 Node: { Token: {Value: false, Type: boolean value keyword, Line: 63, Column: 19}, Type: bool }
@@ -1284,12 +1284,12 @@ children: [
                         ] },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 66, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: other, Type: identifier, Line: 66, Column: 20} }
+                                    Node: { Token: {Value: other, Type: identifier, Line: 66, Column: 20}, Type: Container }
                                 ] }
                             ] }
                         ] }
@@ -1353,12 +1353,12 @@ children: [
                         Node: { Token: {Value: connect, Type: identifier, Line: 82, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 83, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: "Connected", Type: string literal, Line: 83, Column: 20} }
+                                    Node: { Token: {Value: "Connected", Type: string literal, Line: 83, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -1375,13 +1375,13 @@ children: [
                         Node: { Token: {Value: connect, Type: identifier, Line: 87, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: exit, Type: identifier, Line: 88, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: 1, Type: int literal, Line: 88, Column: 17} },
-                                    Node: { Token: {Value: "Failed to connect", Type: string literal, Line: 88, Column: 20} }
+                                    Node: { Token: {Value: 1, Type: int literal, Line: 88, Column: 17}, Type: int },
+                                    Node: { Token: {Value: "Failed to connect", Type: string literal, Line: 88, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -1409,12 +1409,12 @@ children: [
                         Node: { Token: {Value: connect, Type: identifier, Line: 95, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 96, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: "Connected to DB server", Type: string literal, Line: 96, Column: 20} }
+                                    Node: { Token: {Value: "Connected to DB server", Type: string literal, Line: 96, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -1439,12 +1439,12 @@ children: [
                                     Node: { Token: {Value: TLS, Type: identifier, Line: 99, Column: 16}, Type: bool },
                                     Node: { Label: "conditional_body"
                                     children: [
-                                        Node: { Label: "call"
+                                        Node: { Label: "call", Type: None
                                         children: [
                                             Node: { Token: {Value: println, Type: identifier, Line: 100, Column: 16} },
                                             Node: { Label: "params"
                                             children: [
-                                                Node: { Token: {Value: "Connected to DB server with TLS", Type: string literal, Line: 100, Column: 24} }
+                                                Node: { Token: {Value: "Connected to DB server with TLS", Type: string literal, Line: 100, Column: 24}, Type: String }
                                             ] }
                                         ] }
                                     ] }
@@ -1453,20 +1453,20 @@ children: [
                                 children: [
                                     Node: { Label: "conditional_body"
                                     children: [
-                                        Node: { Label: "call"
+                                        Node: { Label: "call", Type: None
                                         children: [
                                             Node: { Token: {Value: printerr, Type: identifier, Line: 102, Column: 16} },
                                             Node: { Label: "params"
                                             children: [
-                                                Node: { Token: {Value: "Warning: insecure connection", Type: string literal, Line: 102, Column: 25} }
+                                                Node: { Token: {Value: "Warning: insecure connection", Type: string literal, Line: 102, Column: 25}, Type: String }
                                             ] }
                                         ] },
-                                        Node: { Label: "call"
+                                        Node: { Label: "call", Type: None
                                         children: [
                                             Node: { Token: {Value: println, Type: identifier, Line: 103, Column: 16} },
                                             Node: { Label: "params"
                                             children: [
-                                                Node: { Token: {Value: "Connected to DB server", Type: string literal, Line: 103, Column: 24} }
+                                                Node: { Token: {Value: "Connected to DB server", Type: string literal, Line: 103, Column: 24}, Type: String }
                                             ] }
                                         ] }
                                     ] }
@@ -1516,13 +1516,13 @@ children: [
                         Node: { Token: {Value: float, Type: type keyword, Line: 115, Column: 24} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "Variable"
+                            Node: { Label: "Variable", Type: float
                             children: [
                                 Node: { Token: {Value: float, Type: type keyword, Line: 116, Column: 12} },
                                 Node: { Token: {Value: seconds, Type: identifier, Line: 116, Column: 18} },
                                 Node: { Token: {Value: 0.025, Type: float literal, Line: 116, Column: 28}, Type: float }
                             ] },
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: float
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 117, Column: 12} },
                                 Node: { Token: {Value: seconds, Type: identifier, Line: 117, Column: 19}, Type: float }
@@ -1543,7 +1543,7 @@ children: [
                 Node: { Token: {Value: private, Type: modifier keyword, Line: 123, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Label: "modifiers"
                         children: [
@@ -1553,7 +1553,7 @@ children: [
                         Node: { Token: {Value: y, Type: identifier, Line: 124, Column: 20} },
                         Node: { Token: {Value: "y", Type: string literal, Line: 124, Column: 24}, Type: String }
                     ] },
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: None
                     children: [
                         Node: { Label: "modifiers"
                         children: [
@@ -1589,7 +1589,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: int
     children: [
         Node: { Label: "modifiers"
         children: [
@@ -1609,7 +1609,7 @@ children: [
         Node: { Token: {Value: TestName, Type: identifier, Line: 137, Column: 7} },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 138, Column: 4} },
                 Node: { Token: {Value: x, Type: identifier, Line: 138, Column: 8} }
@@ -1619,16 +1619,16 @@ children: [
                 Node: { Token: {Value: getX, Type: identifier, Line: 139, Column: 7} },
                 Node: { Label: "fn-body"
                 children: [
-                    Node: { Label: "dot"
+                    Node: { Label: "dot", Type: None
                     children: [
-                        Node: { Token: {Value: global, Type: identifier, Line: 140, Column: 8} },
+                        Node: { Token: {Value: global, Type: identifier, Line: 140, Column: 8}, Type: Ref(@global) },
                         Node: { Token: {Value: xyz, Type: identifier, Line: 140, Column: 15} }
                     ] },
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: None
                     children: [
                         Node: { Label: "dot"
                         children: [
-                            Node: { Token: {Value: global, Type: identifier, Line: 141, Column: 8} },
+                            Node: { Token: {Value: global, Type: identifier, Line: 141, Column: 8}, Type: Ref(@global) },
                             Node: { Token: {Value: getXY, Type: identifier, Line: 141, Column: 15} }
                         ] }
                     ] },
@@ -1645,7 +1645,7 @@ children: [
                     children: [
                         Node: { Label: "dot"
                         children: [
-                            Node: { Token: {Value: this, Type: identifier, Line: 143, Column: 8} },
+                            Node: { Token: {Value: this, Type: identifier, Line: 143, Column: 8}, Type: Ref(TestName) },
                             Node: { Token: {Value: x, Type: identifier, Line: 143, Column: 13} }
                         ] },
                         Node: { Label: "dot"
@@ -1664,7 +1664,7 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 147, Column: 13} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: App
             children: [
                 Node: { Token: {Value: App, Type: identifier, Line: 148, Column: 4} },
                 Node: { Token: {Value: app, Type: identifier, Line: 148, Column: 8} },
@@ -1673,15 +1673,15 @@ children: [
                     Node: { Token: {Value: App, Type: identifier, Line: 148, Column: 14} }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: app, Type: identifier, Line: 149, Column: 4} },
+                    Node: { Token: {Value: app, Type: identifier, Line: 149, Column: 4}, Type: App },
                     Node: { Token: {Value: connect, Type: identifier, Line: 149, Column: 8} }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: Container
             children: [
                 Node: { Token: {Value: Container, Type: identifier, Line: 150, Column: 4} },
                 Node: { Token: {Value: one, Type: identifier, Line: 150, Column: 14} },
@@ -1693,7 +1693,7 @@ children: [
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: id, Type: identifier, Line: 150, Column: 30} },
-                            Node: { Token: {Value: "one", Type: string literal, Line: 150, Column: 34} }
+                            Node: { Token: {Value: "one", Type: string literal, Line: 150, Column: 34}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
@@ -1703,7 +1703,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: Container
             children: [
                 Node: { Token: {Value: Container, Type: identifier, Line: 151, Column: 4} },
                 Node: { Token: {Value: two, Type: identifier, Line: 151, Column: 14} },
@@ -1715,7 +1715,7 @@ children: [
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: id, Type: identifier, Line: 151, Column: 30} },
-                            Node: { Token: {Value: "two", Type: string literal, Line: 151, Column: 34} }
+                            Node: { Token: {Value: "two", Type: string literal, Line: 151, Column: 34}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
@@ -1725,7 +1725,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: Container
             children: [
                 Node: { Token: {Value: Container, Type: identifier, Line: 152, Column: 4} },
                 Node: { Token: {Value: three, Type: identifier, Line: 152, Column: 14} },
@@ -1737,17 +1737,17 @@ children: [
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: id, Type: identifier, Line: 152, Column: 32} },
-                            Node: { Token: {Value: '3', Type: char literal, Line: 152, Column: 36} }
+                            Node: { Token: {Value: '3', Type: char literal, Line: 152, Column: 36}, Type: char }
                         ] }
                     ] }
                 ] }
             ] },
-            Node: { Token: {Value: >, Type: compare operator, Line: 153, Column: 8}
+            Node: { Token: {Value: >, Type: compare operator, Line: 153, Column: 8}, Type: bool
             children: [
                 Node: { Token: {Value: one, Type: identifier, Line: 153, Column: 4}, Type: Container },
                 Node: { Token: {Value: two, Type: identifier, Line: 153, Column: 10}, Type: Container }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: float
             children: [
                 Node: { Token: {Value: float, Type: type keyword, Line: 154, Column: 4} },
                 Node: { Token: {Value: f1, Type: identifier, Line: 154, Column: 10} },
@@ -1757,7 +1757,7 @@ children: [
                     Node: { Token: {Value: float, Type: type keyword, Line: 154, Column: 22} }
                 ] }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 155, Column: 14}
+            Node: { Token: {Value: +, Type: add operator, Line: 155, Column: 14}, Type: None
             children: [
                 Node: { Token: {Value: *, Type: multiply operator, Line: 155, Column: 8}
                 children: [
@@ -1766,19 +1766,19 @@ children: [
                 ] },
                 Node: { Token: {Value: three, Type: identifier, Line: 155, Column: 16}, Type: Container }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: println, Type: identifier, Line: 156, Column: 4} },
                 Node: { Label: "params"
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Token: {Value: one, Type: identifier, Line: 156, Column: 12} },
+                        Node: { Token: {Value: one, Type: identifier, Line: 156, Column: 12}, Type: Container },
                         Node: { Token: {Value: runTimeVersion, Type: identifier, Line: 156, Column: 16} }
                     ] }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: println, Type: identifier, Line: 157, Column: 4} },
                 Node: { Label: "params"
@@ -1789,7 +1789,7 @@ children: [
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: one, Type: identifier, Line: 157, Column: 12} },
+                                Node: { Token: {Value: one, Type: identifier, Line: 157, Column: 12}, Type: Container },
                                 Node: { Token: {Value: madeup, Type: identifier, Line: 157, Column: 16} }
                             ] },
                             Node: { Token: {Value: not, Type: identifier, Line: 157, Column: 23} }
@@ -1802,7 +1802,7 @@ children: [
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: two, Type: identifier, Line: 158, Column: 4} },
+                    Node: { Token: {Value: two, Type: identifier, Line: 158, Column: 4}, Type: Container },
                     Node: { Token: {Value: id, Type: identifier, Line: 158, Column: 8} }
                 ] },
                 Node: { Token: {Value: "2", Type: string literal, Line: 158, Column: 13} }
@@ -1811,16 +1811,16 @@ children: [
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: "hello", Type: string literal, Line: 159, Column: 4} },
+                    Node: { Token: {Value: "hello", Type: string literal, Line: 159, Column: 4}, Type: String },
                     Node: { Token: {Value: length, Type: identifier, Line: 159, Column: 12} }
                 ] },
                 Node: { Token: {Value: 0, Type: int literal, Line: 159, Column: 21} }
             ] },
-            Node: { Label: "struct_literal"
+            Node: { Label: "struct_literal", Type: None
             children: [
                 Node: { Token: {Value: StructLiteral, Type: identifier, Line: 160, Column: 4} }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: MariaDB
             children: [
                 Node: { Token: {Value: MariaDB, Type: identifier, Line: 161, Column: 4} },
                 Node: { Token: {Value: maria, Type: identifier, Line: 161, Column: 12} },
@@ -1829,7 +1829,7 @@ children: [
                     Node: { Token: {Value: MariaDB, Type: identifier, Line: 161, Column: 20} }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: PostgreSQL
             children: [
                 Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 162, Column: 4} },
                 Node: { Token: {Value: pgsql, Type: identifier, Line: 162, Column: 15} },
@@ -1838,44 +1838,44 @@ children: [
                     Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 162, Column: 23} }
                 ] }
             ] },
-            Node: { Token: {Value: <=, Type: compare operator, Line: 163, Column: 10}
+            Node: { Token: {Value: <=, Type: compare operator, Line: 163, Column: 10}, Type: None
             children: [
                 Node: { Token: {Value: maria, Type: identifier, Line: 163, Column: 4}, Type: MariaDB },
                 Node: { Token: {Value: pgsql, Type: identifier, Line: 163, Column: 13}, Type: PostgreSQL }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: pgsql, Type: identifier, Line: 164, Column: 4} },
+                    Node: { Token: {Value: pgsql, Type: identifier, Line: 164, Column: 4}, Type: PostgreSQL },
                     Node: { Token: {Value: disconnect, Type: identifier, Line: 164, Column: 10} }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Label: "dot"
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Token: {Value: pgsql, Type: identifier, Line: 165, Column: 4} },
+                        Node: { Token: {Value: pgsql, Type: identifier, Line: 165, Column: 4}, Type: PostgreSQL },
                         Node: { Token: {Value: Server, Type: identifier, Line: 165, Column: 10} }
                     ] },
                     Node: { Token: {Value: connect, Type: identifier, Line: 165, Column: 17} }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Label: "dot"
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Token: {Value: pgsql, Type: identifier, Line: 166, Column: 4} },
+                        Node: { Token: {Value: pgsql, Type: identifier, Line: 166, Column: 4}, Type: PostgreSQL },
                         Node: { Token: {Value: DB, Type: identifier, Line: 166, Column: 10} }
                     ] },
                     Node: { Token: {Value: getTLSVersion, Type: identifier, Line: 166, Column: 13} }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: PrivateTester
             children: [
                 Node: { Token: {Value: PrivateTester, Type: identifier, Line: 167, Column: 4} },
                 Node: { Token: {Value: pt, Type: identifier, Line: 167, Column: 18} },
@@ -1884,37 +1884,37 @@ children: [
                     Node: { Token: {Value: PrivateTester, Type: identifier, Line: 167, Column: 23} }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: pt, Type: identifier, Line: 168, Column: 4} },
+                    Node: { Token: {Value: pt, Type: identifier, Line: 168, Column: 4}, Type: PrivateTester },
                     Node: { Token: {Value: test, Type: identifier, Line: 168, Column: 7} }
                 ] }
             ] },
-            Node: { Label: "dot"
+            Node: { Label: "dot", Type: PrivateTester
             children: [
-                Node: { Token: {Value: pt, Type: identifier, Line: 169, Column: 4} },
+                Node: { Token: {Value: pt, Type: identifier, Line: 169, Column: 4}, Type: PrivateTester },
                 Node: { Token: {Value: y, Type: identifier, Line: 169, Column: 7} }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: String
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: maria, Type: identifier, Line: 170, Column: 4} },
+                    Node: { Token: {Value: maria, Type: identifier, Line: 170, Column: 4}, Type: MariaDB },
                     Node: { Token: {Value: getVersion, Type: identifier, Line: 170, Column: 10} }
                 ] }
             ] },
-            Node: { Label: "dot"
+            Node: { Label: "dot", Type: MariaDB
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: maria, Type: identifier, Line: 171, Column: 4} },
+                    Node: { Token: {Value: maria, Type: identifier, Line: 171, Column: 4}, Type: MariaDB },
                     Node: { Token: {Value: this, Type: identifier, Line: 171, Column: 10} }
                 ] },
                 Node: { Token: {Value: y, Type: identifier, Line: 171, Column: 15} }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: PrivateTester
             children: [
                 Node: { Token: {Value: PrivateTester, Type: identifier, Line: 172, Column: 4} },
                 Node: { Token: {Value: pt2, Type: identifier, Line: 172, Column: 18} },
@@ -1924,13 +1924,13 @@ children: [
                     Node: { Token: {Value: PrivateTester, Type: identifier, Line: 172, Column: 33} }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: PrivateTester
             children: [
                 Node: { Token: {Value: PrivateTester, Type: identifier, Line: 173, Column: 4} },
                 Node: { Token: {Value: mariaPT, Type: identifier, Line: 173, Column: 18} },
                 Node: { Token: {Value: maria, Type: identifier, Line: 173, Column: 28}, Type: MariaDB }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 174, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 174, Column: 11}, Type: int }

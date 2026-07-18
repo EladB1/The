@@ -8,6 +8,7 @@ import (
 	"github.com/EladB1/The/internal/config"
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/filehandler"
+	"github.com/EladB1/The/internal/irgen"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
 	"github.com/EladB1/The/internal/semantic"
@@ -52,11 +53,18 @@ func compile(source []string) {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}
-	ast, scopeTree, semanticDiagnostics := semantic.Analyze(ast)
+	scopeTree, semanticDiagnostics := semantic.Analyze(&ast)
 	fmt.Println(scopeTree)
 	compilerDiagnostics.Combine(semanticDiagnostics)
 	fmt.Println(ast.String(literals))
 	if semanticDiagnostics.HasError {
+		reportStatus(compilerDiagnostics)
+		os.Exit(1)
+	}
+	ir, irDiagnostics := irgen.Generate(ast, scopeTree)
+	compilerDiagnostics.Combine(irDiagnostics)
+	fmt.Println(ir)
+	if irDiagnostics.HasError {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}

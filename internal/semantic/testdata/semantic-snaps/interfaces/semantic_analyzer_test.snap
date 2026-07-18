@@ -38,7 +38,7 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: String
             children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 9, Column: 4} },
                 Node: { Token: {Value: status, Type: identifier, Line: 9, Column: 11} }
@@ -53,12 +53,12 @@ children: [
                         Node: { Token: {Value: display, Type: identifier, Line: 11, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 12, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: +, Type: add operator, Line: 12, Column: 38}
+                                    Node: { Token: {Value: +, Type: add operator, Line: 12, Column: 38}, Type: String
                                     children: [
                                         Node: { Token: {Value: "Result status: ", Type: string literal, Line: 12, Column: 20}, Type: String },
                                         Node: { Token: {Value: status, Type: identifier, Line: 12, Column: 40}, Type: String }
@@ -73,7 +73,7 @@ children: [
                         Node: { Token: {Value: String, Type: type keyword, Line: 14, Column: 26} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: String
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 15, Column: 12} },
                                 Node: { Token: {Value: status, Type: identifier, Line: 15, Column: 19}, Type: String }
@@ -99,12 +99,12 @@ children: [
                 Node: { Token: {Value: showUsage, Type: identifier, Line: 22, Column: 7} },
                 Node: { Label: "fn-body"
                 children: [
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: None
                     children: [
                         Node: { Token: {Value: println, Type: identifier, Line: 23, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: "Usage is `./run [args]`", Type: string literal, Line: 23, Column: 16} }
+                            Node: { Token: {Value: "Usage is `./run [args]`", Type: string literal, Line: 23, Column: 16}, Type: String }
                         ] }
                     ] }
                 ] }
@@ -114,12 +114,12 @@ children: [
                 Node: { Token: {Value: startup, Type: identifier, Line: 25, Column: 7} },
                 Node: { Label: "fn-body"
                 children: [
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: None
                     children: [
                         Node: { Token: {Value: println, Type: identifier, Line: 26, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: "Starting run...", Type: string literal, Line: 26, Column: 16} }
+                            Node: { Token: {Value: "Starting run...", Type: string literal, Line: 26, Column: 16}, Type: String }
                         ] }
                     ] }
                 ] }
@@ -146,11 +146,11 @@ children: [
                         Node: { Token: {Value: Result, Type: identifier, Line: 32, Column: 20} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: startup, Type: identifier, Line: 33, Column: 12} }
                             ] },
-                            Node: { Label: "control-flow"
+                            Node: { Label: "control-flow", Type: TestResult
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 34, Column: 12} },
                                 Node: { Label: "struct_literal", Type: TestResult
@@ -161,7 +161,7 @@ children: [
                                         Node: { Label: "property"
                                         children: [
                                             Node: { Token: {Value: status, Type: identifier, Line: 34, Column: 30} },
-                                            Node: { Token: {Value: "passed", Type: string literal, Line: 34, Column: 38} }
+                                            Node: { Token: {Value: "passed", Type: string literal, Line: 34, Column: 38}, Type: String }
                                         ] }
                                     ] }
                                 ] }
@@ -173,20 +173,20 @@ children: [
                         Node: { Token: {Value: showUsage, Type: identifier, Line: 36, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 37, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: "Usage is `./test-run [args]`", Type: string literal, Line: 37, Column: 20} }
+                                    Node: { Token: {Value: "Usage is `./test-run [args]`", Type: string literal, Line: 37, Column: 20}, Type: String }
                                 ] }
                             ] },
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 38, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: "args:\n--verbose\n--out", Type: string literal, Line: 38, Column: 20} }
+                                    Node: { Token: {Value: "args:\n--verbose\n--out", Type: string literal, Line: 38, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -201,7 +201,7 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 43, Column: 13} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 44, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 44, Column: 11}, Type: int }
@@ -307,15 +307,15 @@ children: [
                         Node: { Token: {Value: do, Type: identifier, Line: 15, Column: 11} },
                         Node: { Label: "fn-body"
                         children: [
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: printerr, Type: identifier, Line: 16, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: "don't", Type: string literal, Line: 16, Column: 21} }
+                                    Node: { Token: {Value: "don't", Type: string literal, Line: 16, Column: 21}, Type: String }
                                 ] }
                             ] },
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: something, Type: identifier, Line: 17, Column: 12} }
                             ] },
@@ -375,7 +375,7 @@ children: [
                 Node: { Token: {Value: uint32, Type: type keyword, Line: 28, Column: 17} },
                 Node: { Label: "fn-body"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: A
                     children: [
                         Node: { Token: {Value: A, Type: identifier, Line: 29, Column: 8} },
                         Node: { Token: {Value: a, Type: identifier, Line: 29, Column: 10} },

@@ -10,7 +10,7 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *NamedBlockSymbol {
+func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *NamedBlockSymbol {
 	details := nbNode.Children
 	name := details[0].Token.Value
 	if !slices.Contains(specialBlocks, name) && !slices.Contains(impl, name) {
@@ -87,7 +87,7 @@ func analyzeNamedBlock(nbNode parser.AST, structName string, impl []string) *Nam
 	return &NamedBlockSymbol{
 		name:           name,
 		isSpecialBlock: slices.Contains(specialBlocks, name),
-		Def:            &nbNode,
+		Def:            nbNode,
 		innerScope:     newScope,
 	}
 }

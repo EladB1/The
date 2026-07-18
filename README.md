@@ -209,13 +209,14 @@ Typecasting will help with operations on incompatible types, but won't fix all i
 ### Variables
 
 All variables are immutable by default; to define a mutable variable, preface the definiton with `mut`.
-An immutable variable must have an assigned value when defined.
+
+All uninitialized variables will automatically be assigned a "zero" value (0, empty string, false, etc.)
 
 ```
 bool isOpen = false; // Cannot be changed
 mut bool isCorrect = verify(value); // Can be changed
 
-double pi; // This will cause an error since pi is immutable but has no value
+double pi;
 mut double e; // Since it's mutable, a value can be set later so this is valid
 ```
 

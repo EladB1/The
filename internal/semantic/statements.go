@@ -11,7 +11,7 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-func analyzeForCondition(condition []parser.AST) {
+func analyzeForCondition(condition []*parser.AST) {
 	parts := len(condition)
 	if condition[0].Label == "Variable" {
 		symbol := analyzeVariable(condition[0])
@@ -31,7 +31,7 @@ func analyzeForCondition(condition []parser.AST) {
 			} else {
 				if condition[parts-1].Label == "range" {
 					if symbol != nil {
-						expr, hasErr := evalType(&condition[parts-1], symbol.Type)
+						expr, hasErr := evalType(condition[parts-1], symbol.Type)
 						if !hasErr && expr != symbol.Type {
 							messages.Complain(diagnostic.TypeError, condition[parts-1].Location, "Variable of type %s not compatible with range expression of type %s", symbol.Type, expr)
 						}
@@ -40,7 +40,7 @@ func analyzeForCondition(condition []parser.AST) {
 					if symbol != nil && symbol.Type != datatypes.Char {
 						messages.Complain(diagnostic.TypeError, condition[0].Location, "Cannot use %s as loop variables", symbol.Type.String())
 					}
-					rhs, hasErr := evalType(&condition[parts-1], datatypes.String)
+					rhs, hasErr := evalType(condition[parts-1], datatypes.String)
 					if !hasErr && rhs != datatypes.String {
 						messages.Complain(diagnostic.TypeError, condition[parts-1].Location, "Cannot loop over %s", rhs.String())
 					}
@@ -48,16 +48,16 @@ func analyzeForCondition(condition []parser.AST) {
 			}
 		} else {
 			if symbol != nil {
-				cond, hasErr := evalType(&condition[1], datatypes.Bool)
+				cond, hasErr := evalType(condition[1], datatypes.Bool)
 				if !hasErr && cond != datatypes.Bool {
 					messages.Complain(diagnostic.TypeError, condition[1].Location, "Expected bool as loop condition but got %s", cond.String())
 				}
 				var expr datatypes.DataType
 				if condition[2].Token.Kind == lexer.OPERATOR_ASSIGN {
-					expr, hasErr = analyzeAssignment(&condition[2])
+					expr, hasErr = analyzeAssignment(condition[2])
 
 				} else {
-					expr, hasErr = evalType(&condition[2], symbol.Type)
+					expr, hasErr = evalType(condition[2], symbol.Type)
 				}
 				if !hasErr && symbol.Type != expr {
 					messages.Complain(diagnostic.TypeError, condition[2].Location, "Expected %s as loop expression but got %s", symbol.Type.String(), expr.String())
@@ -65,18 +65,18 @@ func analyzeForCondition(condition []parser.AST) {
 			}
 		}
 	} else {
-		iter, _ := analyzeAssignment(&condition[0])
+		iter, _ := analyzeAssignment(condition[0])
 		if iter != datatypes.None {
-			cond, hasErr := evalType(&condition[1], datatypes.Bool)
+			cond, hasErr := evalType(condition[1], datatypes.Bool)
 			if !hasErr && cond != datatypes.Bool {
 				messages.Complain(diagnostic.TypeError, condition[1].Location, "Expected bool as loop condition but got %s", cond.String())
 			}
 			var expr datatypes.DataType
 			if condition[2].Token.Kind == lexer.OPERATOR_ASSIGN {
-				expr, hasErr = analyzeAssignment(&condition[2])
+				expr, hasErr = analyzeAssignment(condition[2])
 
 			} else {
-				expr, hasErr = evalType(&condition[2], iter)
+				expr, hasErr = evalType(condition[2], iter)
 			}
 			if !hasErr && iter != expr {
 				messages.Complain(diagnostic.TypeError, condition[2].Location, "Expected %s as loop expression but got %s", iter.String(), expr.String())
@@ -108,7 +108,7 @@ func analyzeAssignment(stmt *parser.AST) (datatypes.DataType, bool) {
 		}
 		lhs = symbol.Type
 	}
-	rhs, hasErr := evalType(&stmt.Children[1], lhs)
+	rhs, hasErr := evalType(stmt.Children[1], lhs)
 	if hasErr {
 		return datatypes.None, true
 	}
@@ -160,6 +160,7 @@ func analyzeAssignment(stmt *parser.AST) (datatypes.DataType, bool) {
 
 	}
 	stmt.Children[1].Type = rhs
+	stmt.Type = rhs
 	return lhs, hasError
 }
 
@@ -345,7 +346,7 @@ func checkIncrementOperator(operand lexer.Token, operator lexer.Token) (datatype
 func evalTypecast(original *parser.AST, targetType *parser.AST, expectedType datatypes.DataType) (datatypes.DataType, bool) {
 	lhs, hasErr := evalType(original, expectedType)
 	hasError := hasErr
-	target := nodeToType(*targetType)
+	target := nodeToType(targetType)
 	typeCastError := "Typecasting from %s to %s not allowed"
 	if lhs != target && target != datatypes.String {
 		if lhs == datatypes.Uint64 || lhs == datatypes.Int64 || lhs == datatypes.Double {
@@ -413,13 +414,13 @@ func evalSlice(ast *parser.AST, expectedType datatypes.DataType) (datatypes.Data
 	case 1:
 		nodeType = datatypes.Int32
 	case 2:
-		var expr parser.AST
+		var expr *parser.AST
 		if ast.Children[0].Token.Kind == lexer.OPERATOR_RANGE {
 			expr = ast.Children[1]
 		} else {
 			expr = ast.Children[0]
 		}
-		operand, hasErr := evalType(&expr, expectedType)
+		operand, hasErr := evalType(expr, expectedType)
 		if hasErr {
 			hasError = hasErr
 		}
@@ -430,8 +431,8 @@ func evalSlice(ast *parser.AST, expectedType datatypes.DataType) (datatypes.Data
 			nodeType = operand
 		}
 	case 3:
-		lhs, lHasErr := evalType(&ast.Children[0], expectedType)
-		rhs, rHasErr := evalType(&ast.Children[2], expectedType)
+		lhs, lHasErr := evalType(ast.Children[0], expectedType)
+		rhs, rHasErr := evalType(ast.Children[2], expectedType)
 		if lHasErr || rHasErr {
 			hasError = true
 		} else {
@@ -463,8 +464,8 @@ func evalRange(ast *parser.AST, expectedType datatypes.DataType) (datatypes.Data
 	var err error = nil
 	var nodeType datatypes.DataType = datatypes.None
 	parts := len(ast.Children)
-	first, firstHasErr := evalType(&ast.Children[0], expectedType)
-	second, secondHasErr := evalType(&ast.Children[2], expectedType)
+	first, firstHasErr := evalType(ast.Children[0], expectedType)
+	second, secondHasErr := evalType(ast.Children[2], expectedType)
 	hasError := firstHasErr || secondHasErr
 	if !firstHasErr && !slices.Contains(datatypes.IntTypes, first) {
 		messages.Complain(diagnostic.TypeError, ast.Children[0].Location, "Cannot use %s as range start", first)
@@ -484,7 +485,7 @@ func evalRange(ast *parser.AST, expectedType datatypes.DataType) (datatypes.Data
 			messages.Complain(diagnostic.IllegalStatementError, ast.Children[3].Location, "Cannot use inclusive operator for range step value")
 			hasError = true
 		}
-		third, thirdHasErr := evalType(&ast.Children[4], nodeType)
+		third, thirdHasErr := evalType(ast.Children[4], nodeType)
 		hasError = hasError || thirdHasErr
 		if !thirdHasErr && !slices.Contains(datatypes.IntTypes, third) {
 			messages.Complain(diagnostic.TypeError, ast.Children[4].Location, "Cannot use %s as range step value", third)
@@ -535,7 +536,7 @@ func evalLogicalOperation(left *parser.AST, right *parser.AST, operator lexer.To
 	}
 }
 
-func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
+func handleFunctionCall(details []*parser.AST) (datatypes.DataType, bool) {
 	hasError := false
 	scope := currentScope
 	var name lexer.Token
@@ -600,7 +601,7 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 	var params []datatypes.DataType = []datatypes.DataType{}
 	if len(details) == 2 {
 		for _, param := range details[1].Children {
-			parameter, hasErr := evalType(&param, datatypes.None)
+			parameter, hasErr := evalType(param, datatypes.None)
 			params = append(params, parameter)
 			if hasErr {
 				hasError = hasErr
@@ -627,11 +628,11 @@ func handleFunctionCall(details []parser.AST) (datatypes.DataType, bool) {
 	return datatypes.None, hasError
 }
 
-func handleDot(left parser.AST, right parser.AST, isFnCall bool, isAssignment bool, recursed bool) (datatypes.DataType, bool) {
+func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment bool, recursed bool) (datatypes.DataType, bool) {
 	hasError := false
 	var lhs datatypes.DataType = datatypes.None
 	if left.Label != "dot" {
-		lhs, hasError = evalType(&left, datatypes.None)
+		lhs, hasError = evalType(left, datatypes.None)
 		if isFnCall && !recursed {
 			return lhs, hasError
 		}

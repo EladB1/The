@@ -9,7 +9,7 @@ children: [
         Node: { Token: {Value: String, Type: type keyword, Line: 0, Column: 23} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: String
             children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 1, Column: 4} },
                 Node: { Token: {Value: user, Type: identifier, Line: 1, Column: 11} },
@@ -18,12 +18,12 @@ children: [
                     Node: { Token: {Value: getEnv, Type: identifier, Line: 1, Column: 18} },
                     Node: { Label: "params"
                     children: [
-                        Node: { Label: "call"
+                        Node: { Label: "call", Type: String
                         children: [
                             Node: { Token: {Value: toUpper, Type: identifier, Line: 1, Column: 25} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: "user", Type: string literal, Line: 1, Column: 33} }
+                                Node: { Token: {Value: "user", Type: string literal, Line: 1, Column: 33}, Type: String }
                             ] }
                         ] }
                     ] }
@@ -40,19 +40,19 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "call"
+                        Node: { Label: "call", Type: None
                         children: [
                             Node: { Token: {Value: exit, Type: identifier, Line: 3, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: 1, Type: int literal, Line: 3, Column: 13} },
-                                Node: { Token: {Value: "Failed to find environment variable", Type: string literal, Line: 3, Column: 16} }
+                                Node: { Token: {Value: 1, Type: int literal, Line: 3, Column: 13}, Type: int },
+                                Node: { Token: {Value: "Failed to find environment variable", Type: string literal, Line: 3, Column: 16}, Type: String }
                             ] }
                         ] }
                     ] }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: String
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -72,7 +72,7 @@ children: [
                     ] },
                     Node: { Label: "conditional_body"
                     children: [
-                        Node: { Token: {Value: =, Type: assign operator, Line: 6, Column: 20}
+                        Node: { Token: {Value: =, Type: assign operator, Line: 6, Column: 20}, Type: String
                         children: [
                             Node: { Token: {Value: accountType, Type: identifier, Line: 6, Column: 8}, Type: String },
                             Node: { Token: {Value: "root", Type: string literal, Line: 6, Column: 22}, Type: String }
@@ -86,13 +86,13 @@ children: [
                         Node: { Token: {Value: contains, Type: identifier, Line: 8, Column: 13} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: user, Type: identifier, Line: 8, Column: 22} },
-                            Node: { Token: {Value: "admin", Type: string literal, Line: 8, Column: 28} }
+                            Node: { Token: {Value: user, Type: identifier, Line: 8, Column: 22}, Type: String },
+                            Node: { Token: {Value: "admin", Type: string literal, Line: 8, Column: 28}, Type: String }
                         ] }
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Token: {Value: =, Type: assign operator, Line: 9, Column: 20}
+                        Node: { Token: {Value: =, Type: assign operator, Line: 9, Column: 20}, Type: String
                         children: [
                             Node: { Token: {Value: accountType, Type: identifier, Line: 9, Column: 8}, Type: String },
                             Node: { Token: {Value: "app-admin", Type: string literal, Line: 9, Column: 22}, Type: String }
@@ -106,13 +106,13 @@ children: [
                         Node: { Token: {Value: contains, Type: identifier, Line: 10, Column: 13} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: user, Type: identifier, Line: 10, Column: 22} },
-                            Node: { Token: {Value: "svc", Type: string literal, Line: 10, Column: 28} }
+                            Node: { Token: {Value: user, Type: identifier, Line: 10, Column: 22}, Type: String },
+                            Node: { Token: {Value: "svc", Type: string literal, Line: 10, Column: 28}, Type: String }
                         ] }
                     ] },
                     Node: { Label: "conditional_body"
                     children: [
-                        Node: { Token: {Value: =, Type: assign operator, Line: 11, Column: 20}
+                        Node: { Token: {Value: =, Type: assign operator, Line: 11, Column: 20}, Type: String
                         children: [
                             Node: { Token: {Value: accountType, Type: identifier, Line: 11, Column: 8}, Type: String },
                             Node: { Token: {Value: "service account", Type: string literal, Line: 11, Column: 22}, Type: String }
@@ -123,7 +123,7 @@ children: [
                 children: [
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Token: {Value: =, Type: assign operator, Line: 14, Column: 20}
+                        Node: { Token: {Value: =, Type: assign operator, Line: 14, Column: 20}, Type: String
                         children: [
                             Node: { Token: {Value: accountType, Type: identifier, Line: 14, Column: 8}, Type: String },
                             Node: { Token: {Value: "user", Type: string literal, Line: 14, Column: 22}, Type: String }
@@ -131,7 +131,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: String
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 15, Column: 4} },
                 Node: { Token: {Value: accountType, Type: identifier, Line: 15, Column: 11}, Type: String }
@@ -144,13 +144,13 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 18, Column: 25} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 19, Column: 4} },
                 Node: { Token: {Value: i, Type: identifier, Line: 19, Column: 8} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 19, Column: 12}, Type: int }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 20, Column: 4} },
                 Node: { Token: {Value: j, Type: identifier, Line: 20, Column: 8} },
@@ -178,7 +178,7 @@ children: [
                                 ] },
                                 Node: { Label: "conditional_body"
                                 children: [
-                                    Node: { Label: "control-flow"
+                                    Node: { Label: "control-flow", Type: int
                                     children: [
                                         Node: { Token: {Value: return, Type: flow keyword, Line: 23, Column: 12} },
                                         Node: { Token: {Value: i, Type: identifier, Line: 23, Column: 19}, Type: int }
@@ -194,7 +194,7 @@ children: [
                                 ] },
                                 Node: { Label: "conditional_body"
                                 children: [
-                                    Node: { Label: "control-flow"
+                                    Node: { Label: "control-flow", Type: int
                                     children: [
                                         Node: { Token: {Value: return, Type: flow keyword, Line: 25, Column: 12} },
                                         Node: { Token: {Value: j, Type: identifier, Line: 25, Column: 19}, Type: int }
@@ -205,7 +205,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 28, Column: 4} },
                 Node: { Token: {Value: +, Type: add operator, Line: 28, Column: 13}, Type: int
@@ -221,7 +221,7 @@ children: [
         Node: { Token: {Value: nestedLoops, Type: identifier, Line: 31, Column: 3} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -231,7 +231,7 @@ children: [
                 Node: { Token: {Value: i, Type: identifier, Line: 32, Column: 12} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 32, Column: 16}, Type: int }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 33, Column: 4} },
                 Node: { Token: {Value: limit, Type: identifier, Line: 33, Column: 8} },
@@ -261,7 +261,7 @@ children: [
                             ] },
                             Node: { Label: "conditional_body"
                             children: [
-                                Node: { Label: "Unary"
+                                Node: { Label: "Unary", Type: int
                                 children: [
                                     Node: { Token: {Value: i, Type: identifier, Line: 36, Column: 12} },
                                     Node: { Token: {Value: ++, Type: unary operator, Line: 36, Column: 13} }
@@ -273,7 +273,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Label: "modifiers"
                         children: [
@@ -286,7 +286,7 @@ children: [
                     children: [
                         Node: { Label: "loop-condition"
                         children: [
-                            Node: { Token: {Value: =, Type: assign operator, Line: 40, Column: 15}
+                            Node: { Token: {Value: =, Type: assign operator, Line: 40, Column: 15}, Type: int
                             children: [
                                 Node: { Token: {Value: j, Type: identifier, Line: 40, Column: 13}, Type: int },
                                 Node: { Token: {Value: +, Type: add operator, Line: 40, Column: 18}, Type: int
@@ -312,7 +312,7 @@ children: [
                                     Node: { Token: {Value: limit, Type: identifier, Line: 40, Column: 39}, Type: int }
                                 ] }
                             ] },
-                            Node: { Token: {Value: +=, Type: assign operator, Line: 40, Column: 48}
+                            Node: { Token: {Value: +=, Type: assign operator, Line: 40, Column: 48}, Type: int
                             children: [
                                 Node: { Token: {Value: j, Type: identifier, Line: 40, Column: 46}, Type: int },
                                 Node: { Token: {Value: 1, Type: int literal, Line: 40, Column: 51}, Type: int }
@@ -320,12 +320,12 @@ children: [
                         ] },
                         Node: { Label: "loop-body"
                         children: [
-                            Node: { Label: "call"
+                            Node: { Label: "call", Type: None
                             children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 41, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: j, Type: identifier, Line: 41, Column: 20} }
+                                    Node: { Token: {Value: j, Type: identifier, Line: 41, Column: 20}, Type: int }
                                 ] }
                             ] }
                         ] }
@@ -348,7 +348,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Token: {Value: =, Type: assign operator, Line: 46, Column: 10}
+                    Node: { Token: {Value: =, Type: assign operator, Line: 46, Column: 10}, Type: int
                     children: [
                         Node: { Token: {Value: i, Type: identifier, Line: 46, Column: 8}, Type: int },
                         Node: { Token: {Value: +, Type: add operator, Line: 46, Column: 14}, Type: int
@@ -378,7 +378,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: char
                     children: [
                         Node: { Token: {Value: char, Type: type keyword, Line: 51, Column: 9} },
                         Node: { Token: {Value: c, Type: identifier, Line: 51, Column: 14} }
@@ -388,12 +388,12 @@ children: [
                 ] },
                 Node: { Label: "loop-body"
                 children: [
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: None
                     children: [
                         Node: { Token: {Value: print, Type: identifier, Line: 52, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: c, Type: identifier, Line: 52, Column: 14} }
+                            Node: { Token: {Value: c, Type: identifier, Line: 52, Column: 14}, Type: char }
                         ] }
                     ] }
                 ] }
@@ -406,7 +406,7 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 56, Column: 13} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: String
             children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 57, Column: 4} },
                 Node: { Token: {Value: type, Type: identifier, Line: 57, Column: 11} },
@@ -423,19 +423,19 @@ children: [
                     children: [
                         Node: { Label: "dot", Type: int
                         children: [
-                            Node: { Token: {Value: type, Type: identifier, Line: 58, Column: 8} },
+                            Node: { Token: {Value: type, Type: identifier, Line: 58, Column: 8}, Type: String },
                             Node: { Token: {Value: length, Type: identifier, Line: 58, Column: 13} }
                         ] },
                         Node: { Token: {Value: 4, Type: int literal, Line: 58, Column: 23}, Type: int }
                     ] },
                     Node: { Label: "conditional_body"
                     children: [
-                        Node: { Label: "call"
+                        Node: { Label: "call", Type: None
                         children: [
                             Node: { Token: {Value: println, Type: identifier, Line: 59, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: "four", Type: string literal, Line: 59, Column: 16} }
+                                Node: { Token: {Value: "four", Type: string literal, Line: 59, Column: 16}, Type: String }
                             ] }
                         ] }
                     ] }
@@ -444,18 +444,18 @@ children: [
                 children: [
                     Node: { Label: "conditional_body"
                     children: [
-                        Node: { Label: "call"
+                        Node: { Label: "call", Type: None
                         children: [
                             Node: { Token: {Value: println, Type: identifier, Line: 61, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: "other", Type: string literal, Line: 61, Column: 16} }
+                                Node: { Token: {Value: "other", Type: string literal, Line: 61, Column: 16}, Type: String }
                             ] }
                         ] }
                     ] }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -469,7 +469,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Label: "modifiers"
                         children: [
@@ -492,7 +492,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body"
                 children: [
-                    Node: { Token: {Value: +=, Type: assign operator, Line: 65, Column: 12}
+                    Node: { Token: {Value: +=, Type: assign operator, Line: 65, Column: 12}, Type: int
                     children: [
                         Node: { Token: {Value: sum, Type: identifier, Line: 65, Column: 8}, Type: int },
                         Node: { Token: {Value: i, Type: identifier, Line: 65, Column: 15}, Type: int }
@@ -503,7 +503,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 67, Column: 9} },
                         Node: { Token: {Value: i, Type: identifier, Line: 67, Column: 13} }
@@ -542,7 +542,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Token: {Value: *=, Type: assign operator, Line: 70, Column: 12}
+                    Node: { Token: {Value: *=, Type: assign operator, Line: 70, Column: 12}, Type: int
                     children: [
                         Node: { Token: {Value: sum, Type: identifier, Line: 70, Column: 8}, Type: int },
                         Node: { Token: {Value: i, Type: identifier, Line: 70, Column: 15}, Type: int }
@@ -553,12 +553,12 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 72, Column: 9} },
                         Node: { Token: {Value: i, Type: identifier, Line: 72, Column: 13} }
                     ] },
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: char
                     children: [
                         Node: { Token: {Value: char, Type: type keyword, Line: 72, Column: 16} },
                         Node: { Token: {Value: c, Type: identifier, Line: 72, Column: 21} }
@@ -577,20 +577,20 @@ children: [
                 ] },
                 Node: { Label: "loop-body"
                 children: [
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: None
                     children: [
                         Node: { Token: {Value: print, Type: identifier, Line: 73, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: i, Type: identifier, Line: 73, Column: 14} }
+                            Node: { Token: {Value: i, Type: identifier, Line: 73, Column: 14}, Type: int }
                         ] }
                     ] },
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: None
                     children: [
                         Node: { Token: {Value: print, Type: identifier, Line: 74, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: +, Type: add operator, Line: 74, Column: 22}
+                            Node: { Token: {Value: +, Type: add operator, Line: 74, Column: 22}, Type: String
                             children: [
                                 Node: { Token: {Value: +, Type: add operator, Line: 74, Column: 18}, Type: String
                                 children: [
@@ -603,7 +603,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 76, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 76, Column: 11}, Type: int }
@@ -904,7 +904,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 1, Column: 9} },
                         Node: { Token: {Value: i, Type: identifier, Line: 1, Column: 13} }
@@ -918,7 +918,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: float
                     children: [
                         Node: { Token: {Value: float, Type: type keyword, Line: 2, Column: 9} },
                         Node: { Token: {Value: f, Type: identifier, Line: 2, Column: 15} }
@@ -937,7 +937,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: char
                     children: [
                         Node: { Token: {Value: char, Type: type keyword, Line: 3, Column: 9} },
                         Node: { Token: {Value: c, Type: identifier, Line: 3, Column: 14} }
@@ -956,7 +956,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: char
                     children: [
                         Node: { Token: {Value: char, Type: type keyword, Line: 4, Column: 9} },
                         Node: { Token: {Value: c, Type: identifier, Line: 4, Column: 14} }
@@ -977,7 +977,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 5, Column: 9} },
                         Node: { Token: {Value: i, Type: identifier, Line: 5, Column: 13} }
@@ -998,7 +998,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 6, Column: 9} },
                         Node: { Token: {Value: i, Type: identifier, Line: 6, Column: 13} }
@@ -1019,7 +1019,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 7, Column: 9} },
                         Node: { Token: {Value: i, Type: identifier, Line: 7, Column: 13} },
@@ -1060,7 +1060,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 9, Column: 4} },
                 Node: { Token: {Value: j, Type: identifier, Line: 9, Column: 8} }
@@ -1091,7 +1091,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 11, Column: 9} },
                         Node: { Token: {Value: i, Type: identifier, Line: 11, Column: 13} },
@@ -1102,7 +1102,7 @@ children: [
                         Node: { Token: {Value: println, Type: identifier, Line: 11, Column: 20} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: i, Type: identifier, Line: 11, Column: 28} }
+                            Node: { Token: {Value: i, Type: identifier, Line: 11, Column: 28}, Type: int }
                         ] }
                     ] },
                     Node: { Label: "Unary"
@@ -1117,7 +1117,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 12, Column: 9} },
                         Node: { Token: {Value: i, Type: identifier, Line: 12, Column: 13} },
@@ -1140,7 +1140,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: String
                     children: [
                         Node: { Token: {Value: String, Type: type keyword, Line: 13, Column: 9} },
                         Node: { Token: {Value: s, Type: identifier, Line: 13, Column: 16} }
@@ -1154,7 +1154,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: char
                     children: [
                         Node: { Token: {Value: char, Type: type keyword, Line: 14, Column: 9} },
                         Node: { Token: {Value: c, Type: identifier, Line: 14, Column: 14} }
@@ -1172,12 +1172,12 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: char
                     children: [
                         Node: { Token: {Value: char, Type: type keyword, Line: 15, Column: 9} },
                         Node: { Token: {Value: c, Type: identifier, Line: 15, Column: 14} }
                     ] },
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: char
                     children: [
                         Node: { Token: {Value: char, Type: type keyword, Line: 15, Column: 17} },
                         Node: { Token: {Value: d, Type: identifier, Line: 15, Column: 22} }
@@ -1191,7 +1191,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: char
                     children: [
                         Node: { Token: {Value: char, Type: type keyword, Line: 16, Column: 9} },
                         Node: { Token: {Value: c, Type: identifier, Line: 16, Column: 14} }
@@ -1209,7 +1209,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 17, Column: 9} },
                         Node: { Token: {Value: i, Type: identifier, Line: 17, Column: 13} },
@@ -1323,7 +1323,7 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 39, Column: 13} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 41, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 41, Column: 11}, Type: int }
@@ -1692,7 +1692,7 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 0, Column: 13} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 1, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 1, Column: 11}, Type: int }
@@ -1701,7 +1701,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 2, Column: 9} },
                         Node: { Token: {Value: i, Type: identifier, Line: 2, Column: 13} }
@@ -1722,12 +1722,12 @@ children: [
                     children: [
                         Node: { Token: {Value: break, Type: flow keyword, Line: 3, Column: 8} }
                     ] },
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: None
                     children: [
                         Node: { Token: {Value: println, Type: identifier, Line: 4, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: i, Type: identifier, Line: 4, Column: 16} }
+                            Node: { Token: {Value: i, Type: identifier, Line: 4, Column: 16}, Type: int }
                         ] }
                     ] }
                 ] }
@@ -1736,7 +1736,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 6, Column: 9} },
                         Node: { Token: {Value: i, Type: identifier, Line: 6, Column: 13} }
@@ -1755,12 +1755,12 @@ children: [
                     children: [
                         Node: { Token: {Value: continue, Type: flow keyword, Line: 7, Column: 8} }
                     ] },
-                    Node: { Label: "call"
+                    Node: { Label: "call", Type: None
                     children: [
                         Node: { Token: {Value: println, Type: identifier, Line: 8, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: -, Type: add operator, Line: 8, Column: 18}
+                            Node: { Token: {Value: -, Type: add operator, Line: 8, Column: 18}, Type: int
                             children: [
                                 Node: { Token: {Value: i, Type: identifier, Line: 8, Column: 16}, Type: int },
                                 Node: { Token: {Value: 1, Type: int literal, Line: 8, Column: 20}, Type: int }

@@ -5,7 +5,7 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-func analyzeVariable(varNode parser.AST) *VariableSymbol {
+func analyzeVariable(varNode *parser.AST) *VariableSymbol {
 	details := varNode.Children
 	typeNode := details[0]
 	name := details[1].Token
@@ -25,11 +25,11 @@ func analyzeVariable(varNode parser.AST) *VariableSymbol {
 		}
 		// handle value
 		if len(details) == 4 {
-			rhs = &details[3]
+			rhs = details[3]
 		}
 	} else {
 		if len(details) == 3 {
-			rhs = &details[2]
+			rhs = details[2]
 		}
 	}
 	varType := nodeToType(typeNode)
@@ -42,12 +42,13 @@ func analyzeVariable(varNode parser.AST) *VariableSymbol {
 			messages.Complain(diagnostic.TypeError, rhs.Location, "Cannot assign type %s to variable type %s", rType, varType)
 		}
 	}
+	varNode.Type = varType
 	return &VariableSymbol{
 		name:        name.Value,
 		Type:        varType,
 		isPrivate:   isPrivate,
 		isMutable:   isMutable,
-		Def:         &varNode,
+		Def:         varNode,
 		Initialized: rhs != nil,
 	}
 }

@@ -65,7 +65,7 @@ func evalStructLiteral(ast *parser.AST) datatypes.DataType {
 			continue
 		}
 		value := prop.Children[1]
-		if valueType, hasErr := evalType(&value, property.Type); property.Type != valueType && !ImplementsInterface(property.Type, valueType) && !hasErr {
+		if valueType, hasErr := evalType(value, property.Type); property.Type != valueType && !ImplementsInterface(property.Type, valueType) && !hasErr {
 			messages.Complain(diagnostic.TypeError, value.Location, "Property type %s expected but found %s", property.Type, valueType)
 		}
 		visited.Append(propId)
@@ -87,31 +87,31 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 			hasError = true
 		}
 	} else if ast.Label == "Unary" {
-		nodeType, hasError = evalUnary(&ast.Children[0], &ast.Children[1], expectedType)
+		nodeType, hasError = evalUnary(ast.Children[0], ast.Children[1], expectedType)
 	} else if ast.Label == "typecast" {
-		nodeType, hasError = evalTypecast(&ast.Children[0], &ast.Children[1], expectedType)
+		nodeType, hasError = evalTypecast(ast.Children[0], ast.Children[1], expectedType)
 	} else if ast.Label == "index" {
-		nodeType, hasError = evalIndex(&ast.Children[0], &ast.Children[1], expectedType)
+		nodeType, hasError = evalIndex(ast.Children[0], ast.Children[1], expectedType)
 	} else if ast.Label == "slice" {
 		nodeType, hasError = evalSlice(ast, expectedType)
 	} else if ast.Label == "ARR-END" {
-		nodeType, hasError = evalArrayEnd(&ast.Children[0], expectedType)
+		nodeType, hasError = evalArrayEnd(ast.Children[0], expectedType)
 	} else if ast.Label == "range" {
 		nodeType, hasError = evalRange(ast, expectedType)
 	} else if ast.Label == "call" {
 		nodeType, hasError = handleFunctionCall(ast.Children)
 	} else if ast.Token.Kind == lexer.OPERATOR_ADD {
-		nodeType, hasError = evalAdd(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
+		nodeType, hasError = evalAdd(ast.Children[0], ast.Children[1], ast.Token, expectedType)
 	} else if ast.Token.Kind == lexer.OPERATOR_MULT {
-		nodeType, hasError = evalMult(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
+		nodeType, hasError = evalMult(ast.Children[0], ast.Children[1], ast.Token, expectedType)
 	} else if ast.Token.Kind == lexer.OPERATOR_BS || ast.Token.Kind == lexer.OPERATOR_BW {
-		nodeType, hasError = evalBitOperation(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
+		nodeType, hasError = evalBitOperation(ast.Children[0], ast.Children[1], ast.Token, expectedType)
 	} else if ast.Token.Kind == lexer.OPERATOR_COMPARE {
-		nodeType, hasError = evalCompare(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
+		nodeType, hasError = evalCompare(ast.Children[0], ast.Children[1], ast.Token, expectedType)
 	} else if ast.Token.Value == "&&" || ast.Token.Value == "||" {
-		nodeType, hasError = evalLogicalOperation(&ast.Children[0], &ast.Children[1], ast.Token, expectedType)
+		nodeType, hasError = evalLogicalOperation(ast.Children[0], ast.Children[1], ast.Token, expectedType)
 	} else if ast.Token.Value == "**" {
-		nodeType, hasError = evalExponent(&ast.Children[0], &ast.Children[1], expectedType)
+		nodeType, hasError = evalExponent(ast.Children[0], ast.Children[1], expectedType)
 	} else if ast.Label == "dot" {
 		nodeType, hasError = handleDot(ast.Children[0], ast.Children[1], false, false, false)
 	}
@@ -172,7 +172,7 @@ func decideNumberType(lhs datatypes.DataType, rhs datatypes.DataType, operator s
 	}
 }
 
-func nodeToType(node parser.AST) datatypes.DataType {
+func nodeToType(node *parser.AST) datatypes.DataType {
 	if node.Token.Kind == lexer.ID {
 		symbol := globalScope.lookupType(node.Token.Value)
 		if symbol == nil || (symbol.getSymbolType() != "interface" && symbol.getSymbolType() != "struct") {

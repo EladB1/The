@@ -15,15 +15,15 @@ type (
 		Token    lexer.Token
 		Location ds.SourceLocation
 		Type     datatypes.DataType
-		Children []AST
+		Children []*AST
 	}
 )
 
-func (ast AST) String(pool ds.LiteralPool) string {
+func (ast *AST) String(pool ds.LiteralPool) string {
 	return ast.to_string(0, pool)
 }
 
-func (ast AST) to_string(indentLevel int, pool ds.LiteralPool) string {
+func (ast *AST) to_string(indentLevel int, pool ds.LiteralPool) string {
 	prefix := strings.Repeat("\t", indentLevel)
 	builder := strings.Builder{}
 	builder.WriteString(prefix)
@@ -55,20 +55,20 @@ func (ast AST) to_string(indentLevel int, pool ds.LiteralPool) string {
 	return builder.String()
 }
 
-func (ast *AST) PrependChildren(nodes ...AST) {
+func (ast *AST) PrependChildren(nodes ...*AST) {
 	ast.Children = append(nodes, ast.Children...)
 }
 
-func (ast *AST) AddChildren(nodes ...AST) {
+func (ast *AST) AddChildren(nodes ...*AST) {
 	ast.Children = append(ast.Children, nodes...)
 }
 
 func (ast *AST) AddChildToken(token lexer.Token) {
-	ast.AddChildren(AST{Token: token, Location: token.Location})
+	ast.AddChildren(&AST{Token: token, Location: token.Location})
 }
 
-func nodeFromToken(token lexer.Token) AST {
-	return AST{Token: token, Location: token.Location}
+func nodeFromToken(token lexer.Token) *AST {
+	return &AST{Token: token, Location: token.Location}
 }
 
 func (ast *AST) IsLiteral() bool {

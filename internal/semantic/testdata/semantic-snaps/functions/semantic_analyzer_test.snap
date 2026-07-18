@@ -9,7 +9,7 @@ children: [
         Node: { Token: {Value: bool, Type: type keyword, Line: 0, Column: 18} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: bool
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 1, Column: 4} },
                 Node: { Token: {Value: true, Type: boolean value keyword, Line: 1, Column: 11}, Type: bool }
@@ -30,7 +30,7 @@ children: [
         Node: { Token: {Value: bool, Type: type keyword, Line: 4, Column: 23} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: bool
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 5, Column: 4} },
                 Node: { Token: {Value: ==, Type: compare operator, Line: 5, Column: 13}, Type: bool
@@ -60,7 +60,7 @@ children: [
         Node: { Token: {Value: bool, Type: type keyword, Line: 8, Column: 30} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: bool
             children: [
                 Node: { Token: {Value: bool, Type: type keyword, Line: 9, Column: 4} },
                 Node: { Token: {Value: eq, Type: identifier, Line: 9, Column: 9} },
@@ -70,7 +70,7 @@ children: [
                     Node: { Token: {Value: j, Type: identifier, Line: 9, Column: 19}, Type: int }
                 ] }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: bool
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 10, Column: 4} },
                 Node: { Token: {Value: eq, Type: identifier, Line: 10, Column: 11}, Type: bool }
@@ -82,7 +82,7 @@ children: [
         Node: { Token: {Value: caller, Type: identifier, Line: 13, Column: 4} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Token: {Value: ||, Type: operator, Line: 14, Column: 33}
+            Node: { Token: {Value: ||, Type: operator, Line: 14, Column: 33}, Type: bool
             children: [
                 Node: { Token: {Value: ||, Type: operator, Line: 14, Column: 17}, Type: bool
                 children: [
@@ -99,7 +99,7 @@ children: [
                         Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 20} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: 1, Type: int literal, Line: 14, Column: 30} }
+                            Node: { Token: {Value: 1, Type: int literal, Line: 14, Column: 30}, Type: int }
                         ] }
                     ] }
                 ] },
@@ -108,16 +108,16 @@ children: [
                     Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 36} },
                     Node: { Label: "params"
                     children: [
-                        Node: { Token: {Value: +, Type: add operator, Line: 14, Column: 47}
+                        Node: { Token: {Value: +, Type: add operator, Line: 14, Column: 47}, Type: int
                         children: [
                             Node: { Token: {Value: 1, Type: int literal, Line: 14, Column: 46}, Type: int },
                             Node: { Token: {Value: 1, Type: int literal, Line: 14, Column: 48}, Type: int }
                         ] },
-                        Node: { Token: {Value: 2, Type: int literal, Line: 14, Column: 51} }
+                        Node: { Token: {Value: 2, Type: int literal, Line: 14, Column: 51}, Type: int }
                     ] }
                 ] }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: None
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 15, Column: 4} }
             ] }
@@ -129,11 +129,11 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 18, Column: 13} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: forwardDeclaration, Type: identifier, Line: 19, Column: 4} }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 20, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 20, Column: 11}, Type: int }
@@ -145,12 +145,12 @@ children: [
         Node: { Token: {Value: forwardDeclaration, Type: identifier, Line: 23, Column: 3} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: println, Type: identifier, Line: 24, Column: 4} },
                 Node: { Label: "params"
                 children: [
-                    Node: { Token: {Value: "Valid call", Type: string literal, Line: 24, Column: 12} }
+                    Node: { Token: {Value: "Valid call", Type: string literal, Line: 24, Column: 12}, Type: String }
                 ] }
             ] }
         ] }
@@ -172,7 +172,7 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: bool
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 29, Column: 8} },
                             Node: { Token: {Value: true, Type: boolean value keyword, Line: 29, Column: 15}, Type: bool }
@@ -183,7 +183,7 @@ children: [
                 children: [
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: bool
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 31, Column: 8} },
                             Node: { Token: {Value: false, Type: boolean value keyword, Line: 31, Column: 15}, Type: bool }
@@ -218,7 +218,7 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: bool
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 36, Column: 8} },
                             Node: { Token: {Value: true, Type: boolean value keyword, Line: 36, Column: 15}, Type: bool }
@@ -226,7 +226,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: bool
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 37, Column: 4} },
                 Node: { Token: {Value: false, Type: boolean value keyword, Line: 37, Column: 11}, Type: bool }
@@ -263,7 +263,7 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: bool
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 42, Column: 8} },
                             Node: { Token: {Value: true, Type: boolean value keyword, Line: 42, Column: 15}, Type: bool }
@@ -279,7 +279,7 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: bool
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 44, Column: 8} },
                             Node: { Token: {Value: true, Type: boolean value keyword, Line: 44, Column: 15}, Type: bool }
@@ -290,7 +290,7 @@ children: [
                 children: [
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: bool
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 46, Column: 8} },
                             Node: { Token: {Value: false, Type: boolean value keyword, Line: 46, Column: 15}, Type: bool }
@@ -330,7 +330,7 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: bool
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 51, Column: 8} },
                             Node: { Token: {Value: true, Type: boolean value keyword, Line: 51, Column: 15}, Type: bool }
@@ -346,12 +346,12 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "call"
+                        Node: { Label: "call", Type: None
                         children: [
                             Node: { Token: {Value: println, Type: identifier, Line: 53, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: j, Type: identifier, Line: 53, Column: 16} }
+                                Node: { Token: {Value: j, Type: identifier, Line: 53, Column: 16}, Type: uint32 }
                             ] }
                         ] }
                     ] }
@@ -360,7 +360,7 @@ children: [
                 children: [
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: bool
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 55, Column: 8} },
                             Node: { Token: {Value: false, Type: boolean value keyword, Line: 55, Column: 15}, Type: bool }
@@ -368,7 +368,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: bool
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 56, Column: 4} },
                 Node: { Token: {Value: false, Type: boolean value keyword, Line: 56, Column: 11}, Type: bool }
@@ -399,7 +399,7 @@ children: [
         Node: { Token: {Value: bool, Type: type keyword, Line: 59, Column: 44} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: uint32
             children: [
                 Node: { Label: "modifiers"
                 children: [
@@ -429,7 +429,7 @@ children: [
                             ] },
                             Node: { Label: "conditional-body"
                             children: [
-                                Node: { Label: "control-flow"
+                                Node: { Label: "control-flow", Type: bool
                                 children: [
                                     Node: { Token: {Value: return, Type: flow keyword, Line: 63, Column: 12} },
                                     Node: { Token: {Value: true, Type: boolean value keyword, Line: 63, Column: 19}, Type: bool }
@@ -437,14 +437,14 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "Unary"
+                    Node: { Label: "Unary", Type: uint32
                     children: [
                         Node: { Token: {Value: count, Type: identifier, Line: 64, Column: 8} },
                         Node: { Token: {Value: ++, Type: unary operator, Line: 64, Column: 13} }
                     ] }
                 ] }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: bool
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 66, Column: 4} },
                 Node: { Token: {Value: false, Type: boolean value keyword, Line: 66, Column: 11}, Type: bool }
@@ -479,7 +479,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: uint64
                     children: [
                         Node: { Token: {Value: uint64, Type: type keyword, Line: 70, Column: 9} },
                         Node: { Token: {Value: n, Type: identifier, Line: 70, Column: 16} }
@@ -511,7 +511,7 @@ children: [
                             ] },
                             Node: { Label: "conditional_body"
                             children: [
-                                Node: { Label: "control-flow"
+                                Node: { Label: "control-flow", Type: bool
                                 children: [
                                     Node: { Token: {Value: return, Type: flow keyword, Line: 72, Column: 12} },
                                     Node: { Token: {Value: true, Type: boolean value keyword, Line: 72, Column: 19}, Type: bool }
@@ -521,7 +521,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: bool
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 75, Column: 4} },
                 Node: { Token: {Value: false, Type: boolean value keyword, Line: 75, Column: 11}, Type: bool }
@@ -754,16 +754,16 @@ children: [
                     ] },
                     Node: { Label: "conditional_body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: None
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 2, Column: 8} }
                         ] },
-                        Node: { Label: "call"
+                        Node: { Label: "call", Type: None
                         children: [
                             Node: { Token: {Value: println, Type: identifier, Line: 3, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: i, Type: identifier, Line: 3, Column: 16} }
+                                Node: { Token: {Value: i, Type: identifier, Line: 3, Column: 16}, Type: int }
                             ] }
                         ] }
                     ] }
@@ -772,27 +772,27 @@ children: [
                 children: [
                     Node: { Label: "conditional_body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: None
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 5, Column: 8} }
                         ] },
-                        Node: { Label: "call"
+                        Node: { Label: "call", Type: None
                         children: [
                             Node: { Token: {Value: println, Type: identifier, Line: 6, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: "not zero", Type: string literal, Line: 6, Column: 16} }
+                                Node: { Token: {Value: "not zero", Type: string literal, Line: 6, Column: 16}, Type: String }
                             ] }
                         ] }
                     ] }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: println, Type: identifier, Line: 8, Column: 4} },
                 Node: { Label: "params"
                 children: [
-                    Node: { Token: {Value: "after if block", Type: string literal, Line: 8, Column: 12} }
+                    Node: { Token: {Value: "after if block", Type: string literal, Line: 8, Column: 12}, Type: String }
                 ] }
             ] }
         ] }
@@ -803,12 +803,12 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 11, Column: 13} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 12, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 12, Column: 11}, Type: int }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 13, Column: 4} },
                 Node: { Token: {Value: 1, Type: int literal, Line: 13, Column: 11}, Type: int }
@@ -1120,7 +1120,7 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 16, Column: 21} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 17, Column: 4} },
                 Node: { Token: {Value: +, Type: add operator, Line: 17, Column: 13}, Type: int
@@ -1136,24 +1136,24 @@ children: [
         Node: { Token: {Value: caller, Type: identifier, Line: 20, Column: 3} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: plusOne, Type: identifier, Line: 21, Column: 4} },
                 Node: { Label: "params"
                 children: [
-                    Node: { Token: {Value: PI, Type: identifier, Line: 21, Column: 12} }
+                    Node: { Token: {Value: PI, Type: identifier, Line: 21, Column: 12}, Type: double }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: plusOne, Type: identifier, Line: 22, Column: 4} },
                 Node: { Label: "params"
                 children: [
-                    Node: { Token: {Value: 1, Type: int literal, Line: 22, Column: 12} },
-                    Node: { Token: {Value: 1, Type: int literal, Line: 22, Column: 15} }
+                    Node: { Token: {Value: 1, Type: int literal, Line: 22, Column: 12}, Type: int },
+                    Node: { Token: {Value: 1, Type: int literal, Line: 22, Column: 15}, Type: int }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: plusOne, Type: identifier, Line: 23, Column: 4} }
             ] }
@@ -1170,12 +1170,12 @@ children: [
         Node: { Token: {Value: uint32, Type: type keyword, Line: 28, Column: 22} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
                 Node: { Token: {Value: println, Type: identifier, Line: 29, Column: 4} },
                 Node: { Label: "params"
                 children: [
-                    Node: { Token: {Value: "hi", Type: string literal, Line: 29, Column: 12} }
+                    Node: { Token: {Value: "hi", Type: string literal, Line: 29, Column: 12}, Type: String }
                 ] }
             ] }
         ] }
@@ -1205,12 +1205,12 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "call"
+                        Node: { Label: "call", Type: None
                         children: [
                             Node: { Token: {Value: println, Type: identifier, Line: 34, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: u, Type: identifier, Line: 34, Column: 16} }
+                                Node: { Token: {Value: u, Type: identifier, Line: 34, Column: 16}, Type: uint32 }
                             ] }
                         ] }
                     ] }
@@ -1248,7 +1248,7 @@ children: [
                     ] },
                     Node: { Label: "conditional_body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: uint32
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 39, Column: 8} },
                             Node: { Token: {Value: u, Type: identifier, Line: 39, Column: 15}, Type: uint32 }
@@ -1264,7 +1264,7 @@ children: [
                     ] },
                     Node: { Label: "conditional_body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: uint32
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 42, Column: 8} },
                             Node: { Token: {Value: u, Type: identifier, Line: 42, Column: 15}, Type: uint32 }
@@ -1275,12 +1275,12 @@ children: [
                 children: [
                     Node: { Label: "conditional_body"
                     children: [
-                        Node: { Label: "call"
+                        Node: { Label: "call", Type: None
                         children: [
                             Node: { Token: {Value: println, Type: identifier, Line: 45, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: "greater", Type: string literal, Line: 45, Column: 16} }
+                                Node: { Token: {Value: "greater", Type: string literal, Line: 45, Column: 16}, Type: String }
                             ] }
                         ] }
                     ] }
@@ -1307,7 +1307,7 @@ children: [
                 Node: { Token: {Value: true, Type: boolean value keyword, Line: 52, Column: 11}, Type: bool },
                 Node: { Label: "loop-body"
                 children: [
-                    Node: { Label: "control-flow"
+                    Node: { Label: "control-flow", Type: uint32
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 53, Column: 8} },
                         Node: { Label: "typecast", Type: uint32
@@ -1343,7 +1343,7 @@ children: [
             children: [
                 Node: { Label: "loop-condition"
                 children: [
-                    Node: { Label: "Variable"
+                    Node: { Label: "Variable", Type: int
                     children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 60, Column: 9} },
                         Node: { Token: {Value: n, Type: identifier, Line: 60, Column: 13} }
@@ -1358,7 +1358,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body"
                 children: [
-                    Node: { Label: "control-flow"
+                    Node: { Label: "control-flow", Type: uint32
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 61, Column: 8} },
                         Node: { Label: "typecast", Type: uint32
@@ -1543,7 +1543,7 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: int
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 90, Column: 8} },
                             Node: { Token: {Value: i, Type: identifier, Line: 90, Column: 15}, Type: int }
@@ -1588,7 +1588,7 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: int
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 96, Column: 8} },
                             Node: { Token: {Value: i, Type: identifier, Line: 96, Column: 15}, Type: int }
@@ -1643,7 +1643,7 @@ children: [
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
-                        Node: { Label: "control-flow"
+                        Node: { Label: "control-flow", Type: int
                         children: [
                             Node: { Token: {Value: return, Type: flow keyword, Line: 103, Column: 8} },
                             Node: { Token: {Value: i, Type: identifier, Line: 103, Column: 15}, Type: int }

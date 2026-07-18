@@ -9,7 +9,7 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-func processFunctionSignature(fnNode parser.AST) FnCreateSymbol {
+func processFunctionSignature(fnNode *parser.AST) FnCreateSymbol {
 	details := fnNode.Children
 	length := len(details)
 	name := details[0].Token.Value
@@ -20,35 +20,35 @@ func processFunctionSignature(fnNode parser.AST) FnCreateSymbol {
 	switch length {
 	case 2:
 		if details[1].Label == "params" { // fn name(type pname);
-			paramNode = &details[1]
+			paramNode = details[1]
 		} else if details[1].Token.Kind == lexer.ID || details[1].Token.Kind == lexer.KW_TYPE { // fn name() -> type;
-			returnTypeNode = &details[1]
+			returnTypeNode = details[1]
 		} else { // fn name() {}
-			bodyNode = &details[1]
+			bodyNode = details[1]
 		}
 	case 3:
 		if details[1].Token.Kind == lexer.ID || details[1].Token.Kind == lexer.KW_TYPE { // fn name() -> type {}
-			returnTypeNode = &details[1]
-			bodyNode = &details[2]
+			returnTypeNode = details[1]
+			bodyNode = details[2]
 		} else {
-			paramNode = &details[1]
+			paramNode = details[1]
 			if details[2].Token.Kind == lexer.ID || details[2].Token.Kind == lexer.KW_TYPE { // fn name(type pname) -> type;
-				returnTypeNode = &details[2]
+				returnTypeNode = details[2]
 			} else { // fn name(type pname) {}
-				bodyNode = &details[2]
+				bodyNode = details[2]
 			}
 
 		}
 	case 4: // fn name(type pname) -> type {}
-		paramNode = &details[1]
-		returnTypeNode = &details[2]
-		bodyNode = &details[3]
+		paramNode = details[1]
+		returnTypeNode = details[2]
+		bodyNode = details[3]
 	}
 	var paramNames []string
 	var paramTypes []datatypes.DataType
 	var returnType datatypes.DataType = datatypes.None
 	if returnTypeNode != nil {
-		returnType = nodeToType(*returnTypeNode)
+		returnType = nodeToType(returnTypeNode)
 	}
 	if paramNode != nil {
 		for _, param := range paramNode.Children {
@@ -102,7 +102,7 @@ func analyzeFunctionBody(fn FunctionSymbol) {
 	currentScope = scope
 }
 
-func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig string) bool {
+func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig string) bool {
 	hasReturn := false
 	length := len(body)
 	unreachable := false
@@ -124,7 +124,7 @@ func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig str
 				}
 			}
 		} else if stmt.Token.Kind == lexer.OPERATOR_ASSIGN {
-			analyzeAssignment(&stmt)
+			analyzeAssignment(stmt)
 		} else if stmt.Label == "control-flow" {
 			if i != length-1 {
 				unreachable = true
@@ -141,7 +141,7 @@ func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig str
 					messages.Complain(diagnostic.IllegalStatementError, stmt.Location, "Cannot use %s outside of loop", stmt.Children[0].Token.Value)
 				}
 			} else { // return something
-				rhs, rHasErr := evalType(&stmt.Children[1], fn.returnType)
+				rhs, rHasErr := evalType(stmt.Children[1], fn.returnType)
 				if !rHasErr && rhs != fn.returnType && !ImplementsInterface(fn.returnType, rhs) {
 					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' expected return type %s but got %s", sig, fn.returnType, rhs)
 				} else {
@@ -165,7 +165,7 @@ func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig str
 				currentScope = branchScope
 				block_index := 0
 				if branch.Label != "else" {
-					condition, hasErr := evalType(&branch.Children[0], datatypes.Bool)
+					condition, hasErr := evalType(branch.Children[0], datatypes.Bool)
 					if !hasErr && condition != datatypes.Bool {
 						messages.Complain(diagnostic.TypeError, branch.Children[0].Location, "Expected bool but got %s", condition)
 					}
@@ -198,7 +198,7 @@ func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig str
 			newScope := currentScope.addChild(fmt.Sprintf("while#%d@%s", whileCounter, currentScope.id), Loop)
 			whileCounter++
 			currentScope = newScope
-			cond, hasError := evalType(&stmt.Children[0], datatypes.Bool)
+			cond, hasError := evalType(stmt.Children[0], datatypes.Bool)
 			if !hasError && cond != datatypes.Bool {
 				messages.Complain(diagnostic.TypeError, stmt.Children[0].Location, "Expected bool as loop condition but got %s", cond.String())
 			}
@@ -206,7 +206,7 @@ func analyzeBlockAndCheckForReturn(body []parser.AST, fn FunctionSymbol, sig str
 			currentScope = scope
 
 		} else {
-			stmt.Type, _ = evalType(&stmt, datatypes.None) // expressions
+			stmt.Type, _ = evalType(stmt, datatypes.None) // expressions
 		}
 	}
 	return hasReturn

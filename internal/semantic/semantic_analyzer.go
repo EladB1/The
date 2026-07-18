@@ -30,7 +30,7 @@ func setup() {
 	currentScope = globalScope
 }
 
-func Analyze(ast parser.AST) (parser.AST, *Scope, diagnostic.PhaseDiagnostics) {
+func Analyze(ast *parser.AST) (*Scope, diagnostic.PhaseDiagnostics) {
 	setup()
 	collectTypeNames(ast)
 	analyzeInterfaceFnSignatures()
@@ -54,11 +54,11 @@ func Analyze(ast parser.AST) (parser.AST, *Scope, diagnostic.PhaseDiagnostics) {
 		messages.ComplainPositionless(diagnostic.Error, "Missing entrypoint function 'fn main()->int'")
 	}
 	messages.Sort()
-	return ast, rootScope, messages
+	return rootScope, messages
 }
 
 // Pass one
-func collectTypeNames(ast parser.AST) {
+func collectTypeNames(ast *parser.AST) {
 	for _, node := range ast.Children {
 		if node.Label != "interface" && node.Token.Value != "struct" {
 			continue
@@ -80,7 +80,7 @@ func collectTypeNames(ast parser.AST) {
 			globalScope.interfaces[name] = InterfaceSymbol{
 				name:       name,
 				innerScope: childScope,
-				Def:        &node,
+				Def:        node,
 			}
 		} else if node.Token.Value == "struct" {
 			childScope := globalScope.addChild(name, Struct)
@@ -103,7 +103,7 @@ func collectTypeNames(ast parser.AST) {
 			globalScope.structs[name] = StructSymbol{
 				name:       name,
 				innerScope: childScope,
-				Def:        &node,
+				Def:        node,
 			}
 		}
 	}
@@ -177,7 +177,7 @@ func analyzeStructFnSignatures() {
 }
 
 // Pass four
-func collectFunctionSignatures(ast parser.AST) {
+func collectFunctionSignatures(ast *parser.AST) {
 	for _, node := range ast.Children {
 		if node.Label == "fn" {
 			symbol := processFunctionSignature(node)
@@ -284,10 +284,11 @@ func analyzeInterfaceImplementation() {
 }
 
 // Pass six
-func analyzeGlobals(ast parser.AST) {
-	for _, node := range ast.Children {
+func analyzeGlobals(ast *parser.AST) {
+	for i, node := range ast.Children {
 		if node.Label == "Variable" {
 			symbol := analyzeVariable(node)
+			ast.Children[i] = node
 			if symbol == nil {
 				continue
 			}

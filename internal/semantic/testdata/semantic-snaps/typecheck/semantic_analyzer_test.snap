@@ -3,55 +3,55 @@
 AST:
 Node: { Label: "program"
 children: [
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: uint32
     children: [
         Node: { Token: {Value: uint32, Type: type keyword, Line: 0, Column: 0} },
         Node: { Token: {Value: u, Type: identifier, Line: 0, Column: 7} },
         Node: { Token: {Value: 0, Type: int literal, Line: 0, Column: 11}, Type: uint32 }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: uint64
     children: [
         Node: { Token: {Value: uint64, Type: type keyword, Line: 1, Column: 0} },
         Node: { Token: {Value: u2, Type: identifier, Line: 1, Column: 7} },
         Node: { Token: {Value: 1, Type: int literal, Line: 1, Column: 12}, Type: uint64 }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: int
     children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 2, Column: 0} },
         Node: { Token: {Value: i, Type: identifier, Line: 2, Column: 4} },
         Node: { Token: {Value: 2, Type: int literal, Line: 2, Column: 8}, Type: int }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: int64
     children: [
         Node: { Token: {Value: int64, Type: type keyword, Line: 3, Column: 0} },
         Node: { Token: {Value: i2, Type: identifier, Line: 3, Column: 6} },
         Node: { Token: {Value: 3, Type: int literal, Line: 3, Column: 11}, Type: int64 }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: float
     children: [
         Node: { Token: {Value: float, Type: type keyword, Line: 4, Column: 0} },
         Node: { Token: {Value: f, Type: identifier, Line: 4, Column: 6} },
         Node: { Token: {Value: 3.1, Type: float literal, Line: 4, Column: 10}, Type: float }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: double
     children: [
         Node: { Token: {Value: double, Type: type keyword, Line: 5, Column: 0} },
         Node: { Token: {Value: d, Type: identifier, Line: 5, Column: 7} },
         Node: { Token: {Value: 3.2, Type: float literal, Line: 5, Column: 11}, Type: double }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: char
     children: [
         Node: { Token: {Value: char, Type: type keyword, Line: 6, Column: 0} },
         Node: { Token: {Value: c, Type: identifier, Line: 6, Column: 5} },
         Node: { Token: {Value: 'a', Type: char literal, Line: 6, Column: 9}, Type: char }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: String
     children: [
         Node: { Token: {Value: String, Type: type keyword, Line: 7, Column: 0} },
         Node: { Token: {Value: s, Type: identifier, Line: 7, Column: 7} },
         Node: { Token: {Value: "hello, world!", Type: string literal, Line: 7, Column: 11}, Type: String }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: bool
     children: [
         Node: { Token: {Value: bool, Type: type keyword, Line: 8, Column: 0} },
         Node: { Token: {Value: flag, Type: identifier, Line: 8, Column: 5} },
@@ -75,42 +75,42 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 10, Column: 13} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Token: {Value: +, Type: add operator, Line: 11, Column: 6}
+            Node: { Token: {Value: +, Type: add operator, Line: 11, Column: 6}, Type: uint64
             children: [
                 Node: { Token: {Value: u, Type: identifier, Line: 11, Column: 4}, Type: uint32 },
                 Node: { Token: {Value: u2, Type: identifier, Line: 11, Column: 8}, Type: uint64 }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 12, Column: 6}
+            Node: { Token: {Value: +, Type: add operator, Line: 12, Column: 6}, Type: int64
             children: [
                 Node: { Token: {Value: i, Type: identifier, Line: 12, Column: 4}, Type: int },
                 Node: { Token: {Value: i2, Type: identifier, Line: 12, Column: 8}, Type: int64 }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 13, Column: 6}
+            Node: { Token: {Value: +, Type: add operator, Line: 13, Column: 6}, Type: double
             children: [
                 Node: { Token: {Value: f, Type: identifier, Line: 13, Column: 4}, Type: float },
                 Node: { Token: {Value: d, Type: identifier, Line: 13, Column: 8}, Type: double }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 14, Column: 6}
+            Node: { Token: {Value: +, Type: add operator, Line: 14, Column: 6}, Type: float
             children: [
                 Node: { Token: {Value: f, Type: identifier, Line: 14, Column: 4}, Type: float },
                 Node: { Token: {Value: i, Type: identifier, Line: 14, Column: 8}, Type: int }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 15, Column: 6}
+            Node: { Token: {Value: +, Type: add operator, Line: 15, Column: 6}, Type: double
             children: [
                 Node: { Token: {Value: d, Type: identifier, Line: 15, Column: 4}, Type: double },
                 Node: { Token: {Value: i, Type: identifier, Line: 15, Column: 8}, Type: int }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 16, Column: 7}
+            Node: { Token: {Value: +, Type: add operator, Line: 16, Column: 7}, Type: double
             children: [
                 Node: { Token: {Value: i2, Type: identifier, Line: 16, Column: 4}, Type: int64 },
                 Node: { Token: {Value: d, Type: identifier, Line: 16, Column: 9}, Type: double }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 17, Column: 6}
+            Node: { Token: {Value: +, Type: add operator, Line: 17, Column: 6}, Type: uint32
             children: [
                 Node: { Token: {Value: u, Type: identifier, Line: 17, Column: 4}, Type: uint32 },
                 Node: { Token: {Value: 1, Type: int literal, Line: 17, Column: 8}, Type: uint32 }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: double
             children: [
                 Node: { Token: {Value: double, Type: type keyword, Line: 18, Column: 4} },
                 Node: { Token: {Value: sqrt, Type: identifier, Line: 18, Column: 11} },
@@ -120,7 +120,7 @@ children: [
                     Node: { Token: {Value: 0.5, Type: float literal, Line: 18, Column: 23}, Type: double }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 19, Column: 4} },
                 Node: { Token: {Value: pow, Type: identifier, Line: 19, Column: 8} },
@@ -130,12 +130,12 @@ children: [
                     Node: { Token: {Value: u2, Type: identifier, Line: 19, Column: 19}, Type: uint64 }
                 ] }
             ] },
-            Node: { Label: "typecast"
+            Node: { Label: "typecast", Type: int
             children: [
                 Node: { Token: {Value: u, Type: identifier, Line: 20, Column: 4}, Type: uint32 },
                 Node: { Token: {Value: int, Type: type keyword, Line: 20, Column: 9} }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 21, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 21, Column: 11}, Type: int }
@@ -476,13 +476,13 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 0, Column: 13} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: double
             children: [
                 Node: { Token: {Value: double, Type: type keyword, Line: 1, Column: 4} },
                 Node: { Token: {Value: val, Type: identifier, Line: 1, Column: 11} },
                 Node: { Token: {Value: 0.01, Type: float literal, Line: 1, Column: 17}, Type: double }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: float
             children: [
                 Node: { Token: {Value: float, Type: type keyword, Line: 2, Column: 4} },
                 Node: { Token: {Value: f, Type: identifier, Line: 2, Column: 10} },
@@ -492,13 +492,13 @@ children: [
                     Node: { Token: {Value: float, Type: type keyword, Line: 2, Column: 21} }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int64
             children: [
                 Node: { Token: {Value: int64, Type: type keyword, Line: 3, Column: 4} },
                 Node: { Token: {Value: i, Type: identifier, Line: 3, Column: 10} },
                 Node: { Token: {Value: 10, Type: int literal, Line: 3, Column: 14}, Type: int64 }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: float
             children: [
                 Node: { Token: {Value: float, Type: type keyword, Line: 4, Column: 4} },
                 Node: { Token: {Value: f2, Type: identifier, Line: 4, Column: 10} },
@@ -508,7 +508,7 @@ children: [
                     Node: { Token: {Value: float, Type: type keyword, Line: 4, Column: 20} }
                 ] }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 5, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 5, Column: 11}, Type: int }
@@ -849,55 +849,55 @@ Compiler messages:
 AST:
 Node: { Label: "program"
 children: [
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: uint32
     children: [
         Node: { Token: {Value: uint32, Type: type keyword, Line: 0, Column: 0} },
         Node: { Token: {Value: u, Type: identifier, Line: 0, Column: 7} },
         Node: { Token: {Value: 0, Type: int literal, Line: 0, Column: 11}, Type: uint32 }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: uint64
     children: [
         Node: { Token: {Value: uint64, Type: type keyword, Line: 1, Column: 0} },
         Node: { Token: {Value: u2, Type: identifier, Line: 1, Column: 7} },
         Node: { Token: {Value: 1, Type: int literal, Line: 1, Column: 12}, Type: uint64 }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: int
     children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 2, Column: 0} },
         Node: { Token: {Value: i, Type: identifier, Line: 2, Column: 4} },
         Node: { Token: {Value: 2, Type: int literal, Line: 2, Column: 8}, Type: int }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: int64
     children: [
         Node: { Token: {Value: int64, Type: type keyword, Line: 3, Column: 0} },
         Node: { Token: {Value: i2, Type: identifier, Line: 3, Column: 6} },
         Node: { Token: {Value: 3, Type: int literal, Line: 3, Column: 11}, Type: int64 }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: float
     children: [
         Node: { Token: {Value: float, Type: type keyword, Line: 4, Column: 0} },
         Node: { Token: {Value: f, Type: identifier, Line: 4, Column: 6} },
         Node: { Token: {Value: 3.1, Type: float literal, Line: 4, Column: 10}, Type: float }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: double
     children: [
         Node: { Token: {Value: double, Type: type keyword, Line: 5, Column: 0} },
         Node: { Token: {Value: d, Type: identifier, Line: 5, Column: 7} },
         Node: { Token: {Value: 3.2, Type: float literal, Line: 5, Column: 11}, Type: double }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: char
     children: [
         Node: { Token: {Value: char, Type: type keyword, Line: 6, Column: 0} },
         Node: { Token: {Value: c, Type: identifier, Line: 6, Column: 5} },
         Node: { Token: {Value: 'a', Type: char literal, Line: 6, Column: 9}, Type: char }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: String
     children: [
         Node: { Token: {Value: String, Type: type keyword, Line: 7, Column: 0} },
         Node: { Token: {Value: s, Type: identifier, Line: 7, Column: 7} },
         Node: { Token: {Value: "hello, world!", Type: string literal, Line: 7, Column: 11}, Type: String }
     ] },
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: bool
     children: [
         Node: { Token: {Value: bool, Type: type keyword, Line: 8, Column: 0} },
         Node: { Token: {Value: flag, Type: identifier, Line: 8, Column: 5} },
@@ -921,37 +921,37 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 10, Column: 13} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Token: {Value: +, Type: add operator, Line: 11, Column: 6}
+            Node: { Token: {Value: +, Type: add operator, Line: 11, Column: 6}, Type: None
             children: [
                 Node: { Token: {Value: u, Type: identifier, Line: 11, Column: 4}, Type: uint32 },
                 Node: { Token: {Value: d, Type: identifier, Line: 11, Column: 8}, Type: double }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 12, Column: 6}
+            Node: { Token: {Value: +, Type: add operator, Line: 12, Column: 6}, Type: None
             children: [
                 Node: { Token: {Value: u, Type: identifier, Line: 12, Column: 4}, Type: uint32 },
                 Node: { Token: {Value: i, Type: identifier, Line: 12, Column: 8}, Type: int }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 13, Column: 7}
+            Node: { Token: {Value: +, Type: add operator, Line: 13, Column: 7}, Type: None
             children: [
                 Node: { Token: {Value: u2, Type: identifier, Line: 13, Column: 4}, Type: uint64 },
                 Node: { Token: {Value: f, Type: identifier, Line: 13, Column: 9}, Type: float }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 14, Column: 7}
+            Node: { Token: {Value: +, Type: add operator, Line: 14, Column: 7}, Type: None
             children: [
                 Node: { Token: {Value: u2, Type: identifier, Line: 14, Column: 4}, Type: uint64 },
                 Node: { Token: {Value: i2, Type: identifier, Line: 14, Column: 9}, Type: int64 }
             ] },
-            Node: { Token: {Value: *, Type: multiply operator, Line: 15, Column: 6}
+            Node: { Token: {Value: *, Type: multiply operator, Line: 15, Column: 6}, Type: None
             children: [
                 Node: { Token: {Value: u, Type: identifier, Line: 15, Column: 4}, Type: uint32 },
                 Node: { Token: {Value: f, Type: identifier, Line: 15, Column: 8}, Type: float }
             ] },
-            Node: { Token: {Value: *, Type: multiply operator, Line: 16, Column: 8}
+            Node: { Token: {Value: *, Type: multiply operator, Line: 16, Column: 8}, Type: None
             children: [
                 Node: { Token: {Value: "2", Type: string literal, Line: 16, Column: 4}, Type: String },
                 Node: { Token: {Value: 2, Type: int literal, Line: 16, Column: 10}, Type: int }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 17, Column: 6}
+            Node: { Token: {Value: +, Type: add operator, Line: 17, Column: 6}, Type: None
             children: [
                 Node: { Token: {Value: u, Type: identifier, Line: 17, Column: 4}, Type: uint32 },
                 Node: { Token: {Value: *, Type: multiply operator, Line: 17, Column: 10}, Type: int
@@ -960,17 +960,17 @@ children: [
                     Node: { Token: {Value: i, Type: identifier, Line: 17, Column: 12}, Type: int }
                 ] }
             ] },
-            Node: { Label: "Unary"
+            Node: { Label: "Unary", Type: None
             children: [
                 Node: { Token: {Value: c, Type: identifier, Line: 18, Column: 4} },
                 Node: { Token: {Value: ++, Type: unary operator, Line: 18, Column: 5} }
             ] },
-            Node: { Label: "Unary"
+            Node: { Label: "Unary", Type: None
             children: [
                 Node: { Token: {Value: --, Type: unary operator, Line: 19, Column: 4} },
                 Node: { Token: {Value: flag, Type: identifier, Line: 19, Column: 6}, Type: bool }
             ] },
-            Node: { Label: "Unary"
+            Node: { Label: "Unary", Type: None
             children: [
                 Node: { Token: {Value: --, Type: unary operator, Line: 20, Column: 4} },
                 Node: { Token: {Value: i, Type: identifier, Line: 20, Column: 6}, Type: int }
@@ -985,7 +985,7 @@ children: [
                     Node: { Token: {Value: int, Type: type keyword, Line: 21, Column: 17} }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: uint32
             children: [
                 Node: { Token: {Value: uint32, Type: type keyword, Line: 22, Column: 4} },
                 Node: { Token: {Value: fromString, Type: identifier, Line: 22, Column: 11} },
@@ -995,7 +995,7 @@ children: [
                     Node: { Token: {Value: uint32, Type: type keyword, Line: 22, Column: 29} }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: char
             children: [
                 Node: { Token: {Value: char, Type: type keyword, Line: 23, Column: 4} },
                 Node: { Token: {Value: fromDouble, Type: identifier, Line: 23, Column: 9} },
@@ -1005,7 +1005,7 @@ children: [
                     Node: { Token: {Value: char, Type: type keyword, Line: 23, Column: 27} }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: String
             children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 24, Column: 4} },
                 Node: { Token: {Value: fromLong, Type: identifier, Line: 24, Column: 11} },
@@ -1015,7 +1015,7 @@ children: [
                     Node: { Token: {Value: String, Type: type keyword, Line: 24, Column: 28} }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: char
             children: [
                 Node: { Token: {Value: char, Type: type keyword, Line: 25, Column: 4} },
                 Node: { Token: {Value: charFromLong, Type: identifier, Line: 25, Column: 9} },
@@ -1025,7 +1025,7 @@ children: [
                     Node: { Token: {Value: char, Type: type keyword, Line: 25, Column: 30} }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: bool
             children: [
                 Node: { Token: {Value: bool, Type: type keyword, Line: 26, Column: 4} },
                 Node: { Token: {Value: isTrue, Type: identifier, Line: 26, Column: 9} },
@@ -1035,26 +1035,26 @@ children: [
                     Node: { Token: {Value: bool, Type: type keyword, Line: 26, Column: 24} }
                 ] }
             ] },
-            Node: { Label: "typecast"
+            Node: { Label: "typecast", Type: None
             children: [
                 Node: { Token: {Value: i, Type: identifier, Line: 27, Column: 4}, Type: int },
                 Node: { Token: {Value: TYPE, Type: identifier, Line: 27, Column: 9} }
             ] },
-            Node: { Label: "index"
+            Node: { Label: "index", Type: char
             children: [
                 Node: { Token: {Value: s, Type: identifier, Line: 28, Column: 4}, Type: String },
                 Node: { Token: {Value: "world", Type: string literal, Line: 28, Column: 6}, Type: String }
             ] },
-            Node: { Label: "index"
+            Node: { Label: "index", Type: String
             children: [
                 Node: { Token: {Value: s, Type: identifier, Line: 29, Column: 4}, Type: String },
                 Node: { Label: "slice"
                 children: [
-                    Node: { Token: {Value: true, Type: boolean value keyword, Line: 29, Column: 6} },
+                    Node: { Token: {Value: true, Type: boolean value keyword, Line: 29, Column: 6}, Type: bool },
                     Node: { Token: {Value: .., Type: range operator, Line: 29, Column: 10} }
                 ] }
             ] },
-            Node: { Label: "index"
+            Node: { Label: "index", Type: String
             children: [
                 Node: { Token: {Value: s, Type: identifier, Line: 30, Column: 4}, Type: String },
                 Node: { Label: "slice", Type: int
@@ -1062,7 +1062,7 @@ children: [
                     Node: { Token: {Value: false, Type: boolean value keyword, Line: 30, Column: 8} }
                 ] }
             ] },
-            Node: { Label: "index"
+            Node: { Label: "index", Type: char
             children: [
                 Node: { Token: {Value: s, Type: identifier, Line: 31, Column: 4}, Type: String },
                 Node: { Label: "ARR-END"
@@ -1070,12 +1070,12 @@ children: [
                     Node: { Token: {Value: s, Type: identifier, Line: 31, Column: 7}, Type: String }
                 ] }
             ] },
-            Node: { Label: "index"
+            Node: { Label: "index", Type: char
             children: [
                 Node: { Token: {Value: true, Type: boolean value keyword, Line: 32, Column: 4}, Type: bool },
                 Node: { Token: {Value: 0, Type: int literal, Line: 32, Column: 9}, Type: int }
             ] },
-            Node: { Label: "index"
+            Node: { Label: "index", Type: char
             children: [
                 Node: { Token: {Value: 0, Type: int literal, Line: 33, Column: 4}, Type: int },
                 Node: { Token: {Value: "hello", Type: string literal, Line: 33, Column: 6}, Type: String }
@@ -1090,12 +1090,12 @@ children: [
                 Node: { Token: {Value: u, Type: identifier, Line: 35, Column: 4} },
                 Node: { Token: {Value: undefined, Type: identifier, Line: 35, Column: 9} }
             ] },
-            Node: { Label: "dot"
+            Node: { Label: "dot", Type: None
             children: [
                 Node: { Token: {Value: undefined, Type: identifier, Line: 36, Column: 4} },
                 Node: { Token: {Value: something, Type: identifier, Line: 36, Column: 14} }
             ] },
-            Node: { Label: "control-flow"
+            Node: { Label: "control-flow", Type: int
             children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 37, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 37, Column: 11}, Type: int }
