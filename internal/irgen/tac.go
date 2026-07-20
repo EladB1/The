@@ -141,7 +141,7 @@ func (prog *Program) String() string {
 				break
 			}
 			if (inst.Destination != Variable{}) {
-				output.WriteString(fmt.Sprintf("%s: %s =", inst.Destination.Name, inst.Destination.DataType))
+				output.WriteString(fmt.Sprintf("%s: %s = ", inst.Destination.Name, inst.Destination.DataType))
 			}
 			output.WriteString(string(inst.Operation))
 			if (inst.Operand1 != Operand{}) {
@@ -169,7 +169,11 @@ func (op Operand) String() string {
 		output.WriteString(op.Label)
 	}
 	if (op.Var != Variable{}) {
-		output.WriteString(fmt.Sprintf(" %s.%s", op.Var.Visibility, op.Var.Name))
+		vis := ""
+		if op.Var.Visibility != "" {
+			vis = fmt.Sprintf("%s.", op.Var.Visibility)
+		}
+		output.WriteString(fmt.Sprintf(" %s%s", vis, op.Var.Name))
 	} else {
 		output.WriteString(fmt.Sprintf(" %s(%v)", op.Type, op.Constant))
 	}

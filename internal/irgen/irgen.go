@@ -1,8 +1,6 @@
 package irgen
 
 import (
-	"fmt"
-
 	"github.com/EladB1/The/internal/datatypes"
 	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
@@ -38,6 +36,7 @@ func variableDeclaration(ast *parser.AST, scopeTree *semantic.Scope) []TAC {
 	var vis VariableScope
 	var valueNode *parser.AST = nil
 	var value Operand
+	instructions := []TAC{}
 	if currScope.Id == "@global" {
 		vis = Global
 	} else { // TODO handle function parameters
@@ -57,9 +56,10 @@ func variableDeclaration(ast *parser.AST, scopeTree *semantic.Scope) []TAC {
 	if valueNode == nil {
 		value = getZeroValue(ast.Type)
 	} else {
-		value = translateLiteral(*valueNode)
+		instructions, value = translateExpression(*valueNode)
+
 	}
-	return []TAC{Instruction{
+	return append(instructions, Instruction{
 		Operation: Store,
 		Operand1: Operand{
 			Type: irType,
@@ -70,7 +70,7 @@ func variableDeclaration(ast *parser.AST, scopeTree *semantic.Scope) []TAC {
 			},
 		},
 		Operand2: value,
-	}}
+	})
 }
 
 func getZeroValue(sourceType dt.SourceType) Operand {
@@ -80,14 +80,6 @@ func getZeroValue(sourceType dt.SourceType) Operand {
 	return Operand{
 		Type:     dt.TranslateSourceType(sourceType),
 		Constant: 0,
-	}
-}
-
-func translateExpression(node parser.AST) {
-	if node.Token.Kind == lexer.OPERATOR_ADD {
-		temp := fmt.Sprintf("@t%d", tempVarIndex)
-		tempVarIndex++
-		fmt.Println(temp)
 	}
 }
 
@@ -111,21 +103,25 @@ func translateLiteral(node parser.AST) Operand {
 		switch node.Type {
 		case dt.Int32, dt.Uint32:
 			irType = datatypes.I32
+			value = int32(node.Token.IntVal)
 		case dt.Int64, dt.Uint64:
 			irType = datatypes.I64
 			value = node.Token.IntVal
 		case dt.Float:
 			irType = datatypes.F32
+			value = float32(node.Token.FloatVal)
 		case dt.Double:
 			irType = datatypes.F64
+			value = node.Token.FloatVal
 		}
 	case lexer.LIT_FLOAT:
 		if node.Type == dt.Float {
 			irType = datatypes.F32
+			value = float32(node.Token.FloatVal)
 		} else {
 			irType = datatypes.F64
+			value = node.Token.FloatVal
 		}
-		value = node.Token.FloatVal
 	case lexer.LIT_STRING:
 		irType = datatypes.Str_const
 		value = node.Token.StrIndex

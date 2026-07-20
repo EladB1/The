@@ -1,13 +1,14 @@
-mut int x;
-uint64 y = 1;
-String s = "hello, world";
-char c = 'a';
-bool isSomething = true;
-double g = 0 - 9.8;
-float f = 0.001;
+// mut int x;
+// uint64 y = 1;
+// String s = "hello, world";
+// char c = 'a';
+// bool isSomething = true;
+int i = 1 + 5 + 3;
+// double g = 0 - 9.8;
+// float f = 0.001;
 
 fn main() -> int {
-    float value = 1.0 * 0.5;
-    x -= 1;
+    // float value = 1.0 * 0.5;
+    // x -= 1;
     return 0;
 }
