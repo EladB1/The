@@ -3,7 +3,7 @@ uint64 y = 1;
 String s = "hello, world";
 char c = 'a';
 bool isSomething = true;
-double g = 9.8;
+double g = 0 - 9.8;
 float f = 0.001;
 
 fn main() -> int {

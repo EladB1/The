@@ -52,7 +52,7 @@ func analyzeForCondition(condition []*parser.AST) {
 				if !hasErr && cond != datatypes.Bool {
 					messages.Complain(diagnostic.TypeError, condition[1].Location, "Expected bool as loop condition but got %s", cond.String())
 				}
-				var expr datatypes.DataType
+				var expr datatypes.SourceType
 				if condition[2].Token.Kind == lexer.OPERATOR_ASSIGN {
 					expr, hasErr = analyzeAssignment(condition[2])
 
@@ -71,7 +71,7 @@ func analyzeForCondition(condition []*parser.AST) {
 			if !hasErr && cond != datatypes.Bool {
 				messages.Complain(diagnostic.TypeError, condition[1].Location, "Expected bool as loop condition but got %s", cond.String())
 			}
-			var expr datatypes.DataType
+			var expr datatypes.SourceType
 			if condition[2].Token.Kind == lexer.OPERATOR_ASSIGN {
 				expr, hasErr = analyzeAssignment(condition[2])
 
@@ -86,10 +86,10 @@ func analyzeForCondition(condition []*parser.AST) {
 	}
 }
 
-func analyzeAssignment(stmt *parser.AST) (datatypes.DataType, bool) {
+func analyzeAssignment(stmt *parser.AST) (datatypes.SourceType, bool) {
 	hasError := false
 	left := stmt.Children[0]
-	var lhs datatypes.DataType
+	var lhs datatypes.SourceType
 	var lHasErr bool
 	if left.Label == "dot" {
 		lhs, lHasErr = handleDot(left.Children[0], left.Children[1], false, true, false)
@@ -164,7 +164,7 @@ func analyzeAssignment(stmt *parser.AST) (datatypes.DataType, bool) {
 	return lhs, hasError
 }
 
-func evalAdd(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalAdd(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	hasError := false
 	lhs, lHasErr := evalType(left, expectedType)
 	rhs, rHasErr := evalType(right, expectedType)
@@ -192,7 +192,7 @@ func evalAdd(left *parser.AST, right *parser.AST, operator lexer.Token, expected
 	return datatypes.None, hasError
 }
 
-func evalMult(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalMult(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	hasError := false
 	lhs, lHasErr := evalType(left, expectedType)
 	rhs, rHasErr := evalType(right, expectedType)
@@ -219,7 +219,7 @@ func evalMult(left *parser.AST, right *parser.AST, operator lexer.Token, expecte
 	return datatypes.None, hasError
 }
 
-func evalBitOperation(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalBitOperation(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	hasError := false
 	lhs, lHasErr := evalType(left, expectedType)
 	rhs, rHasErr := evalType(right, expectedType)
@@ -235,7 +235,7 @@ func evalBitOperation(left *parser.AST, right *parser.AST, operator lexer.Token,
 	return datatypes.None, true
 }
 
-func evalCompare(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalCompare(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	hasError := false
 	lhs, lHasErr := evalType(left, expectedType)
 	rhs, rHasErr := evalType(right, expectedType)
@@ -282,10 +282,10 @@ func evalCompare(left *parser.AST, right *parser.AST, operator lexer.Token, expe
 	return datatypes.Bool, hasError
 }
 
-func evalUnary(left *parser.AST, right *parser.AST, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalUnary(left *parser.AST, right *parser.AST, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	hasError := false
 	hasErr := false
-	var nodeType datatypes.DataType = datatypes.None
+	var nodeType datatypes.SourceType = datatypes.None
 	if leftTok := left.Token; leftTok.Kind == lexer.OPERATOR_UNARY || leftTok.Value == "-" { // left unary
 		rhs, hasErr := evalType(right, expectedType)
 		hasError = hasError || hasErr
@@ -322,9 +322,9 @@ func evalUnary(left *parser.AST, right *parser.AST, expectedType datatypes.DataT
 	return nodeType, hasError
 }
 
-func checkIncrementOperator(operand lexer.Token, operator lexer.Token) (datatypes.DataType, bool) {
+func checkIncrementOperator(operand lexer.Token, operator lexer.Token) (datatypes.SourceType, bool) {
 	hasError := false
-	var nodeType datatypes.DataType = datatypes.None
+	var nodeType datatypes.SourceType = datatypes.None
 	symbol := currentScope.LookupVariable(operand.Value)
 	if symbol != nil {
 		if !slices.Contains(datatypes.NumericTypes, symbol.Type) {
@@ -343,7 +343,7 @@ func checkIncrementOperator(operand lexer.Token, operator lexer.Token) (datatype
 	return nodeType, hasError
 }
 
-func evalTypecast(original *parser.AST, targetType *parser.AST, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalTypecast(original *parser.AST, targetType *parser.AST, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	lhs, hasErr := evalType(original, expectedType)
 	hasError := hasErr
 	target := nodeToType(targetType)
@@ -383,10 +383,10 @@ func evalTypecast(original *parser.AST, targetType *parser.AST, expectedType dat
 	return target, hasError
 }
 
-func evalIndex(left *parser.AST, right *parser.AST, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalIndex(left *parser.AST, right *parser.AST, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	lhs, lHasErr := evalType(left, expectedType)
 	rhs, rHasErr := evalType(right, expectedType)
-	var nodeType datatypes.DataType
+	var nodeType datatypes.SourceType
 	hasError := lHasErr || rHasErr
 	if lhs != datatypes.String {
 		messages.Complain(diagnostic.TypeError, left.Location, "Cannot index type %s", lhs.String())
@@ -405,9 +405,9 @@ func evalIndex(left *parser.AST, right *parser.AST, expectedType datatypes.DataT
 	return nodeType, hasError
 }
 
-func evalSlice(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalSlice(ast *parser.AST, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	length := len(ast.Children)
-	var nodeType datatypes.DataType
+	var nodeType datatypes.SourceType
 	hasError := false
 	var err error = nil
 	switch length {
@@ -451,7 +451,7 @@ func evalSlice(ast *parser.AST, expectedType datatypes.DataType) (datatypes.Data
 	return nodeType, hasError
 }
 
-func evalArrayEnd(exprNode *parser.AST, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalArrayEnd(exprNode *parser.AST, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	expr, hasError := evalType(exprNode, expectedType)
 	if !hasError && !slices.Contains(datatypes.IntTypes, expr) {
 		messages.Complain(diagnostic.TypeError, exprNode.Location, "Cannot use %s as array end value", expr)
@@ -460,9 +460,9 @@ func evalArrayEnd(exprNode *parser.AST, expectedType datatypes.DataType) (dataty
 	return expr, hasError
 }
 
-func evalRange(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalRange(ast *parser.AST, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	var err error = nil
-	var nodeType datatypes.DataType = datatypes.None
+	var nodeType datatypes.SourceType = datatypes.None
 	parts := len(ast.Children)
 	first, firstHasErr := evalType(ast.Children[0], expectedType)
 	second, secondHasErr := evalType(ast.Children[2], expectedType)
@@ -500,13 +500,13 @@ func evalRange(ast *parser.AST, expectedType datatypes.DataType) (datatypes.Data
 	return nodeType, hasError
 }
 
-func evalExponent(baseNode *parser.AST, expoNode *parser.AST, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalExponent(baseNode *parser.AST, expoNode *parser.AST, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	base, baseHasErr := evalType(baseNode, expectedType)
 	expo, expoHasErr := evalType(expoNode, expectedType)
 	if baseHasErr || expoHasErr {
 		return datatypes.None, true
 	}
-	var nodeType datatypes.DataType = datatypes.None
+	var nodeType datatypes.SourceType = datatypes.None
 	hasError := false
 	if !slices.Contains(datatypes.NumericTypes, base) || !slices.Contains(datatypes.NumericTypes, expo) {
 		messages.Complain(diagnostic.TypeError, expoNode.Location, "Cannot use exponent with types %s and %s", base, expo)
@@ -522,7 +522,7 @@ func evalExponent(baseNode *parser.AST, expoNode *parser.AST, expectedType datat
 	return nodeType, hasError
 }
 
-func evalLogicalOperation(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalLogicalOperation(left *parser.AST, right *parser.AST, operator lexer.Token, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	lhs, lHasErr := evalType(left, expectedType)
 	rhs, rHasErr := evalType(right, expectedType)
 	if lHasErr || rHasErr {
@@ -536,7 +536,7 @@ func evalLogicalOperation(left *parser.AST, right *parser.AST, operator lexer.To
 	}
 }
 
-func handleFunctionCall(details []*parser.AST) (datatypes.DataType, bool) {
+func handleFunctionCall(details []*parser.AST) (datatypes.SourceType, bool) {
 	hasError := false
 	scope := currentScope
 	var name lexer.Token
@@ -598,7 +598,7 @@ func handleFunctionCall(details []*parser.AST) (datatypes.DataType, bool) {
 		return datatypes.None, true
 	}
 	// check parameters
-	var params []datatypes.DataType = []datatypes.DataType{}
+	var params []datatypes.SourceType = []datatypes.SourceType{}
 	if len(details) == 2 {
 		for _, param := range details[1].Children {
 			parameter, hasErr := evalType(param, datatypes.None)
@@ -628,9 +628,9 @@ func handleFunctionCall(details []*parser.AST) (datatypes.DataType, bool) {
 	return datatypes.None, hasError
 }
 
-func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment bool, recursed bool) (datatypes.DataType, bool) {
+func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment bool, recursed bool) (datatypes.SourceType, bool) {
 	hasError := false
-	var lhs datatypes.DataType = datatypes.None
+	var lhs datatypes.SourceType = datatypes.None
 	if left.Label != "dot" {
 		lhs, hasError = evalType(left, datatypes.None)
 		if isFnCall && !recursed {

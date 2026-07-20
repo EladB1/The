@@ -13,7 +13,7 @@ var rootScope *Scope = &Scope{
 		"print": FunctionSymbol{
 			Name: "print",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.Any},
+				Parameters:               []datatypes.SourceType{datatypes.Any},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.None,
@@ -21,7 +21,7 @@ var rootScope *Scope = &Scope{
 		"println": FunctionSymbol{
 			Name: "println",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.Any},
+				Parameters:               []datatypes.SourceType{datatypes.Any},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.None,
@@ -29,7 +29,7 @@ var rootScope *Scope = &Scope{
 		"printerr": FunctionSymbol{
 			Name: "printerr",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.Any},
+				Parameters:               []datatypes.SourceType{datatypes.Any},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.None,
@@ -37,7 +37,7 @@ var rootScope *Scope = &Scope{
 		"typeOf": FunctionSymbol{
 			Name: "typeOf",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.Any},
+				Parameters:               []datatypes.SourceType{datatypes.Any},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.String,
@@ -46,11 +46,11 @@ var rootScope *Scope = &Scope{
 			Name: "exit",
 			Overloads: []FnOverloadSymbol{
 				{
-					Parameters:               []datatypes.DataType{datatypes.Int32},
+					Parameters:               []datatypes.SourceType{datatypes.Int32},
 					HasDefaultImplementation: true,
 				},
 				{
-					Parameters:               []datatypes.DataType{datatypes.Int32, datatypes.String},
+					Parameters:               []datatypes.SourceType{datatypes.Int32, datatypes.String},
 					HasDefaultImplementation: true,
 				},
 			},
@@ -59,7 +59,7 @@ var rootScope *Scope = &Scope{
 		"sleep": FunctionSymbol{
 			Name: "sleep",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.Double},
+				Parameters:               []datatypes.SourceType{datatypes.Double},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.None,
@@ -67,7 +67,7 @@ var rootScope *Scope = &Scope{
 		"getEnv": FunctionSymbol{
 			Name: "getEnv",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.String,
@@ -75,7 +75,7 @@ var rootScope *Scope = &Scope{
 		"setEnv": FunctionSymbol{
 			Name: "setEnv",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String, datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.None,
@@ -83,7 +83,7 @@ var rootScope *Scope = &Scope{
 		"indexOf": FunctionSymbol{
 			Name: "indexOf",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String, datatypes.Char},
+				Parameters:               []datatypes.SourceType{datatypes.String, datatypes.Char},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.Int32,
@@ -92,11 +92,11 @@ var rootScope *Scope = &Scope{
 			Name: "contains",
 			Overloads: []FnOverloadSymbol{
 				{
-					Parameters:               []datatypes.DataType{datatypes.String, datatypes.Char},
+					Parameters:               []datatypes.SourceType{datatypes.String, datatypes.Char},
 					HasDefaultImplementation: true,
 				},
 				{
-					Parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
+					Parameters:               []datatypes.SourceType{datatypes.String, datatypes.String},
 					HasDefaultImplementation: true,
 				},
 			},
@@ -105,7 +105,7 @@ var rootScope *Scope = &Scope{
 		"startsWith": FunctionSymbol{
 			Name: "startsWith",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String, datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.Bool,
@@ -113,7 +113,7 @@ var rootScope *Scope = &Scope{
 		"endsWith": FunctionSymbol{
 			Name: "endsWith",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String, datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String, datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.Bool,
@@ -122,11 +122,11 @@ var rootScope *Scope = &Scope{
 			Name: "replace",
 			Overloads: []FnOverloadSymbol{
 				{
-					Parameters:               []datatypes.DataType{datatypes.String, datatypes.String, datatypes.String},
+					Parameters:               []datatypes.SourceType{datatypes.String, datatypes.String, datatypes.String},
 					HasDefaultImplementation: true,
 				},
 				{
-					Parameters:               []datatypes.DataType{datatypes.String, datatypes.Char, datatypes.Char},
+					Parameters:               []datatypes.SourceType{datatypes.String, datatypes.Char, datatypes.Char},
 					HasDefaultImplementation: true,
 				},
 			},
@@ -136,11 +136,11 @@ var rootScope *Scope = &Scope{
 			Name: "replace",
 			Overloads: []FnOverloadSymbol{
 				{
-					Parameters:               []datatypes.DataType{datatypes.String, datatypes.String, datatypes.String},
+					Parameters:               []datatypes.SourceType{datatypes.String, datatypes.String, datatypes.String},
 					HasDefaultImplementation: true,
 				},
 				{
-					Parameters:               []datatypes.DataType{datatypes.String, datatypes.Char, datatypes.Char},
+					Parameters:               []datatypes.SourceType{datatypes.String, datatypes.Char, datatypes.Char},
 					HasDefaultImplementation: true,
 				},
 			},
@@ -149,7 +149,7 @@ var rootScope *Scope = &Scope{
 		"reverse": FunctionSymbol{
 			Name: "reverse",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.String,
@@ -157,7 +157,7 @@ var rootScope *Scope = &Scope{
 		"toUpper": FunctionSymbol{
 			Name: "toUpper",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.String,
@@ -165,7 +165,7 @@ var rootScope *Scope = &Scope{
 		"toLower": FunctionSymbol{
 			Name: "toLower",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.String,
@@ -173,7 +173,7 @@ var rootScope *Scope = &Scope{
 		"trim": FunctionSymbol{
 			Name: "trim",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.String,
@@ -181,7 +181,7 @@ var rootScope *Scope = &Scope{
 		"trimStart": FunctionSymbol{
 			Name: "trimStart",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.String,
@@ -189,7 +189,7 @@ var rootScope *Scope = &Scope{
 		"trimEnd": FunctionSymbol{
 			Name: "trimEnd",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.String,
@@ -198,11 +198,11 @@ var rootScope *Scope = &Scope{
 			Name: "assert",
 			Overloads: []FnOverloadSymbol{
 				{
-					Parameters:               []datatypes.DataType{datatypes.Bool},
+					Parameters:               []datatypes.SourceType{datatypes.Bool},
 					HasDefaultImplementation: true,
 				},
 				{
-					Parameters:               []datatypes.DataType{datatypes.Bool, datatypes.String},
+					Parameters:               []datatypes.SourceType{datatypes.Bool, datatypes.String},
 					HasDefaultImplementation: true,
 				},
 			},
@@ -211,7 +211,7 @@ var rootScope *Scope = &Scope{
 		"prompt": FunctionSymbol{
 			Name: "prompt",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.String,
@@ -219,7 +219,7 @@ var rootScope *Scope = &Scope{
 		"secretPrompt": FunctionSymbol{
 			Name: "secretPrompt",
 			Overloads: []FnOverloadSymbol{{
-				Parameters:               []datatypes.DataType{datatypes.String},
+				Parameters:               []datatypes.SourceType{datatypes.String},
 				HasDefaultImplementation: true,
 			}},
 			ReturnType: datatypes.String,

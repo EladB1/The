@@ -3,6 +3,8 @@ package irgen
 import (
 	"fmt"
 	"strings"
+
+	"github.com/EladB1/The/internal/datatypes"
 )
 
 type (
@@ -17,7 +19,7 @@ type (
 		Code []TAC
 	}
 	Operand struct {
-		Type     Datatype
+		Type     datatypes.IRType
 		Var      Variable
 		Constant any
 		Unsigned bool
@@ -31,18 +33,18 @@ type (
 	}
 	Parameter struct {
 		Name string
-		Type Datatype
+		Type datatypes.IRType
 	}
 	Function struct {
 		Name       string
 		Parameters []Parameter
-		ReturnType Datatype
+		ReturnType datatypes.IRType
 		Code       []TAC
 	}
 
 	Variable struct {
 		Name       string
-		DataType   Datatype
+		DataType   datatypes.IRType
 		Visibility VariableScope
 	}
 	/* Used within loops to break/continue */
@@ -63,16 +65,6 @@ type (
 )
 
 const (
-	i32       Datatype = "i32"
-	i64       Datatype = "i64"
-	f32       Datatype = "f32"
-	f64       Datatype = "f64"
-	str_const Datatype = "str_const"
-	ptr       Datatype = "ptr"
-	none      Datatype = "none"
-)
-
-const (
 	Local  VariableScope = "local"
 	Global VariableScope = "global"
 	Param  VariableScope = "param"
@@ -81,6 +73,7 @@ const (
 const (
 	Store        Operation = "STORE"
 	Get          Operation = "GET"
+	Set          Operation = "Set"
 	Return       Operation = "return"
 	PrepareParam Operation = "PARAM"
 	Call         Operation = "CALL"

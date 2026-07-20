@@ -169,7 +169,7 @@ func (scope *Scope) LookupNamedBlock(name string) *NamedBlockSymbol {
 	return nil
 }
 
-func (nb NamedBlockSymbol) HasReturnType(returnType datatypes.DataType) bool {
+func (nb NamedBlockSymbol) HasReturnType(returnType datatypes.SourceType) bool {
 	for _, fnSymbol := range nb.InnerScope.Functions {
 		if fnSymbol.ReturnType == returnType {
 			return true
@@ -189,7 +189,7 @@ func (scope *Scope) LookupVariable(name string) *VariableSymbol {
 	return nil
 }
 
-func (scope *Scope) LookupFunctionsByReturnType(returnType datatypes.DataType) []*FunctionSymbol {
+func (scope *Scope) LookupFunctionsByReturnType(returnType datatypes.SourceType) []*FunctionSymbol {
 	matching := []*FunctionSymbol{}
 	for _, fn := range scope.Functions {
 		if fn.ReturnType == returnType {
@@ -235,7 +235,7 @@ func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
 	return nil
 }
 
-func ImplementsInterface(possibleIntf, type_ datatypes.DataType) bool {
+func ImplementsInterface(possibleIntf, type_ datatypes.SourceType) bool {
 	if possibleIntf.IsPrimitive() || type_.IsPrimitive() {
 		return false
 	}

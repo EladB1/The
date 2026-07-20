@@ -11,7 +11,7 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-func evalLiteral(ast *parser.AST, expectedType datatypes.DataType) datatypes.DataType {
+func evalLiteral(ast *parser.AST, expectedType datatypes.SourceType) datatypes.SourceType {
 	if ast.Label == "struct_literal" {
 		return evalStructLiteral(ast)
 	}
@@ -36,7 +36,7 @@ func evalLiteral(ast *parser.AST, expectedType datatypes.DataType) datatypes.Dat
 	return datatypes.None
 }
 
-func evalStructLiteral(ast *parser.AST) datatypes.DataType {
+func evalStructLiteral(ast *parser.AST) datatypes.SourceType {
 	name := ast.Children[0].Token.Value
 	symbol := globalScope.lookupStruct(name)
 	if symbol == nil {
@@ -73,9 +73,9 @@ func evalStructLiteral(ast *parser.AST) datatypes.DataType {
 	return datatypes.DynamicType(name)
 }
 
-func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataType, bool) {
+func evalType(ast *parser.AST, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
 	hasError := false
-	var nodeType datatypes.DataType = datatypes.None
+	var nodeType datatypes.SourceType = datatypes.None
 	if ast.IsLiteral() {
 		nodeType = evalLiteral(ast, expectedType)
 	} else if ast.Token.Kind == lexer.ID {
@@ -121,7 +121,7 @@ func evalType(ast *parser.AST, expectedType datatypes.DataType) (datatypes.DataT
 	return nodeType, hasError
 }
 
-func comparableCheck(lhs datatypes.DataType, rhs datatypes.DataType) bool {
+func comparableCheck(lhs datatypes.SourceType, rhs datatypes.SourceType) bool {
 	lhsUnsigned := slices.Contains(datatypes.UnsignedTypes, lhs)
 	rhsUnsigned := slices.Contains(datatypes.UnsignedTypes, rhs)
 	lhsSigned := slices.Contains(datatypes.SignedIntTypes, lhs) || slices.Contains(datatypes.FloatTypes, lhs)
@@ -130,10 +130,10 @@ func comparableCheck(lhs datatypes.DataType, rhs datatypes.DataType) bool {
 	return lhs == rhs || (lhsUnsigned && rhsUnsigned) || (lhsSigned && rhsSigned)
 }
 
-func handleBinaryNumberExpression(left *parser.AST, right *parser.AST, operator string, expectedType datatypes.DataType) (datatypes.DataType, error) {
+func handleBinaryNumberExpression(left *parser.AST, right *parser.AST, operator string, expectedType datatypes.SourceType) (datatypes.SourceType, error) {
 	inferLeft := left.IsLiteralExpression() && !right.IsLiteralExpression()
 	inferRight := !left.IsLiteralExpression() && right.IsLiteralExpression()
-	var lhs, rhs datatypes.DataType
+	var lhs, rhs datatypes.SourceType
 	var lHasErr, rHasErr bool
 	if inferLeft {
 		rhs, rHasErr = evalType(right, expectedType)
@@ -151,7 +151,7 @@ func handleBinaryNumberExpression(left *parser.AST, right *parser.AST, operator 
 	return decideNumberType(lhs, rhs, operator)
 }
 
-func decideNumberType(lhs datatypes.DataType, rhs datatypes.DataType, operator string) (datatypes.DataType, error) {
+func decideNumberType(lhs datatypes.SourceType, rhs datatypes.SourceType, operator string) (datatypes.SourceType, error) {
 	if lhs == rhs {
 		return lhs, nil
 	}
@@ -172,7 +172,7 @@ func decideNumberType(lhs datatypes.DataType, rhs datatypes.DataType, operator s
 	}
 }
 
-func nodeToType(node *parser.AST) datatypes.DataType {
+func nodeToType(node *parser.AST) datatypes.SourceType {
 	if node.Token.Kind == lexer.ID {
 		symbol := globalScope.LookupType(node.Token.Value)
 		if symbol == nil || (symbol.GetSymbolType() != "interface" && symbol.GetSymbolType() != "struct") {

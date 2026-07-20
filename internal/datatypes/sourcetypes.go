@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type DataType interface {
+type SourceType interface {
 	String() string
 	IsPrimitive() bool
 	IsScopeRef() bool
@@ -144,7 +144,7 @@ func (type_ Ref) GetSizeInBytes() int {
 	return 0
 }
 
-func Join(types []DataType) string {
+func Join(types []SourceType) string {
 	paramStr := strings.Builder{}
 	end := len(types) - 1
 	for i, param := range types {
@@ -157,10 +157,10 @@ func Join(types []DataType) string {
 }
 
 var (
-	UnsignedTypes  []DataType = []DataType{Uint32, Uint64}
-	SignedIntTypes []DataType = []DataType{Int32, Int64}
-	IntTypes       []DataType = slices.Concat(UnsignedTypes, SignedIntTypes)
-	FloatTypes     []DataType = []DataType{Float, Double}
-	SignedTypes    []DataType = slices.Concat(SignedIntTypes, FloatTypes)
-	NumericTypes   []DataType = slices.Concat(UnsignedTypes, SignedTypes)
+	UnsignedTypes  []SourceType = []SourceType{Uint32, Uint64}
+	SignedIntTypes []SourceType = []SourceType{Int32, Int64}
+	IntTypes       []SourceType = slices.Concat(UnsignedTypes, SignedIntTypes)
+	FloatTypes     []SourceType = []SourceType{Float, Double}
+	SignedTypes    []SourceType = slices.Concat(SignedIntTypes, FloatTypes)
+	NumericTypes   []SourceType = slices.Concat(UnsignedTypes, SignedTypes)
 )

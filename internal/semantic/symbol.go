@@ -17,11 +17,11 @@ type (
 	}
 	FunctionSymbol struct {
 		Name       string
-		ReturnType datatypes.DataType
+		ReturnType datatypes.SourceType
 		Overloads  []FnOverloadSymbol
 	}
 	FnOverloadSymbol struct {
-		Parameters               []datatypes.DataType
+		Parameters               []datatypes.SourceType
 		IsPrivate                bool
 		HasDefaultImplementation bool
 		Body                     *parser.AST
@@ -29,8 +29,8 @@ type (
 	}
 	FnCreateSymbol struct {
 		name                     string
-		returnType               datatypes.DataType
-		parameters               []datatypes.DataType
+		returnType               datatypes.SourceType
+		parameters               []datatypes.SourceType
 		isPrivate                bool
 		hasDefaultImplementation bool
 		Body                     *parser.AST
@@ -38,7 +38,7 @@ type (
 	}
 	VariableSymbol struct {
 		Name        string
-		Type        datatypes.DataType
+		Type        datatypes.SourceType
 		isPrivate   bool
 		isMutable   bool
 		Def         *parser.AST
@@ -178,7 +178,7 @@ func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
 	}
 }
 
-func (fn FunctionSymbol) getMatchingOverload(params []datatypes.DataType) *FnOverloadSymbol {
+func (fn FunctionSymbol) getMatchingOverload(params []datatypes.SourceType) *FnOverloadSymbol {
 	count := len(params)
 	for _, overload := range fn.Overloads {
 		matches := false

@@ -1,7 +1,10 @@
 package irgen
 
 import (
+	"fmt"
+
 	"github.com/EladB1/The/internal/datatypes"
+	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
@@ -10,8 +13,10 @@ import (
 
 var messages diagnostic.PhaseDiagnostics
 var currScope *semantic.Scope
+var tempVarIndex uint32
 
 func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.PhaseDiagnostics) {
+	tempVarIndex = 0
 	prog := Program{}
 	messages = diagnostic.PhaseDiagnostics{}
 	currScope = scopeTree.Children[0] // get the global scope using the built-in scope
@@ -48,11 +53,11 @@ func variableDeclaration(ast *parser.AST, scopeTree *semantic.Scope) []TAC {
 			valueNode = details[2]
 		}
 	}
-	irType := translateSourceType(ast.Type)
+	irType := dt.TranslateSourceType(ast.Type)
 	if valueNode == nil {
 		value = getZeroValue(ast.Type)
 	} else {
-		value = handleLiteral(*valueNode)
+		value = translateLiteral(*valueNode)
 	}
 	return []TAC{Instruction{
 		Operation: Store,
@@ -68,75 +73,66 @@ func variableDeclaration(ast *parser.AST, scopeTree *semantic.Scope) []TAC {
 	}}
 }
 
-func getZeroValue(sourceType datatypes.DataType) Operand {
+func getZeroValue(sourceType dt.SourceType) Operand {
 	if !sourceType.IsPrimitive() {
 		// TODO
 	}
 	return Operand{
-		Type:     translateSourceType(sourceType),
+		Type:     dt.TranslateSourceType(sourceType),
 		Constant: 0,
 	}
 }
 
-func handleLiteral(node parser.AST) Operand {
-	irType := none
+func translateExpression(node parser.AST) {
+	if node.Token.Kind == lexer.OPERATOR_ADD {
+		temp := fmt.Sprintf("@t%d", tempVarIndex)
+		tempVarIndex++
+		fmt.Println(temp)
+	}
+}
+
+func translateLiteral(node parser.AST) Operand {
+	irType := datatypes.NoneIR
 	unsigned := false
 	var value any
 	switch node.Token.Kind {
 	case lexer.KW_BOOLVALUE:
-		irType = i32
+		irType = datatypes.I32
 		if node.Token.Value == "true" {
 			value = 1
 		} else {
 			value = 0
 		}
 	case lexer.LIT_CHAR:
-		irType = i32
+		irType = datatypes.I32
 		value = node.Token.CharVal
 	case lexer.LIT_INT, lexer.LIT_HEX:
-		unsigned = node.Type == datatypes.Uint32 || node.Type == datatypes.Uint64
+		unsigned = node.Type == dt.Uint32 || node.Type == dt.Uint64
 		switch node.Type {
-		case datatypes.Int32, datatypes.Uint32:
-			irType = i32
-		case datatypes.Int64, datatypes.Uint64:
-			irType = i64
+		case dt.Int32, dt.Uint32:
+			irType = datatypes.I32
+		case dt.Int64, dt.Uint64:
+			irType = datatypes.I64
 			value = node.Token.IntVal
-		case datatypes.Float:
-			irType = f32
-		case datatypes.Double:
-			irType = f64
+		case dt.Float:
+			irType = datatypes.F32
+		case dt.Double:
+			irType = datatypes.F64
 		}
 	case lexer.LIT_FLOAT:
-		if node.Type == datatypes.Float {
-			irType = f32
+		if node.Type == dt.Float {
+			irType = datatypes.F32
 		} else {
-			irType = f64
+			irType = datatypes.F64
 		}
 		value = node.Token.FloatVal
 	case lexer.LIT_STRING:
-		irType = str_const
+		irType = datatypes.Str_const
 		value = node.Token.StrIndex
 	}
 	return Operand{
 		Type:     irType,
 		Constant: value,
 		Unsigned: unsigned,
-	}
-}
-
-func translateSourceType(sourceType datatypes.DataType) Datatype {
-	switch sourceType {
-	case datatypes.String:
-		return str_const
-	case datatypes.Char, datatypes.Bool, datatypes.Int32, datatypes.Uint32:
-		return i32
-	case datatypes.Int64, datatypes.Uint64:
-		return i64
-	case datatypes.Float:
-		return f32
-	case datatypes.Double:
-		return f64
-	default:
-		return none
 	}
 }

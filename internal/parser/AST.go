@@ -14,7 +14,7 @@ type (
 		Label    string
 		Token    lexer.Token
 		Location ds.SourceLocation
-		Type     datatypes.DataType
+		Type     datatypes.SourceType
 		Children []*AST
 	}
 )

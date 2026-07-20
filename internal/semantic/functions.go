@@ -45,8 +45,8 @@ func processFunctionSignature(fnNode *parser.AST) FnCreateSymbol {
 		bodyNode = details[3]
 	}
 	var paramNames []string
-	var paramTypes []datatypes.DataType
-	var returnType datatypes.DataType = datatypes.None
+	var paramTypes []datatypes.SourceType
+	var returnType datatypes.SourceType = datatypes.None
 	if returnTypeNode != nil {
 		returnType = nodeToType(returnTypeNode)
 	}
