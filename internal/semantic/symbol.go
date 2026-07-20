@@ -36,6 +36,7 @@ type (
 		Body                     *parser.AST
 		innerScope               *Scope
 	}
+	VariableCtx    string
 	VariableSymbol struct {
 		Name        string
 		Type        datatypes.SourceType
@@ -43,6 +44,7 @@ type (
 		isMutable   bool
 		Def         *parser.AST
 		Initialized bool
+		Ctx         VariableCtx
 	}
 	InterfaceSymbol struct {
 		name       string
@@ -202,3 +204,9 @@ func (fn FunctionSymbol) getMatchingOverload(params []datatypes.SourceType) *FnO
 	return nil
 
 }
+
+const (
+	Local  VariableCtx = "local"
+	Global VariableCtx = "global"
+	Param  VariableCtx = "param"
+)

@@ -46,7 +46,7 @@ func translateExpression(node parser.AST) ([]TAC, Operand) {
 				Var: Variable{
 					Name:       variable.Name,
 					DataType:   varType,
-					Visibility: Global, // TODO: determine context of variable
+					Visibility: VariableScope(variable.Ctx),
 				},
 			},
 		})

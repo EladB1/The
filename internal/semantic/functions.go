@@ -67,6 +67,7 @@ func processFunctionSignature(fnNode *parser.AST) FnCreateSymbol {
 			newScope.Variables[paramNames[i]] = VariableSymbol{
 				Name: paramNames[i],
 				Type: paramTypes[i],
+				Ctx:  Param,
 			}
 		}
 	}
@@ -120,6 +121,7 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 				if symbol.isPrivate {
 					messages.Complain(diagnostic.IllegalStatementError, stmt.Location, "Cannot set private variable in function body")
 				} else {
+					symbol.Ctx = Local
 					currentScope.Variables[symbol.Name] = *symbol
 				}
 			}

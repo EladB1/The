@@ -229,90 +229,112 @@ var rootScope *Scope = &Scope{
 		"INT_MIN": VariableSymbol{
 			Name: "INT_MIN",
 			Type: datatypes.Int32,
+			Ctx:  Global,
 		},
 		"INT_MAX": VariableSymbol{
 			Name: "INT_MAX",
 			Type: datatypes.Int32,
+			Ctx:  Global,
 		},
 		"INT64_MIN": VariableSymbol{
 			Name: "INT64_MIN",
 			Type: datatypes.Int64,
+			Ctx:  Global,
 		},
 		"INT64_MAX": VariableSymbol{
 			Name: "INT64_MAX",
 			Type: datatypes.Int64,
+			Ctx:  Global,
 		},
 		"UINT32_MAX": VariableSymbol{
 			Name: "UINT32_MAX",
 			Type: datatypes.Uint32,
+			Ctx:  Global,
 		},
 		"UINT64_MAX": VariableSymbol{
 			Name: "UINT64_MAX",
 			Type: datatypes.Uint64,
+			Ctx:  Global,
 		},
 		"FLOAT_MIN": VariableSymbol{
 			Name: "FLOAT_MIN",
 			Type: datatypes.Float,
+			Ctx:  Global,
 		},
 		"FLOAT_MIN_POSITIVE": VariableSymbol{
 			Name: "FLOAT_MIN_POSITIVE",
 			Type: datatypes.Float,
+			Ctx:  Global,
 		},
 		"FLOAT_MAX": VariableSymbol{
 			Name: "FLOAT_MAX",
 			Type: datatypes.Float,
+			Ctx:  Global,
 		},
 		"FLOAT_EPSILON": VariableSymbol{
 			Name: "FLOAT_EPSILON",
 			Type: datatypes.Float,
+			Ctx:  Global,
 		},
 		"FLOAT_NaN": VariableSymbol{
 			Name: "FLOAT_NaN",
 			Type: datatypes.Float,
+			Ctx:  Global,
 		},
 		"FLOAT_INF": VariableSymbol{
 			Name: "FLOAT_INF",
 			Type: datatypes.Float,
+			Ctx:  Global,
 		},
 		"FLOAT_NEG_INF": VariableSymbol{
 			Name: "FLOAT_NEG_INF",
 			Type: datatypes.Float,
+			Ctx:  Global,
 		},
 		"DOUBLE_MIN": VariableSymbol{
 			Name: "DOUBLE_MIN",
 			Type: datatypes.Double,
+			Ctx:  Global,
 		},
 		"DOUBLE_MIN_POSITIVE": VariableSymbol{
 			Name: "DOUBLE_MIN_POSITIVE",
 			Type: datatypes.Double,
+			Ctx:  Global,
 		},
 		"DOUBLE_MAX": VariableSymbol{
 			Name: "DOUBLE_MAX",
 			Type: datatypes.Double,
+			Ctx:  Global,
 		},
 		"DOUBLE_EPSILON": VariableSymbol{
 			Name: "DOUBLE_EPSILON",
 			Type: datatypes.Double,
+			Ctx:  Global,
 		},
 		"DOUBLE_NaN": VariableSymbol{
 			Name: "DOUBLE_NaN",
 			Type: datatypes.Double,
+			Ctx:  Global,
 		},
 		"DOUBLE_INF": VariableSymbol{
 			Name: "DOUBLE_INF",
 			Type: datatypes.Double,
+			Ctx:  Global,
 		},
 		"DOUBLE_NEG_INF": VariableSymbol{
 			Name: "DOUBLE_NEG_INF",
 			Type: datatypes.Double,
+			Ctx:  Global,
 		},
 		"PI": VariableSymbol{
 			Name: "PI",
 			Type: datatypes.Double,
+			Ctx:  Global,
 		},
 		"E": VariableSymbol{
 			Name: "E",
 			Type: datatypes.Double,
+			Ctx:  Global,
 		},
 	},
 }
