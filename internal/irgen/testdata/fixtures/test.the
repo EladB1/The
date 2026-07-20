@@ -1,11 +1,13 @@
-// mut int x;
-// uint64 y = 1;
-// String s = "hello, world";
-// char c = 'a';
-// bool isSomething = true;
+mut int x;
+uint64 y = 1;
+String s = "hello, world";
+char c = 'a';
+bool isSomething = true;
 int i = 1 + 5 + 3;
 double g = 0 - 9.8;
 int64 j = 1 + i;
+double w = 10.0 * g / 2.1;
+bool b00l = true || false && true;
 // float f = 0.001;
 
 fn main() -> int {
