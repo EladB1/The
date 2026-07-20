@@ -85,7 +85,6 @@ func getZeroValue(sourceType dt.SourceType) Operand {
 
 func translateLiteral(node parser.AST) Operand {
 	irType := datatypes.NoneIR
-	unsigned := false
 	var value any
 	switch node.Token.Kind {
 	case lexer.KW_BOOLVALUE:
@@ -99,14 +98,19 @@ func translateLiteral(node parser.AST) Operand {
 		irType = datatypes.I32
 		value = node.Token.CharVal
 	case lexer.LIT_INT, lexer.LIT_HEX:
-		unsigned = node.Type == dt.Uint32 || node.Type == dt.Uint64
 		switch node.Type {
-		case dt.Int32, dt.Uint32:
+		case dt.Int32:
 			irType = datatypes.I32
 			value = int32(node.Token.IntVal)
-		case dt.Int64, dt.Uint64:
+		case dt.Uint32:
+			irType = datatypes.U32
+			value = uint32(node.Token.IntVal)
+		case dt.Int64:
 			irType = datatypes.I64
 			value = node.Token.IntVal
+		case dt.Uint64:
+			irType = datatypes.U64
+			value = uint64(node.Token.IntVal)
 		case dt.Float:
 			irType = datatypes.F32
 			value = float32(node.Token.FloatVal)
@@ -129,6 +133,5 @@ func translateLiteral(node parser.AST) Operand {
 	return Operand{
 		Type:     irType,
 		Constant: value,
-		Unsigned: unsigned,
 	}
 }
