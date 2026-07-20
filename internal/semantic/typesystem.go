@@ -204,3 +204,11 @@ func nodeToType(node *parser.AST) datatypes.SourceType {
 		return datatypes.None
 	}
 }
+
+func isCompatibleType(expectedType datatypes.SourceType, actualType datatypes.SourceType) bool {
+	return (ImplementsInterface(expectedType, actualType) ||
+		expectedType == datatypes.Int64 && actualType == datatypes.Int32 ||
+		expectedType == datatypes.Uint64 && actualType == datatypes.Uint32 ||
+		expectedType == datatypes.Double && (actualType == datatypes.Float || actualType == datatypes.Int32 || actualType == datatypes.Int64) ||
+		expectedType == datatypes.Float && actualType == datatypes.Int32)
+}

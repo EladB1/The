@@ -38,7 +38,7 @@ func analyzeVariable(varNode *parser.AST) *VariableSymbol {
 		return nil
 	}
 	if rhs != nil {
-		if rType, hasError := evalType(rhs, varType); !hasError && (rType != varType && !ImplementsInterface(varType, rType)) {
+		if rType, hasError := evalType(rhs, varType); !hasError && (rType != varType && !isCompatibleType(varType, rType)) {
 			messages.Complain(diagnostic.TypeError, rhs.Location, "Cannot assign type %s to variable type %s", rType, varType)
 		}
 	}

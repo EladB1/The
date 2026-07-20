@@ -4,7 +4,8 @@
 // char c = 'a';
 // bool isSomething = true;
 int i = 1 + 5 + 3;
-// double g = 0 - 9.8;
+double g = 0 - 9.8;
+int64 j = 1 + i;
 // float f = 0.001;
 
 fn main() -> int {

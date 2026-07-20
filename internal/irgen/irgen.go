@@ -1,6 +1,8 @@
 package irgen
 
 import (
+	"fmt"
+
 	"github.com/EladB1/The/internal/datatypes"
 	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
@@ -11,9 +13,11 @@ import (
 
 var messages diagnostic.PhaseDiagnostics
 var currScope *semantic.Scope
+var scopes *semantic.Scope
 var tempVarIndex uint32
 
 func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.PhaseDiagnostics) {
+	scopes = scopeTree
 	tempVarIndex = 0
 	prog := Program{}
 	messages = diagnostic.PhaseDiagnostics{}
@@ -134,4 +138,14 @@ func translateLiteral(node parser.AST) Operand {
 		Type:     irType,
 		Constant: value,
 	}
+}
+
+func formTempVar(irType datatypes.IRType) Variable {
+	tempVar := Variable{
+		Name:     fmt.Sprintf("__t%d", tempVarIndex),
+		DataType: irType,
+	}
+	tempVarIndex++
+	return tempVar
+
 }
