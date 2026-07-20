@@ -133,7 +133,9 @@ func (prog *Program) appendCode(code []TAC) {
 
 func (prog *Program) String() string {
 	output := strings.Builder{}
+	output.WriteString("Program: [\n")
 	for _, line := range prog.Code {
+		output.WriteRune('\t')
 		switch line.getTACType() {
 		case "Instruction":
 			inst, ok := line.(Instruction)
@@ -160,6 +162,7 @@ func (prog *Program) String() string {
 		}
 		output.WriteRune('\n')
 	}
+	output.WriteString("]\n")
 	return output.String()
 }
 
