@@ -251,11 +251,37 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 	left := node.Children[0]
 	right := node.Children[1]
 	if leftTok := left.Token; leftTok.Kind == lexer.OPERATOR_UNARY || leftTok.Value == "-" { // left unary
+		r_in, r_op := translateExpression(*right)
+		instructions = append(instructions, r_in...)
 		switch leftTok.Value {
 		case "!":
-			//
+			tempVar := formTempVar(r_op.Type)
+			instructions = append(instructions, Instruction{
+				Destination: tempVar,
+				Operation:   typedOperation(datatypes.I32, "xor"),
+				Operand1:    r_op,
+				Operand2: Operand{
+					Type:     datatypes.I32,
+					Constant: -1,
+				},
+			})
+			operand = Operand{
+				Type: datatypes.I32,
+				Var:  tempVar,
+			}
 		case "-":
-			//
+			zero := getZeroValue(right.Type)
+			tempVar := formTempVar(r_op.Type)
+			instructions = append(instructions, Instruction{
+				Destination: tempVar,
+				Operation:   typedOperation(r_op.Type, "sub"),
+				Operand1:    zero,
+				Operand2:    r_op,
+			})
+			operand = Operand{
+				Type: r_op.Type,
+				Var:  tempVar,
+			}
 		case "~":
 			//
 		default: // ++, --
@@ -264,8 +290,6 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 				return instructions, operand
 			}
 			var operation Operation
-			r_in, r_op := translateExpression(*right)
-			instructions = append(instructions, r_in...)
 			switch leftTok.Value {
 			case "++":
 				operation = typedOperation(r_op.Type, "add")
