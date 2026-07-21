@@ -13,7 +13,7 @@ int b = (6 ^ 5 & 1 | 0) << 2 >> 1;
 int size = 2 ** 8;
 bool b00l = true || !false && true;
 int intg = g as int;
-bool less = g < w;
+bool less = g < i;
 // float f = 0.001;
 
 fn main() -> int {

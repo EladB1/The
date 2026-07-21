@@ -71,7 +71,6 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
 	// TODO: handle structs
-	// TODO: handle mixed types
 	left := node.Children[0]
 	right := node.Children[1]
 	l_in, l_op := translateExpression(*left)
@@ -79,7 +78,38 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 	r_in, r_op := translateExpression(*right)
 	instructions = append(instructions, r_in...)
 	fmt.Println(l_op.Type, r_op.Type)
-	irType := l_op.Type
+	var irType datatypes.IRType
+	var typecast Operation
+	if l_op.Type != r_op.Type {
+		irType = getHigherType(l_op.Type, r_op.Type)
+		if l_op.Type != irType {
+			typecast = getTypeCastOperation(l_op.Type, irType)
+			cast := formTempVar(irType)
+			instructions = append(instructions, Instruction{
+				Destination: cast,
+				Operation:   typecast,
+				Operand1:    l_op,
+			})
+			l_op = Operand{
+				Type: irType,
+				Var:  cast,
+			}
+		} else {
+			typecast = getTypeCastOperation(r_op.Type, irType)
+			cast := formTempVar(irType)
+			instructions = append(instructions, Instruction{
+				Destination: cast,
+				Operation:   typecast,
+				Operand1:    r_op,
+			})
+			r_op = Operand{
+				Type: irType,
+				Var:  cast,
+			}
+		}
+	} else {
+		irType = l_op.Type
+	}
 	var operation Operation
 	switch node.Token.Value {
 	case "==":
@@ -501,4 +531,23 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 		Type: tempVar.DataType,
 	}
 	return instructions, operand
+}
+
+func getHigherType(type1, type2 datatypes.IRType) datatypes.IRType {
+	if type1 == datatypes.F64 || type2 == datatypes.F64 {
+		return datatypes.F64
+	}
+	if type1 == datatypes.I64 || type2 == datatypes.I64 {
+		return datatypes.I64
+	}
+	if type1 == datatypes.U64 || type2 == datatypes.U64 {
+		return datatypes.U64
+	}
+	if type1 == datatypes.F32 || type2 == datatypes.F32 {
+		return datatypes.F32
+	}
+	if type1 == datatypes.I32 || type2 == datatypes.I32 {
+		return datatypes.I32
+	}
+	return datatypes.U32
 }
