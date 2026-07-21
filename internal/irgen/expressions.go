@@ -38,7 +38,6 @@ func translateExpression(node parser.AST) ([]TAC, Operand) {
 
 func translateLogicalAndOr(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
-	operand := Operand{}
 	irType := datatypes.I32
 	left := node.Children[0]
 	right := node.Children[1]
@@ -59,7 +58,7 @@ func translateLogicalAndOr(node parser.AST) ([]TAC, Operand) {
 		Operand1:    l_op,
 		Operand2:    r_op,
 	})
-	operand = Operand{
+	operand := Operand{
 		Var: Variable{
 			Name:     tempVar.Name,
 			DataType: irType,
@@ -71,13 +70,13 @@ func translateLogicalAndOr(node parser.AST) ([]TAC, Operand) {
 func translateComparison(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
+	// TODO: handle structs
 
 	return instructions, operand
 }
 
 func translateBitOperation(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
-	operand := Operand{}
 	rootType := node.Type
 	irType := datatypes.TranslateSourceType(rootType)
 	left := node.Children[0]
@@ -107,7 +106,7 @@ func translateBitOperation(node parser.AST) ([]TAC, Operand) {
 		Operand1:    l_op,
 		Operand2:    r_op,
 	})
-	operand = Operand{
+	operand := Operand{
 		Type: irType,
 		Var:  tempVar,
 	}
@@ -170,7 +169,6 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 
 func translateMultiplication(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
-	operand := Operand{}
 	rootType := node.Type
 	left := node.Children[0]
 	right := node.Children[1]
@@ -198,7 +196,7 @@ func translateMultiplication(node parser.AST) ([]TAC, Operand) {
 		Operand2:    r_op,
 	}
 	instructions = append(instructions, op)
-	operand = Operand{
+	operand := Operand{
 		Type: operationType,
 		Var:  tempVar,
 	}
@@ -207,7 +205,6 @@ func translateMultiplication(node parser.AST) ([]TAC, Operand) {
 
 func translateExponent(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
-	operand := Operand{}
 	rootType := node.Type
 	irType := datatypes.TranslateSourceType(rootType)
 	left := node.Children[0]
@@ -241,7 +238,7 @@ func translateExponent(node parser.AST) ([]TAC, Operand) {
 			Constant: 2,
 		},
 	})
-	operand = Operand{
+	operand := Operand{
 		Type: irType,
 		Var:  tempVar,
 	}
@@ -251,13 +248,110 @@ func translateExponent(node parser.AST) ([]TAC, Operand) {
 func translateUnary(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
+	left := node.Children[0]
+	right := node.Children[1]
+	if leftTok := left.Token; leftTok.Kind == lexer.OPERATOR_UNARY || leftTok.Value == "-" { // left unary
+		switch leftTok.Value {
+		case "!":
+			//
+		case "-":
+			//
+		case "~":
+			//
+		default: // ++, --
+			variable := currScope.LookupVariable(right.Token.Value)
+			if variable == nil {
+				return instructions, operand
+			}
+			var operation Operation
+			r_in, r_op := translateExpression(*right)
+			instructions = append(instructions, r_in...)
+			switch leftTok.Value {
+			case "++":
+				operation = typedOperation(r_op.Type, "add")
+			case "--":
+				operation = typedOperation(r_op.Type, "sub")
+			}
 
+			tempVar := formTempVar(r_op.Type)
+			operand = Operand{
+				Var:  tempVar,
+				Type: tempVar.DataType,
+			}
+			increment := []TAC{
+				Instruction{
+					Destination: tempVar,
+					Operation:   operation,
+					Operand1:    r_op,
+					Operand2: Operand{
+						Type:     r_op.Type,
+						Constant: 1,
+					},
+				},
+				Instruction{
+					Operation: Store,
+					Operand1: Operand{
+						Var: Variable{
+							Name:       variable.Name,
+							DataType:   datatypes.TranslateSourceType(variable.Type),
+							Visibility: VariableScope(variable.Ctx),
+						},
+					},
+					Operand2: Operand{
+						Var: tempVar,
+					},
+				},
+			}
+			instructions = append(instructions, increment...)
+		}
+	} else { // right unary
+		variable := currScope.LookupVariable(left.Token.Value)
+		if variable == nil {
+			return instructions, operand
+		}
+		var operation Operation
+		l_in, l_op := translateExpression(*left)
+		instructions = append(instructions, l_in...)
+		switch right.Token.Value {
+		case "++":
+			operation = typedOperation(l_op.Type, "add")
+		case "--":
+			operation = typedOperation(l_op.Type, "sub")
+		}
+
+		tempVar := formTempVar(l_op.Type)
+		operand = l_op
+		increment := []TAC{
+			Instruction{
+				Destination: tempVar,
+				Operation:   operation,
+				Operand1:    l_op,
+				Operand2: Operand{
+					Type:     l_op.Type,
+					Constant: 1,
+				},
+			},
+			Instruction{
+				Operation: Store,
+				Operand1: Operand{
+					Var: Variable{
+						Name:       variable.Name,
+						DataType:   datatypes.TranslateSourceType(variable.Type),
+						Visibility: VariableScope(variable.Ctx),
+					},
+				},
+				Operand2: Operand{
+					Var: tempVar,
+				},
+			},
+		}
+		instructions = append(instructions, increment...)
+	}
 	return instructions, operand
 }
 
 func translateTypecast(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
-
 	targetType := datatypes.TranslateSourceType(node.Type)
 	sourceType := datatypes.TranslateSourceType(node.Children[0].Type)
 	l_in, l_op := translateExpression(*node.Children[0])
@@ -277,71 +371,36 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 }
 
 func getTypeCastOperation(src datatypes.IRType, target datatypes.IRType) Operation {
-	switch src {
-	case datatypes.I32:
-		switch target {
-		case datatypes.I64:
-			return I32ToI64
-		case datatypes.F32:
-			return I32ToF32
-		case datatypes.F64:
-			return I32ToF64
-		}
-	case datatypes.U32:
-		switch target {
-		case datatypes.I64:
-			return U32ToI64
-		case datatypes.F32:
-			return U32ToF32
-		case datatypes.F64:
-			return U32ToF64
-		}
-	case datatypes.I64:
-		switch target {
-		case datatypes.I32:
-			return I64ToI32
-		case datatypes.F32:
-			return I64ToF32
-		case datatypes.F64:
-			return I64ToF64
-		}
-	case datatypes.U64:
-		switch target {
-		case datatypes.I32:
-			return U64ToI32
-		case datatypes.F32:
-			return U64ToF32
-		case datatypes.F64:
-			return U64ToF64
-		}
-	case datatypes.F32:
-		switch target {
-		case datatypes.I32:
-			return F32ToI32
-		case datatypes.U32:
-			return F32ToU32
-		case datatypes.I64:
-			return F32ToI64
-		case datatypes.U64:
-			return F32ToU64
-		case datatypes.F64:
-			return F32ToF64
-		}
-	case datatypes.F64:
-		switch target {
-		case datatypes.I32:
-			return F64ToI32
-		case datatypes.U32:
-			return F64ToU32
-		case datatypes.I64:
-			return F64ToI64
-		case datatypes.U64:
-			return F64ToU64
-		case datatypes.F32:
-			return F64ToF32
-		}
+	key := fmt.Sprintf("%s->%s", src, target)
+	operations := map[string]Operation{
+		"i32->i64": I32ToI64,
+		"i32->f32": I32ToF32,
+		"i32->f64": I32ToF64,
+		"u32->i64": U32ToI64,
+		"u32->f32": U32ToF32,
+		"u32->f64": U32ToF64,
+		"i64->i32": I64ToI32,
+		"i64->f32": I64ToF32,
+		"i64->f64": I64ToF64,
+		"u64->i32": U64ToI32,
+		"u64->f32": U64ToF32,
+		"u64->f64": U64ToF64,
+		"f32->i32": F32ToI32,
+		"f32->u32": F32ToU32,
+		"f32->i64": F32ToI64,
+		"f32->u64": F32ToU64,
+		"f32->f64": F32ToF64,
+		"f64->i32": F64ToI32,
+		"f64->u32": F64ToU32,
+		"f64->i64": F64ToI64,
+		"f64->u64": F64ToU64,
+		"f64->f32": F64ToF32,
 	}
-	return Operation("")
+	operation, ok := operations[key]
+	if !ok {
+		return Operation("")
+	}
+	return operation
 }
 
 func loadVariable(node parser.AST) ([]TAC, Operand) {
@@ -366,6 +425,7 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 			Name:     tempVar.Name,
 			DataType: tempVar.DataType,
 		},
+		Type: tempVar.DataType,
 	}
 	return instructions, operand
 }

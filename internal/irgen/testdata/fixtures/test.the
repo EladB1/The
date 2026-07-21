@@ -1,4 +1,6 @@
 mut int x;
+int x2 = x++;
+int x3 = --x;
 uint64 y = 1;
 String s = "hello, world";
 char c = 'a';
