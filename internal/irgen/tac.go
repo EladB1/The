@@ -79,6 +79,34 @@ const (
 	JMP          Operation = "JMP"
 	JMPIF        Operation = "JMPIF"
 	Malloc       Operation = "Malloc"
+	// int -> otherType
+	I32ToI64 Operation = "i64.extend_i32_s"
+	I32ToF32 Operation = "f32.convert_i32_s"
+	I32ToF64 Operation = "f64.convert_i32_s"
+	// int64 -> otherType
+	I64ToI32 Operation = "i32.wrap_i64"
+	I64ToF32 Operation = "i64.trunc_f32_s"
+	I64ToF64 Operation = "i64.trunc_f64_s"
+	// uint32 -> otherType
+	U32ToI64 Operation = "i64.extend_i32_u"
+	U32ToF32 Operation = "f32.convert_i32_u"
+	U32ToF64 Operation = "f64.convert_i32_u"
+	// uint64 -> otherType
+	U64ToI32 Operation = "i32.wrap_i64"
+	U64ToF32 Operation = "i64.trunc_f32_u"
+	U64ToF64 Operation = "i64.trunc_f64_u"
+	// float -> otherType
+	F32ToI32 Operation = "i32.trunc_f32_s"
+	F32ToU32 Operation = "i32.trunc_f32_u"
+	F32ToI64 Operation = "i64.trunc_f32_s"
+	F32ToU64 Operation = "i64.trunc_f32_u"
+	F32ToF64 Operation = "f64.promote_f32"
+	// double -> otherType
+	F64ToI32 Operation = "i32.trunc_f64_s"
+	F64ToU32 Operation = "i32.trunc_f64_u"
+	F64ToI64 Operation = "i64.trunc_f64_s"
+	F64ToU64 Operation = "i64.trunc_f64_u"
+	F64ToF32 Operation = "f32.demote_f64"
 	// TODO str_const operations
 	// TODO ptr operations
 	// TODO runtime library functions/constants
@@ -161,7 +189,11 @@ func (op Operand) String() string {
 		}
 		output.WriteString(fmt.Sprintf(" %s%s", vis, op.Var.Name))
 	} else {
-		output.WriteString(fmt.Sprintf(" %s(%v)", op.Type, op.Constant))
+		if op.Type == "" {
+			output.WriteString(fmt.Sprintf(" %v", op.Constant))
+		} else {
+			output.WriteString(fmt.Sprintf(" %s(%v)", op.Type, op.Constant))
+		}
 	}
 	return output.String()
 }

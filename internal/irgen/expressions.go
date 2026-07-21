@@ -1,6 +1,8 @@
 package irgen
 
 import (
+	"fmt"
+
 	"github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
@@ -14,10 +16,8 @@ func translateExpression(node parser.AST) ([]TAC, Operand) {
 		instructions, operand = translateLogicalAndOr(node)
 	} else if token.Kind == lexer.OPERATOR_COMPARE {
 		instructions, operand = translateComparison(node)
-	} else if token.Kind == lexer.OPERATOR_BS {
-		instructions, operand = translateBitshift(node)
-	} else if token.Kind == lexer.OPERATOR_BW {
-		instructions, operand = translateBitwise(node)
+	} else if token.Kind == lexer.OPERATOR_BS || token.Kind == lexer.OPERATOR_BW {
+		instructions, operand = translateBitOperation(node)
 	} else if token.Kind == lexer.OPERATOR_ADD {
 		instructions, operand = translateAddition(node)
 	} else if token.Kind == lexer.OPERATOR_MULT {
@@ -75,17 +75,42 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 	return instructions, operand
 }
 
-func translateBitshift(node parser.AST) ([]TAC, Operand) {
+func translateBitOperation(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
-
-	return instructions, operand
-}
-
-func translateBitwise(node parser.AST) ([]TAC, Operand) {
-	instructions := []TAC{}
-	operand := Operand{}
-
+	rootType := node.Type
+	irType := datatypes.TranslateSourceType(rootType)
+	left := node.Children[0]
+	right := node.Children[1]
+	var operation Operation
+	// TODO: typecasting and signed/unsigned
+	switch node.Token.Value {
+	case "^":
+		operation = typedOperation(irType, "xor")
+	case "&":
+		operation = typedOperation(irType, "and")
+	case "|":
+		operation = typedOperation(irType, "or")
+	case "<<":
+		operation = typedOperation(irType, "lshift")
+	case ">>":
+		operation = typedOperation(irType, "rshift")
+	}
+	l_in, l_op := translateExpression(*left)
+	instructions = append(instructions, l_in...)
+	r_in, r_op := translateExpression(*right)
+	instructions = append(instructions, r_in...)
+	tempVar := formTempVar(irType)
+	instructions = append(instructions, Instruction{
+		Destination: tempVar,
+		Operation:   operation,
+		Operand1:    l_op,
+		Operand2:    r_op,
+	})
+	operand = Operand{
+		Type: irType,
+		Var:  tempVar,
+	}
 	return instructions, operand
 }
 
@@ -183,7 +208,43 @@ func translateMultiplication(node parser.AST) ([]TAC, Operand) {
 func translateExponent(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
-
+	rootType := node.Type
+	irType := datatypes.TranslateSourceType(rootType)
+	left := node.Children[0]
+	right := node.Children[1]
+	if left.Type != rootType {
+		// TODO
+	}
+	if right.Type != rootType {
+		// TODO
+	}
+	l_in, l_op := translateExpression(*left)
+	instructions = append(instructions, l_in...)
+	r_in, r_op := translateExpression(*right)
+	instructions = append(instructions, r_in...)
+	instructions = append(instructions, Instruction{
+		Operation: PrepareParam,
+		Operand1:  l_op,
+	})
+	instructions = append(instructions, Instruction{
+		Operation: PrepareParam,
+		Operand1:  r_op,
+	})
+	tempVar := formTempVar(irType)
+	instructions = append(instructions, Instruction{
+		Destination: tempVar,
+		Operation:   Call,
+		Operand1: Operand{
+			Constant: fmt.Sprintf("__%s_pow", irType),
+		},
+		Operand2: Operand{
+			Constant: 2,
+		},
+	})
+	operand = Operand{
+		Type: irType,
+		Var:  tempVar,
+	}
 	return instructions, operand
 }
 
@@ -196,9 +257,91 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 
 func translateTypecast(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
-	operand := Operand{}
 
+	targetType := datatypes.TranslateSourceType(node.Type)
+	sourceType := datatypes.TranslateSourceType(node.Children[0].Type)
+	l_in, l_op := translateExpression(*node.Children[0])
+	instructions = append(instructions, l_in...)
+	operation := getTypeCastOperation(sourceType, targetType)
+	tempVar := formTempVar(targetType)
+	instructions = append(instructions, Instruction{
+		Destination: tempVar,
+		Operation:   operation,
+		Operand1:    l_op,
+	})
+	operand := Operand{
+		Type: targetType,
+		Var:  tempVar,
+	}
 	return instructions, operand
+}
+
+func getTypeCastOperation(src datatypes.IRType, target datatypes.IRType) Operation {
+	switch src {
+	case datatypes.I32:
+		switch target {
+		case datatypes.I64:
+			return I32ToI64
+		case datatypes.F32:
+			return I32ToF32
+		case datatypes.F64:
+			return I32ToF64
+		}
+	case datatypes.U32:
+		switch target {
+		case datatypes.I64:
+			return U32ToI64
+		case datatypes.F32:
+			return U32ToF32
+		case datatypes.F64:
+			return U32ToF64
+		}
+	case datatypes.I64:
+		switch target {
+		case datatypes.I32:
+			return I64ToI32
+		case datatypes.F32:
+			return I64ToF32
+		case datatypes.F64:
+			return I64ToF64
+		}
+	case datatypes.U64:
+		switch target {
+		case datatypes.I32:
+			return U64ToI32
+		case datatypes.F32:
+			return U64ToF32
+		case datatypes.F64:
+			return U64ToF64
+		}
+	case datatypes.F32:
+		switch target {
+		case datatypes.I32:
+			return F32ToI32
+		case datatypes.U32:
+			return F32ToU32
+		case datatypes.I64:
+			return F32ToI64
+		case datatypes.U64:
+			return F32ToU64
+		case datatypes.F64:
+			return F32ToF64
+		}
+	case datatypes.F64:
+		switch target {
+		case datatypes.I32:
+			return F64ToI32
+		case datatypes.U32:
+			return F64ToU32
+		case datatypes.I64:
+			return F64ToI64
+		case datatypes.U64:
+			return F64ToU64
+		case datatypes.F32:
+			return F64ToF32
+		}
+	}
+	return Operation("")
 }
 
 func loadVariable(node parser.AST) ([]TAC, Operand) {
