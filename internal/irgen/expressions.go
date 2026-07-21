@@ -71,7 +71,41 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
 	// TODO: handle structs
-
+	// TODO: handle mixed types
+	left := node.Children[0]
+	right := node.Children[1]
+	l_in, l_op := translateExpression(*left)
+	instructions = append(instructions, l_in...)
+	r_in, r_op := translateExpression(*right)
+	instructions = append(instructions, r_in...)
+	fmt.Println(l_op.Type, r_op.Type)
+	irType := l_op.Type
+	var operation Operation
+	switch node.Token.Value {
+	case "==":
+		operation = typedOperation(irType, "eq")
+	case "!=":
+		operation = typedOperation(irType, "ne")
+	case "<":
+		operation = typedOperation(irType, "lt")
+	case "<=":
+		operation = typedOperation(irType, "le")
+	case ">":
+		operation = typedOperation(irType, "gt")
+	case ">=":
+		operation = typedOperation(irType, "ge")
+	}
+	tempVar := formTempVar(datatypes.I32)
+	instructions = append(instructions, Instruction{
+		Destination: tempVar,
+		Operation:   operation,
+		Operand1:    l_op,
+		Operand2:    r_op,
+	})
+	operand = Operand{
+		Type: datatypes.I32,
+		Var:  tempVar,
+	}
 	return instructions, operand
 }
 
@@ -262,7 +296,7 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 				Operand1:    r_op,
 				Operand2: Operand{
 					Type:     datatypes.I32,
-					Constant: -1,
+					Constant: 1,
 				},
 			})
 			operand = Operand{
@@ -283,7 +317,20 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 				Var:  tempVar,
 			}
 		case "~":
-			//
+			tempVar := formTempVar(r_op.Type)
+			instructions = append(instructions, Instruction{
+				Destination: tempVar,
+				Operation:   typedOperation(r_op.Type, "xor"),
+				Operand1:    r_op,
+				Operand2: Operand{
+					Type:     r_op.Type,
+					Constant: -1,
+				},
+			})
+			operand = Operand{
+				Type: r_op.Type,
+				Var:  tempVar,
+			}
 		default: // ++, --
 			variable := currScope.LookupVariable(right.Token.Value)
 			if variable == nil {
@@ -376,6 +423,8 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 
 func translateTypecast(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
+	// TODO: handle toString()
+	// TODO: handle struct as source
 	targetType := datatypes.TranslateSourceType(node.Type)
 	sourceType := datatypes.TranslateSourceType(node.Children[0].Type)
 	l_in, l_op := translateExpression(*node.Children[0])
