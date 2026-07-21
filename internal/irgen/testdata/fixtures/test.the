@@ -14,6 +14,10 @@ int size = 2 ** 8;
 bool b00l = true || !false && true;
 int intg = g as int;
 bool less = g < i;
+double g2 = g * i - j;
+int64 bits = j & i;
+String concat1 = 'A' + c;
+bool lessStr = concat1 < "Ab";
 // float f = 0.001;
 
 fn main() -> int {

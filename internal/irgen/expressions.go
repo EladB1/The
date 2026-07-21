@@ -70,14 +70,286 @@ func translateLogicalAndOr(node parser.AST) ([]TAC, Operand) {
 func translateComparison(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
-	// TODO: handle structs
 	left := node.Children[0]
 	right := node.Children[1]
 	l_in, l_op := translateExpression(*left)
 	instructions = append(instructions, l_in...)
 	r_in, r_op := translateExpression(*right)
 	instructions = append(instructions, r_in...)
-	fmt.Println(l_op.Type, r_op.Type)
+	var irType datatypes.IRType
+	var comp string
+	switch node.Token.Value {
+	case "==":
+		comp = "eq"
+	case "!=":
+		comp = "ne"
+	case "<":
+		comp = "lt"
+	case "<=":
+		comp = "le"
+	case ">":
+		comp = "gt"
+	case ">=":
+		comp = "ge"
+	}
+	if !left.Type.IsPrimitive() {
+		// TODO: handle structs
+	} else if l_op.Type == datatypes.Str_const {
+		tempVar := formTempVar(datatypes.I32)
+		call := []TAC{
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  l_op,
+			},
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  r_op,
+			},
+			Instruction{
+				Destination: tempVar,
+				Operation:   Call,
+				Operand1: Operand{
+					Constant: fmt.Sprintf("__str_%s", comp),
+				},
+				Operand2: Operand{
+					Constant: 2,
+				},
+			},
+		}
+		instructions = append(instructions, call...)
+		operand = Operand{
+			Type: datatypes.I32,
+			Var:  tempVar,
+		}
+		return instructions, operand
+	} else if l_op.Type != r_op.Type {
+		var typecast Operation
+		irType = getHigherType(l_op.Type, r_op.Type)
+		if l_op.Type != irType {
+			typecast = getTypeCastOperation(l_op.Type, irType)
+			cast := formTempVar(irType)
+			instructions = append(instructions, Instruction{
+				Destination: cast,
+				Operation:   typecast,
+				Operand1:    l_op,
+			})
+			l_op = Operand{
+				Type: irType,
+				Var:  cast,
+			}
+		} else {
+			typecast = getTypeCastOperation(r_op.Type, irType)
+			cast := formTempVar(irType)
+			instructions = append(instructions, Instruction{
+				Destination: cast,
+				Operation:   typecast,
+				Operand1:    r_op,
+			})
+			r_op = Operand{
+				Type: irType,
+				Var:  cast,
+			}
+		}
+	} else {
+		irType = l_op.Type
+	}
+	operation := typedOperation(irType, comp)
+	tempVar := formTempVar(datatypes.I32)
+	instructions = append(instructions, Instruction{
+		Destination: tempVar,
+		Operation:   operation,
+		Operand1:    l_op,
+		Operand2:    r_op,
+	})
+	operand = Operand{
+		Type: datatypes.I32,
+		Var:  tempVar,
+	}
+	return instructions, operand
+}
+
+func translateBitOperation(node parser.AST) ([]TAC, Operand) {
+	instructions := []TAC{}
+	rootType := node.Type
+	irType := datatypes.TranslateSourceType(rootType)
+	left := node.Children[0]
+	right := node.Children[1]
+	var operation Operation
+	l_in, l_op := translateExpression(*left)
+	instructions = append(instructions, l_in...)
+	r_in, r_op := translateExpression(*right)
+	instructions = append(instructions, r_in...)
+	var typecast Operation
+	if l_op.Type != r_op.Type {
+		irType = getHigherType(l_op.Type, r_op.Type)
+		if l_op.Type != irType {
+			typecast = getTypeCastOperation(l_op.Type, irType)
+			cast := formTempVar(irType)
+			instructions = append(instructions, Instruction{
+				Destination: cast,
+				Operation:   typecast,
+				Operand1:    l_op,
+			})
+			l_op = Operand{
+				Type: irType,
+				Var:  cast,
+			}
+		} else {
+			typecast = getTypeCastOperation(r_op.Type, irType)
+			cast := formTempVar(irType)
+			instructions = append(instructions, Instruction{
+				Destination: cast,
+				Operation:   typecast,
+				Operand1:    r_op,
+			})
+			r_op = Operand{
+				Type: irType,
+				Var:  cast,
+			}
+		}
+	} else {
+		irType = l_op.Type
+	}
+	switch node.Token.Value {
+	case "^":
+		operation = typedOperation(irType, "xor")
+	case "&":
+		operation = typedOperation(irType, "and")
+	case "|":
+		operation = typedOperation(irType, "or")
+	case "<<":
+		operation = typedOperation(irType, "lshift")
+	case ">>":
+		operation = typedOperation(irType, "rshift")
+	}
+	tempVar := formTempVar(irType)
+	instructions = append(instructions, Instruction{
+		Destination: tempVar,
+		Operation:   operation,
+		Operand1:    l_op,
+		Operand2:    r_op,
+	})
+	operand := Operand{
+		Type: irType,
+		Var:  tempVar,
+	}
+	return instructions, operand
+}
+
+func translateAddition(node parser.AST) ([]TAC, Operand) {
+	instructions := []TAC{}
+	operand := Operand{}
+	rootType := node.Type
+	left := node.Children[0]
+	right := node.Children[1]
+	var operation Operation
+	l_in, l_op := translateExpression(*left)
+	instructions = append(instructions, l_in...)
+	r_in, r_op := translateExpression(*right)
+	instructions = append(instructions, r_in...)
+	if rootType == datatypes.String {
+		var fn string
+		if left.Type == datatypes.Char && right.Type == datatypes.Char {
+			fn = "__char_concat"
+		} else if left.Type == datatypes.Char && right.Type == datatypes.String {
+			fn = "__char_concat_str"
+		} else if left.Type == datatypes.String && right.Type == datatypes.Char {
+			fn = "__str_concat_char"
+		} else { // string + string
+			fn = "__str_concat"
+		}
+		tempVar := formTempVar(datatypes.Str_const)
+		call := []TAC{
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  l_op,
+			},
+			Instruction{
+				Operation: PrepareParam,
+				Operand2:  r_op,
+			},
+			Instruction{
+				Destination: tempVar,
+				Operation:   Call,
+				Operand1: Operand{
+					Constant: fn,
+				},
+				Operand2: Operand{
+					Constant: 2,
+				},
+			},
+		}
+		instructions = append(instructions, call...)
+		operand = Operand{
+			Type: datatypes.Str_const,
+			Var:  tempVar,
+		}
+	} else {
+
+		var irType datatypes.IRType
+		var typecast Operation
+		if l_op.Type != r_op.Type {
+			irType = getHigherType(l_op.Type, r_op.Type)
+			if l_op.Type != irType {
+				typecast = getTypeCastOperation(l_op.Type, irType)
+				cast := formTempVar(irType)
+				instructions = append(instructions, Instruction{
+					Destination: cast,
+					Operation:   typecast,
+					Operand1:    l_op,
+				})
+				l_op = Operand{
+					Type: irType,
+					Var:  cast,
+				}
+			} else {
+				typecast = getTypeCastOperation(r_op.Type, irType)
+				cast := formTempVar(irType)
+				instructions = append(instructions, Instruction{
+					Destination: cast,
+					Operation:   typecast,
+					Operand1:    r_op,
+				})
+				r_op = Operand{
+					Type: irType,
+					Var:  cast,
+				}
+			}
+		} else {
+			irType = l_op.Type
+		}
+		operationType := datatypes.TranslateSourceType(rootType)
+		if node.Token.Value == "+" {
+			operation = typedOperation(operationType, "add")
+		} else {
+			operation = typedOperation(operationType, "sub")
+		}
+		tempVar := formTempVar(operationType)
+		op := Instruction{
+			Destination: tempVar,
+			Operation:   operation,
+			Operand1:    l_op,
+			Operand2:    r_op,
+		}
+		instructions = append(instructions, op)
+		operand = Operand{
+			Type: operationType,
+			Var:  tempVar,
+		}
+	}
+	return instructions, operand
+}
+
+func translateMultiplication(node parser.AST) ([]TAC, Operand) {
+	instructions := []TAC{}
+	rootType := node.Type
+	left := node.Children[0]
+	right := node.Children[1]
+	var operation Operation
+	l_in, l_op := translateExpression(*left)
+	instructions = append(instructions, l_in...)
+	r_in, r_op := translateExpression(*right)
+	instructions = append(instructions, r_in...)
 	var irType datatypes.IRType
 	var typecast Operation
 	if l_op.Type != r_op.Type {
@@ -110,137 +382,6 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 	} else {
 		irType = l_op.Type
 	}
-	var operation Operation
-	switch node.Token.Value {
-	case "==":
-		operation = typedOperation(irType, "eq")
-	case "!=":
-		operation = typedOperation(irType, "ne")
-	case "<":
-		operation = typedOperation(irType, "lt")
-	case "<=":
-		operation = typedOperation(irType, "le")
-	case ">":
-		operation = typedOperation(irType, "gt")
-	case ">=":
-		operation = typedOperation(irType, "ge")
-	}
-	tempVar := formTempVar(datatypes.I32)
-	instructions = append(instructions, Instruction{
-		Destination: tempVar,
-		Operation:   operation,
-		Operand1:    l_op,
-		Operand2:    r_op,
-	})
-	operand = Operand{
-		Type: datatypes.I32,
-		Var:  tempVar,
-	}
-	return instructions, operand
-}
-
-func translateBitOperation(node parser.AST) ([]TAC, Operand) {
-	instructions := []TAC{}
-	rootType := node.Type
-	irType := datatypes.TranslateSourceType(rootType)
-	left := node.Children[0]
-	right := node.Children[1]
-	var operation Operation
-	// TODO: typecasting and signed/unsigned
-	switch node.Token.Value {
-	case "^":
-		operation = typedOperation(irType, "xor")
-	case "&":
-		operation = typedOperation(irType, "and")
-	case "|":
-		operation = typedOperation(irType, "or")
-	case "<<":
-		operation = typedOperation(irType, "lshift")
-	case ">>":
-		operation = typedOperation(irType, "rshift")
-	}
-	l_in, l_op := translateExpression(*left)
-	instructions = append(instructions, l_in...)
-	r_in, r_op := translateExpression(*right)
-	instructions = append(instructions, r_in...)
-	tempVar := formTempVar(irType)
-	instructions = append(instructions, Instruction{
-		Destination: tempVar,
-		Operation:   operation,
-		Operand1:    l_op,
-		Operand2:    r_op,
-	})
-	operand := Operand{
-		Type: irType,
-		Var:  tempVar,
-	}
-	return instructions, operand
-}
-
-func translateAddition(node parser.AST) ([]TAC, Operand) {
-	/*
-		1. Get type from root
-		2. Check left and right types for typecasting requirement
-		3. Call translateExpression(left)
-		4. Call translateExpression(right)
-		5. Decide which operation to use
-		6. return
-	*/
-	instructions := []TAC{}
-	operand := Operand{}
-	rootType := node.Type
-	left := node.Children[0]
-	right := node.Children[1]
-	var operation Operation
-	if rootType == datatypes.String {
-		// char + char
-		// char + string
-		// string + char
-		// string + string
-	} else {
-		l_in, l_op := translateExpression(*left)
-		instructions = append(instructions, l_in...)
-		r_in, r_op := translateExpression(*right)
-		instructions = append(instructions, r_in...)
-		if rootType == datatypes.Int32 {
-		}
-		operationType := datatypes.TranslateSourceType(rootType)
-		// i64
-		// i32 (unsigned)
-		// i64 (unsigned)
-		// f32
-		// f64
-		if node.Token.Value == "+" {
-			operation = typedOperation(operationType, "add")
-		} else {
-			operation = typedOperation(operationType, "sub")
-		}
-		tempVar := formTempVar(operationType)
-		op := Instruction{
-			Destination: tempVar,
-			Operation:   operation,
-			Operand1:    l_op,
-			Operand2:    r_op,
-		}
-		instructions = append(instructions, op)
-		operand = Operand{
-			Type: operationType,
-			Var:  tempVar,
-		}
-	}
-	return instructions, operand
-}
-
-func translateMultiplication(node parser.AST) ([]TAC, Operand) {
-	instructions := []TAC{}
-	rootType := node.Type
-	left := node.Children[0]
-	right := node.Children[1]
-	var operation Operation
-	l_in, l_op := translateExpression(*left)
-	instructions = append(instructions, l_in...)
-	r_in, r_op := translateExpression(*right)
-	instructions = append(instructions, r_in...)
 	operationType := datatypes.TranslateSourceType(rootType)
 	switch node.Token.Value {
 	case "*":
@@ -470,6 +611,34 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 		Type: targetType,
 		Var:  tempVar,
 	}
+	return instructions, operand
+}
+
+func translateIndex(node parser.AST) ([]TAC, Operand) {
+	instructions := []TAC{}
+	operand := Operand{}
+
+	return instructions, operand
+}
+
+func translateSlice(node parser.AST) ([]TAC, Operand) {
+	instructions := []TAC{}
+	operand := Operand{}
+
+	return instructions, operand
+}
+
+func translateDot(node parser.AST) ([]TAC, Operand) {
+	instructions := []TAC{}
+	operand := Operand{}
+
+	return instructions, operand
+}
+
+func translateCall(node parser.AST) ([]TAC, Operand) {
+	instructions := []TAC{}
+	operand := Operand{}
+
 	return instructions, operand
 }
 

@@ -3,7 +3,6 @@ package irgen
 import (
 	"fmt"
 
-	"github.com/EladB1/The/internal/datatypes"
 	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/lexer"
@@ -88,50 +87,50 @@ func getZeroValue(sourceType dt.SourceType) Operand {
 }
 
 func translateLiteral(node parser.AST) Operand {
-	irType := datatypes.NoneIR
+	irType := dt.NoneIR
 	var value any
 	switch node.Token.Kind {
 	case lexer.KW_BOOLVALUE:
-		irType = datatypes.I32
+		irType = dt.I32
 		if node.Token.Value == "true" {
 			value = 1
 		} else {
 			value = 0
 		}
 	case lexer.LIT_CHAR:
-		irType = datatypes.I32
+		irType = dt.I32
 		value = node.Token.CharVal
 	case lexer.LIT_INT, lexer.LIT_HEX:
 		switch node.Type {
 		case dt.Int32:
-			irType = datatypes.I32
+			irType = dt.I32
 			value = int32(node.Token.IntVal)
 		case dt.Uint32:
-			irType = datatypes.U32
+			irType = dt.U32
 			value = uint32(node.Token.IntVal)
 		case dt.Int64:
-			irType = datatypes.I64
+			irType = dt.I64
 			value = node.Token.IntVal
 		case dt.Uint64:
-			irType = datatypes.U64
+			irType = dt.U64
 			value = uint64(node.Token.IntVal)
 		case dt.Float:
-			irType = datatypes.F32
+			irType = dt.F32
 			value = float32(node.Token.FloatVal)
 		case dt.Double:
-			irType = datatypes.F64
+			irType = dt.F64
 			value = node.Token.FloatVal
 		}
 	case lexer.LIT_FLOAT:
 		if node.Type == dt.Float {
-			irType = datatypes.F32
+			irType = dt.F32
 			value = float32(node.Token.FloatVal)
 		} else {
-			irType = datatypes.F64
+			irType = dt.F64
 			value = node.Token.FloatVal
 		}
 	case lexer.LIT_STRING:
-		irType = datatypes.Str_const
+		irType = dt.Str_const
 		value = node.Token.StrIndex
 	}
 	return Operand{
@@ -140,7 +139,7 @@ func translateLiteral(node parser.AST) Operand {
 	}
 }
 
-func formTempVar(irType datatypes.IRType) Variable {
+func formTempVar(irType dt.IRType) Variable {
 	tempVar := Variable{
 		Name:     fmt.Sprintf("__t%d", tempVarIndex),
 		DataType: irType,
