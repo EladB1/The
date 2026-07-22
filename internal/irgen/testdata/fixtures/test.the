@@ -18,6 +18,12 @@ double g2 = g * i - j;
 int64 bits = j & i;
 String concat1 = 'A' + c;
 bool lessStr = concat1 < "Ab";
+char h = "hello"[0];
+char end = "hello"[^1];
+String copy = s[..];
+String firstHalf = s[..6];
+String secondHalf = s[6 ..=];
+String slice = "hello"[3..=4];
 // float f = 0.001;
 
 fn main() -> int {

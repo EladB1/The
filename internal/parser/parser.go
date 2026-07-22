@@ -962,8 +962,8 @@ func parseSlice() *AST {
 	ast := AST{Label: "slice", Location: peek().Location}
 	if checkKind(lexer.OPERATOR_RANGE) {
 		rangeOp := nodeFromToken(consume())
+		ast.AddChildren(rangeOp)
 		if peek().Value == "]" {
-			ast.AddChildren(rangeOp)
 			return &ast
 		} else {
 			if checkValue("^") {

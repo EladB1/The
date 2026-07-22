@@ -28,6 +28,8 @@ func translateExpression(node parser.AST) ([]TAC, Operand) {
 		instructions, operand = translateUnary(node)
 	} else if node.Label == "typecast" {
 		instructions, operand = translateTypecast(node)
+	} else if node.Label == "index" {
+		instructions, operand = translateIndex(node)
 	} else if node.IsLiteral() {
 		operand = translateLiteral(node)
 	} else if node.Token.Kind == lexer.ID {
@@ -616,15 +618,383 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 
 func translateIndex(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
-	operand := Operand{}
-
+	left := node.Children[0]
+	right := node.Children[1]
+	l_in, container_op := translateExpression(*left)
+	instructions = append(instructions, l_in...)
+	var r_in []TAC
+	var r_op Operand
+	switch right.Label {
+	case "slice":
+		r_in, r_op = translateSlice(*right, container_op)
+		return r_in, r_op
+	case "ARR-END":
+		r_in, r_op = translateArrayEnd(*right, container_op)
+	default:
+		r_in, r_op = translateExpression(*right)
+	}
+	instructions = append(instructions, r_in...)
+	if r_op.Type != datatypes.I32 {
+		cast := formTempVar(datatypes.I32)
+		typecast := []TAC{
+			Instruction{
+				Destination: cast,
+				Operation:   getTypeCastOperation(r_op.Type, datatypes.I32),
+				Operand1:    r_op,
+			},
+		}
+		instructions = append(instructions, typecast...)
+		r_op = Operand{
+			Type: datatypes.I32,
+			Var:  cast,
+		}
+	}
+	tempVar := formTempVar(datatypes.I32)
+	call := []TAC{
+		Instruction{
+			Operation: PrepareParam,
+			Operand1:  container_op,
+		},
+		Instruction{
+			Operation: PrepareParam,
+			Operand1:  r_op,
+		},
+		Instruction{
+			Destination: tempVar,
+			Operation:   Call,
+			Operand1: Operand{
+				Constant: "__str_index",
+			},
+			Operand2: Operand{
+				Constant: 2,
+			},
+		},
+	}
+	instructions = append(instructions, call...)
+	operand := Operand{
+		Type: datatypes.I32,
+		Var:  tempVar,
+	}
 	return instructions, operand
 }
 
-func translateSlice(node parser.AST) ([]TAC, Operand) {
+func translateArrayEnd(node parser.AST, arr Operand) ([]TAC, Operand) {
 	instructions := []TAC{}
-	operand := Operand{}
+	in, op := translateExpression(*node.Children[0])
+	instructions = append(instructions, in...)
+	len := formTempVar(datatypes.I32)
+	call := []TAC{
+		Instruction{
+			Operation: PrepareParam,
+			Operand1:  arr,
+		},
+		Instruction{
+			Destination: len,
+			Operation:   Call,
+			Operand1: Operand{
+				Constant: "__str_length",
+			},
+			Operand2: Operand{
+				Constant: 1,
+			},
+		},
+	}
+	instructions = append(instructions, call...)
+	if op.Type != datatypes.I32 {
+		operation := getTypeCastOperation(op.Type, datatypes.I32)
+		cast := formTempVar(datatypes.I32)
+		instructions = append(instructions, Instruction{
+			Destination: cast,
+			Operation:   operation,
+			Operand1:    op,
+		})
+		op = Operand{
+			Type: datatypes.I32,
+			Var:  cast,
+		}
+	}
+	tempVar := formTempVar(datatypes.I32)
+	sub := Instruction{
+		Destination: tempVar,
+		Operation:   typedOperation(datatypes.I32, "sub"),
+		Operand1: Operand{
+			Var: len,
+		},
+		Operand2: op,
+	}
+	instructions = append(instructions, sub)
+	operand := Operand{
+		Type: datatypes.I32,
+		Var:  tempVar,
+	}
+	return instructions, operand
+}
 
+// TODO: refactor
+func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
+	instructions := []TAC{}
+	var operand Operand
+	var slice Variable
+	length := len(node.Children)
+	fn := "__str_slice"
+	switch length {
+	case 1:
+		// str[..]
+		len := formTempVar(datatypes.I32)
+		getLength := []TAC{
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  arr,
+			},
+			Instruction{
+				Destination: len,
+				Operation:   Call,
+				Operand1: Operand{
+					Constant: "__str_length",
+				},
+				Operand2: Operand{
+					Constant: 1,
+				},
+			},
+		}
+		instructions = append(instructions, getLength...)
+		arrayEnd := formTempVar(datatypes.I32)
+		sub := Instruction{
+			Destination: arrayEnd,
+			Operation:   typedOperation(datatypes.I32, "sub"),
+			Operand1: Operand{
+				Var: len,
+			},
+			Operand2: Operand{
+				Type:     datatypes.I32,
+				Constant: 1,
+			},
+		}
+		instructions = append(instructions, sub)
+		slice = formTempVar(datatypes.I32)
+		call := []TAC{
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  arr,
+			},
+			Instruction{
+				Operation: PrepareParam,
+				Operand1: Operand{
+					Type:     datatypes.I32,
+					Constant: 0,
+				},
+			},
+			Instruction{
+				Operation: PrepareParam,
+				Operand1: Operand{
+					Type: datatypes.I32,
+					Var:  arrayEnd,
+				},
+			},
+			Instruction{
+				Destination: slice,
+				Operation:   Call,
+				Operand1: Operand{
+					Constant: fn,
+				},
+				Operand2: Operand{
+					Constant: 3,
+				},
+			},
+		}
+		instructions = append(instructions, call...)
+	case 2:
+		if node.Children[0].Token.Kind == lexer.OPERATOR_RANGE { // str[..1]
+			if node.Children[0].Token.Value == "..=" {
+				fn = "__str_slice_inclusive"
+			}
+			end_in, end_op := translateExpression(*node.Children[1])
+			instructions = append(instructions, end_in...)
+			if end_op.Type != datatypes.I32 {
+				cast := formTempVar(datatypes.I32)
+				instructions = append(instructions, Instruction{
+					Destination: cast,
+					Operation:   getTypeCastOperation(end_op.Type, datatypes.I32),
+					Operand1:    end_op,
+				})
+				end_op = Operand{
+					Type: datatypes.I32,
+					Var:  cast,
+				}
+			}
+			slice = formTempVar(datatypes.I32)
+			call := []TAC{
+				Instruction{
+					Operation: PrepareParam,
+					Operand1:  arr,
+				},
+				Instruction{
+					Operation: PrepareParam,
+					Operand1: Operand{
+						Type:     datatypes.I32,
+						Constant: 0,
+					},
+				},
+				Instruction{
+					Operation: PrepareParam,
+					Operand1:  end_op,
+				},
+				Instruction{
+					Destination: slice,
+					Operation:   Call,
+					Operand1: Operand{
+						Constant: fn,
+					},
+					Operand2: Operand{
+						Constant: 3,
+					},
+				},
+			}
+			instructions = append(instructions, call...)
+
+		} else { // str[1..]
+			if node.Children[1].Token.Value == "..=" {
+				fn = "__str_slice_inclusive"
+			}
+			start_in, start_op := translateExpression(*node.Children[0])
+			instructions = append(instructions, start_in...)
+			if start_op.Type != datatypes.I32 {
+				cast := formTempVar(datatypes.I32)
+				instructions = append(instructions, Instruction{
+					Destination: cast,
+					Operation:   getTypeCastOperation(start_op.Type, datatypes.I32),
+					Operand1:    start_op,
+				})
+				start_op = Operand{
+					Type: datatypes.I32,
+					Var:  cast,
+				}
+			}
+			len := formTempVar(datatypes.I32)
+			getLength := []TAC{
+				Instruction{
+					Operation: PrepareParam,
+					Operand1:  arr,
+				},
+				Instruction{
+					Destination: len,
+					Operation:   Call,
+					Operand1: Operand{
+						Constant: "__str_length",
+					},
+					Operand2: Operand{
+						Constant: 1,
+					},
+				},
+			}
+			instructions = append(instructions, getLength...)
+			arrayEnd := formTempVar(datatypes.I32)
+			sub := Instruction{
+				Destination: arrayEnd,
+				Operation:   typedOperation(datatypes.I32, "sub"),
+				Operand1: Operand{
+					Var: len,
+				},
+				Operand2: Operand{
+					Type:     datatypes.I32,
+					Constant: 1,
+				},
+			}
+			instructions = append(instructions, sub)
+			slice = formTempVar(datatypes.I32)
+			call := []TAC{
+				Instruction{
+					Operation: PrepareParam,
+					Operand1:  arr,
+				},
+				Instruction{
+					Operation: PrepareParam,
+					Operand1:  start_op,
+				},
+				Instruction{
+					Operation: PrepareParam,
+					Operand1: Operand{
+						Type: datatypes.I32,
+						Var:  arrayEnd,
+					},
+				},
+				Instruction{
+					Destination: slice,
+					Operation:   Call,
+					Operand1: Operand{
+						Constant: fn,
+					},
+					Operand2: Operand{
+						Constant: 3,
+					},
+				},
+			}
+			instructions = append(instructions, call...)
+		}
+	case 3:
+		// str[1..5]
+		if node.Children[1].Token.Value == "..=" {
+			fn = "__str_slice_inclusive"
+		}
+		start_in, start_op := translateExpression(*node.Children[0])
+		instructions = append(instructions, start_in...)
+		if start_op.Type != datatypes.I32 {
+			cast := formTempVar(datatypes.I32)
+			instructions = append(instructions, Instruction{
+				Destination: cast,
+				Operation:   getTypeCastOperation(start_op.Type, datatypes.I32),
+				Operand1:    start_op,
+			})
+			start_op = Operand{
+				Type: datatypes.I32,
+				Var:  cast,
+			}
+		}
+		end_in, end_op := translateExpression(*node.Children[2])
+		instructions = append(instructions, end_in...)
+		if end_op.Type != datatypes.I32 {
+			cast := formTempVar(datatypes.I32)
+			instructions = append(instructions, Instruction{
+				Destination: cast,
+				Operation:   getTypeCastOperation(end_op.Type, datatypes.I32),
+				Operand1:    end_op,
+			})
+			end_op = Operand{
+				Type: datatypes.I32,
+				Var:  cast,
+			}
+		}
+		slice = formTempVar(datatypes.I32)
+		call := []TAC{
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  arr,
+			},
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  start_op,
+			},
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  end_op,
+			},
+			Instruction{
+				Destination: slice,
+				Operation:   Call,
+				Operand1: Operand{
+					Constant: fn,
+				},
+				Operand2: Operand{
+					Constant: 3,
+				},
+			},
+		}
+		instructions = append(instructions, call...)
+	}
+	operand = Operand{
+		Type: datatypes.I32,
+		Var:  slice,
+	}
 	return instructions, operand
 }
 
