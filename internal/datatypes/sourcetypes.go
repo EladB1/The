@@ -38,6 +38,26 @@ const (
 	Any    PrimitiveType = "any"
 )
 
+func GetTypeCategoryOfString(value string) SourceType {
+	fmt.Println(value)
+	if strings.HasPrefix(value, "Ref(") {
+		suffix := strings.Split(value, "Ref(")[1]
+		sub := strings.Split(suffix, ")")[0]
+		return Ref{Scope: sub}
+	} else if strings.HasPrefix(value, "ScopeRef(") {
+		suffix := strings.Split(value, "ScopeRef(")[1]
+		sub := strings.Split(suffix, ")")[0]
+		return ScopeRef{Scopes: strings.Split(sub, ",")}
+	}
+	switch value {
+	case "int", "int64", "uint32", "uint64", "float", "double", "bool", "char", "String", "None", "any":
+		return PrimitiveType(value)
+
+	default:
+		return DynamicType(value)
+	}
+}
+
 func (type_ PrimitiveType) String() string {
 	return string(type_)
 }

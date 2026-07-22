@@ -7,6 +7,7 @@ char c = 'a';
 bool isSomething = true;
 int i = 1 + 5 + ~3;
 double g = -9.8;
+float f = 0.001;
 int64 j = 1 + i;
 double w = 10.0 * g / 2.1;
 int b = (6 ^ 5 & 1 | 0) << 2 >> 1;
@@ -24,7 +25,6 @@ String copy = s[..];
 String firstHalf = s[..6];
 String secondHalf = s[6 ..=];
 String slice = "hello"[3..=4];
-// float f = 0.001;
 
 fn main() -> int {
     // float value = 1.0 * 0.5;

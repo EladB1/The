@@ -1,6 +1,7 @@
 package semantic
 
 import (
+	"encoding/json"
 	"fmt"
 	"slices"
 	"strings"
@@ -30,6 +31,38 @@ type Scope struct {
 	Interfaces  InterfaceSymbolTable
 	Structs     StructSymbolTable
 	NamedBlocks NamedBlockSymbolTable
+}
+
+type SerializedScope struct {
+	Id          string
+	Kind        ScopeType
+	ParentId    string
+	Children    []*Scope
+	Functions   FunctionSymbolTable
+	Variables   VariableSymbolTable
+	Interfaces  InterfaceSymbolTable
+	Structs     StructSymbolTable
+	NamedBlocks NamedBlockSymbolTable
+}
+
+func (scope *Scope) MarshalJSON() ([]byte, error) {
+	var parentId string
+	if scope.Parent == nil {
+		parentId = ""
+	} else {
+		parentId = scope.Parent.Id
+	}
+	return json.Marshal(SerializedScope{
+		Id:          scope.Id,
+		Kind:        scope.Kind,
+		ParentId:    parentId,
+		Children:    scope.Children,
+		Functions:   scope.Functions,
+		Variables:   scope.Variables,
+		Interfaces:  scope.Interfaces,
+		Structs:     scope.Structs,
+		NamedBlocks: scope.NamedBlocks,
+	})
 }
 
 func (scope *Scope) addChild(id string, kind ScopeType) *Scope {

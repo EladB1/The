@@ -30,29 +30,19 @@ func TestGenerateFixtures(t *testing.T) {
 	if os.Getenv("UPDATE_FIXTURES") != "true" {
 		t.Skip()
 	}
-	subdirs, err := os.ReadDir(dir)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
-	}
-	for _, subdir := range subdirs {
-		if !subdir.IsDir() {
-			continue
+	fixtures := testutils.GetSourceFromDirectory(t, dir)
+	for _, fixture := range fixtures {
+		tokens, pool, _ := lexer.Lex(fixture.Source, false)
+		ast, _ := parser.Parse(tokens, pool)
+		scopes, _ := semantic.Analyze(&ast)
+		fix := Fixture{
+			ScopeTree: scopes,
+			AST:       ast,
+			Literals:  pool,
 		}
-		testpath := filepath.Join(dir, subdir.Name())
-		fixtures := testutils.GetSourceFromDirectory(t, testpath)
-		for _, fixture := range fixtures {
-			tokens, pool, _ := lexer.Lex(fixture.Source, false)
-			ast, _ := parser.Parse(tokens, pool)
-			scopes, _ := semantic.Analyze(&ast)
-			fix := Fixture{
-				ScopeTree: scopes,
-				AST:       ast,
-				Literals:  pool,
-			}
-			testutils.WriteResultToFile(fix, testpath, fixture.File)
-		}
+		testutils.WriteResultToFile(fix, dir, fixture.File)
 	}
+
 }
 
 func loadFixture(t *testing.T, testdir string, filename string) Fixture {
@@ -71,13 +61,11 @@ func loadFixture(t *testing.T, testdir string, filename string) Fixture {
 	return fixture
 }
 
-func snapshotTestIRGenerator(t *testing.T, filename string, subdir string) {
-	snapTarget := filepath.Join(snapsDir, subdir)
-	testdir := filepath.Join(dir, subdir)
+func snapshotTestIRGenerator(t *testing.T, filename string) {
 	snapshots := snaps.WithConfig(
-		snaps.Dir(snapTarget),
+		snaps.Dir(snapsDir),
 	)
-	fixture := loadFixture(t, testdir, filename)
+	fixture := loadFixture(t, dir, filename)
 	prog, messages := Generate(fixture.AST, fixture.ScopeTree)
 	var msgBuilder strings.Builder
 	delim := ","
@@ -91,9 +79,8 @@ func snapshotTestIRGenerator(t *testing.T, filename string, subdir string) {
 	snapshots.MatchSnapshot(t, results)
 }
 
-// func TestLiteralsAndSimpleAssignments(t *testing.T) {
-// 	subdir := "statements"
-// 	t.Run("should run", func(t *testing.T) {
-// 		snapshotTestIRGenerator(t, "", subdir)
-// 	})
-// }
+func TestLiteralsAndSimpleAssignments(t *testing.T) {
+	t.Run("should run expressions and produce IR", func(t *testing.T) {
+		snapshotTestIRGenerator(t, "expressions.json")
+	})
+}

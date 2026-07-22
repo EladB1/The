@@ -416,16 +416,33 @@ func translateExponent(node parser.AST) ([]TAC, Operand) {
 	irType := datatypes.TranslateSourceType(rootType)
 	left := node.Children[0]
 	right := node.Children[1]
-	if left.Type != rootType {
-		// TODO
-	}
-	if right.Type != rootType {
-		// TODO
-	}
 	l_in, l_op := translateExpression(*left)
 	instructions = append(instructions, l_in...)
 	r_in, r_op := translateExpression(*right)
 	instructions = append(instructions, r_in...)
+	if left.Type != rootType {
+		cast := formTempVar(irType)
+		instructions = append(instructions, Instruction{
+			Destination: cast,
+			Operation:   getTypeCastOperation(l_op.Type, irType),
+		})
+		l_op = Operand{
+			Type: irType,
+			Var:  cast,
+		}
+	}
+	if right.Type != rootType {
+		cast := formTempVar(irType)
+		instructions = append(instructions, Instruction{
+			Destination: cast,
+			Operation:   getTypeCastOperation(r_op.Type, irType),
+		})
+		r_op = Operand{
+			Type: irType,
+			Var:  cast,
+		}
+	}
+
 	instructions = append(instructions, Instruction{
 		Operation: PrepareParam,
 		Operand1:  l_op,
@@ -596,19 +613,41 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 
 func translateTypecast(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
-	// TODO: handle toString()
-	// TODO: handle struct as source
-	targetType := datatypes.TranslateSourceType(node.Type)
+	var tempVar Variable
 	sourceType := datatypes.TranslateSourceType(node.Children[0].Type)
 	l_in, l_op := translateExpression(*node.Children[0])
 	instructions = append(instructions, l_in...)
-	operation := getTypeCastOperation(sourceType, targetType)
-	tempVar := formTempVar(targetType)
-	instructions = append(instructions, Instruction{
-		Destination: tempVar,
-		Operation:   operation,
-		Operand1:    l_op,
-	})
+	// TODO: handle struct as source
+	targetType := datatypes.TranslateSourceType(node.Type)
+	if targetType == datatypes.Str_const {
+		fn := getToStringFn(node.Children[0].Type)
+		tempVar = formTempVar(datatypes.Str_const)
+		call := []TAC{
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  l_op,
+			},
+			Instruction{
+				Destination: tempVar,
+				Operation:   Call,
+				Operand1: Operand{
+					Constant: fn,
+				},
+				Operand2: Operand{
+					Constant: 1,
+				},
+			},
+		}
+		instructions = append(instructions, call...)
+	} else {
+		operation := getTypeCastOperation(sourceType, targetType)
+		tempVar = formTempVar(targetType)
+		instructions = append(instructions, Instruction{
+			Destination: tempVar,
+			Operation:   operation,
+			Operand1:    l_op,
+		})
+	}
 	operand := Operand{
 		Type: targetType,
 		Var:  tempVar,
@@ -964,4 +1003,24 @@ func getArrayLength(arr Operand) ([]TAC, Operand) {
 		Var:  len,
 	}
 	return instructions, operand
+}
+
+func getToStringFn(src datatypes.SourceType) string {
+	// TODO: handle struct
+	switch src {
+	case datatypes.Int32, datatypes.Uint32:
+		return "__str_fromInt32"
+	case datatypes.Int64, datatypes.Uint64:
+		return "__str_fromInt64"
+	case datatypes.Bool:
+		return "__str_fromBool"
+	case datatypes.Char:
+		return "__str_fromChar"
+	case datatypes.Float:
+		return "__str_fromFloat32"
+	case datatypes.Double:
+		return "__str_fromFloat64"
+	default:
+		return ""
+	}
 }
