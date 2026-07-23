@@ -24,8 +24,6 @@ const (
 	ScopeRef  DataType = "ScopeRef"
 )
 
-// DynamicType would be DataType(struct_or_interface_name)
-
 type SourceType struct {
 	Root      DataType
 	SubTypes  []SourceType
