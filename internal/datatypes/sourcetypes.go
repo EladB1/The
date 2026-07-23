@@ -69,6 +69,9 @@ func NewReferenceSubType(dt string) SourceType {
 }
 
 func (st SourceType) String() string {
+	if st.Equals(EmptySourceType) {
+		return ""
+	}
 	if st.Root == Ref {
 		return fmt.Sprintf("Ref(%s)", JoinTypes(st.SubTypes))
 	} else if st.Root == ScopeRef {

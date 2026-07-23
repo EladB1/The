@@ -75,7 +75,7 @@ func snapshotTestIRGenerator(t *testing.T, filename string) {
 		}
 		msgBuilder.WriteString(fmt.Sprintf("\n\t\"%v\"%s", msg, delim))
 	}
-	results := fmt.Sprintf("IR:\n%v\nCompiler messages:\n[%s\n]", prog, msgBuilder.String())
+	results := fmt.Sprintf("IR:\n%v\nCompiler messages:\n[%s\n]", prog.String(), msgBuilder.String())
 	snapshots.MatchSnapshot(t, results)
 }
 
