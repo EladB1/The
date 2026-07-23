@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/EladB1/The/internal/datatypes"
+	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/parser"
 )
@@ -44,7 +44,7 @@ func Analyze(ast *parser.AST) (*Scope, diagnostic.PhaseDiagnostics) {
 	missingEntry := true
 	if fn := globalScope.LookupFunctionByName("main"); fn != nil {
 		for _, overload := range fn.Overloads {
-			if len(overload.Parameters) == 0 && fn.ReturnType == datatypes.Int32 {
+			if len(overload.Parameters) == 0 && fn.ReturnType.Equals(dt.Int32Type) {
 				missingEntry = false
 				break
 			}
@@ -86,7 +86,7 @@ func collectTypeNames(ast *parser.AST) {
 			childScope := globalScope.addChild(name, Struct)
 			childScope.Variables["this"] = VariableSymbol{
 				Name:        "this",
-				Type:        datatypes.Ref{Scope: childScope.Id},
+				Type:        dt.NewContainerType(dt.Ref, dt.NewReferenceSubType(childScope.Id)),
 				isPrivate:   true,
 				isMutable:   true,
 				Initialized: true,
@@ -94,7 +94,7 @@ func collectTypeNames(ast *parser.AST) {
 			}
 			childScope.Variables["global"] = VariableSymbol{
 				Name:        "global",
-				Type:        datatypes.Ref{Scope: globalScope.Id},
+				Type:        dt.GlobalRefType,
 				isPrivate:   true,
 				isMutable:   true,
 				Initialized: true,
@@ -211,10 +211,8 @@ func analyzeInterfaceImplementation() {
 				messages.Complain(diagnostic.ImplementationError, str.Def.Location, "struct %s is missing named block for interface %s", str.Name, intfName)
 			} else {
 				str.InnerScope.Variables[intfName] = VariableSymbol{
-					Name: intfName,
-					Type: datatypes.ScopeRef{
-						Scopes: []string{str.Name, intfName},
-					},
+					Name:        intfName,
+					Type:        dt.NewContainerType(dt.ScopeRef, dt.NewReferenceSubType(str.Name), dt.NewReferenceSubType(intfName)),
 					isPrivate:   false,
 					isMutable:   false,
 					Def:         namedBlock.Def,
@@ -223,7 +221,7 @@ func analyzeInterfaceImplementation() {
 				for _, fn := range intf.innerScope.Functions {
 					missing := false
 					returnStr := ""
-					if fn.ReturnType != datatypes.None {
+					if !fn.ReturnType.Equals(dt.NoneType) {
 						returnStr = fmt.Sprintf("->%s", fn.ReturnType)
 					}
 					nb_fn := namedBlock.InnerScope.LookupFunctionByName(fn.Name)
@@ -231,12 +229,12 @@ func analyzeInterfaceImplementation() {
 						missing = true
 						namedBlock.InnerScope.Functions[fn.Name] = fn
 						nb_fn = namedBlock.InnerScope.LookupFunctionByName(fn.Name)
-					} else if nb_fn.ReturnType != fn.ReturnType {
+					} else if !nb_fn.ReturnType.Equals(fn.ReturnType) {
 						messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Implementation function %s returns %s but interface %s returns %s", fn.Name, nb_fn.ReturnType, intfName, fn.ReturnType)
 						continue
 					}
 					for i, overload := range fn.Overloads {
-						params := datatypes.Join(overload.Parameters)
+						params := dt.JoinTypes(overload.Parameters)
 						if missing {
 							str.UpdateImplFnNames(fn.Name, intfName)
 							if overload.HasDefaultImplementation { // copy it over from the interface
@@ -264,7 +262,7 @@ func analyzeInterfaceImplementation() {
 				}
 				for _, fn := range namedBlock.InnerScope.Functions {
 					returnStr := ""
-					if fn.ReturnType != datatypes.None {
+					if !fn.ReturnType.Equals(dt.NoneType) {
 						returnStr = fmt.Sprintf("->%s", fn.ReturnType)
 					}
 					intf_fn := intf.innerScope.LookupFunctionByName(fn.Name)
@@ -274,7 +272,7 @@ func analyzeInterfaceImplementation() {
 					}
 					for _, overload := range fn.Overloads {
 						if match := intf_fn.getMatchingOverload(overload.Parameters); match == nil {
-							messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Named block %s contains function %s(%s)%s which its interface does not", intfName, fn.Name, datatypes.Join(overload.Parameters), returnStr)
+							messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Named block %s contains function %s(%s)%s which its interface does not", intfName, fn.Name, dt.JoinTypes(overload.Parameters), returnStr)
 						}
 					}
 				}

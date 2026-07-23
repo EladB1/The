@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/EladB1/The/internal/datatypes"
+	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/parser"
 )
 
@@ -17,11 +17,11 @@ type (
 	}
 	FunctionSymbol struct {
 		Name       string
-		ReturnType datatypes.SourceType
+		ReturnType dt.SourceType
 		Overloads  []FnOverloadSymbol
 	}
 	FnOverloadSymbol struct {
-		Parameters               []datatypes.SourceType
+		Parameters               []dt.SourceType
 		IsPrivate                bool
 		HasDefaultImplementation bool
 		Body                     *parser.AST
@@ -29,8 +29,8 @@ type (
 	}
 	FnCreateSymbol struct {
 		name                     string
-		returnType               datatypes.SourceType
-		parameters               []datatypes.SourceType
+		returnType               dt.SourceType
+		parameters               []dt.SourceType
 		isPrivate                bool
 		hasDefaultImplementation bool
 		Body                     *parser.AST
@@ -39,7 +39,7 @@ type (
 	VariableCtx    string
 	VariableSymbol struct {
 		Name        string
-		Type        datatypes.SourceType
+		Type        dt.SourceType
 		isPrivate   bool
 		isMutable   bool
 		Def         *parser.AST
@@ -141,7 +141,7 @@ func (fn FunctionSymbol) String() string {
 		if symbol.IsPrivate {
 			priv = ", isPrivate: true"
 		}
-		overloads.WriteString(fmt.Sprintf("{parameters: (%s)%s, implemented: %v}", datatypes.Join(symbol.Parameters), priv, symbol.HasDefaultImplementation))
+		overloads.WriteString(fmt.Sprintf("{parameters: (%s)%s, implemented: %v}", dt.JoinTypes(symbol.Parameters), priv, symbol.HasDefaultImplementation))
 	}
 	return fmt.Sprintf("{name: %s, returns: %s, overloads: [%s]}", fn.Name, fn.ReturnType, overloads.String())
 }
@@ -164,10 +164,10 @@ func (nb NamedBlockSymbol) String() string {
 
 func (symbol FnCreateSymbol) getSignature() string {
 	returns := ""
-	if symbol.returnType != datatypes.None {
+	if !symbol.returnType.Equals(dt.NoneType) {
 		returns = fmt.Sprintf("->%s", symbol.returnType)
 	}
-	return fmt.Sprintf("fn %s(%s)%s", symbol.name, datatypes.Join(symbol.parameters), returns)
+	return fmt.Sprintf("fn %s(%s)%s", symbol.name, dt.JoinTypes(symbol.parameters), returns)
 }
 
 func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
@@ -180,7 +180,7 @@ func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
 	}
 }
 
-func (fn FunctionSymbol) getMatchingOverload(params []datatypes.SourceType) *FnOverloadSymbol {
+func (fn FunctionSymbol) getMatchingOverload(params []dt.SourceType) *FnOverloadSymbol {
 	count := len(params)
 	for _, overload := range fn.Overloads {
 		matches := false
@@ -190,7 +190,7 @@ func (fn FunctionSymbol) getMatchingOverload(params []datatypes.SourceType) *FnO
 			}
 			for i := range count {
 				param := overload.Parameters[i]
-				if params[i] == param || param == datatypes.Any || ImplementsInterface(param, params[i]) {
+				if params[i].Equals(param) || param.Equals(dt.AnyType) || ImplementsInterface(param, params[i]) {
 					matches = true
 				} else {
 					matches = false

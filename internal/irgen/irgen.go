@@ -77,7 +77,7 @@ func variableDeclaration(ast *parser.AST, scopeTree *semantic.Scope) []TAC {
 }
 
 func getZeroValue(sourceType dt.SourceType) Operand {
-	if !sourceType.IsPrimitive() {
+	if sourceType.IsDynamic {
 		// TODO
 	}
 	return Operand{
@@ -101,28 +101,27 @@ func translateLiteral(node parser.AST) Operand {
 		irType = dt.I32
 		value = node.Token.CharVal
 	case lexer.LIT_INT, lexer.LIT_HEX:
-		switch node.Type {
-		case dt.Int32:
+		if node.Type.Equals(dt.Int32Type) {
 			irType = dt.I32
 			value = int32(node.Token.IntVal)
-		case dt.Uint32:
+		} else if node.Type.Equals(dt.Uint32Type) {
 			irType = dt.U32
 			value = uint32(node.Token.IntVal)
-		case dt.Int64:
+		} else if node.Type.Equals(dt.Int64Type) {
 			irType = dt.I64
 			value = node.Token.IntVal
-		case dt.Uint64:
+		} else if node.Type.Equals(dt.Uint64Type) {
 			irType = dt.U64
 			value = uint64(node.Token.IntVal)
-		case dt.Float:
+		} else if node.Type.Equals(dt.FloatType) {
 			irType = dt.F32
 			value = float32(node.Token.FloatVal)
-		case dt.Double:
+		} else if node.Type.Equals(dt.DoubleType) {
 			irType = dt.F64
 			value = node.Token.FloatVal
 		}
 	case lexer.LIT_FLOAT:
-		if node.Type == dt.Float {
+		if node.Type.Equals(dt.FloatType) {
 			irType = dt.F32
 			value = float32(node.Token.FloatVal)
 		} else {
