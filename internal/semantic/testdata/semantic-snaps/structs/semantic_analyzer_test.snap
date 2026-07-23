@@ -436,7 +436,7 @@ children: [
                 Node: { Token: {Value: bool, Type: type keyword, Line: 91, Column: 17} },
                 Node: { Label: "fn-body"
                 children: [
-                    Node: { Label: "dot", Type: int
+                    Node: { Label: "dot", Type: Ref(@global)
                     children: [
                         Node: { Token: {Value: global, Type: identifier, Line: 92, Column: 8}, Type: Ref(@global) },
                         Node: { Token: {Value: x, Type: identifier, Line: 92, Column: 15} }
@@ -449,21 +449,21 @@ children: [
                             Node: { Token: {Value: getX, Type: identifier, Line: 93, Column: 15} }
                         ] }
                     ] },
-                    Node: { Token: {Value: =, Type: assign operator, Line: 94, Column: 15}, Type: int
+                    Node: { Token: {Value: =, Type: assign operator, Line: 94, Column: 15}
                     children: [
-                        Node: { Label: "dot", Type: int
+                        Node: { Label: "dot"
                         children: [
                             Node: { Token: {Value: this, Type: identifier, Line: 94, Column: 8}, Type: Ref(TestName) },
                             Node: { Token: {Value: x, Type: identifier, Line: 94, Column: 13} }
                         ] },
-                        Node: { Token: {Value: -, Type: add operator, Line: 94, Column: 26}, Type: int
+                        Node: { Token: {Value: -, Type: add operator, Line: 94, Column: 26}
                         children: [
-                            Node: { Label: "dot", Type: int
+                            Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: global, Type: identifier, Line: 94, Column: 17}, Type: Ref(@global) },
+                                Node: { Token: {Value: global, Type: identifier, Line: 94, Column: 17} },
                                 Node: { Token: {Value: x, Type: identifier, Line: 94, Column: 24} }
                             ] },
-                            Node: { Token: {Value: 1, Type: int literal, Line: 94, Column: 28}, Type: int }
+                            Node: { Token: {Value: 1, Type: int literal, Line: 94, Column: 28} }
                         ] }
                     ] },
                     Node: { Label: "call", Type: None
@@ -811,7 +811,10 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
     ] }
 ] }
 Compiler messages:
-[]
+[
+    "TypeError: Cannot access property x of type Ref(@global) at line: 93, column: 16",
+    "TypeError: Cannot access property x of type Ref(TestName) at line: 95, column: 14"
+]
 
 ---
 
@@ -1619,7 +1622,7 @@ children: [
                 Node: { Token: {Value: getX, Type: identifier, Line: 139, Column: 7} },
                 Node: { Label: "fn-body"
                 children: [
-                    Node: { Label: "dot", Type: None
+                    Node: { Label: "dot", Type: Ref(@global)
                     children: [
                         Node: { Token: {Value: global, Type: identifier, Line: 140, Column: 8}, Type: Ref(@global) },
                         Node: { Token: {Value: xyz, Type: identifier, Line: 140, Column: 15} }
@@ -2114,11 +2117,10 @@ Compiler messages:
     "IllegalStatementError: Function name 'test' already defined without a return type; cannot overload with return type int at line: 128, column: 9",
     "TypeError: Function 'something()->bool' expected return type bool but got int at line: 130, column: 13",
     "Warning: Mutable global variable declared at line: 135, column: 1",
-    "NameError: Could not find variable xyz at line: 141, column: 16",
+    "TypeError: Cannot access property xyz of type Ref(@global) at line: 141, column: 16",
     "NameError: Could not find function getXY in scope at line: 142, column: 16",
     "AccessError: Cannot change value of immutable variable 'x' at line: 143, column: 9",
-    "AccessError: Cannot change value of immutable variable 'x' at line: 144, column: 9",
-    "NameError: Could not find type Ref(TestName) at line: 144, column: 9",
+    "TypeError: Cannot access property x of type Ref(TestName) at line: 144, column: 14",
     "AmbiguityError: Interfaces Backend,DB both contain function named connect. Change the function call to pick which one to use at line: 150, column: 9",
     "IllegalStatementError: Cannot define struct property 'id' multiple times in struct literal at line: 151, column: 42",
     "NameError: Could not find property 'image' in struct Container at line: 152, column: 42",

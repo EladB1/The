@@ -19,7 +19,7 @@ const (
 	String    DataType = "String"
 	None      DataType = "None"
 	Any       DataType = "any"
-	GlobalRef DataType = "Ref(@global)"
+	GlobalRef DataType = "Ref"
 	Ref       DataType = "Ref"
 	ScopeRef  DataType = "ScopeRef"
 )
@@ -45,7 +45,7 @@ var (
 	StringType      SourceType = newPrimitive(String)
 	NoneType        SourceType = newPrimitive(None)
 	AnyType         SourceType = newPrimitive(Any)
-	GlobalRefType   SourceType = newPrimitive(GlobalRef)
+	GlobalRefType   SourceType = NewContainerType(GlobalRef, NewReferenceSubType("@global"))
 )
 
 func newPrimitive(dt DataType) SourceType {

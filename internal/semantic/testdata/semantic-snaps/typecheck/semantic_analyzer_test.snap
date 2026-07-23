@@ -1057,9 +1057,10 @@ children: [
             Node: { Label: "index", Type: String
             children: [
                 Node: { Token: {Value: s, Type: identifier, Line: 30, Column: 4}, Type: String },
-                Node: { Label: "slice", Type: int
+                Node: { Label: "slice"
                 children: [
-                    Node: { Token: {Value: false, Type: boolean value keyword, Line: 30, Column: 8} }
+                    Node: { Token: {Value: .., Type: range operator, Line: 30, Column: 6} },
+                    Node: { Token: {Value: false, Type: boolean value keyword, Line: 30, Column: 8}, Type: bool }
                 ] }
             ] },
             Node: { Label: "index", Type: char
@@ -1446,6 +1447,7 @@ Compiler messages:
     "CastError: Typecasting from uint64 to bool not allowed at line: 27, column: 25",
     "TypeError: Invalid type 'TYPE' provided at line: 28, column: 10",
     "TypeError: Invalid type bool used in range expression at line: 30, column: 7",
+    "TypeError: Invalid type bool used in range expression at line: 31, column: 9",
     "TypeError: Cannot use String as array end value at line: 32, column: 8",
     "TypeError: Cannot index type bool at line: 33, column: 5",
     "TypeError: Cannot index type int at line: 34, column: 5",
