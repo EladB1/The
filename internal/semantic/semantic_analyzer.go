@@ -14,6 +14,7 @@ var specialBlocks []string = []string{"private", "cast", "compare"}
 var messages diagnostic.PhaseDiagnostics
 
 func initScope() *Scope {
+	rootScope.Children = nil
 	globalScope := rootScope.addChild("@global", Default)
 	return globalScope
 }

@@ -1,7 +1,6 @@
 package semantic
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 
@@ -679,10 +678,6 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 	rname := right.Token.Value
 	if mem, ok := PrimitiveMembers[lhs.Root]; ok {
 		propType := dt.NoneType
-		if isFnCall {
-			// TODO
-			fmt.Println("HERE2")
-		}
 		if isAssignment {
 			messages.Complain(diagnostic.AccessError, left.Location, "Cannot assign value to %s.%s", lhs.Root, rname)
 			hasError = true
@@ -705,20 +700,6 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 				hasError = true
 			}
 		}
-		if lhs.RootEquals(dt.Ref) || lhs.Equals(dt.GlobalRefType) {
-			scope := FindAncestorScopeById(lhs.SubTypes[0].String())
-			if prop := scope.LookupVariable(rname); prop != nil {
-				if isAssignment && !prop.isMutable && !hasError {
-					messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", prop.Name)
-					hasError = true
-				} else {
-					return prop.Type, hasError
-				}
-			} else {
-				messages.Complain(diagnostic.NameError, right.Location, "Could not find variable %s", rname)
-				return dt.NoneType, hasError
-			}
-		}
 		symbol := globalScope.LookupType(lhs.String())
 		if symbol == nil {
 			messages.Complain(diagnostic.NameError, left.Location, "Could not find type %s", lhs)
@@ -739,6 +720,19 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 				messages.Complain(diagnostic.NameError, right.Location, "Could not find property %s in type %s", rname, lhs)
 				hasError = true
 			}
+		}
+	} else if lhs.RootEquals(dt.Ref) || lhs.Equals(dt.GlobalRefType) {
+		scope := FindAncestorScopeById(lhs.SubTypes[0].String())
+		if prop := scope.LookupVariable(rname); prop != nil {
+			if isAssignment && !prop.isMutable && !hasError {
+				messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", prop.Name)
+				hasError = true
+			} else {
+				return prop.Type, hasError
+			}
+		} else {
+			messages.Complain(diagnostic.NameError, right.Location, "Could not find variable %s", rname)
+			return dt.NoneType, hasError
 		}
 	} else if !hasError {
 		messages.Complain(diagnostic.TypeError, right.Location, "Cannot access property %s of type %s", rname, lhs)
