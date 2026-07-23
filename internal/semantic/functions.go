@@ -3,7 +3,7 @@ package semantic
 import (
 	"fmt"
 
-	"github.com/EladB1/The/internal/datatypes"
+	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
@@ -45,8 +45,8 @@ func processFunctionSignature(fnNode *parser.AST) FnCreateSymbol {
 		bodyNode = details[3]
 	}
 	var paramNames []string
-	var paramTypes []datatypes.SourceType
-	var returnType datatypes.SourceType = datatypes.None
+	var paramTypes []dt.SourceType
+	var returnType dt.SourceType = dt.NoneType
 	if returnTypeNode != nil {
 		returnType = nodeToType(returnTypeNode)
 	}
@@ -57,7 +57,7 @@ func processFunctionSignature(fnNode *parser.AST) FnCreateSymbol {
 		}
 	}
 	if bodyNode != nil {
-		paramList := datatypes.Join(paramTypes)
+		paramList := dt.JoinTypes(paramTypes)
 		scopeId := fmt.Sprintf("%s(%s)", name, paramList)
 		if currentScope.Id != "@global" {
 			scopeId = fmt.Sprintf("%s(%s)@%s", name, paramList, currentScope.Id)
@@ -89,14 +89,14 @@ func analyzeFunctionBody(fn FunctionSymbol) {
 			continue
 		}
 		currentScope = overload.InnerScope
-		params := datatypes.Join(overload.Parameters)
+		params := dt.JoinTypes(overload.Parameters)
 		returnStr := ""
-		if fn.ReturnType != datatypes.None {
+		if !fn.ReturnType.Equals(dt.NoneType) {
 			returnStr = fmt.Sprintf("->%s", fn.ReturnType)
 		}
 		sig := fmt.Sprintf("%s(%s)%s", fn.Name, params, returnStr)
 		hasReturn := analyzeBlockAndCheckForReturn(overload.Body.Children, fn, sig)
-		if !hasReturn && fn.ReturnType != datatypes.None {
+		if !hasReturn && !fn.ReturnType.Equals(dt.NoneType) {
 			messages.Complain(diagnostic.TypeError, overload.Body.Location, "Function '%s' may not return a value", sig)
 		}
 	}
@@ -132,10 +132,10 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 				unreachable = true
 			}
 			if len(stmt.Children) == 1 && stmt.Children[0].Token.Value == "return" {
-				if fn.ReturnType != datatypes.None {
+				if !fn.ReturnType.Equals(dt.NoneType) {
 					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' missing return value, expected: %s", sig, fn.ReturnType)
 				} else {
-					stmt.Type = datatypes.None
+					stmt.Type = dt.NoneType
 				}
 				hasReturn = true
 			} else if len(stmt.Children) == 1 { // continue and break
@@ -144,7 +144,7 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 				}
 			} else { // return something
 				rhs, rHasErr := evalType(stmt.Children[1], fn.ReturnType)
-				if !rHasErr && rhs != fn.ReturnType && !ImplementsInterface(fn.ReturnType, rhs) {
+				if !rHasErr && !rhs.Equals(fn.ReturnType) && !ImplementsInterface(fn.ReturnType, rhs) {
 					messages.Complain(diagnostic.TypeError, stmt.Location, "Function '%s' expected return type %s but got %s", sig, fn.ReturnType, rhs)
 				} else {
 					stmt.Type = rhs
@@ -167,8 +167,8 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 				currentScope = branchScope
 				block_index := 0
 				if branch.Label != "else" {
-					condition, hasErr := evalType(branch.Children[0], datatypes.Bool)
-					if !hasErr && condition != datatypes.Bool {
+					condition, hasErr := evalType(branch.Children[0], dt.BoolType)
+					if !hasErr && !condition.Equals(dt.BoolType) {
 						messages.Complain(diagnostic.TypeError, branch.Children[0].Location, "Expected bool but got %s", condition)
 					}
 					block_index = 1
@@ -200,15 +200,15 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 			newScope := currentScope.addChild(fmt.Sprintf("while#%d@%s", whileCounter, currentScope.Id), Loop)
 			whileCounter++
 			currentScope = newScope
-			cond, hasError := evalType(stmt.Children[0], datatypes.Bool)
-			if !hasError && cond != datatypes.Bool {
+			cond, hasError := evalType(stmt.Children[0], dt.BoolType)
+			if !hasError && !cond.Equals(dt.BoolType) {
 				messages.Complain(diagnostic.TypeError, stmt.Children[0].Location, "Expected bool as loop condition but got %s", cond.String())
 			}
 			analyzeBlockAndCheckForReturn(stmt.Children[1].Children, fn, sig)
 			currentScope = scope
 
 		} else {
-			stmt.Type, _ = evalType(stmt, datatypes.None) // expressions
+			stmt.Type, _ = evalType(stmt, dt.NoneType) // expressions
 		}
 	}
 	return hasReturn

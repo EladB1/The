@@ -2,41 +2,40 @@ package semantic
 
 import (
 	"fmt"
-	"slices"
 
 	ds "github.com/EladB1/The/internal/datastructures"
-	"github.com/EladB1/The/internal/datatypes"
+	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
 )
 
-func evalLiteral(ast *parser.AST, expectedType datatypes.SourceType) datatypes.SourceType {
+func evalLiteral(ast *parser.AST, expectedType dt.SourceType) dt.SourceType {
 	if ast.Label == "struct_literal" {
 		return evalStructLiteral(ast)
 	}
 	switch ast.Token.Kind {
 	case lexer.LIT_CHAR:
-		return datatypes.Char
+		return dt.CharType
 	case lexer.LIT_STRING:
-		return datatypes.String
+		return dt.StringType
 	case lexer.LIT_FLOAT:
-		if expectedType == datatypes.Float {
-			return datatypes.Float
+		if expectedType.Equals(dt.FloatType) {
+			return dt.FloatType
 		}
-		return datatypes.Double
+		return dt.DoubleType
 	case lexer.LIT_INT, lexer.LIT_HEX:
-		if slices.Contains(datatypes.NumericTypes, expectedType) {
+		if expectedType.IsNumeric() {
 			return expectedType
 		}
-		return datatypes.Int32
+		return dt.Int32Type
 	case lexer.KW_BOOLVALUE:
-		return datatypes.Bool
+		return dt.BoolType
 	}
-	return datatypes.None
+	return dt.NoneType
 }
 
-func evalStructLiteral(ast *parser.AST) datatypes.SourceType {
+func evalStructLiteral(ast *parser.AST) dt.SourceType {
 	name := ast.Children[0].Token.Value
 	symbol := globalScope.lookupStruct(name)
 	if symbol == nil {
@@ -45,10 +44,10 @@ func evalStructLiteral(ast *parser.AST) datatypes.SourceType {
 		} else {
 			messages.Complain(diagnostic.NameError, ast.Location, "Struct %s not defined", name)
 		}
-		return datatypes.None
+		return dt.NoneType
 	}
 	if len(ast.Children) == 1 {
-		return datatypes.DynamicType(name)
+		return dt.NewDynamicType(name)
 	}
 	properties := ast.Children[1].Children
 	visited := ds.HashSet{}
@@ -65,17 +64,17 @@ func evalStructLiteral(ast *parser.AST) datatypes.SourceType {
 			continue
 		}
 		value := prop.Children[1]
-		if valueType, hasErr := evalType(value, property.Type); property.Type != valueType && !ImplementsInterface(property.Type, valueType) && !hasErr {
+		if valueType, hasErr := evalType(value, property.Type); !property.Type.Equals(valueType) && !ImplementsInterface(property.Type, valueType) && !hasErr {
 			messages.Complain(diagnostic.TypeError, value.Location, "Property type %s expected but found %s", property.Type, valueType)
 		}
 		visited.Append(propId)
 	}
-	return datatypes.DynamicType(name)
+	return dt.NewDynamicType(name)
 }
 
-func evalType(ast *parser.AST, expectedType datatypes.SourceType) (datatypes.SourceType, bool) {
+func evalType(ast *parser.AST, expectedType dt.SourceType) (dt.SourceType, bool) {
 	hasError := false
-	var nodeType datatypes.SourceType = datatypes.None
+	nodeType := dt.NoneType
 	if ast.IsLiteral() {
 		nodeType = evalLiteral(ast, expectedType)
 	} else if ast.Token.Kind == lexer.ID {
@@ -121,19 +120,14 @@ func evalType(ast *parser.AST, expectedType datatypes.SourceType) (datatypes.Sou
 	return nodeType, hasError
 }
 
-func comparableCheck(lhs datatypes.SourceType, rhs datatypes.SourceType) bool {
-	lhsUnsigned := slices.Contains(datatypes.UnsignedTypes, lhs)
-	rhsUnsigned := slices.Contains(datatypes.UnsignedTypes, rhs)
-	lhsSigned := slices.Contains(datatypes.SignedIntTypes, lhs) || slices.Contains(datatypes.FloatTypes, lhs)
-	rhsSigned := slices.Contains(datatypes.SignedIntTypes, rhs) || slices.Contains(datatypes.FloatTypes, rhs)
-
-	return lhs == rhs || (lhsUnsigned && rhsUnsigned) || (lhsSigned && rhsSigned)
+func comparableCheck(lhs dt.SourceType, rhs dt.SourceType) bool {
+	return lhs.Equals(rhs) || (lhs.IsUnsignedType() && rhs.IsUnsignedType()) || (lhs.IsSignedType() && rhs.IsSignedType())
 }
 
-func handleBinaryNumberExpression(left *parser.AST, right *parser.AST, operator string, expectedType datatypes.SourceType) (datatypes.SourceType, error) {
+func handleBinaryNumberExpression(left *parser.AST, right *parser.AST, operator string, expectedType dt.SourceType) (dt.SourceType, error) {
 	inferLeft := left.IsLiteralExpression() && !right.IsLiteralExpression()
 	inferRight := !left.IsLiteralExpression() && right.IsLiteralExpression()
-	var lhs, rhs datatypes.SourceType
+	var lhs, rhs dt.SourceType
 	var lHasErr, rHasErr bool
 	if inferLeft {
 		rhs, rHasErr = evalType(right, expectedType)
@@ -146,69 +140,69 @@ func handleBinaryNumberExpression(left *parser.AST, right *parser.AST, operator 
 		rhs, rHasErr = evalType(right, expectedType)
 	}
 	if lHasErr || rHasErr {
-		return datatypes.None, nil
+		return dt.NoneType, nil
 	}
 	return decideNumberType(lhs, rhs, operator)
 }
 
-func decideNumberType(lhs datatypes.SourceType, rhs datatypes.SourceType, operator string) (datatypes.SourceType, error) {
-	if lhs == rhs {
+func decideNumberType(lhs dt.SourceType, rhs dt.SourceType, operator string) (dt.SourceType, error) {
+	if lhs.Equals(rhs) {
 		return lhs, nil
 	}
-	if (lhs == datatypes.Uint32 || lhs == datatypes.Uint64) && (rhs == datatypes.Uint32 || rhs == datatypes.Uint64) {
-		return datatypes.Uint64, nil
-	} else if (lhs == datatypes.Int32 || lhs == datatypes.Int64) && (rhs == datatypes.Int32 || rhs == datatypes.Int64) {
-		return datatypes.Int64, nil
-	} else if (lhs == datatypes.Int32 || lhs == datatypes.Float) && (rhs == datatypes.Int32 || rhs == datatypes.Float) {
-		return datatypes.Float, nil
-	} else if (lhs == datatypes.Int32 || lhs == datatypes.Double) && (rhs == datatypes.Int32 || rhs == datatypes.Double) {
-		return datatypes.Double, nil
-	} else if (lhs == datatypes.Int64 || lhs == datatypes.Double) && (rhs == datatypes.Int64 || rhs == datatypes.Double) {
-		return datatypes.Double, nil
-	} else if (lhs == datatypes.Float || lhs == datatypes.Double) && (rhs == datatypes.Float || rhs == datatypes.Double) {
-		return datatypes.Double, nil
+	if (lhs.Equals(dt.Uint32Type) || lhs.Equals(dt.Uint64Type)) && (rhs.Equals(dt.Uint32Type) || rhs.Equals(dt.Uint64Type)) {
+		return dt.Uint64Type, nil
+	} else if (lhs.Equals(dt.Int32Type) || lhs.Equals(dt.Int64Type)) && (rhs.Equals(dt.Int32Type) || rhs.Equals(dt.Int64Type)) {
+		return dt.Int64Type, nil
+	} else if (lhs.Equals(dt.Int32Type) || lhs.Equals(dt.FloatType)) && (rhs.Equals(dt.Int32Type) || rhs.Equals(dt.FloatType)) {
+		return dt.FloatType, nil
+	} else if (lhs.Equals(dt.Int32Type) || lhs.Equals(dt.DoubleType)) && (rhs.Equals(dt.Int32Type) || rhs.Equals(dt.DoubleType)) {
+		return dt.DoubleType, nil
+	} else if (lhs.Equals(dt.Int64Type) || lhs.Equals(dt.DoubleType)) && (rhs.Equals(dt.Int64Type) || rhs.Equals(dt.DoubleType)) {
+		return dt.DoubleType, nil
+	} else if (lhs.Equals(dt.FloatType) || lhs.Equals(dt.DoubleType)) && (rhs.Equals(dt.FloatType) || rhs.Equals(dt.DoubleType)) {
+		return dt.DoubleType, nil
 	} else {
-		return datatypes.None, fmt.Errorf("Cannot use operator '%s' between %s and %s", operator, lhs, rhs)
+		return dt.NoneType, fmt.Errorf("Cannot use operator '%s' between %s and %s", operator, lhs, rhs)
 	}
 }
 
-func nodeToType(node *parser.AST) datatypes.SourceType {
+func nodeToType(node *parser.AST) dt.SourceType {
 	if node.Token.Kind == lexer.ID {
 		symbol := globalScope.LookupType(node.Token.Value)
 		if symbol == nil || (symbol.GetSymbolType() != "interface" && symbol.GetSymbolType() != "struct") {
 			messages.Complain(diagnostic.TypeError, node.Location, "Invalid type '%s' provided", node.Token.Value)
-			return datatypes.None
+			return dt.NoneType
 		}
-		return datatypes.DynamicType(node.Token.Value)
+		return dt.NewDynamicType(node.Token.Value)
 	}
 	switch node.Token.Value {
 	case "int":
-		return datatypes.Int32
+		return dt.Int32Type
 	case "int64":
-		return datatypes.Int64
+		return dt.Int64Type
 	case "uint32":
-		return datatypes.Uint32
+		return dt.Uint32Type
 	case "uint64":
-		return datatypes.Uint64
+		return dt.Uint64Type
 	case "float":
-		return datatypes.Float
+		return dt.FloatType
 	case "double":
-		return datatypes.Double
+		return dt.DoubleType
 	case "char":
-		return datatypes.Char
+		return dt.CharType
 	case "bool":
-		return datatypes.Bool
+		return dt.BoolType
 	case "String":
-		return datatypes.String
+		return dt.StringType
 	default:
-		return datatypes.None
+		return dt.NoneType
 	}
 }
 
-func isCompatibleType(expectedType datatypes.SourceType, actualType datatypes.SourceType) bool {
+func isCompatibleType(expectedType dt.SourceType, actualType dt.SourceType) bool {
 	return (ImplementsInterface(expectedType, actualType) ||
-		expectedType == datatypes.Int64 && actualType == datatypes.Int32 ||
-		expectedType == datatypes.Uint64 && actualType == datatypes.Uint32 ||
-		expectedType == datatypes.Double && (actualType == datatypes.Float || actualType == datatypes.Int32 || actualType == datatypes.Int64) ||
-		expectedType == datatypes.Float && actualType == datatypes.Int32)
+		expectedType.Equals(dt.Int64Type) && actualType.Equals(dt.Int32Type) ||
+		expectedType.Equals(dt.Uint64Type) && actualType.Equals(dt.Uint32Type) ||
+		expectedType.Equals(dt.DoubleType) && actualType.IsSignedType() ||
+		expectedType.Equals(dt.FloatType) && actualType.Equals(dt.Int32Type))
 }

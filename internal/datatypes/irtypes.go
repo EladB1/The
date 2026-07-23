@@ -16,20 +16,19 @@ const (
 
 func TranslateSourceType(srcType SourceType) IRType {
 	irType := NoneIR
-	switch srcType {
-	case String:
+	if srcType.Equals(StringType) {
 		return Str_const
-	case Char, Bool, Int32:
+	} else if srcType.Equals(CharType) || srcType.Equals(BoolType) || srcType.Equals(Int32Type) {
 		return I32
-	case Uint32:
+	} else if srcType.Equals(Uint32Type) {
 		return U32
-	case Uint64:
+	} else if srcType.Equals(Uint64Type) {
 		return U64
-	case Int64:
+	} else if srcType.Equals(Int64Type) {
 		return I64
-	case Float:
+	} else if srcType.Equals(FloatType) {
 		return F32
-	case Double:
+	} else if srcType.Equals(DoubleType) {
 		return F64
 	}
 	return irType

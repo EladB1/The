@@ -19,5 +19,7 @@ fn main() -> int {
     double sqrt = u ** 0.5;
     int pow = i ** u2;
     u as int;
+    mut char c2 = 'z' - c;
+    c2 -= 'b';
     return 0;
 }

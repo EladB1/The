@@ -54,7 +54,10 @@ func (diagnostics *PhaseDiagnostics) Sort() {
 		if diagnostics.Messages[i].Position.Column != diagnostics.Messages[j].Position.Column {
 			return diagnostics.Messages[i].Position.Column < diagnostics.Messages[j].Position.Column
 		}
-		return diagnostics.Messages[i].Level <= diagnostics.Messages[j].Level
+		if diagnostics.Messages[i].Level != diagnostics.Messages[j].Level {
+			return diagnostics.Messages[i].Level < diagnostics.Messages[j].Level
+		}
+		return diagnostics.Messages[i].Message < diagnostics.Messages[j].Message
 	})
 }
 

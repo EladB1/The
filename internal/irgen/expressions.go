@@ -3,7 +3,7 @@ package irgen
 import (
 	"fmt"
 
-	"github.com/EladB1/The/internal/datatypes"
+	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
 )
@@ -40,7 +40,7 @@ func translateExpression(node parser.AST) ([]TAC, Operand) {
 
 func translateLogicalAndOr(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
-	irType := datatypes.I32
+	irType := dt.I32
 	left := node.Children[0]
 	right := node.Children[1]
 	var operation Operation
@@ -78,7 +78,7 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 	instructions = append(instructions, l_in...)
 	r_in, r_op := translateExpression(*right)
 	instructions = append(instructions, r_in...)
-	var irType datatypes.IRType
+	var irType dt.IRType
 	var comp string
 	switch node.Token.Value {
 	case "==":
@@ -94,10 +94,10 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 	case ">=":
 		comp = "ge"
 	}
-	if !left.Type.IsPrimitive() {
+	if left.Type.IsDynamic {
 		// TODO: handle structs
-	} else if l_op.Type == datatypes.Str_const {
-		tempVar := formTempVar(datatypes.I32)
+	} else if l_op.Type == dt.Str_const {
+		tempVar := formTempVar(dt.I32)
 		call := []TAC{
 			Instruction{
 				Operation: PrepareParam,
@@ -120,7 +120,7 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 		}
 		instructions = append(instructions, call...)
 		operand = Operand{
-			Type: datatypes.I32,
+			Type: dt.I32,
 			Var:  tempVar,
 		}
 		return instructions, operand
@@ -156,7 +156,7 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 		irType = l_op.Type
 	}
 	operation := typedOperation(irType, comp)
-	tempVar := formTempVar(datatypes.I32)
+	tempVar := formTempVar(dt.I32)
 	instructions = append(instructions, Instruction{
 		Destination: tempVar,
 		Operation:   operation,
@@ -164,7 +164,7 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 		Operand2:    r_op,
 	})
 	operand = Operand{
-		Type: datatypes.I32,
+		Type: dt.I32,
 		Var:  tempVar,
 	}
 	return instructions, operand
@@ -173,7 +173,7 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 func translateBitOperation(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	rootType := node.Type
-	irType := datatypes.TranslateSourceType(rootType)
+	irType := dt.TranslateSourceType(rootType)
 	left := node.Children[0]
 	right := node.Children[1]
 	var operation Operation
@@ -249,18 +249,18 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 	instructions = append(instructions, l_in...)
 	r_in, r_op := translateExpression(*right)
 	instructions = append(instructions, r_in...)
-	if rootType == datatypes.String {
+	if rootType.Equals(dt.StringType) {
 		var fn string
-		if left.Type == datatypes.Char && right.Type == datatypes.Char {
+		if left.Type.Equals(dt.CharType) && right.Type.Equals(dt.CharType) {
 			fn = "__char_concat"
-		} else if left.Type == datatypes.Char && right.Type == datatypes.String {
+		} else if left.Type.Equals(dt.CharType) && right.Type.Equals(dt.StringType) {
 			fn = "__char_concat_str"
-		} else if left.Type == datatypes.String && right.Type == datatypes.Char {
+		} else if left.Type.Equals(dt.StringType) && right.Type.Equals(dt.CharType) {
 			fn = "__str_concat_char"
 		} else { // string + string
 			fn = "__str_concat"
 		}
-		tempVar := formTempVar(datatypes.Str_const)
+		tempVar := formTempVar(dt.Str_const)
 		call := []TAC{
 			Instruction{
 				Operation: PrepareParam,
@@ -283,12 +283,12 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 		}
 		instructions = append(instructions, call...)
 		operand = Operand{
-			Type: datatypes.Str_const,
+			Type: dt.Str_const,
 			Var:  tempVar,
 		}
 	} else {
 
-		var irType datatypes.IRType
+		var irType dt.IRType
 		var typecast Operation
 		if l_op.Type != r_op.Type {
 			irType = getHigherType(l_op.Type, r_op.Type)
@@ -320,7 +320,7 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 		} else {
 			irType = l_op.Type
 		}
-		operationType := datatypes.TranslateSourceType(rootType)
+		operationType := dt.TranslateSourceType(rootType)
 		if node.Token.Value == "+" {
 			operation = typedOperation(operationType, "add")
 		} else {
@@ -352,7 +352,7 @@ func translateMultiplication(node parser.AST) ([]TAC, Operand) {
 	instructions = append(instructions, l_in...)
 	r_in, r_op := translateExpression(*right)
 	instructions = append(instructions, r_in...)
-	var irType datatypes.IRType
+	var irType dt.IRType
 	var typecast Operation
 	if l_op.Type != r_op.Type {
 		irType = getHigherType(l_op.Type, r_op.Type)
@@ -384,7 +384,7 @@ func translateMultiplication(node parser.AST) ([]TAC, Operand) {
 	} else {
 		irType = l_op.Type
 	}
-	operationType := datatypes.TranslateSourceType(rootType)
+	operationType := dt.TranslateSourceType(rootType)
 	switch node.Token.Value {
 	case "*":
 		operation = typedOperation(operationType, "mul")
@@ -413,14 +413,14 @@ func translateMultiplication(node parser.AST) ([]TAC, Operand) {
 func translateExponent(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	rootType := node.Type
-	irType := datatypes.TranslateSourceType(rootType)
+	irType := dt.TranslateSourceType(rootType)
 	left := node.Children[0]
 	right := node.Children[1]
 	l_in, l_op := translateExpression(*left)
 	instructions = append(instructions, l_in...)
 	r_in, r_op := translateExpression(*right)
 	instructions = append(instructions, r_in...)
-	if left.Type != rootType {
+	if !left.Type.Equals(rootType) {
 		cast := formTempVar(irType)
 		instructions = append(instructions, Instruction{
 			Destination: cast,
@@ -431,7 +431,7 @@ func translateExponent(node parser.AST) ([]TAC, Operand) {
 			Var:  cast,
 		}
 	}
-	if right.Type != rootType {
+	if !right.Type.Equals(rootType) {
 		cast := formTempVar(irType)
 		instructions = append(instructions, Instruction{
 			Destination: cast,
@@ -482,15 +482,15 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 			tempVar := formTempVar(r_op.Type)
 			instructions = append(instructions, Instruction{
 				Destination: tempVar,
-				Operation:   typedOperation(datatypes.I32, "xor"),
+				Operation:   typedOperation(dt.I32, "xor"),
 				Operand1:    r_op,
 				Operand2: Operand{
-					Type:     datatypes.I32,
+					Type:     dt.I32,
 					Constant: 1,
 				},
 			})
 			operand = Operand{
-				Type: datatypes.I32,
+				Type: dt.I32,
 				Var:  tempVar,
 			}
 		case "-":
@@ -554,7 +554,7 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 					Operand1: Operand{
 						Var: Variable{
 							Name:       variable.Name,
-							DataType:   datatypes.TranslateSourceType(variable.Type),
+							DataType:   dt.TranslateSourceType(variable.Type),
 							Visibility: VariableScope(variable.Ctx),
 						},
 					},
@@ -597,7 +597,7 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 				Operand1: Operand{
 					Var: Variable{
 						Name:       variable.Name,
-						DataType:   datatypes.TranslateSourceType(variable.Type),
+						DataType:   dt.TranslateSourceType(variable.Type),
 						Visibility: VariableScope(variable.Ctx),
 					},
 				},
@@ -614,14 +614,14 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 func translateTypecast(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	var tempVar Variable
-	sourceType := datatypes.TranslateSourceType(node.Children[0].Type)
+	sourceType := dt.TranslateSourceType(node.Children[0].Type)
 	l_in, l_op := translateExpression(*node.Children[0])
 	instructions = append(instructions, l_in...)
 	// TODO: handle struct as source
-	targetType := datatypes.TranslateSourceType(node.Type)
-	if targetType == datatypes.Str_const {
+	targetType := dt.TranslateSourceType(node.Type)
+	if targetType == dt.Str_const {
 		fn := getToStringFn(node.Children[0].Type)
-		tempVar = formTempVar(datatypes.Str_const)
+		tempVar = formTempVar(dt.Str_const)
 		call := []TAC{
 			Instruction{
 				Operation: PrepareParam,
@@ -673,22 +673,22 @@ func translateIndex(node parser.AST) ([]TAC, Operand) {
 		r_in, r_op = translateExpression(*right)
 	}
 	instructions = append(instructions, r_in...)
-	if r_op.Type != datatypes.I32 {
-		cast := formTempVar(datatypes.I32)
+	if r_op.Type != dt.I32 {
+		cast := formTempVar(dt.I32)
 		typecast := []TAC{
 			Instruction{
 				Destination: cast,
-				Operation:   getTypeCastOperation(r_op.Type, datatypes.I32),
+				Operation:   getTypeCastOperation(r_op.Type, dt.I32),
 				Operand1:    r_op,
 			},
 		}
 		instructions = append(instructions, typecast...)
 		r_op = Operand{
-			Type: datatypes.I32,
+			Type: dt.I32,
 			Var:  cast,
 		}
 	}
-	tempVar := formTempVar(datatypes.I32)
+	tempVar := formTempVar(dt.I32)
 	call := []TAC{
 		Instruction{
 			Operation: PrepareParam,
@@ -711,7 +711,7 @@ func translateIndex(node parser.AST) ([]TAC, Operand) {
 	}
 	instructions = append(instructions, call...)
 	operand := Operand{
-		Type: datatypes.I32,
+		Type: dt.I32,
 		Var:  tempVar,
 	}
 	return instructions, operand
@@ -723,29 +723,29 @@ func translateArrayEnd(node parser.AST, arr Operand) ([]TAC, Operand) {
 	instructions = append(instructions, in...)
 	len_in, len := getArrayLength(arr)
 	instructions = append(instructions, len_in...)
-	if op.Type != datatypes.I32 {
-		operation := getTypeCastOperation(op.Type, datatypes.I32)
-		cast := formTempVar(datatypes.I32)
+	if op.Type != dt.I32 {
+		operation := getTypeCastOperation(op.Type, dt.I32)
+		cast := formTempVar(dt.I32)
 		instructions = append(instructions, Instruction{
 			Destination: cast,
 			Operation:   operation,
 			Operand1:    op,
 		})
 		op = Operand{
-			Type: datatypes.I32,
+			Type: dt.I32,
 			Var:  cast,
 		}
 	}
-	tempVar := formTempVar(datatypes.I32)
+	tempVar := formTempVar(dt.I32)
 	sub := Instruction{
 		Destination: tempVar,
-		Operation:   typedOperation(datatypes.I32, "sub"),
+		Operation:   typedOperation(dt.I32, "sub"),
 		Operand1:    len,
 		Operand2:    op,
 	}
 	instructions = append(instructions, sub)
 	operand := Operand{
-		Type: datatypes.I32,
+		Type: dt.I32,
 		Var:  tempVar,
 	}
 	return instructions, operand
@@ -757,7 +757,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 	var slice Variable
 	start_in := []TAC{}
 	end_in := []TAC{}
-	start_op := getZeroValue(datatypes.Int32)
+	start_op := getZeroValue(dt.Int32Type)
 	var end_op Operand
 	rangeIndex := 0
 	length := len(node.Children)
@@ -771,15 +771,15 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 			rangeIndex = 0
 			end_in, end_op = translateExpression(*node.Children[1])
 			instructions = append(instructions, end_in...)
-			if end_op.Type != datatypes.I32 {
-				cast := formTempVar(datatypes.I32)
+			if end_op.Type != dt.I32 {
+				cast := formTempVar(dt.I32)
 				instructions = append(instructions, Instruction{
 					Destination: cast,
-					Operation:   getTypeCastOperation(end_op.Type, datatypes.I32),
+					Operation:   getTypeCastOperation(end_op.Type, dt.I32),
 					Operand1:    end_op,
 				})
 				end_op = Operand{
-					Type: datatypes.I32,
+					Type: dt.I32,
 					Var:  cast,
 				}
 			}
@@ -787,15 +787,15 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 			rangeIndex = 1
 			start_in, start_op = translateExpression(*node.Children[0])
 			instructions = append(instructions, start_in...)
-			if start_op.Type != datatypes.I32 {
-				cast := formTempVar(datatypes.I32)
+			if start_op.Type != dt.I32 {
+				cast := formTempVar(dt.I32)
 				instructions = append(instructions, Instruction{
 					Destination: cast,
-					Operation:   getTypeCastOperation(start_op.Type, datatypes.I32),
+					Operation:   getTypeCastOperation(start_op.Type, dt.I32),
 					Operand1:    start_op,
 				})
 				start_op = Operand{
-					Type: datatypes.I32,
+					Type: dt.I32,
 					Var:  cast,
 				}
 			}
@@ -806,34 +806,34 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 		rangeIndex = 1
 		start_in, start_op = translateExpression(*node.Children[0])
 		instructions = append(instructions, start_in...)
-		if start_op.Type != datatypes.I32 {
-			cast := formTempVar(datatypes.I32)
+		if start_op.Type != dt.I32 {
+			cast := formTempVar(dt.I32)
 			instructions = append(instructions, Instruction{
 				Destination: cast,
-				Operation:   getTypeCastOperation(start_op.Type, datatypes.I32),
+				Operation:   getTypeCastOperation(start_op.Type, dt.I32),
 				Operand1:    start_op,
 			})
 			start_op = Operand{
-				Type: datatypes.I32,
+				Type: dt.I32,
 				Var:  cast,
 			}
 		}
 		end_in, end_op = translateExpression(*node.Children[2])
 		instructions = append(instructions, end_in...)
-		if end_op.Type != datatypes.I32 {
-			cast := formTempVar(datatypes.I32)
+		if end_op.Type != dt.I32 {
+			cast := formTempVar(dt.I32)
 			instructions = append(instructions, Instruction{
 				Destination: cast,
-				Operation:   getTypeCastOperation(end_op.Type, datatypes.I32),
+				Operation:   getTypeCastOperation(end_op.Type, dt.I32),
 				Operand1:    end_op,
 			})
 			end_op = Operand{
-				Type: datatypes.I32,
+				Type: dt.I32,
 				Var:  cast,
 			}
 		}
 	}
-	slice = formTempVar(datatypes.I32)
+	slice = formTempVar(dt.I32)
 	if node.Children[rangeIndex].Token.Value == "..=" {
 		fn = "__str_slice_inclusive"
 	}
@@ -863,7 +863,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 	}
 	instructions = append(instructions, call...)
 	operand = Operand{
-		Type: datatypes.I32,
+		Type: dt.I32,
 		Var:  slice,
 	}
 	return instructions, operand
@@ -883,7 +883,7 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 	return instructions, operand
 }
 
-func getTypeCastOperation(src datatypes.IRType, target datatypes.IRType) Operation {
+func getTypeCastOperation(src dt.IRType, target dt.IRType) Operation {
 	key := fmt.Sprintf("%s->%s", src, target)
 	operations := map[string]Operation{
 		"i32->i64": I32ToI64,
@@ -920,7 +920,7 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
 	variable := currScope.LookupVariable(node.Token.Value)
-	varType := datatypes.TranslateSourceType(variable.Type)
+	varType := dt.TranslateSourceType(variable.Type)
 	tempVar := formTempVar(varType)
 	instructions = append(instructions, Instruction{
 		Destination: tempVar,
@@ -943,34 +943,34 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 	return instructions, operand
 }
 
-func getHigherType(type1, type2 datatypes.IRType) datatypes.IRType {
-	if type1 == datatypes.F64 || type2 == datatypes.F64 {
-		return datatypes.F64
+func getHigherType(type1, type2 dt.IRType) dt.IRType {
+	if type1 == dt.F64 || type2 == dt.F64 {
+		return dt.F64
 	}
-	if type1 == datatypes.I64 || type2 == datatypes.I64 {
-		return datatypes.I64
+	if type1 == dt.I64 || type2 == dt.I64 {
+		return dt.I64
 	}
-	if type1 == datatypes.U64 || type2 == datatypes.U64 {
-		return datatypes.U64
+	if type1 == dt.U64 || type2 == dt.U64 {
+		return dt.U64
 	}
-	if type1 == datatypes.F32 || type2 == datatypes.F32 {
-		return datatypes.F32
+	if type1 == dt.F32 || type2 == dt.F32 {
+		return dt.F32
 	}
-	if type1 == datatypes.I32 || type2 == datatypes.I32 {
-		return datatypes.I32
+	if type1 == dt.I32 || type2 == dt.I32 {
+		return dt.I32
 	}
-	return datatypes.U32
+	return dt.U32
 }
 
 func getArrayEnd(arr Operand) ([]TAC, Operand) {
 	instructions, len := getArrayLength(arr)
-	arrayEnd := formTempVar(datatypes.I32)
+	arrayEnd := formTempVar(dt.I32)
 	instructions = append(instructions, Instruction{
 		Destination: arrayEnd,
-		Operation:   typedOperation(datatypes.I32, "sub"),
+		Operation:   typedOperation(dt.I32, "sub"),
 		Operand1:    len,
 		Operand2: Operand{
-			Type:     datatypes.I32,
+			Type:     dt.I32,
 			Constant: 1,
 		},
 	})
@@ -981,7 +981,7 @@ func getArrayEnd(arr Operand) ([]TAC, Operand) {
 }
 
 func getArrayLength(arr Operand) ([]TAC, Operand) {
-	len := formTempVar(datatypes.I32)
+	len := formTempVar(dt.I32)
 	instructions := []TAC{
 		Instruction{
 			Operation: PrepareParam,
@@ -999,28 +999,26 @@ func getArrayLength(arr Operand) ([]TAC, Operand) {
 		},
 	}
 	operand := Operand{
-		Type: datatypes.I32,
+		Type: dt.I32,
 		Var:  len,
 	}
 	return instructions, operand
 }
 
-func getToStringFn(src datatypes.SourceType) string {
+func getToStringFn(src dt.SourceType) string {
 	// TODO: handle struct
-	switch src {
-	case datatypes.Int32, datatypes.Uint32:
+	if src.Equals(dt.Int32Type) || src.Equals(dt.Uint32Type) {
 		return "__str_fromInt32"
-	case datatypes.Int64, datatypes.Uint64:
+	} else if src.Equals(dt.Int64Type) || src.Equals(dt.Uint64Type) {
 		return "__str_fromInt64"
-	case datatypes.Bool:
+	} else if src.Equals(dt.BoolType) {
 		return "__str_fromBool"
-	case datatypes.Char:
+	} else if src.Equals(dt.CharType) {
 		return "__str_fromChar"
-	case datatypes.Float:
+	} else if src.Equals(dt.FloatType) {
 		return "__str_fromFloat32"
-	case datatypes.Double:
+	} else if src.Equals(dt.DoubleType) {
 		return "__str_fromFloat64"
-	default:
-		return ""
 	}
+	return ""
 }

@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/EladB1/The/internal/datatypes"
+	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/parser"
 )
@@ -42,7 +42,7 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *Na
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Compare block function '%s' must be defined with a function body", symbol.getSignature())
 				}
 			case "cast":
-				if len(symbol.parameters) > 0 || symbol.returnType == datatypes.None || symbol.returnType == datatypes.DynamicType(structName) {
+				if len(symbol.parameters) > 0 || symbol.returnType.Equals(dt.NoneType) || symbol.returnType.Equals(dt.NewDynamicType(structName)) {
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block must take no parameters and return a different type")
 				} else if intf := globalScope.LookupInterface(symbol.returnType.String()); intf != nil {
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block cannot return an interface")

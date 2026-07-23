@@ -48,21 +48,21 @@ Exit code: 1
 
 Output:
 
-Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: false}{parameters: (bool,String), implemented: false}]} contains:{name: contains, returns: bool, overloads: [{parameters: (String,char), implemented: false}{parameters: (String,String), implemented: false}]} endsWith:{name: endsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: false}{parameters: (int,String), implemented: false}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: false}]} indexOf:{name: indexOf, returns: int, overloads: [{parameters: (String,char), implemented: false}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: false}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: false}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: false}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: false}]} replace:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} replaceAll:{name: replace, returns: String, overloads: [{parameters: (String,String,String), implemented: false}{parameters: (String,char,char), implemented: false}]} reverse:{name: reverse, returns: String, overloads: [{parameters: (String), implemented: false}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: false}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: false}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: false}]} startsWith:{name: startsWith, returns: bool, overloads: [{parameters: (String,String), implemented: false}]} toLower:{name: toLower, returns: String, overloads: [{parameters: (String), implemented: false}]} toUpper:{name: toUpper, returns: String, overloads: [{parameters: (String), implemented: false}]} trim:{name: trim, returns: String, overloads: [{parameters: (String), implemented: false}]} trimEnd:{name: trimEnd, returns: String, overloads: [{parameters: (String), implemented: false}]} trimStart:{name: trimStart, returns: String, overloads: [{parameters: (String), implemented: false}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: false}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
+Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: true}{parameters: (bool,String), implemented: true}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: true}{parameters: (int,String), implemented: true}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: true}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: true}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: true}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: true}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: true}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: true}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: true}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: true}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: true}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
     Scope: { id: @global, parent: @built-in, interfaces: map[Data:{name: Data} Json:{name: Json}], structs: map[Metadata:{name: Metadata, size: 4, implements: [Data, Json]}], functions: map[main:{name: main, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[i:{name: i, Type: int, Initialized: true}], children: [
         Scope: { id: Data, type: 1, parent: @global, functions: map[getId:{name: getId, returns: int, overloads: [{parameters: (), implemented: false}]} getValue:{name: getValue, returns: None, overloads: [{parameters: (), implemented: false}]}] },
         Scope: { id: Json, type: 1, parent: @global, functions: map[getId:{name: getId, returns: int, overloads: [{parameters: (), implemented: false}]}] },
-        Scope: { id: Metadata, type: 2, parent: @global, namedBlocks: map[Data:{name: Data}], variables: map[Data:{name: Data, Type: ScopeRef(Metadata,Data), Initialized: true} id:{name: id, Type: int, Initialized: false} this:{name: this, Type: Ref, isPrivate: true, Initialized: true} value:{name: value, Type: None, Initialized: false}], children: [
+        Scope: { id: Metadata, type: 2, parent: @global, namedBlocks: map[Data:{name: Data}], variables: map[Data:{name: Data, Type: ScopeRef(Metadata,Data), Initialized: true} global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} id:{name: id, Type: int, Initialized: false} this:{name: this, Type: Ref(Metadata), isPrivate: true, isMutable: true, Initialized: true} value:{name: value, Type: None, Initialized: false}], children: [
             Scope: { id: Data@Metadata, type: 3, parent: Metadata, functions: map[dataIdEquals:{name: dataIdEquals, returns: None, overloads: [{parameters: (int), implemented: true}]} getId:{name: getId, returns: int, overloads: [{parameters: (), implemented: false}]} getValue:{name: getValue, returns: None, overloads: [{parameters: (), implemented: false}]}], children: [
                 Scope: { id: dataIdEquals(int)@Data@Metadata, type: 4, parent: Data@Metadata, variables: map[value:{name: value, Type: int, Initialized: false}] }
             ] }
         ] },
-        Scope: { id: @main(), type: 4, parent: @global, variables: map[metadata:{name: metadata, Type: Metadata, Initialized: true}] }
+        Scope: { id: main(), type: 4, parent: @global, variables: map[metadata:{name: metadata, Type: Metadata, Initialized: true}] }
     ] }
 ] }
 Node: { Label: "program"
 children: [
-    Node: { Label: "Variable"
+    Node: { Label: "Variable", Type: int
     children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 1, Column: 0} },
         Node: { Token: {Value: i, Type: identifier, Line: 1, Column: 4} },
@@ -107,12 +107,12 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: int
             children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 13, Column: 4} },
                 Node: { Token: {Value: id, Type: identifier, Line: 13, Column: 8} }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: None
             children: [
                 Node: { Token: {Value: Any, Type: identifier, Line: 14, Column: 4} },
                 Node: { Token: {Value: value, Type: identifier, Line: 14, Column: 8} }
@@ -160,16 +160,19 @@ children: [
                 Node: { Token: {Value: x, Type: identifier, Line: 23, Column: 4} },
                 Node: { Token: {Value: 5, Type: int literal, Line: 23, Column: 8} }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: None
             children: [
-                Node: { Token: {Value: contains, Type: identifier, Line: 24, Column: 4} },
+                Node: { Label: "dot"
+                children: [
+                    Node: { Token: {Value: "something", Type: string literal, Line: 24, Column: 4}, Type: String },
+                    Node: { Token: {Value: contains, Type: identifier, Line: 24, Column: 16} }
+                ] },
                 Node: { Label: "params"
                 children: [
-                    Node: { Token: {Value: "something", Type: string literal, Line: 24, Column: 13} },
-                    Node: { Token: {Value: true, Type: boolean value keyword, Line: 24, Column: 26} }
+                    Node: { Token: {Value: true, Type: boolean value keyword, Line: 24, Column: 25}, Type: bool }
                 ] }
             ] },
-            Node: { Label: "Variable"
+            Node: { Label: "Variable", Type: Metadata
             children: [
                 Node: { Token: {Value: Metadata, Type: identifier, Line: 25, Column: 4} },
                 Node: { Token: {Value: metadata, Type: identifier, Line: 25, Column: 13} },
@@ -181,16 +184,16 @@ children: [
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: id, Type: identifier, Line: 25, Column: 33} },
-                            Node: { Token: {Value: 1, Type: int literal, Line: 25, Column: 37} }
+                            Node: { Token: {Value: 1, Type: int literal, Line: 25, Column: 37}, Type: int }
                         ] }
                     ] }
                 ] }
             ] },
-            Node: { Label: "call"
+            Node: { Label: "call", Type: int
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: metadata, Type: identifier, Line: 26, Column: 4} },
+                    Node: { Token: {Value: metadata, Type: identifier, Line: 26, Column: 4}, Type: Metadata },
                     Node: { Token: {Value: getId, Type: identifier, Line: 26, Column: 13} }
                 ] }
             ] },
@@ -210,12 +213,12 @@ TypeError: Cannot assign type String to variable type int at line: 2, column: 9
 TypeError: Invalid type 'Any' provided at line: 5, column: 22
 ImplementationError: struct Metadata is missing named block for interface Json at line: 13, column: 1
 TypeError: Invalid type 'Any' provided at line: 15, column: 5
-ImplementationError: Named block Data contains function dataIdEquals which its interface does not at line: 16, column: 5
-ImplementationError: Interface Data implementation missing 'fn getValue()' at line: 16, column: 5
 ImplementationError: Interface Data implementation missing 'fn getId()->int' at line: 16, column: 5
+ImplementationError: Interface Data implementation missing 'fn getValue()' at line: 16, column: 5
+ImplementationError: Named block Data contains function dataIdEquals which its interface does not at line: 16, column: 5
 TypeError: Function 'dataIdEquals(int)' expected return type None but got bool at line: 18, column: 13
 NameError: Variable 'x' is not defined in this scope at line: 24, column: 5
-CallError: Could not find function 'contains(String,bool)->bool' at line: 25, column: 14
+CallError: Could not find function 'contains(bool)->bool' at line: 25, column: 16
 CallError: Function without body cannot be called at line: 27, column: 13
 TypeError: Function 'main()' expected return type None but got int at line: 28, column: 5
 Error: Missing entrypoint function 'fn main()->int' 

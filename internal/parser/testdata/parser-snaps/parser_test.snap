@@ -201,6 +201,7 @@ children: [
                 Node: { Token: {Value: str, Type: identifier, Line: 15, Column: 4} },
                 Node: { Label: "slice"
                 children: [
+                    Node: { Token: {Value: ..=, Type: range operator, Line: 15, Column: 8} },
                     Node: { Token: {Value: 5, Type: int literal, Line: 15, Column: 11} }
                 ] }
             ] },

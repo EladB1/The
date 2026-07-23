@@ -1,0 +1,13 @@
+String s = "string";
+fn main() -> int {
+    int len = "hello".length;
+    bool contains = "hello".contains('l');
+    bool isEnd = s[len-1] == s[^1];
+    String copy = s[..];
+    String slice = s[1..=3];
+    mut String greet = "hello" + ',' + " world";
+    greet += '!';
+    String withNum = "Number: " + 2 as String;
+    
+    return 0;
+}

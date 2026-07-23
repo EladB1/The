@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/EladB1/The/internal/datatypes"
+	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/parser"
 )
 
@@ -17,11 +17,11 @@ type (
 	}
 	FunctionSymbol struct {
 		Name       string
-		ReturnType datatypes.SourceType
+		ReturnType dt.SourceType
 		Overloads  []FnOverloadSymbol
 	}
 	FnOverloadSymbol struct {
-		Parameters               []datatypes.SourceType
+		Parameters               []dt.SourceType
 		IsPrivate                bool
 		HasDefaultImplementation bool
 		Body                     *parser.AST
@@ -29,8 +29,8 @@ type (
 	}
 	FnCreateSymbol struct {
 		name                     string
-		returnType               datatypes.SourceType
-		parameters               []datatypes.SourceType
+		returnType               dt.SourceType
+		parameters               []dt.SourceType
 		isPrivate                bool
 		hasDefaultImplementation bool
 		Body                     *parser.AST
@@ -39,7 +39,7 @@ type (
 	VariableCtx    string
 	VariableSymbol struct {
 		Name        string
-		Type        datatypes.SourceType
+		Type        dt.SourceType
 		isPrivate   bool
 		isMutable   bool
 		Def         *parser.AST
@@ -71,6 +71,13 @@ type (
 	InterfaceSymbolTable  map[string]InterfaceSymbol
 	StructSymbolTable     map[string]StructSymbol
 	NamedBlockSymbolTable map[string]NamedBlockSymbol
+
+	PrimitiveTypeMembers struct {
+		Properties VariableSymbolTable
+		Methods    FunctionSymbolTable
+	}
+
+	PrimitiveTypeTables map[dt.DataType]PrimitiveTypeMembers
 )
 
 /* TypeSymbol interface functions */
@@ -141,7 +148,7 @@ func (fn FunctionSymbol) String() string {
 		if symbol.IsPrivate {
 			priv = ", isPrivate: true"
 		}
-		overloads.WriteString(fmt.Sprintf("{parameters: (%s)%s, implemented: %v}", datatypes.Join(symbol.Parameters), priv, symbol.HasDefaultImplementation))
+		overloads.WriteString(fmt.Sprintf("{parameters: (%s)%s, implemented: %v}", dt.JoinTypes(symbol.Parameters), priv, symbol.HasDefaultImplementation))
 	}
 	return fmt.Sprintf("{name: %s, returns: %s, overloads: [%s]}", fn.Name, fn.ReturnType, overloads.String())
 }
@@ -164,10 +171,10 @@ func (nb NamedBlockSymbol) String() string {
 
 func (symbol FnCreateSymbol) getSignature() string {
 	returns := ""
-	if symbol.returnType != datatypes.None {
+	if !symbol.returnType.Equals(dt.NoneType) {
 		returns = fmt.Sprintf("->%s", symbol.returnType)
 	}
-	return fmt.Sprintf("fn %s(%s)%s", symbol.name, datatypes.Join(symbol.parameters), returns)
+	return fmt.Sprintf("fn %s(%s)%s", symbol.name, dt.JoinTypes(symbol.parameters), returns)
 }
 
 func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
@@ -180,7 +187,7 @@ func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
 	}
 }
 
-func (fn FunctionSymbol) getMatchingOverload(params []datatypes.SourceType) *FnOverloadSymbol {
+func (fn FunctionSymbol) getMatchingOverload(params []dt.SourceType) *FnOverloadSymbol {
 	count := len(params)
 	for _, overload := range fn.Overloads {
 		matches := false
@@ -190,7 +197,7 @@ func (fn FunctionSymbol) getMatchingOverload(params []datatypes.SourceType) *FnO
 			}
 			for i := range count {
 				param := overload.Parameters[i]
-				if params[i] == param || param == datatypes.Any || ImplementsInterface(param, params[i]) {
+				if params[i].Equals(param) || param.Equals(dt.AnyType) || ImplementsInterface(param, params[i]) {
 					matches = true
 				} else {
 					matches = false
@@ -206,7 +213,138 @@ func (fn FunctionSymbol) getMatchingOverload(params []datatypes.SourceType) *FnO
 }
 
 const (
-	Local  VariableCtx = "local"
-	Global VariableCtx = "global"
-	Param  VariableCtx = "param"
+	Local         VariableCtx = "local"
+	Global        VariableCtx = "global"
+	Param         VariableCtx = "param"
+	PrimitiveProp VariableCtx = "primitive_property"
+)
+
+var (
+	PrimitiveMembers PrimitiveTypeTables = PrimitiveTypeTables{
+		dt.String: PrimitiveTypeMembers{
+			Properties: VariableSymbolTable{
+				"length": VariableSymbol{
+					Name: "length",
+					Type: dt.Int32Type,
+					Ctx:  PrimitiveProp,
+				},
+			},
+			Methods: FunctionSymbolTable{
+				"indexOf": FunctionSymbol{
+					Name: "indexOf",
+					Overloads: []FnOverloadSymbol{{
+						Parameters:               []dt.SourceType{dt.CharType},
+						HasDefaultImplementation: true,
+					}},
+					ReturnType: dt.Int32Type,
+				},
+				"contains": FunctionSymbol{
+					Name: "contains",
+					Overloads: []FnOverloadSymbol{
+						{
+							Parameters:               []dt.SourceType{dt.CharType},
+							HasDefaultImplementation: true,
+						},
+						{
+							Parameters:               []dt.SourceType{dt.StringType},
+							HasDefaultImplementation: true,
+						},
+					},
+					ReturnType: dt.BoolType,
+				},
+				"startsWith": FunctionSymbol{
+					Name: "startsWith",
+					Overloads: []FnOverloadSymbol{{
+						Parameters:               []dt.SourceType{dt.StringType},
+						HasDefaultImplementation: true,
+					}},
+					ReturnType: dt.BoolType,
+				},
+				"endsWith": FunctionSymbol{
+					Name: "endsWith",
+					Overloads: []FnOverloadSymbol{{
+						Parameters:               []dt.SourceType{dt.StringType},
+						HasDefaultImplementation: true,
+					}},
+					ReturnType: dt.BoolType,
+				},
+				"replace": FunctionSymbol{
+					Name: "replace",
+					Overloads: []FnOverloadSymbol{
+						{
+							Parameters:               []dt.SourceType{dt.StringType, dt.StringType},
+							HasDefaultImplementation: true,
+						},
+						{
+							Parameters:               []dt.SourceType{dt.CharType, dt.CharType},
+							HasDefaultImplementation: true,
+						},
+					},
+					ReturnType: dt.StringType,
+				},
+				"replaceAll": FunctionSymbol{
+					Name: "replace",
+					Overloads: []FnOverloadSymbol{
+						{
+							Parameters:               []dt.SourceType{dt.StringType, dt.StringType},
+							HasDefaultImplementation: true,
+						},
+						{
+							Parameters:               []dt.SourceType{dt.CharType, dt.CharType},
+							HasDefaultImplementation: true,
+						},
+					},
+					ReturnType: dt.StringType,
+				},
+				"reverse": FunctionSymbol{
+					Name: "reverse",
+					Overloads: []FnOverloadSymbol{{
+						Parameters:               []dt.SourceType{},
+						HasDefaultImplementation: true,
+					}},
+					ReturnType: dt.StringType,
+				},
+				"toUpper": FunctionSymbol{
+					Name: "toUpper",
+					Overloads: []FnOverloadSymbol{{
+						Parameters:               []dt.SourceType{},
+						HasDefaultImplementation: true,
+					}},
+					ReturnType: dt.StringType,
+				},
+				"toLower": FunctionSymbol{
+					Name: "toLower",
+					Overloads: []FnOverloadSymbol{{
+						Parameters:               []dt.SourceType{},
+						HasDefaultImplementation: true,
+					}},
+					ReturnType: dt.StringType,
+				},
+				"trim": FunctionSymbol{
+					Name: "trim",
+					Overloads: []FnOverloadSymbol{{
+						Parameters:               []dt.SourceType{},
+						HasDefaultImplementation: true,
+					}},
+					ReturnType: dt.StringType,
+				},
+				"trimStart": FunctionSymbol{
+					Name: "trimStart",
+					Overloads: []FnOverloadSymbol{{
+						Parameters:               []dt.SourceType{},
+						HasDefaultImplementation: true,
+					}},
+					ReturnType: dt.StringType,
+				},
+				"trimEnd": FunctionSymbol{
+					Name: "trimEnd",
+					Overloads: []FnOverloadSymbol{{
+						Parameters:               []dt.SourceType{},
+						HasDefaultImplementation: true,
+					}},
+					ReturnType: dt.StringType,
+				},
+			},
+		},
+	}
 )

@@ -33,7 +33,7 @@ func (ast *AST) to_string(indentLevel int, pool ds.LiteralPool) string {
 	} else {
 		builder.WriteString(fmt.Sprintf("Token: %v", ast.Token.String(pool)))
 	}
-	if ast.Type != nil {
+	if !ast.Type.Equals(datatypes.EmptySourceType) {
 		builder.WriteString(fmt.Sprintf(", Type: %v", ast.Type))
 	}
 	childCount := len(ast.Children)

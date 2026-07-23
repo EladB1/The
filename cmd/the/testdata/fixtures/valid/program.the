@@ -32,7 +32,7 @@ fn main() -> int {
             continue;
         println(c);
     }
-    int indx = 0;
+    mut int indx = 0;
     while (indx < str.length) {
         if (indx != 0 && indx % 7 == 0)
             break;

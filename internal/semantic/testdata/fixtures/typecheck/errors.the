@@ -35,5 +35,9 @@ fn main() -> int {
     u *= c;
     u *= undefined;
     undefined.something;
+    'c' - 0;
+    mut char a = 'a';
+    a -= 0;
+    a *= 'a';
     return 0;
 }

@@ -1,14 +1,14 @@
 fn getAccountType() -> String {
-    String user = getEnv(toUpper("user"));
+    String user = getEnv("user".toUpper());
     if (user == "")
         exit(1, "Failed to find environment variable");
     mut String accountType;
     if (user == "root") {
         accountType = "root";
     }
-    else if (contains(user, "admin"))
+    else if (user.contains("admin"))
         accountType = "app-admin";
-    else if (contains(user, "svc")) {
+    else if (user.contains("svc")) {
         accountType = "service account";
     }
     else

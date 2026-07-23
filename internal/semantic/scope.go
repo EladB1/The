@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/EladB1/The/internal/datatypes"
+	dt "github.com/EladB1/The/internal/datatypes"
 )
 
 type ScopeType int
@@ -202,9 +202,9 @@ func (scope *Scope) LookupNamedBlock(name string) *NamedBlockSymbol {
 	return nil
 }
 
-func (nb NamedBlockSymbol) HasReturnType(returnType datatypes.SourceType) bool {
+func (nb NamedBlockSymbol) HasReturnType(returnType dt.SourceType) bool {
 	for _, fnSymbol := range nb.InnerScope.Functions {
-		if fnSymbol.ReturnType == returnType {
+		if fnSymbol.ReturnType.Equals(returnType) {
 			return true
 		}
 	}
@@ -222,10 +222,10 @@ func (scope *Scope) LookupVariable(name string) *VariableSymbol {
 	return nil
 }
 
-func (scope *Scope) LookupFunctionsByReturnType(returnType datatypes.SourceType) []*FunctionSymbol {
+func (scope *Scope) LookupFunctionsByReturnType(returnType dt.SourceType) []*FunctionSymbol {
 	matching := []*FunctionSymbol{}
 	for _, fn := range scope.Functions {
-		if fn.ReturnType == returnType {
+		if fn.ReturnType.Equals(returnType) {
 			matching = append(matching, &fn)
 		}
 	}
@@ -246,8 +246,8 @@ func (scope *Scope) LookupFunctionByName(name string) *FunctionSymbol {
 func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
 	fn, ok := table[symbol.name]
 	if ok {
-		if fn.ReturnType != symbol.returnType {
-			if fn.ReturnType == datatypes.None {
+		if !fn.ReturnType.Equals(symbol.returnType) {
+			if fn.ReturnType.Equals(dt.NoneType) {
 				return fmt.Errorf("Function name '%s' already defined without a return type; cannot overload with return type %s", symbol.name, symbol.returnType)
 			}
 			return fmt.Errorf("Function name '%s' can only be overloaded with return type %s. Found: %s", symbol.name, fn.ReturnType, symbol.returnType)
@@ -268,8 +268,8 @@ func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
 	return nil
 }
 
-func ImplementsInterface(possibleIntf, type_ datatypes.SourceType) bool {
-	if possibleIntf.IsPrimitive() || type_.IsPrimitive() {
+func ImplementsInterface(possibleIntf, type_ dt.SourceType) bool {
+	if !possibleIntf.IsDynamic || !type_.IsDynamic {
 		return false
 	}
 	if intf := globalScope.LookupInterface(possibleIntf.String()); intf != nil {

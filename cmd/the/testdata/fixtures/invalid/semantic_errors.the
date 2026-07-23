@@ -22,7 +22,7 @@ struct Metadata impl Data, Json {
 
 fn main() {
     x = 5;
-    contains("something", true);
+    "something".contains(true);
     Metadata metadata = Metadata{id: 1};
     metadata.getId();
     return -1;
