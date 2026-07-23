@@ -6,6 +6,7 @@ import (
 	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
+	"github.com/EladB1/The/internal/semantic"
 )
 
 func translateExpression(node parser.AST) ([]TAC, Operand) {
@@ -30,6 +31,10 @@ func translateExpression(node parser.AST) ([]TAC, Operand) {
 		instructions, operand = translateTypecast(node)
 	} else if node.Label == "index" {
 		instructions, operand = translateIndex(node)
+	} else if node.Label == "dot" {
+		instructions, operand = translateDot(node)
+	} else if node.Label == "call" {
+		instructions, operand = translateCall(node)
 	} else if node.IsLiteral() {
 		operand = translateLiteral(node)
 	} else if node.Token.Kind == lexer.ID {
@@ -872,14 +877,90 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 func translateDot(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
+	left := node.Children[0]
+	prop := node.Children[1]
+	if left.Label == "dot" {
 
+	} else if mem, ok := semantic.PrimitiveMembers[left.Type.Root]; ok {
+		if pr, ok := mem.Properties[prop.Token.Value]; ok {
+			fn := builtinPropToFunction(left.Type, pr)
+			l_in, l_op := translateExpression(*left)
+			instructions = append(instructions, l_in...)
+			irType := dt.TranslateSourceType(pr.Type)
+			result := formTempVar(irType)
+			call := []TAC{
+				Instruction{
+					Operation: PrepareParam,
+					Operand1:  l_op,
+				},
+				Instruction{
+					Destination: result,
+					Operation:   Call,
+					Operand1: Operand{
+						Constant: fn,
+					},
+					Operand2: Operand{
+						Constant: 1,
+					},
+				},
+			}
+			instructions = append(instructions, call...)
+			operand = Operand{
+				Type: irType,
+				Var:  result,
+			}
+		}
+	} else if left.Type.Equals(dt.GlobalRefType) {
+
+	} else if left.Type.RootEquals(dt.Ref) {
+
+	} else {
+		// struct
+	}
 	return instructions, operand
 }
 
 func translateCall(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
-
+	name := node.Children[0].Token.Value
+	irParamTypes := []dt.IRType{}
+	srcParamTypes := []dt.SourceType{}
+	loadParams := []TAC{}
+	for _, param := range node.Children[1].Children {
+		param_in, param_op := translateExpression(*param)
+		instructions = append(instructions, param_in...)
+		srcParamTypes = append(srcParamTypes, param.Type)
+		irParamTypes = append(irParamTypes, dt.TranslateSourceType(param.Type))
+		loadParams = append(loadParams, Instruction{
+			Operation: PrepareParam,
+			Operand1:  param_op,
+		})
+	}
+	symbol := currScope.LookupFunctionByName(name)
+	irName := ""
+	if symbol != nil {
+		if len(symbol.Overloads) == 1 {
+			irName = name
+		} else {
+			overload := symbol.GetMatchingOverload(srcParamTypes)
+			if overload != nil {
+				irName = overload.IRName
+			}
+		}
+	}
+	instructions = append(instructions, loadParams...)
+	result := formTempVar(dt.TranslateSourceType(symbol.ReturnType))
+	instructions = append(instructions, Instruction{
+		Destination: result,
+		Operation:   Call,
+		Operand1: Operand{
+			Constant: irName,
+		},
+		Operand2: Operand{
+			Constant: len(srcParamTypes),
+		},
+	})
 	return instructions, operand
 }
 
@@ -1021,4 +1102,12 @@ func getToStringFn(src dt.SourceType) string {
 		return "__str_fromFloat64"
 	}
 	return ""
+}
+
+func builtinPropToFunction(object dt.SourceType, vs semantic.VariableSymbol) string {
+	prefix := ""
+	if object.Equals(dt.StringType) {
+		prefix = "str"
+	}
+	return fmt.Sprintf("__%s_%s", prefix, vs.Name)
 }

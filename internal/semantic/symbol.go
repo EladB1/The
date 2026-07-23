@@ -26,6 +26,7 @@ type (
 		HasDefaultImplementation bool
 		Body                     *parser.AST
 		InnerScope               *Scope
+		IRName                   string
 	}
 	FnCreateSymbol struct {
 		name                     string
@@ -177,17 +178,39 @@ func (symbol FnCreateSymbol) getSignature() string {
 	return fmt.Sprintf("fn %s(%s)%s", symbol.name, dt.JoinTypes(symbol.parameters), returns)
 }
 
-func (symbol FnCreateSymbol) toOverload() FnOverloadSymbol {
+func (symbol FnCreateSymbol) toOverload(hasMatch bool) FnOverloadSymbol {
 	return FnOverloadSymbol{
 		Parameters:               symbol.parameters,
 		HasDefaultImplementation: symbol.hasDefaultImplementation,
 		IsPrivate:                symbol.isPrivate,
 		Body:                     symbol.Body,
 		InnerScope:               symbol.innerScope,
+		IRName:                   symbol.getIRName(hasMatch),
 	}
 }
 
-func (fn FunctionSymbol) getMatchingOverload(params []dt.SourceType) *FnOverloadSymbol {
+func (symbol FnCreateSymbol) getIRName(hasMatch bool) string {
+	if !hasMatch {
+		return ""
+	}
+	params := strings.Builder{}
+	for _, param := range symbol.parameters {
+		params.WriteRune('_')
+		params.WriteString(param.String())
+	}
+	return fmt.Sprintf("%s_%s", symbol.name, params.String())
+}
+
+func (fn *FnOverloadSymbol) updateIRName(name string) {
+	params := strings.Builder{}
+	for _, param := range fn.Parameters {
+		params.WriteRune('_')
+		params.WriteString(param.String())
+	}
+	fn.IRName = fmt.Sprintf("%s_%s", name, params.String())
+}
+
+func (fn FunctionSymbol) GetMatchingOverload(params []dt.SourceType) *FnOverloadSymbol {
 	count := len(params)
 	for _, overload := range fn.Overloads {
 		matches := false
@@ -244,10 +267,12 @@ var (
 						{
 							Parameters:               []dt.SourceType{dt.CharType},
 							HasDefaultImplementation: true,
+							IRName:                   "contains_char",
 						},
 						{
 							Parameters:               []dt.SourceType{dt.StringType},
 							HasDefaultImplementation: true,
+							IRName:                   "contains_String",
 						},
 					},
 					ReturnType: dt.BoolType,

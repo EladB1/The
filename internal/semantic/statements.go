@@ -590,7 +590,7 @@ func handleFunctionCall(details []*parser.AST) (dt.SourceType, bool) {
 					}
 				}
 				paramList := dt.JoinTypes(params)
-				if fn := method.getMatchingOverload(params); fn != nil {
+				if fn := method.GetMatchingOverload(params); fn != nil {
 					returnType = method.ReturnType
 				} else {
 					// TODO: find closest error
@@ -645,7 +645,7 @@ func handleFunctionCall(details []*parser.AST) (dt.SourceType, bool) {
 		}
 	}
 	paramList := dt.JoinTypes(params)
-	if fn := symbol.getMatchingOverload(params); fn != nil {
+	if fn := symbol.GetMatchingOverload(params); fn != nil {
 		if fn.IsPrivate {
 			messages.Complain(diagnostic.AccessError, details[0].Location, "Cannot access private function '%s' from outside struct definition", name.Value)
 			hasError = true

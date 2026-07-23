@@ -252,17 +252,18 @@ func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
 			}
 			return fmt.Errorf("Function name '%s' can only be overloaded with return type %s. Found: %s", symbol.name, fn.ReturnType, symbol.returnType)
 		}
-		if fn.getMatchingOverload(symbol.parameters) != nil {
+		if fn.GetMatchingOverload(symbol.parameters) != nil {
 			return fmt.Errorf("Function with signature '%s' cannot be redefined", symbol.getSignature())
 		} else {
-			fn.Overloads = append(fn.Overloads, symbol.toOverload())
+			fn.Overloads[0].updateIRName(symbol.name) // Update existing name
+			fn.Overloads = append(fn.Overloads, symbol.toOverload(true))
 			table[fn.Name] = fn
 		}
 	} else {
 		table[symbol.name] = FunctionSymbol{
 			Name:       symbol.name,
 			ReturnType: symbol.returnType,
-			Overloads:  []FnOverloadSymbol{symbol.toOverload()},
+			Overloads:  []FnOverloadSymbol{symbol.toOverload(false)},
 		}
 	}
 	return nil

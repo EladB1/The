@@ -247,7 +247,7 @@ func analyzeInterfaceImplementation() {
 								messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Interface %s implementation missing 'fn %s(%s)%s'", intfName, fn.Name, params, returnStr)
 							}
 						} else {
-							match := nb_fn.getMatchingOverload(overload.Parameters)
+							match := nb_fn.GetMatchingOverload(overload.Parameters)
 							if overload.HasDefaultImplementation {
 								if match == nil {
 									nb_fn.Overloads[i].Parameters = overload.Parameters
@@ -272,7 +272,7 @@ func analyzeInterfaceImplementation() {
 						continue
 					}
 					for _, overload := range fn.Overloads {
-						if match := intf_fn.getMatchingOverload(overload.Parameters); match == nil {
+						if match := intf_fn.GetMatchingOverload(overload.Parameters); match == nil {
 							messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Named block %s contains function %s(%s)%s which its interface does not", intfName, fn.Name, dt.JoinTypes(overload.Parameters), returnStr)
 						}
 					}

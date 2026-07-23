@@ -48,10 +48,12 @@ var rootScope *Scope = &Scope{
 				{
 					Parameters:               []dt.SourceType{dt.Int32Type},
 					HasDefaultImplementation: true,
+					IRName:                   "exit_int",
 				},
 				{
 					Parameters:               []dt.SourceType{dt.Int32Type, dt.StringType},
 					HasDefaultImplementation: true,
+					IRName:                   "exit_int_String",
 				},
 			},
 			ReturnType: dt.NoneType,
@@ -86,10 +88,12 @@ var rootScope *Scope = &Scope{
 				{
 					Parameters:               []dt.SourceType{dt.BoolType},
 					HasDefaultImplementation: true,
+					IRName:                   "assert_bool",
 				},
 				{
 					Parameters:               []dt.SourceType{dt.BoolType, dt.StringType},
 					HasDefaultImplementation: true,
+					IRName:                   "assert_bool_String",
 				},
 			},
 			ReturnType: dt.NoneType,
