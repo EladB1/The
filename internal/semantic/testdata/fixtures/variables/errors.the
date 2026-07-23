@@ -13,8 +13,6 @@ fn main() -> int {
     bool opposite = -isTrue;
     int result = "hello" + i;
     int pick = 1 || 0 && (0 && 1);
-    String repeat = "a" ** 2;
-    String withNum = "Number: " + 2;
     int sum = (total + 0) * 1;
     bool eq = "1" == 1;
     something name;

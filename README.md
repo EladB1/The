@@ -140,6 +140,26 @@ data[.. ^1]; // valid; returns "abcd"
 data[..= ^1]; // valid; returns "abcde"
 ```
 
+Strings also have their own methods which can be called as `string.method(params)`
+
+| Function | Description
+| --- | --- |
+| `indexOf(char chr) -> int` | Get the index of `chr` |
+| `contains(String substring) -> bool` | Check if a string contains a substring |
+| `contains(char chr) -> bool` | Check if a string contains a character |
+| `startsWith(String prefix) -> bool` | Check if a string starts with `prefix` |
+| `endsWith(String suffix) -> bool` | Check if a string ends with `suffix` |
+| `replace(String old, String new) -> String` | Replace the first occurence of `old` with `new` |
+| `replace(String string, char old, char new) -> String` | Replace the first occurence of `old` with `new` |
+| `replaceAll(String old, String new) -> String` |  Replace all occurences of `old` with `new` |
+| `replaceAll(char old, char new) -> String` |  Replace all occurences of `old` with `new` |
+| `reverse() -> String` | Get a string in reverse order |
+| `toUpper() -> String` | Change all characters to uppercase |
+| `toLower() -> String` | Change all characters to lowercase |
+| `trim() -> String` | Remove whitespace from the start and end of string |
+| `trimStart() -> String` | Remove whitespace from the start of string |
+| `trimEnd() -> String` | Remove whitespace from the end of string |
+
 ### Type Compatibility
 
 | Operation | Result | Valid | Context |
@@ -156,6 +176,7 @@ data[..= ^1]; // valid; returns "abcde"
 | `String` **operator** any other type | **Error** | ❌ | |
 | `char + char` | `String` | ✅ | Concatenate characters to form a `String` |
 | `char + String` | `String` | ✅ | Only concatenation supported between them |
+| `char` - `char` | `char` | ✅ | Use to transform one character to another |
 | `char` **operator** any other type | **Error** | ❌ | |
 | `bool` **operator** any other type | **Error** | ❌ | |
 
@@ -713,21 +734,6 @@ Standard library functions/variables are included without importing anything (im
 | `sleep(double seconds)` | Block the thread for specified amount of seconds |
 | `getEnv(String key) -> String` | Get the value of environment variable |
 | `setEnv(String key, String value)` | Set the value of environment variable |
-| `indexOf(String string, char chr) -> int` | Get the index of `chr` |
-| `contains(String string, String substring) -> bool` | Check if a string contains a substring |
-| `contains(String string, char chr) -> bool` | Check if a string contains a character |
-| `startsWith(String string, String prefix) -> bool` | Check if a string starts with `prefix` |
-| `endsWith(String string, String suffix) -> bool` | Check if a string ends with `suffix` |
-| `replace(String string, String old, String new) -> String` | Replace the first occurence of `old` with `new` |
-| `replace(String string, char old, char new) -> String` | Replace the first occurence of `old` with `new` |
-| `replaceAll(String string, String old, String new) -> String` |  Replace all occurences of `old` with `new` |
-| `replaceAll(String string, char old, char new) -> String` |  Replace all occurences of `old` with `new` |
-| `reverse(String string) -> String` | Get a string in reverse order |
-| `toUpper(String string) -> String` | Change all characters to uppercase |
-| `toLower(String string) -> String` | Change all characters to lowercase |
-| `trim(String string) -> String` | Remove whitespace from the start and end of string |
-| `trimStart(String string) -> String` | Remove whitespace from the start of string |
-| `trimEnd(String string) -> String` | Remove whitespace from the end of string |
 | `assert(bool condition)` | Check if a condition is true and fail otherwise |
 | `assert(bool condition, String message)` | Check if a condition is true and fail otherwise with a message |
 | `prompt(String promptText) -> String` | Print `promptText` and read from stdin |

@@ -72,11 +72,12 @@ func (st SourceType) String() string {
 	if st.Equals(EmptySourceType) {
 		return ""
 	}
-	if st.Root == Ref {
+	switch st.Root {
+	case Ref:
 		return fmt.Sprintf("Ref(%s)", JoinTypes(st.SubTypes))
-	} else if st.Root == ScopeRef {
+	case ScopeRef:
 		return fmt.Sprintf("ScopeRef(%s)", JoinTypes(st.SubTypes))
-	} else {
+	default:
 		return string(st.Root)
 	}
 }

@@ -1,0 +1,11 @@
+fn main() -> int {
+    String repeat = "a" ** 2;
+    String withNum = "Number: " + 2;
+    "a".length = 2;
+    "a".something;
+    "a".something();
+    "a"['a'];
+    "a"[^'a'];
+    "10" - "9";
+    return 0;
+}

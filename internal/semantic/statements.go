@@ -1,6 +1,7 @@
 package semantic
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
@@ -134,7 +135,16 @@ func analyzeAssignment(stmt *parser.AST) (dt.SourceType, bool) {
 			hasError = true
 		}
 	case "-=", "*=", "/=":
-		if lhs.IsNumeric() {
+		if lhs.Equals(dt.CharType) {
+			if !hasError && operator != "-=" {
+				messages.Complain(diagnostic.TypeError, stmt.Location, "Cannot use operator %s on char", operator)
+				hasError = true
+			}
+			if !hasError && !rhs.Equals(dt.CharType) {
+				messages.Complain(diagnostic.TypeError, stmt.Location, "Cannot substract %s from char", rhs)
+				hasError = true
+			}
+		} else if lhs.IsNumeric() {
 			result, err := decideNumberType(lhs, rhs, operator)
 			if err != nil {
 				messages.Complain(diagnostic.TypeError, stmt.Location, "%s", err.Error())
@@ -170,8 +180,10 @@ func evalAdd(left *parser.AST, right *parser.AST, operator lexer.Token, expected
 	if lHasErr || rHasErr {
 		return dt.NoneType, true
 	}
-	if (lhs.Equals(dt.StringType) || lhs.Equals(dt.CharType)) && (rhs.Equals(dt.StringType) || rhs.Equals(dt.CharType)) {
+	if operator.Value == "+" && (lhs.Equals(dt.StringType) || lhs.Equals(dt.CharType)) && (rhs.Equals(dt.StringType) || rhs.Equals(dt.CharType)) {
 		return dt.StringType, hasError
+	} else if operator.Value == "-" && lhs.Equals(dt.CharType) && rhs.Equals(dt.CharType) {
+		return dt.CharType, hasError
 	} else if lhs.IsNumeric() && rhs.IsNumeric() {
 		if lhs.Equals(rhs) {
 			return lhs, hasError
@@ -565,6 +577,32 @@ func handleFunctionCall(details []*parser.AST) (dt.SourceType, bool) {
 			}
 		} else if lhs.RootEquals(dt.Ref) || lhs.Equals(dt.GlobalRefType) {
 			scope = FindAncestorScopeById(lhs.SubTypes[0].String())
+		} else if mem, ok := PrimitiveMembers[lhs.Root]; ok {
+			returnType := dt.NoneType
+			if method, ok := mem.Methods[name.Value]; ok {
+				var params []dt.SourceType = []dt.SourceType{}
+				if len(details) == 2 {
+					for _, param := range details[1].Children {
+						parameter, hasErr := evalType(param, dt.NoneType)
+						params = append(params, parameter)
+						if hasErr {
+							hasError = hasErr
+						}
+					}
+				}
+				paramList := dt.JoinTypes(params)
+				if fn := method.getMatchingOverload(params); fn != nil {
+					returnType = method.ReturnType
+				} else {
+					// TODO: find closest error
+					messages.Complain(diagnostic.CallError, details[0].Location, "Could not find function '%s(%s)->%s'", name.Value, paramList, method.ReturnType)
+					hasError = true
+				}
+			} else {
+				messages.Complain(diagnostic.NameError, details[0].Location, "Could not find function %s", name.Value)
+				hasError = true
+			}
+			return returnType, hasError
 		} else {
 			symbol := globalScope.LookupType(lhs.String())
 			if symbol == nil {
@@ -639,12 +677,24 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 		lhs, hasError = handleDot(left.Children[0], left.Children[1], isFnCall, isAssignment, true)
 	}
 	rname := right.Token.Value
-	if lhs.Equals(dt.StringType) && rname == "length" {
-		if isAssignment {
-			messages.Complain(diagnostic.AccessError, left.Location, "Cannot assign value to string length")
-			hasError = true
+	if mem, ok := PrimitiveMembers[lhs.Root]; ok {
+		propType := dt.NoneType
+		if isFnCall {
+			// TODO
+			fmt.Println("HERE2")
 		}
-		return dt.Int32Type, hasError
+		if isAssignment {
+			messages.Complain(diagnostic.AccessError, left.Location, "Cannot assign value to %s.%s", lhs.Root, rname)
+			hasError = true
+		} else {
+			if prop, ok := mem.Properties[rname]; ok {
+				propType = prop.Type
+			} else {
+				messages.Complain(diagnostic.NameError, left.Location, "Could not find %s.%s", lhs.Root, rname)
+				hasError = true
+			}
+		}
+		return propType, hasError
 	} else if isFnCall && (lhs.RootEquals(dt.ScopeRef) || lhs.RootEquals(dt.Ref) || lhs.Equals(dt.GlobalRefType)) {
 		return lhs, hasError
 	} else if lhs.IsDynamic {

@@ -162,3 +162,13 @@ func TestTypeSystem(t *testing.T) {
 		snapshotTestSemanticAnalyzer(t, "errors.json", subdir)
 	})
 }
+
+func TestStrings(t *testing.T) {
+	subdir := "strings"
+	t.Run("should run valid.the and have no errors", func(t *testing.T) {
+		snapshotTestSemanticAnalyzer(t, "valid.json", subdir)
+	})
+	t.Run("should errors.the and have errors", func(t *testing.T) {
+		snapshotTestSemanticAnalyzer(t, "errors.json", subdir)
+	})
+}
