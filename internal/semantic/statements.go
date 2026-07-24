@@ -591,6 +591,7 @@ func handleFunctionCall(details []*parser.AST) (dt.SourceType, bool) {
 				}
 				paramList := dt.JoinTypes(params)
 				if fn := method.GetMatchingOverload(params); fn != nil {
+					details[0].Children[1].IRName = fn.IRName
 					returnType = method.ReturnType
 				} else {
 					// TODO: find closest error
@@ -653,6 +654,9 @@ func handleFunctionCall(details []*parser.AST) (dt.SourceType, bool) {
 			if !fn.HasDefaultImplementation && !currentScope.HasScopeTypeAncestor(Interface) && !symbol.ReturnType.Equals(dt.NoneType) {
 				messages.Complain(diagnostic.CallError, details[0].Location, "Function without body cannot be called")
 				hasError = true
+			}
+			if details[0].Label != "dot" {
+				details[0].IRName = fn.IRName
 			}
 			return symbol.ReturnType, hasError
 		}

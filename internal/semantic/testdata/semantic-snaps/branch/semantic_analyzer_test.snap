@@ -23,7 +23,7 @@ children: [
                             Node: { Label: "dot"
                             children: [
                                 Node: { Token: {Value: "user", Type: string literal, Line: 1, Column: 25}, Type: String },
-                                Node: { Token: {Value: toUpper, Type: identifier, Line: 1, Column: 32} }
+                                Node: { Token: {Value: toUpper, Type: identifier, Line: 1, Column: 32}, IRName: "__str_toUpper" }
                             ] }
                         ] }
                     ] }
@@ -42,7 +42,7 @@ children: [
                     children: [
                         Node: { Label: "call", Type: None
                         children: [
-                            Node: { Token: {Value: exit, Type: identifier, Line: 3, Column: 8} },
+                            Node: { Token: {Value: exit, Type: identifier, Line: 3, Column: 8}, IRName: "exit_int_String" },
                             Node: { Label: "params"
                             children: [
                                 Node: { Token: {Value: 1, Type: int literal, Line: 3, Column: 13}, Type: int },
@@ -86,7 +86,7 @@ children: [
                         Node: { Label: "dot"
                         children: [
                             Node: { Token: {Value: user, Type: identifier, Line: 8, Column: 13}, Type: String },
-                            Node: { Token: {Value: contains, Type: identifier, Line: 8, Column: 18} }
+                            Node: { Token: {Value: contains, Type: identifier, Line: 8, Column: 18}, IRName: "__str_contains_String" }
                         ] },
                         Node: { Label: "params"
                         children: [
@@ -109,7 +109,7 @@ children: [
                         Node: { Label: "dot"
                         children: [
                             Node: { Token: {Value: user, Type: identifier, Line: 10, Column: 13}, Type: String },
-                            Node: { Token: {Value: contains, Type: identifier, Line: 10, Column: 18} }
+                            Node: { Token: {Value: contains, Type: identifier, Line: 10, Column: 18}, IRName: "__str_contains_String" }
                         ] },
                         Node: { Label: "params"
                         children: [

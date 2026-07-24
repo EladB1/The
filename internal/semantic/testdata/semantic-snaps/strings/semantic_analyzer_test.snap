@@ -34,7 +34,7 @@ children: [
                     Node: { Label: "dot"
                     children: [
                         Node: { Token: {Value: "hello", Type: string literal, Line: 3, Column: 20}, Type: String },
-                        Node: { Token: {Value: contains, Type: identifier, Line: 3, Column: 28} }
+                        Node: { Token: {Value: contains, Type: identifier, Line: 3, Column: 28}, IRName: "__str_contains_char" }
                     ] },
                     Node: { Label: "params"
                     children: [

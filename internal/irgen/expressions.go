@@ -2,6 +2,7 @@ package irgen
 
 import (
 	"fmt"
+	"slices"
 
 	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/lexer"
@@ -923,11 +924,27 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 func translateCall(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
-	name := node.Children[0].Token.Value
+	var nameNode *parser.AST
+	var object *parser.AST = nil
+	if node.Children[0].Label == "dot" {
+		object = node.Children[0].Children[0]
+		nameNode = node.Children[0].Children[1]
+	} else {
+		nameNode = node.Children[0]
+	}
+	name := nameNode.Token.Value
+	irName := name // TODO: handle struct/interface/string
+	if nameNode.IRName != "" {
+		irName = nameNode.IRName
+	}
 	irParamTypes := []dt.IRType{}
 	srcParamTypes := []dt.SourceType{}
+	params := node.Children[1].Children
+	if object != nil {
+		params = slices.Insert(params, 0, object)
+	}
 	loadParams := []TAC{}
-	for _, param := range node.Children[1].Children {
+	for _, param := range params {
 		param_in, param_op := translateExpression(*param)
 		instructions = append(instructions, param_in...)
 		srcParamTypes = append(srcParamTypes, param.Type)
@@ -938,19 +955,13 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 		})
 	}
 	symbol := currScope.LookupFunctionByName(name)
-	irName := ""
+
+	returnType := dt.NoneIR
 	if symbol != nil {
-		if len(symbol.Overloads) == 1 {
-			irName = name
-		} else {
-			overload := symbol.GetMatchingOverload(srcParamTypes)
-			if overload != nil {
-				irName = overload.IRName
-			}
-		}
+		dt.TranslateSourceType(symbol.ReturnType)
 	}
 	instructions = append(instructions, loadParams...)
-	result := formTempVar(dt.TranslateSourceType(symbol.ReturnType))
+	result := formTempVar(returnType)
 	instructions = append(instructions, Instruction{
 		Destination: result,
 		Operation:   Call,

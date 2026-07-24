@@ -111,6 +111,17 @@ Program: [
     PARAM i32(4)
     __t57: i32 = CALL __str_slice_inclusive 3
     STORE global.slice __t57
+    __t58: str_const = GET global.s
+    PARAM __t58
+    __t59: i32 = CALL __str_length 1
+    STORE global.len __t59
+    PARAM str_const(6)
+    __t60: none = CALL getEnv 1
+    STORE global.env
+    PARAM str_const(7)
+    PARAM i32(97)
+    __t61: none = CALL __str_contains_char 2
+    STORE global.hasA
 ]
 
 Compiler messages:

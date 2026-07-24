@@ -91,12 +91,12 @@ children: [
                         Node: { Token: {Value: !, Type: unary operator, Line: 14, Column: 4} },
                         Node: { Label: "call", Type: bool
                         children: [
-                            Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 5} }
+                            Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 5}, IRName: "overloads" }
                         ] }
                     ] },
                     Node: { Label: "call", Type: bool
                     children: [
-                        Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 20} },
+                        Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 20}, IRName: "overloads____int" },
                         Node: { Label: "params"
                         children: [
                             Node: { Token: {Value: 1, Type: int literal, Line: 14, Column: 30}, Type: int }
@@ -105,7 +105,7 @@ children: [
                 ] },
                 Node: { Label: "call", Type: bool
                 children: [
-                    Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 36} },
+                    Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 36}, IRName: "overloads____int__int" },
                     Node: { Label: "params"
                     children: [
                         Node: { Token: {Value: +, Type: add operator, Line: 14, Column: 47}, Type: int

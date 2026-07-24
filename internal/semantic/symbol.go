@@ -195,19 +195,26 @@ func (symbol FnCreateSymbol) getIRName(hasMatch bool) string {
 	}
 	params := strings.Builder{}
 	for _, param := range symbol.parameters {
-		params.WriteRune('_')
+		params.WriteString("__")
 		params.WriteString(param.String())
 	}
-	return fmt.Sprintf("%s_%s", symbol.name, params.String())
+	if len(symbol.parameters) == 0 {
+		return symbol.name
+	}
+	return fmt.Sprintf("%s__%s", symbol.name, params.String())
 }
 
 func (fn *FnOverloadSymbol) updateIRName(name string) {
 	params := strings.Builder{}
 	for _, param := range fn.Parameters {
-		params.WriteRune('_')
+		params.WriteString("__")
 		params.WriteString(param.String())
 	}
-	fn.IRName = fmt.Sprintf("%s_%s", name, params.String())
+	if len(fn.Parameters) == 0 {
+		fn.IRName = name
+	} else {
+		fn.IRName = fmt.Sprintf("%s__%s", name, params.String())
+	}
 }
 
 func (fn FunctionSymbol) GetMatchingOverload(params []dt.SourceType) *FnOverloadSymbol {
@@ -258,6 +265,7 @@ var (
 					Overloads: []FnOverloadSymbol{{
 						Parameters:               []dt.SourceType{dt.CharType},
 						HasDefaultImplementation: true,
+						IRName:                   "__str_indexOf",
 					}},
 					ReturnType: dt.Int32Type,
 				},
@@ -267,12 +275,12 @@ var (
 						{
 							Parameters:               []dt.SourceType{dt.CharType},
 							HasDefaultImplementation: true,
-							IRName:                   "contains_char",
+							IRName:                   "__str_contains_char",
 						},
 						{
 							Parameters:               []dt.SourceType{dt.StringType},
 							HasDefaultImplementation: true,
-							IRName:                   "contains_String",
+							IRName:                   "__str_contains_String",
 						},
 					},
 					ReturnType: dt.BoolType,
@@ -282,6 +290,7 @@ var (
 					Overloads: []FnOverloadSymbol{{
 						Parameters:               []dt.SourceType{dt.StringType},
 						HasDefaultImplementation: true,
+						IRName:                   "__str_startsWith",
 					}},
 					ReturnType: dt.BoolType,
 				},
@@ -290,6 +299,7 @@ var (
 					Overloads: []FnOverloadSymbol{{
 						Parameters:               []dt.SourceType{dt.StringType},
 						HasDefaultImplementation: true,
+						IRName:                   "__str_endsWith",
 					}},
 					ReturnType: dt.BoolType,
 				},
@@ -299,24 +309,28 @@ var (
 						{
 							Parameters:               []dt.SourceType{dt.StringType, dt.StringType},
 							HasDefaultImplementation: true,
+							IRName:                   "__str_replace_String_String",
 						},
 						{
 							Parameters:               []dt.SourceType{dt.CharType, dt.CharType},
 							HasDefaultImplementation: true,
+							IRName:                   "__str_replace_char_char",
 						},
 					},
 					ReturnType: dt.StringType,
 				},
 				"replaceAll": FunctionSymbol{
-					Name: "replace",
+					Name: "replaceAll",
 					Overloads: []FnOverloadSymbol{
 						{
 							Parameters:               []dt.SourceType{dt.StringType, dt.StringType},
 							HasDefaultImplementation: true,
+							IRName:                   "__str_replaceAll_String_String",
 						},
 						{
 							Parameters:               []dt.SourceType{dt.CharType, dt.CharType},
 							HasDefaultImplementation: true,
+							IRName:                   "__str_replaceAll_char_char",
 						},
 					},
 					ReturnType: dt.StringType,
@@ -326,6 +340,7 @@ var (
 					Overloads: []FnOverloadSymbol{{
 						Parameters:               []dt.SourceType{},
 						HasDefaultImplementation: true,
+						IRName:                   "__str_reverse",
 					}},
 					ReturnType: dt.StringType,
 				},
@@ -334,6 +349,7 @@ var (
 					Overloads: []FnOverloadSymbol{{
 						Parameters:               []dt.SourceType{},
 						HasDefaultImplementation: true,
+						IRName:                   "__str_toUpper",
 					}},
 					ReturnType: dt.StringType,
 				},
@@ -342,6 +358,7 @@ var (
 					Overloads: []FnOverloadSymbol{{
 						Parameters:               []dt.SourceType{},
 						HasDefaultImplementation: true,
+						IRName:                   "__str_toLower",
 					}},
 					ReturnType: dt.StringType,
 				},
@@ -350,6 +367,7 @@ var (
 					Overloads: []FnOverloadSymbol{{
 						Parameters:               []dt.SourceType{},
 						HasDefaultImplementation: true,
+						IRName:                   "__str_trim",
 					}},
 					ReturnType: dt.StringType,
 				},
@@ -358,6 +376,7 @@ var (
 					Overloads: []FnOverloadSymbol{{
 						Parameters:               []dt.SourceType{},
 						HasDefaultImplementation: true,
+						IRName:                   "__str_trimStart",
 					}},
 					ReturnType: dt.StringType,
 				},
@@ -366,6 +385,7 @@ var (
 					Overloads: []FnOverloadSymbol{{
 						Parameters:               []dt.SourceType{},
 						HasDefaultImplementation: true,
+						IRName:                   "__str_trimEnd",
 					}},
 					ReturnType: dt.StringType,
 				},

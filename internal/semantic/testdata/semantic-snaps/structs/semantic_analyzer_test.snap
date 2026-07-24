@@ -1263,7 +1263,7 @@ children: [
                         children: [
                             Node: { Label: "call", Type: None
                             children: [
-                                Node: { Token: {Value: exit, Type: identifier, Line: 88, Column: 12} },
+                                Node: { Token: {Value: exit, Type: identifier, Line: 88, Column: 12}, IRName: "exit_int_String" },
                                 Node: { Label: "params"
                                 children: [
                                     Node: { Token: {Value: 1, Type: int literal, Line: 88, Column: 17}, Type: int },

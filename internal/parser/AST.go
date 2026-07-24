@@ -13,6 +13,7 @@ type (
 	AST struct {
 		Label    string
 		Token    lexer.Token
+		IRName   string
 		Location ds.SourceLocation
 		Type     datatypes.SourceType
 		Children []*AST
@@ -32,6 +33,9 @@ func (ast *AST) to_string(indentLevel int, pool ds.LiteralPool) string {
 		builder.WriteString(fmt.Sprintf("Label: \"%s\"", ast.Label))
 	} else {
 		builder.WriteString(fmt.Sprintf("Token: %v", ast.Token.String(pool)))
+	}
+	if ast.IRName != "" {
+		builder.WriteString(fmt.Sprintf(", IRName: \"%s\"", ast.IRName))
 	}
 	if !ast.Type.Equals(datatypes.EmptySourceType) {
 		builder.WriteString(fmt.Sprintf(", Type: %v", ast.Type))
