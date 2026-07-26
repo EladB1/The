@@ -33,7 +33,6 @@ func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.Ph
 }
 
 func functionDefinition(ast *parser.AST) []TAC {
-
 	fn := Function{}
 	fn.Name = ast.IRName
 	returnType := ast.Type
@@ -59,6 +58,29 @@ func functionDefinition(ast *parser.AST) []TAC {
 		for _, node := range overload.Body.Children {
 			if node.Label == "Variable" {
 				fn.Code = append(fn.Code, variableDeclaration(node)...)
+			} else if node.Label == "control-flow" {
+				if node.Children[0].Token.Value == "return" {
+					if len(node.Children) == 1 {
+						fn.Code = append(fn.Code, Instruction{
+							Operation: Return,
+						})
+					} else {
+						instructions, operand := translateExpression(*node.Children[1])
+						fn.Code = append(fn.Code, instructions...)
+						fn.Code = append(fn.Code, Instruction{
+							Operation: Return,
+							Operand1:  operand,
+						})
+					}
+				}
+			} else if node.Token.Kind == lexer.OPERATOR_ASSIGN {
+
+			} else if node.Label == "while" {
+
+			} else if node.Label == "for" {
+
+			} else if node.Label == "if-block" {
+
 			} else {
 				expression, _ := translateExpression(*node)
 				fn.Code = append(fn.Code, expression...)

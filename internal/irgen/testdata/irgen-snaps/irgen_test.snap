@@ -122,7 +122,9 @@ Program: [
     PARAM i32(97)
     __t61: none = CALL __str_contains_char 2
     STORE global.hasA
-    fn main()->i32 {}
+    fn main()->i32 {
+        return i32(0)
+    }
 
 ]
 
@@ -141,11 +143,25 @@ Program: [
         __t1: none = CALL println 1
     }
 
-    fn add(param.x: i32, param.y: i32)->i32 {}
+    fn add(param.x: i32, param.y: i32)->i32 {
+        __t2: i32 = GET param.x
+        __t3: i32 = GET param.y
+        __t4: i32 = i32.add __t2 __t3
+        return __t4
+    }
 
-    fn add--int--int--int(param.x: i32, param.y: i32, param.z: i32)->i32 {}
+    fn add--int--int--int(param.x: i32, param.y: i32, param.z: i32)->i32 {
+        __t5: i32 = GET param.x
+        __t6: i32 = GET param.y
+        __t7: i32 = i32.add __t5 __t6
+        __t8: i32 = GET param.z
+        __t9: i32 = i32.add __t7 __t8
+        return __t9
+    }
 
-    fn main()->i32 {}
+    fn main()->i32 {
+        return i32(0)
+    }
 
 ]
 
