@@ -418,7 +418,7 @@ children: [
                 Node: { Token: {Value: type, Type: identifier, Line: 57, Column: 11} },
                 Node: { Label: "call", Type: String
                 children: [
-                    Node: { Token: {Value: getAccountType, Type: identifier, Line: 57, Column: 18} }
+                    Node: { Token: {Value: getAccountType, Type: identifier, Line: 57, Column: 18}, IRName: "getAccountType" }
                 ] }
             ] },
             Node: { Label: "if-block"

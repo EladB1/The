@@ -78,6 +78,9 @@ struct Person {
 
 struct Inner {
     mut String value;
+    fn innerFunc() -> int {
+        return 1;
+    }
 }
 
 struct Outer {

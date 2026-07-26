@@ -148,7 +148,7 @@ children: [
                         children: [
                             Node: { Label: "call", Type: None
                             children: [
-                                Node: { Token: {Value: startup, Type: identifier, Line: 33, Column: 12} }
+                                Node: { Token: {Value: startup, Type: identifier, Line: 33, Column: 12}, IRName: "__TestRunner_Runner_startup" }
                             ] },
                             Node: { Label: "control-flow", Type: TestResult
                             children: [

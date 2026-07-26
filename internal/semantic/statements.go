@@ -657,6 +657,8 @@ func handleFunctionCall(details []*parser.AST) (dt.SourceType, bool) {
 			}
 			if details[0].Label != "dot" {
 				details[0].IRName = fn.IRName
+			} else {
+				details[0].Children[1].IRName = fn.IRName
 			}
 			return symbol.ReturnType, hasError
 		}

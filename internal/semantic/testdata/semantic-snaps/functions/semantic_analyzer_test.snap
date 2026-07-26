@@ -131,7 +131,7 @@ children: [
         children: [
             Node: { Label: "call", Type: None
             children: [
-                Node: { Token: {Value: forwardDeclaration, Type: identifier, Line: 19, Column: 4} }
+                Node: { Token: {Value: forwardDeclaration, Type: identifier, Line: 19, Column: 4}, IRName: "forwardDeclaration" }
             ] },
             Node: { Label: "control-flow", Type: int
             children: [

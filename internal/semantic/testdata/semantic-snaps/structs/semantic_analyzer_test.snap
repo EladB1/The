@@ -30,14 +30,14 @@ children: [
                 children: [
                     Node: { Label: "call", Type: None
                     children: [
-                        Node: { Token: {Value: powerOff, Type: identifier, Line: 6, Column: 8} }
+                        Node: { Token: {Value: powerOff, Type: identifier, Line: 6, Column: 8}, IRName: "__Server_Device_powerOff" }
                     ] },
                     Node: { Label: "control-flow", Type: bool
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 7, Column: 8} },
                         Node: { Label: "call", Type: bool
                         children: [
-                            Node: { Token: {Value: powerOn, Type: identifier, Line: 7, Column: 15} }
+                            Node: { Token: {Value: powerOn, Type: identifier, Line: 7, Column: 15}, IRName: "__Server_Device_powerOn" }
                         ] }
                     ] }
                 ] }
@@ -272,7 +272,7 @@ children: [
                         Node: { Label: "dot"
                         children: [
                             Node: { Token: {Value: ca, Type: identifier, Line: 61, Column: 12}, Type: CompilerApp },
-                            Node: { Token: {Value: do, Type: identifier, Line: 61, Column: 15} }
+                            Node: { Token: {Value: do, Type: identifier, Line: 61, Column: 15}, IRName: "__CompilerApp_do" }
                         ] }
                     ] }
                 ] }
@@ -291,7 +291,7 @@ children: [
                                 Node: { Token: {Value: ca, Type: identifier, Line: 62, Column: 12}, Type: CompilerApp },
                                 Node: { Token: {Value: Compiler, Type: identifier, Line: 62, Column: 15} }
                             ] },
-                            Node: { Token: {Value: help, Type: identifier, Line: 62, Column: 24} }
+                            Node: { Token: {Value: help, Type: identifier, Line: 62, Column: 24}, IRName: "__CompilerApp_Compiler_help" }
                         ] }
                     ] }
                 ] }
@@ -310,7 +310,7 @@ children: [
                                 Node: { Token: {Value: ca, Type: identifier, Line: 63, Column: 12}, Type: CompilerApp },
                                 Node: { Token: {Value: App, Type: identifier, Line: 63, Column: 15} }
                             ] },
-                            Node: { Token: {Value: help, Type: identifier, Line: 63, Column: 19} }
+                            Node: { Token: {Value: help, Type: identifier, Line: 63, Column: 19}, IRName: "__CompilerApp_App_help" }
                         ] }
                     ] }
                 ] }
@@ -386,98 +386,111 @@ children: [
                 ] },
                 Node: { Token: {Value: String, Type: type keyword, Line: 79, Column: 8} },
                 Node: { Token: {Value: value, Type: identifier, Line: 79, Column: 15} }
+            ] },
+            Node: { Label: "fn"
+            children: [
+                Node: { Token: {Value: innerFunc, Type: identifier, Line: 80, Column: 7} },
+                Node: { Token: {Value: int, Type: type keyword, Line: 80, Column: 22} },
+                Node: { Label: "fn-body"
+                children: [
+                    Node: { Label: "control-flow", Type: int
+                    children: [
+                        Node: { Token: {Value: return, Type: flow keyword, Line: 81, Column: 8} },
+                        Node: { Token: {Value: 1, Type: int literal, Line: 81, Column: 15}, Type: int }
+                    ] }
+                ] }
             ] }
         ] }
     ] },
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 82, Column: 0}
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 85, Column: 0}
     children: [
-        Node: { Token: {Value: Outer, Type: identifier, Line: 82, Column: 7} },
+        Node: { Token: {Value: Outer, Type: identifier, Line: 85, Column: 7} },
         Node: { Label: "struct-body"
         children: [
             Node: { Label: "Variable", Type: Inner
             children: [
                 Node: { Label: "modifiers"
                 children: [
-                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 83, Column: 4} }
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 86, Column: 4} }
                 ] },
-                Node: { Token: {Value: Inner, Type: identifier, Line: 83, Column: 8} },
-                Node: { Token: {Value: inner, Type: identifier, Line: 83, Column: 14} }
+                Node: { Token: {Value: Inner, Type: identifier, Line: 86, Column: 8} },
+                Node: { Token: {Value: inner, Type: identifier, Line: 86, Column: 14} }
             ] }
         ] }
     ] },
     Node: { Label: "Variable", Type: int
     children: [
-        Node: { Token: {Value: int, Type: type keyword, Line: 86, Column: 0} },
-        Node: { Token: {Value: x, Type: identifier, Line: 86, Column: 4} },
-        Node: { Token: {Value: 0, Type: int literal, Line: 86, Column: 8}, Type: int }
+        Node: { Token: {Value: int, Type: type keyword, Line: 89, Column: 0} },
+        Node: { Token: {Value: x, Type: identifier, Line: 89, Column: 4} },
+        Node: { Token: {Value: 0, Type: int literal, Line: 89, Column: 8}, Type: int }
     ] },
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: getX, Type: identifier, Line: 87, Column: 3} },
+        Node: { Token: {Value: getX, Type: identifier, Line: 90, Column: 3} },
         Node: { Label: "fn-body" }
     ] },
-    Node: { Token: {Value: struct, Type: structure keyword, Line: 89, Column: 0}
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 92, Column: 0}
     children: [
-        Node: { Token: {Value: TestName, Type: identifier, Line: 89, Column: 7} },
+        Node: { Token: {Value: TestName, Type: identifier, Line: 92, Column: 7} },
         Node: { Label: "struct-body"
         children: [
             Node: { Label: "Variable", Type: int
             children: [
                 Node: { Label: "modifiers"
                 children: [
-                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 90, Column: 4} }
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 93, Column: 4} }
                 ] },
-                Node: { Token: {Value: int, Type: type keyword, Line: 90, Column: 8} },
-                Node: { Token: {Value: x, Type: identifier, Line: 90, Column: 12} }
+                Node: { Token: {Value: int, Type: type keyword, Line: 93, Column: 8} },
+                Node: { Token: {Value: x, Type: identifier, Line: 93, Column: 12} }
             ] },
             Node: { Label: "fn"
             children: [
-                Node: { Token: {Value: getX, Type: identifier, Line: 91, Column: 7} },
-                Node: { Token: {Value: bool, Type: type keyword, Line: 91, Column: 17} },
+                Node: { Token: {Value: getX, Type: identifier, Line: 94, Column: 7} },
+                Node: { Token: {Value: bool, Type: type keyword, Line: 94, Column: 17} },
                 Node: { Label: "fn-body"
                 children: [
                     Node: { Label: "dot", Type: int
                     children: [
-                        Node: { Token: {Value: global, Type: identifier, Line: 92, Column: 8}, Type: Ref(@global) },
-                        Node: { Token: {Value: x, Type: identifier, Line: 92, Column: 15} }
+                        Node: { Token: {Value: global, Type: identifier, Line: 95, Column: 8}, Type: Ref(@global) },
+                        Node: { Token: {Value: x, Type: identifier, Line: 95, Column: 15} }
                     ] },
                     Node: { Label: "call", Type: None
                     children: [
                         Node: { Label: "dot"
                         children: [
-                            Node: { Token: {Value: global, Type: identifier, Line: 93, Column: 8}, Type: Ref(@global) },
-                            Node: { Token: {Value: getX, Type: identifier, Line: 93, Column: 15} }
+                            Node: { Token: {Value: global, Type: identifier, Line: 96, Column: 8}, Type: Ref(@global) },
+                            Node: { Token: {Value: getX, Type: identifier, Line: 96, Column: 15}, IRName: "getX" }
                         ] }
                     ] },
-                    Node: { Token: {Value: =, Type: assign operator, Line: 94, Column: 15}, Type: int
+                    Node: { Token: {Value: =, Type: assign operator, Line: 97, Column: 15}, Type: int
                     children: [
                         Node: { Label: "dot", Type: int
                         children: [
-                            Node: { Token: {Value: this, Type: identifier, Line: 94, Column: 8}, Type: Ref(TestName) },
-                            Node: { Token: {Value: x, Type: identifier, Line: 94, Column: 13} }
+                            Node: { Token: {Value: this, Type: identifier, Line: 97, Column: 8}, Type: Ref(TestName) },
+                            Node: { Token: {Value: x, Type: identifier, Line: 97, Column: 13} }
                         ] },
-                        Node: { Token: {Value: -, Type: add operator, Line: 94, Column: 26}, Type: int
+                        Node: { Token: {Value: -, Type: add operator, Line: 97, Column: 26}, Type: int
                         children: [
                             Node: { Label: "dot", Type: int
                             children: [
-                                Node: { Token: {Value: global, Type: identifier, Line: 94, Column: 17}, Type: Ref(@global) },
-                                Node: { Token: {Value: x, Type: identifier, Line: 94, Column: 24} }
+                                Node: { Token: {Value: global, Type: identifier, Line: 97, Column: 17}, Type: Ref(@global) },
+                                Node: { Token: {Value: x, Type: identifier, Line: 97, Column: 24} }
                             ] },
-                            Node: { Token: {Value: 1, Type: int literal, Line: 94, Column: 28}, Type: int }
+                            Node: { Token: {Value: 1, Type: int literal, Line: 97, Column: 28}, Type: int }
                         ] }
                     ] },
                     Node: { Label: "call", Type: None
                     children: [
-                        Node: { Token: {Value: println, Type: identifier, Line: 95, Column: 8} },
+                        Node: { Token: {Value: println, Type: identifier, Line: 98, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: x, Type: identifier, Line: 95, Column: 16}, Type: int }
+                            Node: { Token: {Value: x, Type: identifier, Line: 98, Column: 16}, Type: int }
                         ] }
                     ] },
                     Node: { Label: "control-flow", Type: bool
                     children: [
-                        Node: { Token: {Value: return, Type: flow keyword, Line: 96, Column: 8} },
-                        Node: { Token: {Value: false, Type: boolean value keyword, Line: 96, Column: 15}, Type: bool }
+                        Node: { Token: {Value: return, Type: flow keyword, Line: 99, Column: 8} },
+                        Node: { Token: {Value: false, Type: boolean value keyword, Line: 99, Column: 15}, Type: bool }
                     ] }
                 ] }
             ] }
@@ -485,51 +498,51 @@ children: [
     ] },
     Node: { Label: "fn"
     children: [
-        Node: { Token: {Value: main, Type: identifier, Line: 100, Column: 3} },
-        Node: { Token: {Value: int, Type: type keyword, Line: 100, Column: 13} },
+        Node: { Token: {Value: main, Type: identifier, Line: 103, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 103, Column: 13} },
         Node: { Label: "fn-body"
         children: [
             Node: { Label: "Variable", Type: Person
             children: [
-                Node: { Token: {Value: Person, Type: identifier, Line: 101, Column: 4} },
-                Node: { Token: {Value: p1, Type: identifier, Line: 101, Column: 11} },
+                Node: { Token: {Value: Person, Type: identifier, Line: 104, Column: 4} },
+                Node: { Token: {Value: p1, Type: identifier, Line: 104, Column: 11} },
                 Node: { Label: "struct_literal", Type: Person
                 children: [
-                    Node: { Token: {Value: Person, Type: identifier, Line: 101, Column: 16} },
+                    Node: { Token: {Value: Person, Type: identifier, Line: 104, Column: 16} },
                     Node: { Label: "properties"
                     children: [
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: first, Type: identifier, Line: 102, Column: 8} },
-                            Node: { Token: {Value: "name", Type: string literal, Line: 102, Column: 15}, Type: String }
+                            Node: { Token: {Value: first, Type: identifier, Line: 105, Column: 8} },
+                            Node: { Token: {Value: "name", Type: string literal, Line: 105, Column: 15}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: last, Type: identifier, Line: 103, Column: 8} },
-                            Node: { Token: {Value: "othername", Type: string literal, Line: 103, Column: 14}, Type: String }
+                            Node: { Token: {Value: last, Type: identifier, Line: 106, Column: 8} },
+                            Node: { Token: {Value: "othername", Type: string literal, Line: 106, Column: 14}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: age, Type: identifier, Line: 104, Column: 8} },
-                            Node: { Token: {Value: 25, Type: int literal, Line: 104, Column: 13}, Type: uint32 }
+                            Node: { Token: {Value: age, Type: identifier, Line: 107, Column: 8} },
+                            Node: { Token: {Value: 25, Type: int literal, Line: 107, Column: 13}, Type: uint32 }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: ssn, Type: identifier, Line: 105, Column: 8} },
-                            Node: { Token: {Value: "000000000", Type: string literal, Line: 105, Column: 13}, Type: String }
+                            Node: { Token: {Value: ssn, Type: identifier, Line: 108, Column: 8} },
+                            Node: { Token: {Value: "000000000", Type: string literal, Line: 108, Column: 13}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: status, Type: identifier, Line: 106, Column: 8} },
+                            Node: { Token: {Value: status, Type: identifier, Line: 109, Column: 8} },
                             Node: { Label: "struct_literal", Type: EmploymentStatus
                             children: [
-                                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 106, Column: 16} },
+                                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 109, Column: 16} },
                                 Node: { Label: "properties"
                                 children: [
                                     Node: { Label: "property"
                                     children: [
-                                        Node: { Token: {Value: employed, Type: identifier, Line: 106, Column: 34} },
-                                        Node: { Token: {Value: true, Type: boolean value keyword, Line: 106, Column: 44}, Type: bool }
+                                        Node: { Token: {Value: employed, Type: identifier, Line: 109, Column: 34} },
+                                        Node: { Token: {Value: true, Type: boolean value keyword, Line: 109, Column: 44}, Type: bool }
                                     ] }
                                 ] }
                             ] }
@@ -541,115 +554,115 @@ children: [
             children: [
                 Node: { Label: "modifiers"
                 children: [
-                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 108, Column: 4} }
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 111, Column: 4} }
                 ] },
-                Node: { Token: {Value: Person, Type: identifier, Line: 108, Column: 8} },
-                Node: { Token: {Value: p2, Type: identifier, Line: 108, Column: 15} },
+                Node: { Token: {Value: Person, Type: identifier, Line: 111, Column: 8} },
+                Node: { Token: {Value: p2, Type: identifier, Line: 111, Column: 15} },
                 Node: { Label: "struct_literal", Type: Person
                 children: [
-                    Node: { Token: {Value: Person, Type: identifier, Line: 108, Column: 20} },
+                    Node: { Token: {Value: Person, Type: identifier, Line: 111, Column: 20} },
                     Node: { Label: "properties"
                     children: [
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: first, Type: identifier, Line: 109, Column: 8} },
-                            Node: { Token: {Value: "name", Type: string literal, Line: 109, Column: 15}, Type: String }
+                            Node: { Token: {Value: first, Type: identifier, Line: 112, Column: 8} },
+                            Node: { Token: {Value: "name", Type: string literal, Line: 112, Column: 15}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: last, Type: identifier, Line: 110, Column: 8} },
-                            Node: { Token: {Value: "othername", Type: string literal, Line: 110, Column: 14}, Type: String }
+                            Node: { Token: {Value: last, Type: identifier, Line: 113, Column: 8} },
+                            Node: { Token: {Value: "othername", Type: string literal, Line: 113, Column: 14}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: age, Type: identifier, Line: 111, Column: 8} },
-                            Node: { Token: {Value: 12, Type: int literal, Line: 111, Column: 13}, Type: uint32 }
+                            Node: { Token: {Value: age, Type: identifier, Line: 114, Column: 8} },
+                            Node: { Token: {Value: 12, Type: int literal, Line: 114, Column: 13}, Type: uint32 }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: status, Type: identifier, Line: 112, Column: 8} },
+                            Node: { Token: {Value: status, Type: identifier, Line: 115, Column: 8} },
                             Node: { Label: "struct_literal", Type: EmploymentStatus
                             children: [
-                                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 112, Column: 16} },
+                                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 115, Column: 16} },
                                 Node: { Label: "properties"
                                 children: [
                                     Node: { Label: "property"
                                     children: [
-                                        Node: { Token: {Value: employed, Type: identifier, Line: 112, Column: 34} },
-                                        Node: { Token: {Value: false, Type: boolean value keyword, Line: 112, Column: 44}, Type: bool }
+                                        Node: { Token: {Value: employed, Type: identifier, Line: 115, Column: 34} },
+                                        Node: { Token: {Value: false, Type: boolean value keyword, Line: 115, Column: 44}, Type: bool }
                                     ] }
                                 ] }
                             ] }
                         ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: ssn, Type: identifier, Line: 113, Column: 8} },
-                            Node: { Token: {Value: "000000001", Type: string literal, Line: 113, Column: 13}, Type: String }
+                            Node: { Token: {Value: ssn, Type: identifier, Line: 116, Column: 8} },
+                            Node: { Token: {Value: "000000001", Type: string literal, Line: 116, Column: 13}, Type: String }
                         ] }
                     ] }
                 ] }
             ] },
             Node: { Label: "Variable", Type: String
             children: [
-                Node: { Token: {Value: String, Type: type keyword, Line: 115, Column: 4} },
-                Node: { Token: {Value: personString, Type: identifier, Line: 115, Column: 11} },
+                Node: { Token: {Value: String, Type: type keyword, Line: 118, Column: 4} },
+                Node: { Token: {Value: personString, Type: identifier, Line: 118, Column: 11} },
                 Node: { Label: "typecast", Type: String
                 children: [
-                    Node: { Token: {Value: p1, Type: identifier, Line: 115, Column: 26}, Type: Person },
-                    Node: { Token: {Value: String, Type: type keyword, Line: 115, Column: 32} }
+                    Node: { Token: {Value: p1, Type: identifier, Line: 118, Column: 26}, Type: Person },
+                    Node: { Token: {Value: String, Type: type keyword, Line: 118, Column: 32} }
                 ] }
             ] },
-            Node: { Token: {Value: ==, Type: compare operator, Line: 116, Column: 7}, Type: bool
+            Node: { Token: {Value: ==, Type: compare operator, Line: 119, Column: 7}, Type: bool
             children: [
-                Node: { Token: {Value: p1, Type: identifier, Line: 116, Column: 4}, Type: Person },
-                Node: { Token: {Value: p2, Type: identifier, Line: 116, Column: 10}, Type: Person }
+                Node: { Token: {Value: p1, Type: identifier, Line: 119, Column: 4}, Type: Person },
+                Node: { Token: {Value: p2, Type: identifier, Line: 119, Column: 10}, Type: Person }
             ] },
-            Node: { Token: {Value: ==, Type: compare operator, Line: 117, Column: 13}, Type: bool
+            Node: { Token: {Value: ==, Type: compare operator, Line: 120, Column: 13}, Type: bool
             children: [
                 Node: { Label: "dot", Type: String
                 children: [
-                    Node: { Token: {Value: p1, Type: identifier, Line: 117, Column: 4}, Type: Person },
-                    Node: { Token: {Value: first, Type: identifier, Line: 117, Column: 7} }
+                    Node: { Token: {Value: p1, Type: identifier, Line: 120, Column: 4}, Type: Person },
+                    Node: { Token: {Value: first, Type: identifier, Line: 120, Column: 7} }
                 ] },
                 Node: { Label: "dot", Type: String
                 children: [
-                    Node: { Token: {Value: p2, Type: identifier, Line: 117, Column: 16}, Type: Person },
-                    Node: { Token: {Value: first, Type: identifier, Line: 117, Column: 19} }
+                    Node: { Token: {Value: p2, Type: identifier, Line: 120, Column: 16}, Type: Person },
+                    Node: { Token: {Value: first, Type: identifier, Line: 120, Column: 19} }
                 ] }
             ] },
             Node: { Label: "if-block"
             children: [
                 Node: { Label: "if"
                 children: [
-                    Node: { Token: {Value: &&, Type: operator, Line: 118, Column: 27}, Type: bool
+                    Node: { Token: {Value: &&, Type: operator, Line: 121, Column: 27}, Type: bool
                     children: [
                         Node: { Label: "dot", Type: bool
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: p1, Type: identifier, Line: 118, Column: 8}, Type: Person },
-                                Node: { Token: {Value: status, Type: identifier, Line: 118, Column: 11} }
+                                Node: { Token: {Value: p1, Type: identifier, Line: 121, Column: 8}, Type: Person },
+                                Node: { Token: {Value: status, Type: identifier, Line: 121, Column: 11} }
                             ] },
-                            Node: { Token: {Value: employed, Type: identifier, Line: 118, Column: 18} }
+                            Node: { Token: {Value: employed, Type: identifier, Line: 121, Column: 18} }
                         ] },
                         Node: { Label: "dot", Type: bool
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: p2, Type: identifier, Line: 118, Column: 30}, Type: Person },
-                                Node: { Token: {Value: status, Type: identifier, Line: 118, Column: 33} }
+                                Node: { Token: {Value: p2, Type: identifier, Line: 121, Column: 30}, Type: Person },
+                                Node: { Token: {Value: status, Type: identifier, Line: 121, Column: 33} }
                             ] },
-                            Node: { Token: {Value: employed, Type: identifier, Line: 118, Column: 40} }
+                            Node: { Token: {Value: employed, Type: identifier, Line: 121, Column: 40} }
                         ] }
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
                         Node: { Label: "call", Type: None
                         children: [
-                            Node: { Token: {Value: println, Type: identifier, Line: 119, Column: 8} },
+                            Node: { Token: {Value: println, Type: identifier, Line: 122, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: "woot", Type: string literal, Line: 119, Column: 16}, Type: String }
+                                Node: { Token: {Value: "woot", Type: string literal, Line: 122, Column: 16}, Type: String }
                             ] }
                         ] }
                     ] }
@@ -659,49 +672,49 @@ children: [
             children: [
                 Node: { Label: "modifiers"
                 children: [
-                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 120, Column: 4} }
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 123, Column: 4} }
                 ] },
-                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 120, Column: 8} },
-                Node: { Token: {Value: status, Type: identifier, Line: 120, Column: 25} }
+                Node: { Token: {Value: EmploymentStatus, Type: identifier, Line: 123, Column: 8} },
+                Node: { Token: {Value: status, Type: identifier, Line: 123, Column: 25} }
             ] },
-            Node: { Token: {Value: =, Type: assign operator, Line: 121, Column: 23}, Type: bool
+            Node: { Token: {Value: =, Type: assign operator, Line: 124, Column: 23}, Type: bool
             children: [
                 Node: { Label: "dot", Type: bool
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Token: {Value: p2, Type: identifier, Line: 121, Column: 4}, Type: Person },
-                        Node: { Token: {Value: status, Type: identifier, Line: 121, Column: 7} }
+                        Node: { Token: {Value: p2, Type: identifier, Line: 124, Column: 4}, Type: Person },
+                        Node: { Token: {Value: status, Type: identifier, Line: 124, Column: 7} }
                     ] },
-                    Node: { Token: {Value: employed, Type: identifier, Line: 121, Column: 14} }
+                    Node: { Token: {Value: employed, Type: identifier, Line: 124, Column: 14} }
                 ] },
-                Node: { Token: {Value: true, Type: boolean value keyword, Line: 121, Column: 25}, Type: bool }
+                Node: { Token: {Value: true, Type: boolean value keyword, Line: 124, Column: 25}, Type: bool }
             ] },
             Node: { Label: "Variable", Type: Outer
             children: [
                 Node: { Label: "modifiers"
                 children: [
-                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 122, Column: 4} }
+                    Node: { Token: {Value: mut, Type: modifier keyword, Line: 125, Column: 4} }
                 ] },
-                Node: { Token: {Value: Outer, Type: identifier, Line: 122, Column: 8} },
-                Node: { Token: {Value: outer, Type: identifier, Line: 122, Column: 14} },
+                Node: { Token: {Value: Outer, Type: identifier, Line: 125, Column: 8} },
+                Node: { Token: {Value: outer, Type: identifier, Line: 125, Column: 14} },
                 Node: { Label: "struct_literal", Type: Outer
                 children: [
-                    Node: { Token: {Value: Outer, Type: identifier, Line: 122, Column: 22} },
+                    Node: { Token: {Value: Outer, Type: identifier, Line: 125, Column: 22} },
                     Node: { Label: "properties"
                     children: [
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: inner, Type: identifier, Line: 123, Column: 8} },
+                            Node: { Token: {Value: inner, Type: identifier, Line: 126, Column: 8} },
                             Node: { Label: "struct_literal", Type: Inner
                             children: [
-                                Node: { Token: {Value: Inner, Type: identifier, Line: 123, Column: 15} },
+                                Node: { Token: {Value: Inner, Type: identifier, Line: 126, Column: 15} },
                                 Node: { Label: "properties"
                                 children: [
                                     Node: { Label: "property"
                                     children: [
-                                        Node: { Token: {Value: value, Type: identifier, Line: 124, Column: 12} },
-                                        Node: { Token: {Value: "asdf", Type: string literal, Line: 124, Column: 19}, Type: String }
+                                        Node: { Token: {Value: value, Type: identifier, Line: 127, Column: 12} },
+                                        Node: { Token: {Value: "asdf", Type: string literal, Line: 127, Column: 19}, Type: String }
                                     ] }
                                 ] }
                             ] }
@@ -709,23 +722,23 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Token: {Value: =, Type: assign operator, Line: 127, Column: 22}, Type: String
+            Node: { Token: {Value: =, Type: assign operator, Line: 130, Column: 22}, Type: String
             children: [
                 Node: { Label: "dot", Type: String
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Token: {Value: outer, Type: identifier, Line: 127, Column: 4}, Type: Outer },
-                        Node: { Token: {Value: inner, Type: identifier, Line: 127, Column: 10} }
+                        Node: { Token: {Value: outer, Type: identifier, Line: 130, Column: 4}, Type: Outer },
+                        Node: { Token: {Value: inner, Type: identifier, Line: 130, Column: 10} }
                     ] },
-                    Node: { Token: {Value: value, Type: identifier, Line: 127, Column: 16} }
+                    Node: { Token: {Value: value, Type: identifier, Line: 130, Column: 16} }
                 ] },
-                Node: { Token: {Value: "wasd", Type: string literal, Line: 127, Column: 24}, Type: String }
+                Node: { Token: {Value: "wasd", Type: string literal, Line: 130, Column: 24}, Type: String }
             ] },
             Node: { Label: "control-flow", Type: int
             children: [
-                Node: { Token: {Value: return, Type: flow keyword, Line: 128, Column: 4} },
-                Node: { Token: {Value: 0, Type: int literal, Line: 128, Column: 11}, Type: int }
+                Node: { Token: {Value: return, Type: flow keyword, Line: 131, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 131, Column: 11}, Type: int }
             ] }
         ] }
     ] }
@@ -761,7 +774,9 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: EmploymentStatus, type: 2, parent: @global, variables: map[employed:{name: employed, Type: bool, isMutable: true, Initialized: false} global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(EmploymentStatus), isPrivate: true, isMutable: true, Initialized: true}] },
         Scope: { id: Person, type: 2, parent: @global, variables: map[age:{name: age, Type: uint32, Initialized: false} first:{name: first, Type: String, Initialized: false} global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} last:{name: last, Type: String, Initialized: false} ssn:{name: ssn, Type: String, isPrivate: true, Initialized: false} status:{name: status, Type: EmploymentStatus, isMutable: true, Initialized: false} this:{name: this, Type: Ref(Person), isPrivate: true, isMutable: true, Initialized: true}] },
-        Scope: { id: Inner, type: 2, parent: @global, variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(Inner), isPrivate: true, isMutable: true, Initialized: true} value:{name: value, Type: String, isMutable: true, Initialized: false}] },
+        Scope: { id: Inner, type: 2, parent: @global, functions: map[innerFunc:{name: innerFunc, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(Inner), isPrivate: true, isMutable: true, Initialized: true} value:{name: value, Type: String, isMutable: true, Initialized: false}], children: [
+            Scope: { id: innerFunc()@Inner, type: 4, parent: Inner }
+        ] },
         Scope: { id: Outer, type: 2, parent: @global, variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} inner:{name: inner, Type: Inner, isMutable: true, Initialized: false} this:{name: this, Type: Ref(Outer), isPrivate: true, isMutable: true, Initialized: true}] },
         Scope: { id: TestName, type: 2, parent: @global, functions: map[getX:{name: getX, returns: bool, overloads: [{parameters: (), implemented: true}]}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(TestName), isPrivate: true, isMutable: true, Initialized: true} x:{name: x, Type: int, isMutable: true, Initialized: false}], children: [
             Scope: { id: getX()@TestName, type: 4, parent: TestName }
@@ -1746,7 +1761,7 @@ children: [
                         Node: { Token: {Value: pgsql, Type: identifier, Line: 165, Column: 4}, Type: PostgreSQL },
                         Node: { Token: {Value: Server, Type: identifier, Line: 165, Column: 10} }
                     ] },
-                    Node: { Token: {Value: connect, Type: identifier, Line: 165, Column: 17} }
+                    Node: { Token: {Value: connect, Type: identifier, Line: 165, Column: 17}, IRName: "__PostgreSQL_DB_connect" }
                 ] }
             ] },
             Node: { Label: "call", Type: None

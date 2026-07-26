@@ -189,9 +189,31 @@ func (symbol FnCreateSymbol) toOverload(hasMatch bool) FnOverloadSymbol {
 	}
 }
 
+// getX()@TestName
+// main()
+// read scope id until ( -> "raw" function name
+// if one @, treat as struct method
+// if two @s, treat as struct, named block method
+
+func getIRNamePrefix(scopeId string) string {
+	prefix := strings.Split(scopeId, "(")[0]
+	if strings.ContainsRune(scopeId, '@') {
+		parts := strings.Split(scopeId, "@")
+		for i := 1; i < len(parts); i++ {
+			prefix = parts[i] + "_" + prefix // prepend the prefix
+		}
+		prefix = "__" + prefix
+	}
+	return prefix
+}
+
 func (symbol FnCreateSymbol) getIRName(hasMatch bool) string {
-	if !hasMatch {
+	if symbol.innerScope == nil {
 		return ""
+	}
+	name := getIRNamePrefix(symbol.innerScope.Id)
+	if !hasMatch {
+		return name
 	}
 	params := strings.Builder{}
 	for _, param := range symbol.parameters {
@@ -199,21 +221,21 @@ func (symbol FnCreateSymbol) getIRName(hasMatch bool) string {
 		params.WriteString(param.String())
 	}
 	if len(symbol.parameters) == 0 {
-		return symbol.name
+		return name
 	}
-	return fmt.Sprintf("%s__%s", symbol.name, params.String())
+	return fmt.Sprintf("%s__%s", name, params.String())
 }
 
-func (fn *FnOverloadSymbol) updateIRName(name string) {
+func (fn *FnOverloadSymbol) updateIRName() {
 	params := strings.Builder{}
 	for _, param := range fn.Parameters {
 		params.WriteString("__")
 		params.WriteString(param.String())
 	}
 	if len(fn.Parameters) == 0 {
-		fn.IRName = name
+		fn.IRName = getIRNamePrefix(fn.InnerScope.Id)
 	} else {
-		fn.IRName = fmt.Sprintf("%s__%s", name, params.String())
+		fn.IRName = fmt.Sprintf("%s__%s", getIRNamePrefix(fn.InnerScope.Id), params.String())
 	}
 }
 

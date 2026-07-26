@@ -255,7 +255,7 @@ func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
 		if fn.GetMatchingOverload(symbol.parameters) != nil {
 			return fmt.Errorf("Function with signature '%s' cannot be redefined", symbol.getSignature())
 		} else {
-			fn.Overloads[0].updateIRName(symbol.name) // Update existing name
+			fn.Overloads[0].updateIRName() // Update existing name
 			fn.Overloads = append(fn.Overloads, symbol.toOverload(true))
 			table[fn.Name] = fn
 		}

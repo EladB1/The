@@ -3,6 +3,7 @@ package semantic
 import (
 	"fmt"
 	"slices"
+	"strings"
 
 	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
@@ -242,6 +243,7 @@ func analyzeInterfaceImplementation() {
 								nb_fn.Overloads[i].Parameters = overload.Parameters
 								nb_fn.Overloads[i].InnerScope = namedBlock.InnerScope.addChild(fmt.Sprintf("%s@%s", fn.Name, namedBlock.InnerScope.Id), Function)
 								nb_fn.Overloads[i].InnerScope.Variables = overload.InnerScope.Variables
+								nb_fn.Overloads[i].IRName = strings.Replace(overload.IRName, fmt.Sprintf("__%s", intfName), fmt.Sprintf("__%s_%s", str.Name, intfName), 1)
 								namedBlock.InnerScope.Functions[fn.Name] = *nb_fn
 							} else {
 								messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Interface %s implementation missing 'fn %s(%s)%s'", intfName, fn.Name, params, returnStr)
