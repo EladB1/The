@@ -49,8 +49,6 @@ Null Safety
 
 Establish a `Maybe<Type>` which states that it could either contain a value of type `Type` or could be empty. Both cases would have to be handled either by `match`, if statements, or a special syntax like `?` for `Type` and `?:` for empty. The "zero value" of a `Maybe` is empty.
 
-Under the hood, it's just a pointer with the resolved value pointing to something of the underlying type and the empty value being a null pointer.
-
 Idea for how the code would look:
 
 ```
@@ -73,10 +71,15 @@ fn deleteEverythingAfterNode(Node head) {
 }
 ```
 
+> Under the hood:
+> `Maybe<T>` is a pointer to a value of type `T`\
+> An empty value means the pointer is null\
+> Resolved is used to safely dereference the pointer
+
 Error Handling
 ---
 
-Create an error handling system where there are a set of built-in errors as well as user defined errors. Anything that could throw an error must have type `Try<Type, ErrorType>`. Both causes would have to be handled either by `match`, if statements, or a special syntax like `?` for `Type` and `?:` for error. Essentially, `Try<Type, ErrorType>` is two pointers: one to the resolved and the other to the possible error; one pointer will always be null.
+Create an error handling system where there are a set of built-in errors as well as user defined errors. Anything that could throw an error must have type `Try<Type, ErrorType>`. Both causes would have to be handled either by `match`, if statements, or a special syntax like `?` for `Type` and `?:` for error. Essentially, `Try<Type, ErrorType>` is 
 
 There are 
 
@@ -91,16 +94,23 @@ fn getFile(String path) -> Try<File, IOError> {
 }
 
 fn main() -> int {
-    String lines = getFile("/etc/hosts")
-                    .resolved(File file => file.read())
-                    .failed(IOError err => {
-                        exit(1, err);
-                    });
-    // Consumer of Try must handle both the resolved/failed cases
+    String lines = getFile("/etc/hosts").fold(
+        resolved: file => file.read(),
+        failed: error => {
+            exit(1, err);
+            // can return a String from here to handle the error gracefully
+        }
+    );
     return 0;
 }
 
 ```
+
+> Under the hood:
+> `Try<T, E>` a tagged union with an internal value flag\
+> If resolved, the value flag is set to 0; otherwise, set it to 1\
+> `raise` value should be 1\
+> `fold` resolves down to conditional blocks that run the `resolved` and `failed` code depending on the tagged union flag
 
 Enums
 ---
