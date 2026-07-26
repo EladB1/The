@@ -71,7 +71,7 @@ fn deleteEverythingAfterNode(Node head) {
 }
 ```
 
-> Under the hood:
+> **Under the hood:**\
 > `Maybe<T>` is a pointer to a value of type `T`\
 > An empty value means the pointer is null\
 > Resolved is used to safely dereference the pointer
@@ -106,10 +106,10 @@ fn main() -> int {
 
 ```
 
-> Under the hood:
-> `Try<T, E>` a tagged union with an internal value flag\
+> **Under the hood:**\
+> `Try<T, E>` is a tagged union with an internal value flag\
 > If resolved, the value flag is set to 0; otherwise, set it to 1\
-> `raise` value should be 1\
+> `raise` sets the internal flag to 1, indicating that the error type should be used\
 > `fold` resolves down to conditional blocks that run the `resolved` and `failed` code depending on the tagged union flag
 
 Enums
