@@ -10,14 +10,14 @@ Just filling out a basic outline for now
 func Optimize(prog *irgen.Program) {}
 
 // When an unreachable statement is found, removing anything including and after it
-func removeAllUnreachable()
+func removeAllUnreachable() {}
 
 // Fold constant expressions to their result; i.e.: 1 + 6 <= 3 * 2 becomes 6 <= 6 becomes true
-func constantFolding()
+func constantFolding() {}
 
 // a plain expression that isn't used by anything can be removed
-func removeUnusedExpression()
+func removeUnusedExpression() {}
 
-func removeUnusedVariable()
+func removeUnusedVariable() {}
 
-func removeUnusedFunction()
+func removeUnusedFunction() {}

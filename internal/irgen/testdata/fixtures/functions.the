@@ -3,6 +3,14 @@ fn test() {
     println(num);
 }
 
+fn test2() {
+    mut int i = 0;
+    i = 1;
+    i = i + 1;
+    i *= 5;
+    return;
+}
+
 fn add(int x, int y) -> int {
     return x + y;
 }

@@ -74,7 +74,52 @@ func functionDefinition(ast *parser.AST) []TAC {
 					}
 				}
 			} else if node.Token.Kind == lexer.OPERATOR_ASSIGN {
-
+				name := node.Children[0].Token.Value
+				value := node.Children[1]
+				value_in, value_op := translateExpression(*value)
+				if node.Token.Value != "=" {
+					instructions, operand := loadVariable(*node.Children[0])
+					fn.Code = append(fn.Code, instructions...)
+					var operation Operation
+					result := formTempVar(operand.Type)
+					switch node.Token.Value {
+					case "+=":
+						operation = typedOperation(operand.Type, "add")
+					case "-=":
+						operation = typedOperation(operand.Type, "sub")
+					case "*=":
+						operation = typedOperation(operand.Type, "mul")
+					case "/=":
+						operation = typedOperation(operand.Type, "div")
+					}
+					fn.Code = append(fn.Code, value_in...)
+					fn.Code = append(fn.Code, Instruction{
+						Destination: result,
+						Operation:   operation,
+						Operand1:    operand,
+						Operand2:    value_op,
+					})
+					value_op = Operand{
+						Type: operand.Type,
+						Var:  result,
+					}
+				} else {
+					fn.Code = append(fn.Code, value_in...)
+				}
+				variable := currScope.LookupVariable(name)
+				if variable != nil {
+					fn.Code = append(fn.Code, Instruction{
+						Operation: Store,
+						Operand1: Operand{
+							Var: Variable{
+								Name:       variable.Name,
+								DataType:   dt.TranslateSourceType(variable.Type),
+								Visibility: VariableScope(variable.Ctx),
+							},
+						},
+						Operand2: value_op,
+					})
+				}
 			} else if node.Label == "while" {
 
 			} else if node.Label == "for" {
