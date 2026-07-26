@@ -22,18 +22,54 @@ func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.Ph
 	messages = diagnostic.PhaseDiagnostics{}
 	currScope = scopeTree.Children[0] // get the global scope using the built-in scope
 	for _, node := range ast.Children {
-		if node.Label == "Variable" {
-			prog.appendCode(variableDeclaration(node, scopeTree))
+		switch node.Label {
+		case "Variable":
+			prog.appendCode(variableDeclaration(node))
+		case "fn":
+			prog.appendCode(functionDefinition(node))
 		}
 	}
 	return prog, messages
 }
 
-func variableDeclaration(ast *parser.AST, scopeTree *semantic.Scope) []TAC {
-	/*
-		no value => add "zero" value
-		value => get code for value
-	*/
+func functionDefinition(ast *parser.AST) []TAC {
+
+	fn := Function{}
+	fn.Name = ast.IRName
+	returnType := ast.Type
+	fn.ReturnType = dt.TranslateSourceType(returnType)
+	name := ast.Children[0].Token.Value
+	overload := currScope.LookupFunctionByNameAndIRName(name, fn.Name)
+	if overload == nil {
+		return []TAC{fn}
+	}
+	scope := currScope
+	fn.Parameters = []Parameter{}
+	if len(overload.Parameters) != 0 {
+		params := ast.Children[1]
+		for i := range len(overload.Parameters) {
+			fn.Parameters = append(fn.Parameters, Parameter{
+				Name: params.Children[i].Children[1].Token.Value,
+				Type: dt.TranslateSourceType(overload.Parameters[i]),
+			})
+		}
+	}
+	if overload.HasDefaultImplementation {
+		currScope = overload.InnerScope
+		for _, node := range overload.Body.Children {
+			if node.Label == "Variable" {
+				fn.Code = append(fn.Code, variableDeclaration(node)...)
+			} else {
+				expression, _ := translateExpression(*node)
+				fn.Code = append(fn.Code, expression...)
+			}
+		}
+	}
+	currScope = scope
+	return []TAC{fn}
+}
+
+func variableDeclaration(ast *parser.AST) []TAC {
 	details := ast.Children
 	var name string = details[1].Token.Value
 	var vis VariableScope
@@ -42,7 +78,7 @@ func variableDeclaration(ast *parser.AST, scopeTree *semantic.Scope) []TAC {
 	instructions := []TAC{}
 	if currScope.Id == "@global" {
 		vis = Global
-	} else { // TODO handle function parameters
+	} else {
 		vis = Local
 	}
 	if details[0].Label == "modifiers" {

@@ -87,7 +87,7 @@ children: [
         Node: { Token: {Value: newLine, Type: identifier, Line: 7, Column: 5} },
         Node: { Token: {Value: '\n', Type: char literal, Line: 7, Column: 15}, Type: char }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 9, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 9, Column: 13} },
@@ -158,7 +158,7 @@ children: [
         Node: { Token: {Value: int, Type: type keyword, Line: 0, Column: 4} },
         Node: { Token: {Value: i, Type: identifier, Line: 0, Column: 8} }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 2, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 2, Column: 13} },
@@ -280,7 +280,7 @@ children: [
             Node: { Token: {Value: 1, Type: int literal, Line: 4, Column: 15}, Type: int }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 6, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 6, Column: 13} },

@@ -178,8 +178,8 @@ func (symbol FnCreateSymbol) getSignature() string {
 	return fmt.Sprintf("fn %s(%s)%s", symbol.name, dt.JoinTypes(symbol.parameters), returns)
 }
 
-func (symbol FnCreateSymbol) toOverload(hasMatch bool) FnOverloadSymbol {
-	return FnOverloadSymbol{
+func (symbol FnCreateSymbol) toOverload(hasMatch bool) *FnOverloadSymbol {
+	return &FnOverloadSymbol{
 		Parameters:               symbol.parameters,
 		HasDefaultImplementation: symbol.hasDefaultImplementation,
 		IsPrivate:                symbol.isPrivate,
@@ -217,26 +217,13 @@ func (symbol FnCreateSymbol) getIRName(hasMatch bool) string {
 	}
 	params := strings.Builder{}
 	for _, param := range symbol.parameters {
-		params.WriteString("__")
+		params.WriteString("--")
 		params.WriteString(param.String())
 	}
 	if len(symbol.parameters) == 0 {
 		return name
 	}
-	return fmt.Sprintf("%s__%s", name, params.String())
-}
-
-func (fn *FnOverloadSymbol) updateIRName() {
-	params := strings.Builder{}
-	for _, param := range fn.Parameters {
-		params.WriteString("__")
-		params.WriteString(param.String())
-	}
-	if len(fn.Parameters) == 0 {
-		fn.IRName = getIRNamePrefix(fn.InnerScope.Id)
-	} else {
-		fn.IRName = fmt.Sprintf("%s__%s", getIRNamePrefix(fn.InnerScope.Id), params.String())
-	}
+	return fmt.Sprintf("%s%s", name, params.String())
 }
 
 func (fn FunctionSymbol) GetMatchingOverload(params []dt.SourceType) *FnOverloadSymbol {

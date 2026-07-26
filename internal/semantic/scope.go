@@ -243,30 +243,47 @@ func (scope *Scope) LookupFunctionByName(name string) *FunctionSymbol {
 	return nil
 }
 
-func (table FunctionSymbolTable) add(symbol FnCreateSymbol) error {
+func (scope *Scope) LookupFunctionByNameAndIRName(name, irName string) *FnOverloadSymbol {
+	curr := scope
+	for curr != nil {
+		if fn, ok := curr.Functions[name]; ok {
+			for _, overload := range fn.Overloads {
+				if overload.IRName == irName {
+					return &overload
+				}
+			}
+		}
+		curr = curr.Parent
+	}
+	return nil
+}
+
+func (table FunctionSymbolTable) add(symbol FnCreateSymbol) (*FnOverloadSymbol, error) {
+	var overload *FnOverloadSymbol = nil
 	fn, ok := table[symbol.name]
 	if ok {
 		if !fn.ReturnType.Equals(symbol.returnType) {
 			if fn.ReturnType.Equals(dt.NoneType) {
-				return fmt.Errorf("Function name '%s' already defined without a return type; cannot overload with return type %s", symbol.name, symbol.returnType)
+				return overload, fmt.Errorf("Function name '%s' already defined without a return type; cannot overload with return type %s", symbol.name, symbol.returnType)
 			}
-			return fmt.Errorf("Function name '%s' can only be overloaded with return type %s. Found: %s", symbol.name, fn.ReturnType, symbol.returnType)
+			return overload, fmt.Errorf("Function name '%s' can only be overloaded with return type %s. Found: %s", symbol.name, fn.ReturnType, symbol.returnType)
 		}
 		if fn.GetMatchingOverload(symbol.parameters) != nil {
-			return fmt.Errorf("Function with signature '%s' cannot be redefined", symbol.getSignature())
+			return overload, fmt.Errorf("Function with signature '%s' cannot be redefined", symbol.getSignature())
 		} else {
-			fn.Overloads[0].updateIRName() // Update existing name
-			fn.Overloads = append(fn.Overloads, symbol.toOverload(true))
+			overload = symbol.toOverload(true)
+			fn.Overloads = append(fn.Overloads, *overload)
 			table[fn.Name] = fn
 		}
 	} else {
+		overload = symbol.toOverload(false)
 		table[symbol.name] = FunctionSymbol{
 			Name:       symbol.name,
 			ReturnType: symbol.returnType,
-			Overloads:  []FnOverloadSymbol{symbol.toOverload(false)},
+			Overloads:  []FnOverloadSymbol{*overload},
 		}
 	}
-	return nil
+	return overload, nil
 }
 
 func ImplementsInterface(possibleIntf, type_ dt.SourceType) bool {

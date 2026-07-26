@@ -79,6 +79,7 @@ func processFunctionSignature(fnNode *parser.AST) FnCreateSymbol {
 		Body:                     bodyNode,
 		innerScope:               newScope,
 	}
+	fnNode.Type = returnType
 	return symbol
 }
 

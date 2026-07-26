@@ -3,7 +3,7 @@
 AST:
 Node: { Label: "program"
 children: [
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "overloads", Type: bool
     children: [
         Node: { Token: {Value: overloads, Type: identifier, Line: 0, Column: 3} },
         Node: { Token: {Value: bool, Type: type keyword, Line: 0, Column: 18} },
@@ -16,7 +16,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "overloads--int", Type: bool
     children: [
         Node: { Token: {Value: overloads, Type: identifier, Line: 4, Column: 3} },
         Node: { Label: "params"
@@ -41,7 +41,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "overloads--int--int", Type: bool
     children: [
         Node: { Token: {Value: overloads, Type: identifier, Line: 8, Column: 3} },
         Node: { Label: "params"
@@ -77,7 +77,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "caller", Type: None
     children: [
         Node: { Token: {Value: caller, Type: identifier, Line: 13, Column: 4} },
         Node: { Label: "fn-body"
@@ -96,7 +96,7 @@ children: [
                     ] },
                     Node: { Label: "call", Type: bool
                     children: [
-                        Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 20}, IRName: "overloads____int" },
+                        Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 20}, IRName: "overloads--int" },
                         Node: { Label: "params"
                         children: [
                             Node: { Token: {Value: 1, Type: int literal, Line: 14, Column: 30}, Type: int }
@@ -105,7 +105,7 @@ children: [
                 ] },
                 Node: { Label: "call", Type: bool
                 children: [
-                    Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 36}, IRName: "overloads____int__int" },
+                    Node: { Token: {Value: overloads, Type: identifier, Line: 14, Column: 36}, IRName: "overloads--int--int" },
                     Node: { Label: "params"
                     children: [
                         Node: { Token: {Value: +, Type: add operator, Line: 14, Column: 47}, Type: int
@@ -123,7 +123,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 18, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 18, Column: 13} },
@@ -140,7 +140,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "forwardDeclaration", Type: None
     children: [
         Node: { Token: {Value: forwardDeclaration, Type: identifier, Line: 23, Column: 3} },
         Node: { Label: "fn-body"
@@ -155,7 +155,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "returns", Type: bool
     children: [
         Node: { Token: {Value: returns, Type: identifier, Line: 27, Column: 3} },
         Node: { Token: {Value: bool, Type: type keyword, Line: 27, Column: 16} },
@@ -193,7 +193,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "returns--int", Type: bool
     children: [
         Node: { Token: {Value: returns, Type: identifier, Line: 34, Column: 3} },
         Node: { Label: "params"
@@ -233,7 +233,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "returns--int--int", Type: bool
     children: [
         Node: { Token: {Value: returns, Type: identifier, Line: 40, Column: 3} },
         Node: { Label: "params"
@@ -300,7 +300,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "returns--uint32--uint32", Type: bool
     children: [
         Node: { Token: {Value: returns, Type: identifier, Line: 49, Column: 3} },
         Node: { Label: "params"
@@ -375,7 +375,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "returns--uint32--uint32--uint32", Type: bool
     children: [
         Node: { Token: {Value: returns, Type: identifier, Line: 59, Column: 3} },
         Node: { Label: "params"
@@ -451,7 +451,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "returns--uint64--uint64--uint64", Type: bool
     children: [
         Node: { Token: {Value: returns, Type: identifier, Line: 69, Column: 3} },
         Node: { Label: "params"
@@ -579,7 +579,7 @@ Compiler messages:
 AST:
 Node: { Label: "program"
 children: [
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "ifBlock", Type: None
     children: [
         Node: { Token: {Value: ifBlock, Type: identifier, Line: 0, Column: 3} },
         Node: { Label: "params"
@@ -646,7 +646,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 11, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 11, Column: 13} },
@@ -689,16 +689,16 @@ Compiler messages:
 AST:
 Node: { Label: "program"
 children: [
-    Node: { Label: "fn"
+    Node: { Label: "fn", Type: None
     children: [
         Node: { Token: {Value: test, Type: identifier, Line: 0, Column: 3} }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", Type: None
     children: [
         Node: { Token: {Value: test, Type: identifier, Line: 2, Column: 3} },
         Node: { Label: "fn-body" }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "overloads", Type: bool
     children: [
         Node: { Token: {Value: overloads, Type: identifier, Line: 4, Column: 3} },
         Node: { Label: "params"
@@ -719,7 +719,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", Type: bool
     children: [
         Node: { Token: {Value: overloads, Type: identifier, Line: 8, Column: 3} },
         Node: { Label: "params"
@@ -744,7 +744,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", Type: char
     children: [
         Node: { Token: {Value: overloads, Type: identifier, Line: 12, Column: 3} },
         Node: { Label: "params"
@@ -769,7 +769,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "plusOne", Type: int
     children: [
         Node: { Token: {Value: plusOne, Type: identifier, Line: 16, Column: 3} },
         Node: { Label: "params"
@@ -794,7 +794,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "caller", Type: None
     children: [
         Node: { Token: {Value: caller, Type: identifier, Line: 20, Column: 3} },
         Node: { Label: "fn-body"
@@ -822,12 +822,12 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", Type: None
     children: [
         Node: { Token: {Value: badReturn, Type: identifier, Line: 26, Column: 3} },
         Node: { Token: {Value: TYPE, Type: identifier, Line: 26, Column: 18} }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "missingReturn", Type: uint32
     children: [
         Node: { Token: {Value: missingReturn, Type: identifier, Line: 28, Column: 3} },
         Node: { Token: {Value: uint32, Type: type keyword, Line: 28, Column: 22} },
@@ -843,7 +843,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "missingReturn--uint32", Type: uint32
     children: [
         Node: { Token: {Value: missingReturn, Type: identifier, Line: 32, Column: 3} },
         Node: { Label: "params"
@@ -881,7 +881,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "missingReturn--uint32--uint32", Type: uint32
     children: [
         Node: { Token: {Value: missingReturn, Type: identifier, Line: 37, Column: 3} },
         Node: { Label: "params"
@@ -951,7 +951,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "missingReturn--int", Type: uint32
     children: [
         Node: { Token: {Value: missingReturn, Type: identifier, Line: 50, Column: 3} },
         Node: { Label: "params"
@@ -983,7 +983,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "missingReturn--int--int", Type: uint32
     children: [
         Node: { Token: {Value: missingReturn, Type: identifier, Line: 58, Column: 3} },
         Node: { Label: "params"
@@ -1038,7 +1038,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "missingReturnNestedIfBlocks", Type: bool
     children: [
         Node: { Token: {Value: missingReturnNestedIfBlocks, Type: identifier, Line: 66, Column: 3} },
         Node: { Label: "params"
@@ -1168,7 +1168,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "wrongReturnValue", Type: int
     children: [
         Node: { Token: {Value: wrongReturnValue, Type: identifier, Line: 84, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 84, Column: 25} },
@@ -1181,7 +1181,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "wrongReturnValue--int", Type: int
     children: [
         Node: { Token: {Value: wrongReturnValue, Type: identifier, Line: 88, Column: 3} },
         Node: { Label: "params"
@@ -1221,7 +1221,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "wrongReturnValue--int--int", Type: int
     children: [
         Node: { Token: {Value: wrongReturnValue, Type: identifier, Line: 94, Column: 3} },
         Node: { Label: "params"
@@ -1276,7 +1276,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "wrongAndMissingReturnValue", Type: int
     children: [
         Node: { Token: {Value: wrongAndMissingReturnValue, Type: identifier, Line: 101, Column: 3} },
         Node: { Label: "params"

@@ -122,6 +122,31 @@ Program: [
     PARAM i32(97)
     __t61: none = CALL __str_contains_char 2
     STORE global.hasA
+    fn main()->i32 {}
+
+]
+
+Compiler messages:
+[
+]
+---
+
+[TestLiteralsAndSimpleAssignments/should_run_functions_and_produce_IR - 1]
+IR:
+Program: [
+    fn test() {
+        STORE local.num i32(1)
+        __t0: i32 = GET local.num
+        PARAM __t0
+        __t1: none = CALL println 1
+    }
+
+    fn add(param.x: i32, param.y: i32)->i32 {}
+
+    fn add--int--int--int(param.x: i32, param.y: i32, param.z: i32)->i32 {}
+
+    fn main()->i32 {}
+
 ]
 
 Compiler messages:

@@ -69,7 +69,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 10, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 10, Column: 13} },
@@ -177,7 +177,7 @@ Compiler messages:
 AST:
 Node: { Label: "program"
 children: [
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 0, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 0, Column: 13} },
@@ -307,7 +307,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 10, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 10, Column: 13} },

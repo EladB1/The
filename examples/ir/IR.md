@@ -39,7 +39,7 @@ fn test(param.i: i32) -> i32 {
     t2: i32 = i32.add t1 i32(1)
     return t2 
 }
-fn main -> i32 {
+fn main() -> i32 {
     STORE local.i: i32 i32(1)
     STORE local.pi: f64 f64(3.14159)
     t3: f32 = GET global.e
@@ -103,7 +103,7 @@ fn main() -> int {
 <td>
 
 ```
-fn main -> i32 {
+fn main() -> i32 {
     STORE local.limit: i32 i32(100)
     block loop_exit@0: {
         // Loop initialization(s)

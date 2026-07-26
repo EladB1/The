@@ -41,6 +41,7 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *Na
 				if !symbol.hasDefaultImplementation {
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Compare block function '%s' must be defined with a function body", symbol.getSignature())
 				}
+				node.IRName = symbol.getIRName(false)
 			case "cast":
 				if len(symbol.parameters) > 0 || symbol.returnType.Equals(dt.NoneType) || symbol.returnType.Equals(dt.NewDynamicType(structName)) {
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Functions in cast block must take no parameters and return a different type")
@@ -50,18 +51,24 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *Na
 					messages.Complain(diagnostic.AmbiguityError, node.Location, "Cannot have more than one cast function that returns %s", symbol.returnType)
 				} else if !symbol.hasDefaultImplementation {
 					messages.Complain(diagnostic.NamedBlockError, node.Location, "Cast block function '%s' must be defined with a function body", symbol.getSignature())
+				} else {
+					node.IRName = symbol.getIRName(false)
 				}
 			case "private":
 				symbol.isPrivate = true
 				currentScope = scope
 				// private is not a real named block; it is only a shortcut to mark everything in it as private
-				if err := currentScope.Functions.add(symbol); err != nil {
+				if overload, err := currentScope.Functions.add(symbol); err != nil {
 					messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
+				} else {
+					node.IRName = overload.IRName
 				}
 				continue
 			}
-			if err := currentScope.Functions.add(symbol); err != nil {
+			if overload, err := currentScope.Functions.add(symbol); err != nil {
 				messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
+			} else {
+				node.IRName = overload.IRName
 			}
 		case "Variable":
 			if name != "private" {

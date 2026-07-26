@@ -13,16 +13,16 @@ children: [
         Node: { Token: {Value: Device, Type: identifier, Line: 2, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: bool
             children: [
                 Node: { Token: {Value: powerOn, Type: identifier, Line: 3, Column: 7} },
                 Node: { Token: {Value: bool, Type: type keyword, Line: 3, Column: 20} }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: None
             children: [
                 Node: { Token: {Value: powerOff, Type: identifier, Line: 4, Column: 7} }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", IRName: "__Device_restart", Type: bool
             children: [
                 Node: { Token: {Value: restart, Type: identifier, Line: 5, Column: 7} },
                 Node: { Token: {Value: bool, Type: type keyword, Line: 5, Column: 20} },
@@ -42,7 +42,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", IRName: "__Device_uptimeHours", Type: uint32
             children: [
                 Node: { Token: {Value: uptimeHours, Type: identifier, Line: 9, Column: 7} },
                 Node: { Token: {Value: uint32, Type: type keyword, Line: 9, Column: 24} },
@@ -96,7 +96,7 @@ children: [
                 Node: { Token: {Value: Device, Type: identifier, Line: 20, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Server_Device_powerOn", Type: bool
                     children: [
                         Node: { Token: {Value: powerOn, Type: identifier, Line: 21, Column: 11} },
                         Node: { Token: {Value: bool, Type: type keyword, Line: 21, Column: 24} },
@@ -130,7 +130,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Server_Device_powerOff", Type: None
                     children: [
                         Node: { Token: {Value: powerOff, Type: identifier, Line: 27, Column: 11} },
                         Node: { Label: "fn-body"
@@ -145,7 +145,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Server_Device_uptimeHours", Type: uint32
                     children: [
                         Node: { Token: {Value: uptimeHours, Type: identifier, Line: 30, Column: 11} },
                         Node: { Token: {Value: uint32, Type: type keyword, Line: 30, Column: 28} },
@@ -171,7 +171,7 @@ children: [
         Node: { Token: {Value: App, Type: identifier, Line: 36, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: String
             children: [
                 Node: { Token: {Value: help, Type: identifier, Line: 37, Column: 7} },
                 Node: { Token: {Value: String, Type: type keyword, Line: 37, Column: 17} }
@@ -183,7 +183,7 @@ children: [
         Node: { Token: {Value: Compiler, Type: identifier, Line: 40, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", IRName: "__Compiler_help", Type: String
             children: [
                 Node: { Token: {Value: help, Type: identifier, Line: 41, Column: 7} },
                 Node: { Token: {Value: String, Type: type keyword, Line: 41, Column: 17} },
@@ -208,7 +208,7 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", IRName: "__CompilerApp_do", Type: String
             children: [
                 Node: { Token: {Value: do, Type: identifier, Line: 47, Column: 7} },
                 Node: { Token: {Value: String, Type: type keyword, Line: 47, Column: 15} },
@@ -231,7 +231,7 @@ children: [
                 Node: { Token: {Value: App, Type: identifier, Line: 52, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__CompilerApp_App_help", Type: String
                     children: [
                         Node: { Token: {Value: help, Type: identifier, Line: 53, Column: 11} },
                         Node: { Token: {Value: String, Type: type keyword, Line: 53, Column: 21} },
@@ -248,7 +248,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "resolveImplementationConflict", Type: None
     children: [
         Node: { Token: {Value: resolveImplementationConflict, Type: identifier, Line: 59, Column: 3} },
         Node: { Label: "fn-body"
@@ -387,7 +387,7 @@ children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 79, Column: 8} },
                 Node: { Token: {Value: value, Type: identifier, Line: 79, Column: 15} }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", IRName: "__Inner_innerFunc", Type: int
             children: [
                 Node: { Token: {Value: innerFunc, Type: identifier, Line: 80, Column: 7} },
                 Node: { Token: {Value: int, Type: type keyword, Line: 80, Column: 22} },
@@ -424,7 +424,7 @@ children: [
         Node: { Token: {Value: x, Type: identifier, Line: 89, Column: 4} },
         Node: { Token: {Value: 0, Type: int literal, Line: 89, Column: 8}, Type: int }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "getX", Type: None
     children: [
         Node: { Token: {Value: getX, Type: identifier, Line: 90, Column: 3} },
         Node: { Label: "fn-body" }
@@ -443,7 +443,7 @@ children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 93, Column: 8} },
                 Node: { Token: {Value: x, Type: identifier, Line: 93, Column: 12} }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", IRName: "__TestName_getX", Type: bool
             children: [
                 Node: { Token: {Value: getX, Type: identifier, Line: 94, Column: 7} },
                 Node: { Token: {Value: bool, Type: type keyword, Line: 94, Column: 17} },
@@ -496,7 +496,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 103, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 103, Column: 13} },
@@ -854,11 +854,11 @@ children: [
         Node: { Token: {Value: Device, Type: identifier, Line: 3, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: None
             children: [
                 Node: { Token: {Value: powerOn, Type: identifier, Line: 4, Column: 7} }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: None
             children: [
                 Node: { Token: {Value: powerOff, Type: identifier, Line: 5, Column: 7} }
             ] }
@@ -879,7 +879,7 @@ children: [
                 Node: { Token: {Value: Device, Type: identifier, Line: 9, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Server_Device_powerOn", Type: None
                     children: [
                         Node: { Token: {Value: powerOn, Type: identifier, Line: 10, Column: 11} },
                         Node: { Label: "fn-body"
@@ -990,7 +990,7 @@ children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 36, Column: 8} },
                         Node: { Token: {Value: wrongPlace, Type: identifier, Line: 36, Column: 12} }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Container_cast_toInterface", Type: Device
                     children: [
                         Node: { Token: {Value: toInterface, Type: identifier, Line: 37, Column: 11} },
                         Node: { Token: {Value: Device, Type: identifier, Line: 37, Column: 28} },
@@ -1006,7 +1006,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Container_cast_toString", Type: String
                     children: [
                         Node: { Token: {Value: toString, Type: identifier, Line: 40, Column: 11} },
                         Node: { Label: "params"
@@ -1031,7 +1031,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Container_cast_duplicateToString", Type: String
                     children: [
                         Node: { Token: {Value: duplicateToString, Type: identifier, Line: 43, Column: 11} },
                         Node: { Token: {Value: String, Type: type keyword, Line: 43, Column: 34} },
@@ -1052,7 +1052,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Container_cast_toNone", Type: None
                     children: [
                         Node: { Token: {Value: toNone, Type: identifier, Line: 46, Column: 11} },
                         Node: { Label: "fn-body"
@@ -1063,7 +1063,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Container_cast_toSame", Type: Container
                     children: [
                         Node: { Token: {Value: toSame, Type: identifier, Line: 49, Column: 11} },
                         Node: { Token: {Value: Container, Type: identifier, Line: 49, Column: 23} },
@@ -1087,7 +1087,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", Type: int
                     children: [
                         Node: { Token: {Value: createInt, Type: identifier, Line: 52, Column: 11} },
                         Node: { Token: {Value: int, Type: type keyword, Line: 52, Column: 26} }
@@ -1104,7 +1104,7 @@ children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 55, Column: 8} },
                         Node: { Token: {Value: wrongPlace2, Type: identifier, Line: 55, Column: 12} }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Container_compare_greaterThanOrEqualTo", Type: bool
                     children: [
                         Node: { Token: {Value: greaterThanOrEqualTo, Type: identifier, Line: 56, Column: 11} },
                         Node: { Label: "params"
@@ -1125,7 +1125,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Container_compare_equals", Type: bool
                     children: [
                         Node: { Token: {Value: equals, Type: identifier, Line: 59, Column: 11} },
                         Node: { Label: "params"
@@ -1146,7 +1146,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Container_compare_equals--Container--uint32", Type: bool
                     children: [
                         Node: { Token: {Value: equals, Type: identifier, Line: 62, Column: 11} },
                         Node: { Label: "params"
@@ -1172,7 +1172,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__Container_compare_lessThan", Type: None
                     children: [
                         Node: { Token: {Value: lessThan, Type: identifier, Line: 65, Column: 11} },
                         Node: { Label: "params"
@@ -1195,7 +1195,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", Type: bool
                     children: [
                         Node: { Token: {Value: greaterThan, Type: identifier, Line: 68, Column: 11} },
                         Node: { Label: "params"
@@ -1217,7 +1217,7 @@ children: [
         Node: { Token: {Value: DB, Type: identifier, Line: 72, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: None
             children: [
                 Node: { Token: {Value: connect, Type: identifier, Line: 73, Column: 7} }
             ] }
@@ -1228,7 +1228,7 @@ children: [
         Node: { Token: {Value: Backend, Type: identifier, Line: 76, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: None
             children: [
                 Node: { Token: {Value: connect, Type: identifier, Line: 77, Column: 7} }
             ] }
@@ -1249,7 +1249,7 @@ children: [
                 Node: { Token: {Value: DB, Type: identifier, Line: 81, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__App_DB_connect", Type: None
                     children: [
                         Node: { Token: {Value: connect, Type: identifier, Line: 82, Column: 11} },
                         Node: { Label: "fn-body"
@@ -1271,7 +1271,7 @@ children: [
                 Node: { Token: {Value: Backend, Type: identifier, Line: 86, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__App_Backend_connect", Type: None
                     children: [
                         Node: { Token: {Value: connect, Type: identifier, Line: 87, Column: 11} },
                         Node: { Label: "fn-body"
@@ -1305,7 +1305,7 @@ children: [
                 Node: { Token: {Value: DB, Type: identifier, Line: 94, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__PostgreSQL_DB_connect", Type: None
                     children: [
                         Node: { Token: {Value: connect, Type: identifier, Line: 95, Column: 11} },
                         Node: { Label: "fn-body"
@@ -1320,7 +1320,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__PostgreSQL_DB_connect--bool", Type: None
                     children: [
                         Node: { Token: {Value: connect, Type: identifier, Line: 98, Column: 11} },
                         Node: { Label: "params"
@@ -1375,7 +1375,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", Type: bool
                     children: [
                         Node: { Token: {Value: connect, Type: identifier, Line: 106, Column: 11} },
                         Node: { Token: {Value: bool, Type: type keyword, Line: 106, Column: 24} },
@@ -1401,7 +1401,7 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: String
             children: [
                 Node: { Token: {Value: getVersion, Type: identifier, Line: 113, Column: 7} },
                 Node: { Token: {Value: String, Type: type keyword, Line: 113, Column: 23} }
@@ -1411,7 +1411,7 @@ children: [
                 Node: { Token: {Value: DB, Type: identifier, Line: 114, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__MariaDB_DB_connect", Type: float
                     children: [
                         Node: { Token: {Value: connect, Type: identifier, Line: 115, Column: 11} },
                         Node: { Token: {Value: float, Type: type keyword, Line: 115, Column: 24} },
@@ -1463,17 +1463,17 @@ children: [
                         Node: { Token: {Value: TYPE, Type: identifier, Line: 125, Column: 12} },
                         Node: { Token: {Value: j, Type: identifier, Line: 125, Column: 17} }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", Type: None
                     children: [
                         Node: { Token: {Value: test, Type: identifier, Line: 126, Column: 11} }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", Type: int
                     children: [
                         Node: { Token: {Value: test, Type: identifier, Line: 127, Column: 11} },
                         Node: { Token: {Value: int, Type: type keyword, Line: 127, Column: 19} },
                         Node: { Label: "fn-body" }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__PrivateTester_something", Type: bool
                     children: [
                         Node: { Token: {Value: something, Type: identifier, Line: 128, Column: 11} },
                         Node: { Token: {Value: bool, Type: type keyword, Line: 128, Column: 26} },
@@ -1500,7 +1500,7 @@ children: [
         Node: { Token: {Value: x, Type: identifier, Line: 134, Column: 8} },
         Node: { Token: {Value: 0, Type: int literal, Line: 134, Column: 12}, Type: int }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "getX", Type: None
     children: [
         Node: { Token: {Value: getX, Type: identifier, Line: 135, Column: 3} },
         Node: { Label: "fn-body" }
@@ -1515,7 +1515,7 @@ children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 138, Column: 4} },
                 Node: { Token: {Value: x, Type: identifier, Line: 138, Column: 8} }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", IRName: "__TestName_getX", Type: None
             children: [
                 Node: { Token: {Value: getX, Type: identifier, Line: 139, Column: 7} },
                 Node: { Label: "fn-body"
@@ -1559,7 +1559,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 147, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 147, Column: 13} },

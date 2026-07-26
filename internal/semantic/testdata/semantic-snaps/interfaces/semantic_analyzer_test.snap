@@ -18,11 +18,11 @@ children: [
         Node: { Token: {Value: Result, Type: identifier, Line: 3, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: None
             children: [
                 Node: { Token: {Value: display, Type: identifier, Line: 4, Column: 7} }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: String
             children: [
                 Node: { Token: {Value: getStatus, Type: identifier, Line: 5, Column: 7} },
                 Node: { Token: {Value: String, Type: type keyword, Line: 5, Column: 22} }
@@ -48,7 +48,7 @@ children: [
                 Node: { Token: {Value: Result, Type: identifier, Line: 10, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__TestResult_Result_display", Type: None
                     children: [
                         Node: { Token: {Value: display, Type: identifier, Line: 11, Column: 11} },
                         Node: { Label: "fn-body"
@@ -67,7 +67,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__TestResult_Result_getStatus", Type: String
                     children: [
                         Node: { Token: {Value: getStatus, Type: identifier, Line: 14, Column: 11} },
                         Node: { Token: {Value: String, Type: type keyword, Line: 14, Column: 26} },
@@ -89,12 +89,12 @@ children: [
         Node: { Token: {Value: Runner, Type: identifier, Line: 20, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: Result
             children: [
                 Node: { Token: {Value: run, Type: identifier, Line: 21, Column: 7} },
                 Node: { Token: {Value: Result, Type: identifier, Line: 21, Column: 16} }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", IRName: "__Runner_showUsage", Type: None
             children: [
                 Node: { Token: {Value: showUsage, Type: identifier, Line: 22, Column: 7} },
                 Node: { Label: "fn-body"
@@ -109,7 +109,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", IRName: "__Runner_startup", Type: None
             children: [
                 Node: { Token: {Value: startup, Type: identifier, Line: 25, Column: 7} },
                 Node: { Label: "fn-body"
@@ -140,7 +140,7 @@ children: [
                 Node: { Token: {Value: Runner, Type: identifier, Line: 31, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__TestRunner_Runner_run", Type: Result
                     children: [
                         Node: { Token: {Value: run, Type: identifier, Line: 32, Column: 11} },
                         Node: { Token: {Value: Result, Type: identifier, Line: 32, Column: 20} },
@@ -168,7 +168,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__TestRunner_Runner_showUsage", Type: None
                     children: [
                         Node: { Token: {Value: showUsage, Type: identifier, Line: 36, Column: 11} },
                         Node: { Label: "fn-body"
@@ -195,7 +195,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 43, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 43, Column: 13} },
@@ -264,7 +264,7 @@ children: [
         Node: { Token: {Value: A, Type: identifier, Line: 4, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: None
             children: [
                 Node: { Token: {Value: do, Type: identifier, Line: 5, Column: 7} }
             ] }
@@ -275,7 +275,7 @@ children: [
         Node: { Token: {Value: B, Type: identifier, Line: 8, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: None
             children: [
                 Node: { Token: {Value: do, Type: identifier, Line: 9, Column: 7} }
             ] }
@@ -302,7 +302,7 @@ children: [
                 Node: { Token: {Value: B, Type: identifier, Line: 14, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__C_B_do", Type: None
                     children: [
                         Node: { Token: {Value: do, Type: identifier, Line: 15, Column: 11} },
                         Node: { Label: "fn-body"
@@ -326,7 +326,7 @@ children: [
                             ] }
                         ] }
                     ] },
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", Type: bool
                     children: [
                         Node: { Token: {Value: do, Type: identifier, Line: 20, Column: 11} },
                         Node: { Label: "params"
@@ -348,11 +348,11 @@ children: [
         Node: { Token: {Value: D, Type: identifier, Line: 24, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: None
             children: [
                 Node: { Token: {Value: do, Type: identifier, Line: 25, Column: 7} }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: bool
             children: [
                 Node: { Token: {Value: do, Type: identifier, Line: 26, Column: 7} },
                 Node: { Label: "params"
@@ -365,11 +365,11 @@ children: [
                 ] },
                 Node: { Token: {Value: bool, Type: type keyword, Line: 26, Column: 20} }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: None
             children: [
                 Node: { Token: {Value: do, Type: identifier, Line: 27, Column: 7} }
             ] },
-            Node: { Label: "fn"
+            Node: { Label: "fn", IRName: "__D_undo", Type: uint32
             children: [
                 Node: { Token: {Value: undo, Type: identifier, Line: 28, Column: 7} },
                 Node: { Token: {Value: uint32, Type: type keyword, Line: 28, Column: 17} },

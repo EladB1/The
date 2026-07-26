@@ -153,17 +153,43 @@ func (prog *Program) String() string {
 			if !ok {
 				break
 			}
-			if (inst.Destination != Variable{}) {
-				output.WriteString(fmt.Sprintf("%s: %s = ", inst.Destination.Name, inst.Destination.DataType))
+			output.WriteString(inst.String())
+		case "Function":
+			fn, ok := line.(Function)
+			if !ok {
+				break
 			}
-			output.WriteString(string(inst.Operation))
-			if (inst.Operand1 != Operand{}) {
-				output.WriteString(inst.Operand1.String())
-			}
-			if (inst.Operand2 != Operand{}) {
-				output.WriteString(inst.Operand2.String())
-			}
+			output.WriteString(fn.String())
+		}
+		output.WriteRune('\n')
+	}
+	output.WriteString("]\n")
+	return output.String()
+}
 
+func (fn Function) String() string {
+	output := strings.Builder{}
+	output.WriteString(fmt.Sprintf("fn %s(", fn.Name))
+	for i, param := range fn.Parameters {
+		output.WriteString(fmt.Sprintf("param.%s: %s", param.Name, param.Type))
+		if i != len(fn.Parameters)-1 {
+			output.WriteString(", ")
+		}
+	}
+	output.WriteRune(')')
+	if fn.ReturnType != datatypes.NoneIR {
+		output.WriteString(fmt.Sprintf("->%s", fn.ReturnType))
+	}
+	output.WriteString(" {")
+	for i, fn_line := range fn.Code {
+		output.WriteString("\n\t\t")
+		switch fn_line.getTACType() {
+		case "Instruction":
+			inst, ok := fn_line.(Instruction)
+			if !ok {
+				break
+			}
+			output.WriteString(inst.String())
 		case "IfBlock":
 			//
 		case "Block":
@@ -171,9 +197,26 @@ func (prog *Program) String() string {
 		case "Loop":
 			//
 		}
-		output.WriteRune('\n')
+		if i == len(fn.Code)-1 {
+			output.WriteString("\n\t")
+		}
 	}
-	output.WriteString("]\n")
+	output.WriteString("}\n")
+	return output.String()
+}
+
+func (inst Instruction) String() string {
+	output := strings.Builder{}
+	if (inst.Destination != Variable{}) {
+		output.WriteString(fmt.Sprintf("%s: %s = ", inst.Destination.Name, inst.Destination.DataType))
+	}
+	output.WriteString(string(inst.Operation))
+	if (inst.Operand1 != Operand{}) {
+		output.WriteString(inst.Operand1.String())
+	}
+	if (inst.Operand2 != Operand{}) {
+		output.WriteString(inst.Operand2.String())
+	}
 	return output.String()
 }
 

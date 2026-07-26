@@ -3,7 +3,7 @@
 AST:
 Node: { Label: "program"
 children: [
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "getAccountType", Type: String
     children: [
         Node: { Token: {Value: getAccountType, Type: identifier, Line: 0, Column: 3} },
         Node: { Token: {Value: String, Type: type keyword, Line: 0, Column: 23} },
@@ -144,7 +144,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "nestedConditions", Type: int
     children: [
         Node: { Token: {Value: nestedConditions, Type: identifier, Line: 18, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 18, Column: 25} },
@@ -222,7 +222,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "nestedLoops", Type: None
     children: [
         Node: { Token: {Value: nestedLoops, Type: identifier, Line: 31, Column: 3} },
         Node: { Label: "fn-body"
@@ -367,7 +367,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "printString", Type: None
     children: [
         Node: { Token: {Value: printString, Type: identifier, Line: 50, Column: 3} },
         Node: { Label: "params"
@@ -406,7 +406,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 56, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 56, Column: 13} },
@@ -663,7 +663,7 @@ Compiler messages:
 AST:
 Node: { Label: "program"
 children: [
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "forConditions", Type: None
     children: [
         Node: { Token: {Value: forConditions, Type: identifier, Line: 0, Column: 3} },
         Node: { Label: "fn-body"
@@ -998,7 +998,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "whileConditions", Type: None
     children: [
         Node: { Token: {Value: whileConditions, Type: identifier, Line: 20, Column: 3} },
         Node: { Label: "fn-body"
@@ -1015,7 +1015,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "ifConditions", Type: None
     children: [
         Node: { Token: {Value: ifConditions, Type: identifier, Line: 25, Column: 3} },
         Node: { Label: "fn-body"
@@ -1050,7 +1050,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "controlFlow", Type: None
     children: [
         Node: { Token: {Value: controlFlow, Type: identifier, Line: 31, Column: 3} },
         Node: { Label: "fn-body"
@@ -1085,7 +1085,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 39, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 39, Column: 13} },
@@ -1176,7 +1176,7 @@ Compiler messages:
 AST:
 Node: { Label: "program"
 children: [
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 0, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 0, Column: 13} },

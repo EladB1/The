@@ -117,9 +117,11 @@ func analyzeInterfaceFnSignatures() {
 		currentScope = intf.innerScope
 		for _, node := range intf.Def.Children[1].Children {
 			symbol := processFunctionSignature(node)
-			err := currentScope.Functions.add(symbol)
+			overload, err := currentScope.Functions.add(symbol)
 			if err != nil {
 				messages.Complain(diagnostic.IllegalStatementError, node.Location, "%v", err)
+			} else {
+				node.IRName = overload.IRName
 			}
 		}
 	}
@@ -150,8 +152,10 @@ func analyzeStructFnSignatures() {
 			switch node.Label {
 			case "fn":
 				symbol := processFunctionSignature(node)
-				if err := currentScope.Functions.add(symbol); err != nil {
+				if overload, err := currentScope.Functions.add(symbol); err != nil {
 					messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
+				} else {
+					node.IRName = overload.IRName
 				}
 			case "named-block":
 				symbol := analyzeNamedBlock(node, str.Name, impl)
@@ -183,8 +187,10 @@ func collectFunctionSignatures(ast *parser.AST) {
 	for _, node := range ast.Children {
 		if node.Label == "fn" {
 			symbol := processFunctionSignature(node)
-			if err := globalScope.Functions.add(symbol); err != nil {
+			if overload, err := globalScope.Functions.add(symbol); err != nil {
 				messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
+			} else {
+				node.IRName = overload.IRName
 			}
 		}
 	}

@@ -1,0 +1,18 @@
+fn test() {
+    int num = 1;
+    println(num);
+}
+
+fn add(int x, int y) -> int {
+    return x + y;
+}
+
+fn add(int x, int y, int z) -> int {
+    return x + y + z;
+}
+
+
+fn main() -> int {
+
+    return 0;
+}
