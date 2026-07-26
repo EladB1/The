@@ -44,63 +44,61 @@ Container Types
 
 Support for types which can contain other subtypes such as `Array<subtype>` or `Map<subtype1, subtype2>`
 
-Error Handling
----
-
-Create an error handling system where there are a set of built-in errors as well as user defined errors. Anything that could throw an error must have type `Try<Type, ErrorType>`. Both causes would have to be handled either by `match`, if statements, or a special syntax like `?` for `Type` and `?:` for empty.
-
-Idea for how the code would look:
-
-```
-
-Try<Response, HTTPError> response = Try {
-    resolve: TryResolve {
-        condition: httpCall.status >= 200 && httpCall.status < 400,
-        value: httpCall.payload
-    },
-    fail: TryFail {
-        error: HTTPError {
-            status: httpCall.status
-        }
-    }
-};
-
-if (response.hasFailure()) {
-    printErr(response.fail);
-}
-else {
-    println(response.resolve);
-}
-
-```
-
 Null Safety
 ---
 
-Establish a `Maybe<Type>` which states that it could either contain a value of type `Type` or could be empty (essentially null). Both causes would have to be handled either by `match`, if statements, or a special syntax like `?` for `Type` and `?:` for empty.
+Establish a `Maybe<Type>` which states that it could either contain a value of type `Type` or could be empty. Both cases would have to be handled either by `match`, if statements, or a special syntax like `?` for `Type` and `?:` for empty. The "zero value" of a `Maybe` is empty.
+
+Under the hood, it's just a pointer with the resolved value pointing to something of the underlying type and the empty value being a null pointer.
 
 Idea for how the code would look:
 
 ```
-Maybe<Node> next = Maybe {
-    empty: MaybeEmpty {
-        condition: curr.isEnd
+struct Node {
+    int value;
+    Maybe<Node> next;
+}
+fn addNode(Maybe<Node> head, Node node) {
+    if (head.empty)
+        return node;
+    Node curr = head.resolved;
+    while (!curr.next.empty) {
+        curr = curr.next.resolved;
     }
-    resolve: MaybeValue {
-        value: curr.getNext();
-    }
-};
+    curr.next.Resolve(node); // set the Maybe to node
+}
 
-match next {
-    case Resolved: {
-        println(next.value);
-    }
-    case Failed: {
-        printErr("Attempt to access next from last node");
-        exit(1);
-    }
-};
+fn deleteEverythingAfterNode(Node head) {
+    head.next.Empty(); // set the Maybe to empty
+}
+```
 
+Error Handling
+---
+
+Create an error handling system where there are a set of built-in errors as well as user defined errors. Anything that could throw an error must have type `Try<Type, ErrorType>`. Both causes would have to be handled either by `match`, if statements, or a special syntax like `?` for `Type` and `?:` for error. Essentially, `Try<Type, ErrorType>` is two pointers: one to the resolved and the other to the possible error; one pointer will always be null.
+
+There are 
+
+Idea for how the code would look:
+
+```
+
+fn getFile(String path) -> Try<File, IOError> {
+    if (!exists(path))
+        raise FileNotFoundError("Could not find path " + path); // indicate the failure case using `raise` keyword
+    return open(path); // indicate the success with the return of type File
+}
+
+fn main() -> int {
+    String lines = getFile("/etc/hosts")
+                    .resolved(File file => file.read())
+                    .failed(IOError err => {
+                        exit(1, err);
+                    });
+    // Consumer of Try must handle both the resolved/failed cases
+    return 0;
+}
 
 ```
 
