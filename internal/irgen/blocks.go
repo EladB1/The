@@ -8,13 +8,13 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-func translateBlock(nodes []*parser.AST) []TAC {
+func translateBlock(nodes []*parser.AST, exitLabel string, startLabel string) []TAC {
 	instructions := []TAC{}
 	for _, node := range nodes {
 		if node.Label == "Variable" {
 			instructions = append(instructions, variableDeclaration(node)...)
 		} else if node.Label == "control-flow" {
-			instructions = append(instructions, translateControlFlow(node)...)
+			instructions = append(instructions, translateControlFlow(node, exitLabel, startLabel)...)
 		} else if node.Token.Kind == lexer.OPERATOR_ASSIGN {
 			instructions = append(instructions, translateAssignment(node)...)
 		} else if node.Label == "while" {
@@ -22,7 +22,7 @@ func translateBlock(nodes []*parser.AST) []TAC {
 		} else if node.Label == "for" {
 			instructions = append(instructions, translateFor(node)...)
 		} else if node.Label == "if-block" {
-			instructions = append(instructions, translateIfBlock(node)...)
+			instructions = append(instructions, translateIfBlock(node, exitLabel, startLabel)...)
 		} else {
 			expression, _ := translateExpression(*node)
 			instructions = append(instructions, expression...)
@@ -31,9 +31,10 @@ func translateBlock(nodes []*parser.AST) []TAC {
 	return instructions
 }
 
-func translateControlFlow(node *parser.AST) []TAC {
+func translateControlFlow(node *parser.AST, exitLabel string, startLabel string) []TAC {
 	instructions := []TAC{}
-	if node.Children[0].Token.Value == "return" {
+	switch node.Children[0].Token.Value {
+	case "return":
 		if len(node.Children) == 1 {
 			instructions = append(instructions, Instruction{
 				Operation: Return,
@@ -46,6 +47,20 @@ func translateControlFlow(node *parser.AST) []TAC {
 				Operand1:  operand,
 			})
 		}
+	case "continue":
+		instructions = append(instructions, Instruction{
+			Operation: JMP,
+			Operand1: Operand{
+				Label: startLabel,
+			},
+		})
+	case "break":
+		instructions = append(instructions, Instruction{
+			Operation: JMP,
+			Operand1: Operand{
+				Label: exitLabel,
+			},
+		})
 	}
 	return instructions
 }
@@ -143,7 +158,7 @@ func translateWhile(node *parser.AST) []TAC {
 	loopBody := Block{
 		Label: fmt.Sprintf("loop_body@%d", loopIndex),
 	}
-	loopBody.Code = append(loopBody.Code, translateBlock(node.Children[1].Children)...)
+	loopBody.Code = append(loopBody.Code, translateBlock(node.Children[1].Children, outerBlock.Label, loop.Label)...)
 	loopBody.Code = append(loopBody.Code, Instruction{
 		Operation: JMP,
 		Operand1: Operand{
@@ -165,8 +180,49 @@ func translateFor(node *parser.AST) []TAC {
 	return instructions
 }
 
-func translateIfBlock(node *parser.AST) []TAC {
+func translateIfBlock(node *parser.AST, exitLabel string, startLabel string) []TAC {
 	instructions := []TAC{}
+	ifBlock := IfBlock{}
+	cond_in, cond := translateExpression(*node.Children[0].Children[0])
+	instructions = append(instructions, cond_in...)
+	blocksIndex := 0
+	blocks := [][]TAC{translateBlock(node.Children[0].Children[1].Children, exitLabel, startLabel)}
+	conditionsIndex := 0
+	conditions := []Variable{cond.Var}
+	conditionSetup := [][]TAC{cond_in}
+	for i := 1; i < len(node.Children); i++ {
+		block := node.Children[i]
+		if block.Label == "else if" {
+			cond_in, cond := translateExpression(*block.Children[0])
+			conditions = append(conditions, cond.Var)
+			conditionSetup = append(conditionSetup, cond_in)
+			conditionsIndex++
 
+			blocks = append(blocks, translateBlock(block.Children[1].Children, exitLabel, startLabel))
+			blocksIndex++
+		} else {
+			blocks = append(blocks, translateBlock(block.Children[0].Children, exitLabel, startLabel))
+			blocksIndex++
+		}
+	}
+	ifBlock.IfCondition = conditions[0]
+	ifBlock.IfCode = &blocks[0]
+	ifBlock.ElseCode = &[]TAC{}
+	code := ifBlock.ElseCode
+	for i := 1; i <= conditionsIndex; i++ {
+		*code = append(*code, conditionSetup[i]...)
+		inner := IfBlock{
+			IfCondition: conditions[i],
+			IfCode:      &blocks[i],
+			ElseCode:    &[]TAC{},
+		}
+		*code = append(*code, inner)
+		code = inner.ElseCode
+	}
+	if conditionsIndex < blocksIndex {
+		*code = append(*code, blocks[blocksIndex]...)
+	}
+
+	instructions = append(instructions, ifBlock)
 	return instructions
 }

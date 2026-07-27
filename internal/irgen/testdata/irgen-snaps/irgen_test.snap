@@ -155,14 +155,14 @@ Program: [
       return
   }
 
-  fn add(param.x: i32, param.y: i32)->i32 {
+  fn add(x: i32, y: i32)->i32 {
       __t6: i32 = GET param.x
       __t7: i32 = GET param.y
       __t8: i32 = i32.add __t6 __t7
       return __t8
   }
 
-  fn add--int--int--int(param.x: i32, param.y: i32, param.z: i32)->i32 {
+  fn add--int--int--int(x: i32, y: i32, z: i32)->i32 {
       __t9: i32 = GET param.x
       __t10: i32 = GET param.y
       __t11: i32 = i32.add __t9 __t10
@@ -183,6 +183,38 @@ Program: [
             JMP loop@0
           }
         }
+      }
+  }
+
+  fn getZero(x: i32)->i32 {
+      __t17: i32 = GET param.x
+      __t18: i32 = i32.eq __t17 i32(0)
+      if __t18 {
+          __t19: i32 = GET param.x
+          return __t19
+      } else {
+          __t20: i32 = GET param.x
+          __t21: i32 = i32.eq __t20 i32(1)
+          if __t21 {
+              __t22: i32 = GET param.x
+              __t23: i32 = i32.sub __t22 i32(1)
+              return __t23
+          } else {
+              __t24: i32 = GET param.x
+              __t25: i32 = i32.mod __t24 i32(2)
+              __t26: i32 = i32.eq __t25 i32(0)
+              if __t26 {
+                  PARAM str_const(1)
+                  __t27: none = CALL println 1
+                  __t28: i32 = GET param.x
+                  __t29: i32 = i32.div __t28 i32(2)
+                  return __t29
+              } else {
+                  __t30: i32 = GET param.x
+                  __t31: i32 = i32.mul __t30 i32(0)
+                  return __t31
+              }
+          }
       }
   }
 

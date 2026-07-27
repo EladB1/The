@@ -59,8 +59,8 @@ type (
 	}
 	IfBlock struct {
 		IfCondition Variable
-		IfCode      []TAC
-		ElseCode    []TAC
+		IfCode      *[]TAC
+		ElseCode    *[]TAC
 		// As of now else if will be an if embedded within an else block
 	}
 )
@@ -157,7 +157,7 @@ func (fn Function) String() string {
 	output := strings.Builder{}
 	output.WriteString(fmt.Sprintf("%sfn %s(", indentDelim, fn.Name))
 	for i, param := range fn.Parameters {
-		output.WriteString(fmt.Sprintf("param.%s: %s", param.Name, param.Type))
+		output.WriteString(fmt.Sprintf("%s: %s", param.Name, param.Type))
 		if i != len(fn.Parameters)-1 {
 			output.WriteString(", ")
 		}
@@ -173,6 +173,24 @@ func (fn Function) String() string {
 	output.WriteString(stringifyCode(fn.Code, 1))
 	output.WriteString(indentDelim)
 	output.WriteString("}\n")
+	return output.String()
+}
+
+func (block IfBlock) String(indentLevel int) string {
+	output := strings.Builder{}
+	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString("if ")
+	output.WriteString(block.IfCondition.Name)
+	output.WriteString(" {\n")
+	output.WriteString(stringifyCode(*block.IfCode, indentLevel+1))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString("}")
+	if block.ElseCode != nil && len(*block.ElseCode) > 0 {
+		output.WriteString(" else {\n")
+		output.WriteString(stringifyCode(*block.ElseCode, indentLevel+1))
+		output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+		output.WriteString("}")
+	}
 	return output.String()
 }
 
@@ -252,7 +270,11 @@ func stringifyCode(code []TAC, indentLevel int) string {
 			}
 			output.WriteString(fn.String())
 		case "IfBlock":
-			//
+			ifblock, ok := line.(IfBlock)
+			if !ok {
+				break
+			}
+			output.WriteString(ifblock.String(indentLevel + 1))
 		case "Block":
 			block, ok := line.(Block)
 			if !ok {

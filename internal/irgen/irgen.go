@@ -57,7 +57,7 @@ func functionDefinition(ast *parser.AST) []TAC {
 	}
 	if overload.HasDefaultImplementation {
 		currScope = overload.InnerScope
-		fn.Code = append(fn.Code, translateBlock(overload.Body.Children)...)
+		fn.Code = append(fn.Code, translateBlock(overload.Body.Children, "", "")...)
 	}
 	currScope = scope
 	return []TAC{fn}
