@@ -164,6 +164,7 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 				} else {
 					id = fmt.Sprintf("%s#%d@%s", branch.Label, ifBlockCounter, currentScope.Id)
 				}
+				branch.IRName = id // tag for IR generation
 				branchScope := currentScope.addChild(id, Branch)
 				currentScope = branchScope
 				block_index := 0
@@ -192,6 +193,7 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 			scope := currentScope
 			newScope := currentScope.addChild(fmt.Sprintf("for#%d@%s", forCounter, currentScope.Id), Loop)
 			forCounter++
+			stmt.IRName = newScope.Id // tag for IR generation
 			currentScope = newScope
 			analyzeForCondition(stmt.Children[0].Children)
 			analyzeBlockAndCheckForReturn(stmt.Children[1].Children, fn, sig)
@@ -200,6 +202,7 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 			scope := currentScope
 			newScope := currentScope.addChild(fmt.Sprintf("while#%d@%s", whileCounter, currentScope.Id), Loop)
 			whileCounter++
+			stmt.IRName = newScope.Id // tag for IR generation
 			currentScope = newScope
 			cond, hasError := evalType(stmt.Children[0], dt.BoolType)
 			if !hasError && !cond.Equals(dt.BoolType) {

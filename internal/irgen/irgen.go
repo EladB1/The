@@ -14,10 +14,12 @@ var messages diagnostic.PhaseDiagnostics
 var currScope *semantic.Scope
 var scopes *semantic.Scope
 var tempVarIndex uint32
+var loopIndex uint32
 
 func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.PhaseDiagnostics) {
 	scopes = scopeTree
 	tempVarIndex = 0
+	loopIndex = 0
 	prog := Program{}
 	messages = diagnostic.PhaseDiagnostics{}
 	currScope = scopeTree.Children[0] // get the global scope using the built-in scope
@@ -55,82 +57,7 @@ func functionDefinition(ast *parser.AST) []TAC {
 	}
 	if overload.HasDefaultImplementation {
 		currScope = overload.InnerScope
-		for _, node := range overload.Body.Children {
-			if node.Label == "Variable" {
-				fn.Code = append(fn.Code, variableDeclaration(node)...)
-			} else if node.Label == "control-flow" {
-				if node.Children[0].Token.Value == "return" {
-					if len(node.Children) == 1 {
-						fn.Code = append(fn.Code, Instruction{
-							Operation: Return,
-						})
-					} else {
-						instructions, operand := translateExpression(*node.Children[1])
-						fn.Code = append(fn.Code, instructions...)
-						fn.Code = append(fn.Code, Instruction{
-							Operation: Return,
-							Operand1:  operand,
-						})
-					}
-				}
-			} else if node.Token.Kind == lexer.OPERATOR_ASSIGN {
-				name := node.Children[0].Token.Value
-				value := node.Children[1]
-				value_in, value_op := translateExpression(*value)
-				if node.Token.Value != "=" {
-					instructions, operand := loadVariable(*node.Children[0])
-					fn.Code = append(fn.Code, instructions...)
-					var operation Operation
-					result := formTempVar(operand.Type)
-					switch node.Token.Value {
-					case "+=":
-						operation = typedOperation(operand.Type, "add")
-					case "-=":
-						operation = typedOperation(operand.Type, "sub")
-					case "*=":
-						operation = typedOperation(operand.Type, "mul")
-					case "/=":
-						operation = typedOperation(operand.Type, "div")
-					}
-					fn.Code = append(fn.Code, value_in...)
-					fn.Code = append(fn.Code, Instruction{
-						Destination: result,
-						Operation:   operation,
-						Operand1:    operand,
-						Operand2:    value_op,
-					})
-					value_op = Operand{
-						Type: operand.Type,
-						Var:  result,
-					}
-				} else {
-					fn.Code = append(fn.Code, value_in...)
-				}
-				variable := currScope.LookupVariable(name)
-				if variable != nil {
-					fn.Code = append(fn.Code, Instruction{
-						Operation: Store,
-						Operand1: Operand{
-							Var: Variable{
-								Name:       variable.Name,
-								DataType:   dt.TranslateSourceType(variable.Type),
-								Visibility: VariableScope(variable.Ctx),
-							},
-						},
-						Operand2: value_op,
-					})
-				}
-			} else if node.Label == "while" {
-
-			} else if node.Label == "for" {
-
-			} else if node.Label == "if-block" {
-
-			} else {
-				expression, _ := translateExpression(*node)
-				fn.Code = append(fn.Code, expression...)
-			}
-		}
+		fn.Code = append(fn.Code, translateBlock(overload.Body.Children)...)
 	}
 	currScope = scope
 	return []TAC{fn}

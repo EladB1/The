@@ -193,11 +193,93 @@ func (fn Function) String() string {
 		case "IfBlock":
 			//
 		case "Block":
-			//
+			block, ok := fn_line.(Block)
+			if !ok {
+				break
+			}
+			output.WriteString(block.String())
 		case "Loop":
-			//
+			loop, ok := fn_line.(Loop)
+			if !ok {
+				break
+			}
+			output.WriteString(loop.String())
 		}
 		if i == len(fn.Code)-1 {
+			output.WriteString("\n\t")
+		}
+	}
+	output.WriteString("}\n")
+	return output.String()
+}
+
+func (block Block) String() string {
+	output := strings.Builder{}
+	output.WriteString(block.Label)
+	output.WriteString(": {\n")
+	for i, block_line := range block.Code {
+		output.WriteString("\n\t\t")
+		switch block_line.getTACType() {
+		case "Instruction":
+			inst, ok := block_line.(Instruction)
+			if !ok {
+				break
+			}
+			output.WriteString(inst.String())
+		case "IfBlock":
+			//
+		case "Block":
+			block, ok := block_line.(Block)
+			if !ok {
+				break
+			}
+			output.WriteString(block.String())
+		case "Loop":
+			loop, ok := block_line.(Loop)
+			if !ok {
+				break
+			}
+			output.WriteString(loop.String())
+		}
+		if i == len(block.Code)-1 {
+			output.WriteString("\n\t")
+		}
+	}
+	output.WriteString("}\n")
+	return output.String()
+}
+
+// TODO: fix implementation and reduce repitition
+
+func (loop Loop) String() string {
+	output := strings.Builder{}
+	output.WriteString(loop.Label)
+	output.WriteString(": {\n")
+	for i, loop_line := range loop.Code {
+		output.WriteString("\n\t\t")
+		switch loop_line.getTACType() {
+		case "Instruction":
+			inst, ok := loop_line.(Instruction)
+			if !ok {
+				break
+			}
+			output.WriteString(inst.String())
+		case "IfBlock":
+			//
+		case "Block":
+			block, ok := loop_line.(Block)
+			if !ok {
+				break
+			}
+			output.WriteString(block.String())
+		case "Loop":
+			loop, ok := loop_line.(Loop)
+			if !ok {
+				break
+			}
+			output.WriteString(loop.String())
+		}
+		if i == len(loop.Code)-1 {
 			output.WriteString("\n\t")
 		}
 	}
@@ -223,9 +305,9 @@ func (inst Instruction) String() string {
 func (op Operand) String() string {
 	output := strings.Builder{}
 	if op.Label != "" {
+		output.WriteRune(' ')
 		output.WriteString(op.Label)
-	}
-	if (op.Var != Variable{}) {
+	} else if (op.Var != Variable{}) {
 		vis := ""
 		if op.Var.Visibility != "" {
 			vis = fmt.Sprintf("%s.", op.Var.Visibility)

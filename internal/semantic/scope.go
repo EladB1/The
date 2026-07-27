@@ -155,6 +155,15 @@ func (scope *Scope) HasScopeTypeAncestor(sType ScopeType) bool {
 	return false
 }
 
+func (scope *Scope) GetChildScopeById(id string) *Scope {
+	for _, child := range scope.Children {
+		if child.Id == id {
+			return child
+		}
+	}
+	return nil
+}
+
 func (scope *Scope) LookupType(name string) TypeSymbol {
 	curr := scope
 	for curr != nil {

@@ -19,6 +19,12 @@ fn add(int x, int y, int z) -> int {
     return x + y + z;
 }
 
+fn whileLoop() {
+    mut int j = 0;
+    while (j < 10) {
+        j++;
+    }
+}
 
 fn main() -> int {
 
