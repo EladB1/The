@@ -186,12 +186,24 @@ func translateIfBlock(node *parser.AST, exitLabel string, startLabel string) []T
 	cond_in, cond := translateExpression(*node.Children[0].Children[0])
 	instructions = append(instructions, cond_in...)
 	blocksIndex := 0
+	scope := currScope
+	currScope = currScope.GetChildScopeById(node.Children[0].IRName)
+	if currScope == nil {
+		currScope = scope
+		return []TAC{}
+	}
 	blocks := [][]TAC{translateBlock(node.Children[0].Children[1].Children, exitLabel, startLabel)}
 	conditionsIndex := 0
 	conditions := []Variable{cond.Var}
 	conditionSetup := [][]TAC{cond_in}
 	for i := 1; i < len(node.Children); i++ {
+		currScope = scope
 		block := node.Children[i]
+		currScope = currScope.GetChildScopeById(block.IRName)
+		if currScope == nil {
+			currScope = scope
+			return []TAC{}
+		}
 		if block.Label == "else if" {
 			cond_in, cond := translateExpression(*block.Children[0])
 			conditions = append(conditions, cond.Var)
@@ -224,5 +236,6 @@ func translateIfBlock(node *parser.AST, exitLabel string, startLabel string) []T
 	}
 
 	instructions = append(instructions, ifBlock)
+	currScope = scope
 	return instructions
 }

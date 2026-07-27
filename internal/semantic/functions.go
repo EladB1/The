@@ -178,7 +178,8 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 				returns := analyzeBlockAndCheckForReturn(branch.Children[block_index].Children, fn, sig)
 				if i == 0 {
 					hasReturn = returns
-				} else if i == len(stmt.Children)-1 && branch.Label != "else" {
+				}
+				if i == len(stmt.Children)-1 && branch.Label != "else" {
 					hasReturn = false
 				} else {
 					hasReturn = hasReturn && returns

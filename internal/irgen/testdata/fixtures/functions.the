@@ -42,6 +42,27 @@ fn whileLoop() {
 //     return sum;
 // }
 
+fn fib(int n) -> int {
+    if (n == 0 || n == 1)
+        return n;
+    return fib(n - 1) + fib(n - 2);
+}
+
+fn flipSign(int x) -> int {
+    if (x < 0)
+        return -1 * x;
+    else
+        return -x;
+}
+
+fn fib2(int n) -> int {
+    if (n == 0)
+        return n;
+    else if (n == 1)
+        return n;
+    return fib2(n - 1) + fib2(n - 2);
+}
+
 fn getZero(int x) -> int {
     if (x == 0) {
         return x;
@@ -53,6 +74,14 @@ fn getZero(int x) -> int {
     } else {
         return x * 0;
     }
+}
+
+fn doSomething(int x) -> int {
+    if (x % 2 == 0) {
+        int half = x / 2;
+        return half;
+    }
+    return x;
 }
 
 fn main() -> int {

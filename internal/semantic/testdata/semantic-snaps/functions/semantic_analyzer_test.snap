@@ -568,10 +568,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
     ] }
 ] }
 Compiler messages:
-[
-    "Warning: Unreachable code at line: 38, column: 5",
-    "Warning: Unreachable code at line: 65, column: 9"
-]
+[]
 
 ---
 
@@ -1396,13 +1393,13 @@ Compiler messages:
     "TypeError: Function 'missingReturn(uint32,uint32)->uint32' may not return a value at line: 38, column: 49",
     "TypeError: Function 'missingReturn(int)->uint32' may not return a value at line: 51, column: 35",
     "TypeError: Function 'missingReturn(int,int)->uint32' may not return a value at line: 59, column: 42",
+    "TypeError: Function 'missingReturnNestedIfBlocks(int,int)->bool' may not return a value at line: 67, column: 54",
     "TypeError: Function 'missingReturnNestedIfBlocks(int,int)->bool' expected return type bool but got int at line: 70, column: 13",
     "TypeError: Function 'missingReturnNestedIfBlocks(int,int)->bool' expected return type bool but got int at line: 75, column: 13",
     "TypeError: Function 'missingReturnNestedIfBlocks(int,int)->bool' expected return type bool but got int at line: 78, column: 13",
     "TypeError: Function 'missingReturnNestedIfBlocks(int,int)->bool' expected return type bool but got int at line: 81, column: 13",
     "TypeError: Function 'wrongReturnValue()->int' expected return type int but got char at line: 86, column: 5",
     "TypeError: Function 'wrongReturnValue(int)->int' expected return type int but got String at line: 92, column: 5",
-    "Warning: Unreachable code at line: 92, column: 5",
     "TypeError: Function 'wrongReturnValue(int,int)->int' expected return type int but got double at line: 99, column: 9",
     "TypeError: Function 'wrongAndMissingReturnValue(int,char)->int' may not return a value at line: 102, column: 56",
     "TypeError: Function 'wrongAndMissingReturnValue(int,char)->int' expected return type int but got char at line: 106, column: 9",
