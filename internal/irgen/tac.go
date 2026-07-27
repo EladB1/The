@@ -7,6 +7,8 @@ import (
 	"github.com/EladB1/The/internal/datatypes"
 )
 
+const indentDelim string = "  "
+
 type (
 	Datatype      string
 	VariableScope string
@@ -107,9 +109,7 @@ const (
 	F64ToI64 Operation = "i64.trunc_f64_s"
 	F64ToU64 Operation = "i64.trunc_f64_u"
 	F64ToF32 Operation = "f32.demote_f64"
-	// TODO str_const operations
 	// TODO ptr operations
-	// TODO runtime library functions/constants
 )
 
 func typedOperation(irType datatypes.IRType, operation string) Operation {
@@ -144,24 +144,10 @@ func (prog *Program) appendCode(code []TAC) {
 
 func (prog *Program) String() string {
 	output := strings.Builder{}
-	output.WriteString("Program: [\n")
-	for _, line := range prog.Code {
-		output.WriteRune('\t')
-		switch line.getTACType() {
-		case "Instruction":
-			inst, ok := line.(Instruction)
-			if !ok {
-				break
-			}
-			output.WriteString(inst.String())
-		case "Function":
-			fn, ok := line.(Function)
-			if !ok {
-				break
-			}
-			output.WriteString(fn.String())
-		}
+	output.WriteString("Program: [")
+	if len(prog.Code) > 0 {
 		output.WriteRune('\n')
+		output.WriteString(stringifyCode(prog.Code, 1))
 	}
 	output.WriteString("]\n")
 	return output.String()
@@ -169,7 +155,7 @@ func (prog *Program) String() string {
 
 func (fn Function) String() string {
 	output := strings.Builder{}
-	output.WriteString(fmt.Sprintf("fn %s(", fn.Name))
+	output.WriteString(fmt.Sprintf("%sfn %s(", indentDelim, fn.Name))
 	for i, param := range fn.Parameters {
 		output.WriteString(fmt.Sprintf("param.%s: %s", param.Name, param.Type))
 		if i != len(fn.Parameters)-1 {
@@ -181,114 +167,40 @@ func (fn Function) String() string {
 		output.WriteString(fmt.Sprintf("->%s", fn.ReturnType))
 	}
 	output.WriteString(" {")
-	for i, fn_line := range fn.Code {
-		output.WriteString("\n\t\t")
-		switch fn_line.getTACType() {
-		case "Instruction":
-			inst, ok := fn_line.(Instruction)
-			if !ok {
-				break
-			}
-			output.WriteString(inst.String())
-		case "IfBlock":
-			//
-		case "Block":
-			block, ok := fn_line.(Block)
-			if !ok {
-				break
-			}
-			output.WriteString(block.String())
-		case "Loop":
-			loop, ok := fn_line.(Loop)
-			if !ok {
-				break
-			}
-			output.WriteString(loop.String())
-		}
-		if i == len(fn.Code)-1 {
-			output.WriteString("\n\t")
-		}
+	if len(fn.Code) != 0 {
+		output.WriteString("\n")
 	}
+	output.WriteString(stringifyCode(fn.Code, 1))
+	output.WriteString(indentDelim)
 	output.WriteString("}\n")
 	return output.String()
 }
 
-func (block Block) String() string {
+func (block Block) String(indentLevel int) string {
 	output := strings.Builder{}
+	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
 	output.WriteString(block.Label)
 	output.WriteString(": {\n")
-	for i, block_line := range block.Code {
-		output.WriteString("\n\t\t")
-		switch block_line.getTACType() {
-		case "Instruction":
-			inst, ok := block_line.(Instruction)
-			if !ok {
-				break
-			}
-			output.WriteString(inst.String())
-		case "IfBlock":
-			//
-		case "Block":
-			block, ok := block_line.(Block)
-			if !ok {
-				break
-			}
-			output.WriteString(block.String())
-		case "Loop":
-			loop, ok := block_line.(Loop)
-			if !ok {
-				break
-			}
-			output.WriteString(loop.String())
-		}
-		if i == len(block.Code)-1 {
-			output.WriteString("\n\t")
-		}
-	}
-	output.WriteString("}\n")
+	output.WriteString(stringifyCode(block.Code, indentLevel))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString("}")
 	return output.String()
 }
 
-// TODO: fix implementation and reduce repitition
-
-func (loop Loop) String() string {
+func (loop Loop) String(indentLevel int) string {
 	output := strings.Builder{}
+	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
 	output.WriteString(loop.Label)
 	output.WriteString(": {\n")
-	for i, loop_line := range loop.Code {
-		output.WriteString("\n\t\t")
-		switch loop_line.getTACType() {
-		case "Instruction":
-			inst, ok := loop_line.(Instruction)
-			if !ok {
-				break
-			}
-			output.WriteString(inst.String())
-		case "IfBlock":
-			//
-		case "Block":
-			block, ok := loop_line.(Block)
-			if !ok {
-				break
-			}
-			output.WriteString(block.String())
-		case "Loop":
-			loop, ok := loop_line.(Loop)
-			if !ok {
-				break
-			}
-			output.WriteString(loop.String())
-		}
-		if i == len(loop.Code)-1 {
-			output.WriteString("\n\t")
-		}
-	}
-	output.WriteString("}\n")
+	output.WriteString(stringifyCode(loop.Code, indentLevel))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString("}")
 	return output.String()
 }
 
-func (inst Instruction) String() string {
+func (inst Instruction) String(indentLevel int) string {
 	output := strings.Builder{}
+	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
 	if (inst.Destination != Variable{}) {
 		output.WriteString(fmt.Sprintf("%s: %s = ", inst.Destination.Name, inst.Destination.DataType))
 	}
@@ -319,6 +231,42 @@ func (op Operand) String() string {
 		} else {
 			output.WriteString(fmt.Sprintf(" %s(%v)", op.Type, op.Constant))
 		}
+	}
+	return output.String()
+}
+
+func stringifyCode(code []TAC, indentLevel int) string {
+	output := strings.Builder{}
+	for _, line := range code {
+		switch line.getTACType() {
+		case "Instruction":
+			inst, ok := line.(Instruction)
+			if !ok {
+				break
+			}
+			output.WriteString(inst.String(indentLevel + 1))
+		case "Function":
+			fn, ok := line.(Function)
+			if !ok {
+				break
+			}
+			output.WriteString(fn.String())
+		case "IfBlock":
+			//
+		case "Block":
+			block, ok := line.(Block)
+			if !ok {
+				break
+			}
+			output.WriteString(block.String(indentLevel + 1))
+		case "Loop":
+			loop, ok := line.(Loop)
+			if !ok {
+				break
+			}
+			output.WriteString(loop.String(indentLevel + 1))
+		}
+		output.WriteRune('\n')
 	}
 	return output.String()
 }

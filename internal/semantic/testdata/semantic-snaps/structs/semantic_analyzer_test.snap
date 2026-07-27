@@ -632,7 +632,7 @@ children: [
             ] },
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@main()"
                 children: [
                     Node: { Token: {Value: &&, Type: operator, Line: 121, Column: 27}, Type: bool
                     children: [
@@ -1335,7 +1335,7 @@ children: [
                         children: [
                             Node: { Label: "if-block"
                             children: [
-                                Node: { Label: "if"
+                                Node: { Label: "if", IRName: "if#0@connect(bool)@DB@PostgreSQL"
                                 children: [
                                     Node: { Token: {Value: TLS, Type: identifier, Line: 99, Column: 16}, Type: bool },
                                     Node: { Label: "conditional_body"
@@ -1350,7 +1350,7 @@ children: [
                                         ] }
                                     ] }
                                 ] },
-                                Node: { Label: "else"
+                                Node: { Label: "else", IRName: "else#0@connect(bool)@DB@PostgreSQL"
                                 children: [
                                     Node: { Label: "conditional_body"
                                     children: [

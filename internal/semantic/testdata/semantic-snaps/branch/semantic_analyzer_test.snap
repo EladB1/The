@@ -31,7 +31,7 @@ children: [
             ] },
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@getAccountType()"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 2, Column: 13}, Type: bool
                     children: [
@@ -63,7 +63,7 @@ children: [
             ] },
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#1@getAccountType()"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 5, Column: 13}, Type: bool
                     children: [
@@ -79,7 +79,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else if"
+                Node: { Label: "else if", IRName: "else if#1.0@getAccountType()"
                 children: [
                     Node: { Label: "call", Type: bool
                     children: [
@@ -102,7 +102,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else if"
+                Node: { Label: "else if", IRName: "else if#1.1@getAccountType()"
                 children: [
                     Node: { Label: "call", Type: bool
                     children: [
@@ -125,7 +125,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else"
+                Node: { Label: "else", IRName: "else#1@getAccountType()"
                 children: [
                     Node: { Label: "conditional-body"
                     children: [
@@ -164,7 +164,7 @@ children: [
             ] },
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@nestedConditions()"
                 children: [
                     Node: { Token: {Value: !=, Type: compare operator, Line: 21, Column: 10}, Type: bool
                     children: [
@@ -175,7 +175,7 @@ children: [
                     children: [
                         Node: { Label: "if-block"
                         children: [
-                            Node: { Label: "if"
+                            Node: { Label: "if", IRName: "if#0@if#0@nestedConditions()"
                             children: [
                                 Node: { Token: {Value: <, Type: compare operator, Line: 22, Column: 14}, Type: bool
                                 children: [
@@ -191,7 +191,7 @@ children: [
                                     ] }
                                 ] }
                             ] },
-                            Node: { Label: "else if"
+                            Node: { Label: "else if", IRName: "else if#0.0@if#0@nestedConditions()"
                             children: [
                                 Node: { Token: {Value: >, Type: compare operator, Line: 24, Column: 21}, Type: bool
                                 children: [
@@ -243,7 +243,7 @@ children: [
                 Node: { Token: {Value: limit, Type: identifier, Line: 33, Column: 8} },
                 Node: { Token: {Value: 1000, Type: int literal, Line: 33, Column: 16}, Type: int }
             ] },
-            Node: { Label: "while"
+            Node: { Label: "while", IRName: "while#0@nestedLoops()"
             children: [
                 Node: { Token: {Value: <, Type: compare operator, Line: 34, Column: 13}, Type: bool
                 children: [
@@ -254,7 +254,7 @@ children: [
                 children: [
                     Node: { Label: "if-block"
                     children: [
-                        Node: { Label: "if"
+                        Node: { Label: "if", IRName: "if#0@while#0@nestedLoops()"
                         children: [
                             Node: { Token: {Value: ==, Type: compare operator, Line: 35, Column: 18}, Type: bool
                             children: [
@@ -288,7 +288,7 @@ children: [
                         Node: { Token: {Value: int, Type: type keyword, Line: 39, Column: 12} },
                         Node: { Token: {Value: j, Type: identifier, Line: 39, Column: 16} }
                     ] },
-                    Node: { Label: "for"
+                    Node: { Label: "for", IRName: "for#0@while#0@nestedLoops()"
                     children: [
                         Node: { Label: "loop-condition"
                         children: [
@@ -338,7 +338,7 @@ children: [
                     ] },
                     Node: { Label: "if-block"
                     children: [
-                        Node: { Label: "if"
+                        Node: { Label: "if", IRName: "if#1@while#0@nestedLoops()"
                         children: [
                             Node: { Token: {Value: ==, Type: compare operator, Line: 43, Column: 14}, Type: bool
                             children: [
@@ -380,7 +380,7 @@ children: [
         ] },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#0@printString(String)"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -423,7 +423,7 @@ children: [
             ] },
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@main()"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 58, Column: 20}, Type: bool
                     children: [
@@ -446,7 +446,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else"
+                Node: { Label: "else", IRName: "else#0@main()"
                 children: [
                     Node: { Label: "conditional_body"
                     children: [
@@ -471,7 +471,7 @@ children: [
                 Node: { Token: {Value: sum, Type: identifier, Line: 63, Column: 12} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 63, Column: 18}, Type: int }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#0@main()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -505,7 +505,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#1@main()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -528,7 +528,7 @@ children: [
                 children: [
                     Node: { Label: "if-block"
                     children: [
-                        Node: { Label: "if"
+                        Node: { Label: "if", IRName: "if#0@for#1@main()"
                         children: [
                             Node: { Token: {Value: >=, Type: compare operator, Line: 68, Column: 26}, Type: bool
                             children: [
@@ -555,7 +555,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#2@main()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -668,7 +668,7 @@ children: [
         Node: { Token: {Value: forConditions, Type: identifier, Line: 0, Column: 3} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#0@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -682,7 +682,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#1@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -701,7 +701,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#2@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -720,7 +720,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#3@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -741,7 +741,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#4@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -762,7 +762,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#5@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -783,7 +783,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#6@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -806,7 +806,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#7@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -833,7 +833,7 @@ children: [
                 Node: { Token: {Value: int, Type: type keyword, Line: 9, Column: 4} },
                 Node: { Token: {Value: j, Type: identifier, Line: 9, Column: 8} }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#8@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -855,7 +855,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#9@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -881,7 +881,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#10@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -904,7 +904,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#11@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -918,7 +918,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#12@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -936,7 +936,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#13@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -955,7 +955,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#14@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -973,7 +973,7 @@ children: [
                 ] },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#15@forConditions()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -1003,12 +1003,12 @@ children: [
         Node: { Token: {Value: whileConditions, Type: identifier, Line: 20, Column: 3} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "while"
+            Node: { Label: "while", IRName: "while#0@whileConditions()"
             children: [
                 Node: { Token: {Value: 1, Type: int literal, Line: 21, Column: 11}, Type: int },
                 Node: { Label: "loop-body" }
             ] },
-            Node: { Label: "while"
+            Node: { Label: "while", IRName: "while#1@whileConditions()"
             children: [
                 Node: { Token: {Value: keepLooping, Type: identifier, Line: 22, Column: 11} },
                 Node: { Label: "loop-body" }
@@ -1022,7 +1022,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@ifConditions()"
                 children: [
                     Node: { Token: {Value: x, Type: identifier, Line: 26, Column: 8} },
                     Node: { Label: "conditional_body" }
@@ -1030,7 +1030,7 @@ children: [
             ] },
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#1@ifConditions()"
                 children: [
                     Node: { Token: {Value: 1, Type: int literal, Line: 27, Column: 8}, Type: int },
                     Node: { Label: "conditional_body" }
@@ -1038,7 +1038,7 @@ children: [
             ] },
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#2@ifConditions()"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 28, Column: 10}
                     children: [
@@ -1057,7 +1057,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@controlFlow()"
                 children: [
                     Node: { Token: {Value: !=, Type: compare operator, Line: 32, Column: 10}, Type: bool
                     children: [
@@ -1072,7 +1072,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else"
+                Node: { Label: "else", IRName: "else#0@controlFlow()"
                 children: [
                     Node: { Label: "conditional_body"
                     children: [
@@ -1187,7 +1187,7 @@ children: [
                 Node: { Token: {Value: return, Type: flow keyword, Line: 1, Column: 4} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 1, Column: 11}, Type: int }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#0@main()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -1222,7 +1222,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#1@main()"
             children: [
                 Node: { Label: "loop-condition"
                 children: [

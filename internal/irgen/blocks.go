@@ -150,11 +150,9 @@ func translateWhile(node *parser.AST) []TAC {
 			Label: loop.Label,
 		},
 	}) // go back to the start of the loop
-	// loop through body
 	currScope = scope
 	loop.Code = append(loop.Code, loopBody)
 	outerBlock.Code = append(outerBlock.Code, loop)
-	fmt.Println("HERE", outerBlock)
 	loopIndex++
 	instructions = append(instructions, outerBlock)
 	return instructions

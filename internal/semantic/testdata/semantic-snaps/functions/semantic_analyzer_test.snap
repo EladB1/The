@@ -163,7 +163,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@returns()"
                 children: [
                     Node: { Token: {Value: <, Type: compare operator, Line: 28, Column: 10}, Type: bool
                     children: [
@@ -179,7 +179,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else"
+                Node: { Label: "else", IRName: "else#0@returns()"
                 children: [
                     Node: { Label: "conditional-body"
                     children: [
@@ -209,7 +209,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@returns(int)"
                 children: [
                     Node: { Token: {Value: <, Type: compare operator, Line: 35, Column: 10}, Type: bool
                     children: [
@@ -254,7 +254,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@returns(int,int)"
                 children: [
                     Node: { Token: {Value: <, Type: compare operator, Line: 41, Column: 10}, Type: bool
                     children: [
@@ -270,7 +270,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else if"
+                Node: { Label: "else if", IRName: "else if#0.0@returns(int,int)"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 43, Column: 15}, Type: bool
                     children: [
@@ -286,7 +286,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else"
+                Node: { Label: "else", IRName: "else#0@returns(int,int)"
                 children: [
                     Node: { Label: "conditional-body"
                     children: [
@@ -321,7 +321,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@returns(uint32,uint32)"
                 children: [
                     Node: { Token: {Value: <, Type: compare operator, Line: 50, Column: 10}, Type: bool
                     children: [
@@ -337,7 +337,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else if"
+                Node: { Label: "else if", IRName: "else if#0.0@returns(uint32,uint32)"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 52, Column: 15}, Type: bool
                     children: [
@@ -356,7 +356,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else"
+                Node: { Label: "else", IRName: "else#0@returns(uint32,uint32)"
                 children: [
                     Node: { Label: "conditional-body"
                     children: [
@@ -409,14 +409,14 @@ children: [
                 Node: { Token: {Value: count, Type: identifier, Line: 60, Column: 15} },
                 Node: { Token: {Value: i, Type: identifier, Line: 60, Column: 23}, Type: uint32 }
             ] },
-            Node: { Label: "while"
+            Node: { Label: "while", IRName: "while#0@returns(uint32,uint32,uint32)"
             children: [
                 Node: { Token: {Value: true, Type: boolean value keyword, Line: 61, Column: 11}, Type: bool },
                 Node: { Label: "loop-body"
                 children: [
                     Node: { Label: "if-block"
                     children: [
-                        Node: { Label: "if"
+                        Node: { Label: "if", IRName: "if#0@while#0@returns(uint32,uint32,uint32)"
                         children: [
                             Node: { Token: {Value: ==, Type: compare operator, Line: 62, Column: 18}, Type: bool
                             children: [
@@ -475,7 +475,7 @@ children: [
         Node: { Token: {Value: bool, Type: type keyword, Line: 69, Column: 44} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#0@returns(uint64,uint64,uint64)"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -498,7 +498,7 @@ children: [
                 children: [
                     Node: { Label: "if-block"
                     children: [
-                        Node: { Label: "if"
+                        Node: { Label: "if", IRName: "if#0@for#0@returns(uint64,uint64,uint64)"
                         children: [
                             Node: { Token: {Value: ==, Type: compare operator, Line: 71, Column: 14}, Type: bool
                             children: [
@@ -594,7 +594,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@ifBlock(int)"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 1, Column: 10}, Type: bool
                     children: [
@@ -617,7 +617,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else"
+                Node: { Label: "else", IRName: "else#0@ifBlock(int)"
                 children: [
                     Node: { Label: "conditional_body"
                     children: [
@@ -859,7 +859,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@missingReturn(uint32)"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 33, Column: 10}, Type: bool
                     children: [
@@ -902,7 +902,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@missingReturn(uint32,uint32)"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 38, Column: 10}, Type: bool
                     children: [
@@ -918,7 +918,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else if"
+                Node: { Label: "else if", IRName: "else if#0.0@missingReturn(uint32,uint32)"
                 children: [
                     Node: { Token: {Value: <, Type: compare operator, Line: 41, Column: 15}, Type: bool
                     children: [
@@ -934,7 +934,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else"
+                Node: { Label: "else", IRName: "else#0@missingReturn(uint32,uint32)"
                 children: [
                     Node: { Label: "conditional_body"
                     children: [
@@ -965,7 +965,7 @@ children: [
         Node: { Token: {Value: uint32, Type: type keyword, Line: 50, Column: 27} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "while"
+            Node: { Label: "while", IRName: "while#0@missingReturn(int)"
             children: [
                 Node: { Token: {Value: true, Type: boolean value keyword, Line: 52, Column: 11}, Type: bool },
                 Node: { Label: "loop-body"
@@ -1002,7 +1002,7 @@ children: [
         Node: { Token: {Value: uint32, Type: type keyword, Line: 58, Column: 34} },
         Node: { Label: "fn-body"
         children: [
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#0@missingReturn(int,int)"
             children: [
                 Node: { Label: "loop-condition"
                 children: [
@@ -1059,7 +1059,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@missingReturnNestedIfBlocks(int,int)"
                 children: [
                     Node: { Token: {Value: <, Type: compare operator, Line: 67, Column: 10}, Type: bool
                     children: [
@@ -1070,7 +1070,7 @@ children: [
                     children: [
                         Node: { Label: "if-block"
                         children: [
-                            Node: { Label: "if"
+                            Node: { Label: "if", IRName: "if#0@if#0@missingReturnNestedIfBlocks(int,int)"
                             children: [
                                 Node: { Token: {Value: ==, Type: compare operator, Line: 68, Column: 18}, Type: bool
                                 children: [
@@ -1097,13 +1097,13 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else"
+                Node: { Label: "else", IRName: "else#0@missingReturnNestedIfBlocks(int,int)"
                 children: [
                     Node: { Label: "conditional_body"
                     children: [
                         Node: { Label: "if-block"
                         children: [
-                            Node: { Label: "if"
+                            Node: { Label: "if", IRName: "if#0@else#0@missingReturnNestedIfBlocks(int,int)"
                             children: [
                                 Node: { Token: {Value: ==, Type: compare operator, Line: 73, Column: 18}, Type: bool
                                 children: [
@@ -1127,7 +1127,7 @@ children: [
                                     ] }
                                 ] }
                             ] },
-                            Node: { Label: "else if"
+                            Node: { Label: "else if", IRName: "else if#0.0@else#0@missingReturnNestedIfBlocks(int,int)"
                             children: [
                                 Node: { Token: {Value: ==, Type: compare operator, Line: 76, Column: 23}, Type: bool
                                 children: [
@@ -1151,7 +1151,7 @@ children: [
                                     ] }
                                 ] }
                             ] },
-                            Node: { Label: "else"
+                            Node: { Label: "else", IRName: "else#0@else#0@missingReturnNestedIfBlocks(int,int)"
                             children: [
                                 Node: { Label: "conditional-body"
                                 children: [
@@ -1197,7 +1197,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@wrongReturnValue(int)"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 89, Column: 10}, Type: bool
                     children: [
@@ -1242,7 +1242,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@wrongReturnValue(int,int)"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 95, Column: 10}, Type: bool
                     children: [
@@ -1258,7 +1258,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else"
+                Node: { Label: "else", IRName: "else#0@wrongReturnValue(int,int)"
                 children: [
                     Node: { Label: "conditional-body"
                     children: [
@@ -1297,7 +1297,7 @@ children: [
         children: [
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@wrongAndMissingReturnValue(int,char)"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 102, Column: 10}, Type: bool
                     children: [
@@ -1313,7 +1313,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else if"
+                Node: { Label: "else if", IRName: "else if#0.0@wrongAndMissingReturnValue(int,char)"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 104, Column: 15}, Type: bool
                     children: [
