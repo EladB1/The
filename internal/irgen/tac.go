@@ -10,9 +10,10 @@ import (
 const indentDelim string = "  "
 
 type (
-	Datatype      string
-	VariableScope string
-	Operation     string
+	Datatype        string
+	VariableScope   string
+	Operation       string
+	RuntimeFunction string
 	/* interface for Instruction, Function, Loop, IfBlock, and Block */
 	TAC interface {
 		getTACType() string
@@ -110,6 +111,23 @@ const (
 	F64ToU64 Operation = "i64.trunc_f64_u"
 	F64ToF32 Operation = "f32.demote_f64"
 	// TODO ptr operations
+)
+
+const (
+	Stringlen            RuntimeFunction = "__str_length"
+	StringIndex          RuntimeFunction = "__str_index"
+	StringFromInt32      RuntimeFunction = "__str_fromInt32"
+	StringFromInt64      RuntimeFunction = "__str_fromInt64"
+	StringFromFloat32    RuntimeFunction = "__str_fromFloat32"
+	StringFromFloat64    RuntimeFunction = "__str_fromFloat64"
+	StringFromChar       RuntimeFunction = "__str_fromChar"
+	StringFromBool       RuntimeFunction = "__str_fromBool"
+	StringSlice          RuntimeFunction = "__str_slice"
+	StringSliceInclusive RuntimeFunction = "__str_slice_inclusive"
+	StringConcat         RuntimeFunction = "__str_concat"
+	StringConcatChar     RuntimeFunction = "__str_concat_char"
+	CharConcat           RuntimeFunction = "__char_concat"
+	CharConcatString     RuntimeFunction = "__char_concat_str"
 )
 
 func typedOperation(irType datatypes.IRType, operation string) Operation {

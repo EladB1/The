@@ -102,17 +102,7 @@ func translateAssignment(node *parser.AST) []TAC {
 	}
 	variable := currScope.LookupVariable(name)
 	if variable != nil {
-		instructions = append(instructions, Instruction{
-			Operation: Store,
-			Operand1: Operand{
-				Var: Variable{
-					Name:       variable.Name,
-					DataType:   dt.TranslateSourceType(variable.Type),
-					Visibility: VariableScope(variable.Ctx),
-				},
-			},
-			Operand2: value_op,
-		})
+		instructions = append(instructions, storeVariable(*variable, value_op))
 	}
 	return instructions
 }
@@ -215,17 +205,7 @@ func translateForLoop(node *parser.AST) []TAC {
 		}
 		currScope.Variables[iterator_name] = variable
 		init = []TAC{
-			Instruction{
-				Operation: Store,
-				Operand1: Operand{
-					Var: Variable{
-						Name:       iterator_name,
-						DataType:   dt.I32,
-						Visibility: VariableScope(variable.Ctx),
-					},
-				},
-				Operand2: getZeroValue(dt.Int32Type),
-			},
+			storeVariable(variable, getZeroValue(dt.Int32Type)),
 		}
 		container_in, container := translateExpression(*loopConditions.Children[2])
 		outerBlock.Code = append(outerBlock.Code, container_in...)
@@ -273,25 +253,15 @@ func translateForLoop(node *parser.AST) []TAC {
 				Destination: index,
 				Operation:   Call,
 				Operand1: Operand{
-					Constant: "__str_index",
+					Constant: StringIndex,
 				}, // TODO: make this work for any container type
 				Operand2: Operand{
 					Constant: 2,
 				},
 			},
-			Instruction{
-				Operation: Store,
-				Operand1: Operand{
-					Var: Variable{
-						Name:       eachVar.Name,
-						DataType:   dt.TranslateSourceType(eachVar.Type),
-						Visibility: VariableScope(eachVar.Ctx),
-					},
-				},
-				Operand2: Operand{
-					Var: index,
-				},
-			},
+			storeVariable(*eachVar, Operand{
+				Var: index,
+			}),
 		}
 
 		loopBody.Code = append(loopBody.Code, index_in...)
@@ -309,20 +279,10 @@ func translateForLoop(node *parser.AST) []TAC {
 					Constant: 1,
 				},
 			},
-			Instruction{
-				Operation: Store,
-				Operand1: Operand{
-					Var: Variable{
-						Name:       iterator_name,
-						DataType:   dt.I32,
-						Visibility: VariableScope(variable.Ctx),
-					},
-				},
-				Operand2: Operand{
-					Type: dt.I32,
-					Var:  next,
-				},
-			},
+			storeVariable(variable, Operand{
+				Type: dt.I32,
+				Var:  next,
+			}),
 		}
 		// TODO: refactor
 	case semantic.IndexedForeach:

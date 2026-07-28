@@ -256,15 +256,15 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 	r_in, r_op := translateExpression(*right)
 	instructions = append(instructions, r_in...)
 	if rootType.Equals(dt.StringType) {
-		var fn string
+		var fn RuntimeFunction
 		if left.Type.Equals(dt.CharType) && right.Type.Equals(dt.CharType) {
-			fn = "__char_concat"
+			fn = CharConcat
 		} else if left.Type.Equals(dt.CharType) && right.Type.Equals(dt.StringType) {
-			fn = "__char_concat_str"
+			fn = CharConcatString
 		} else if left.Type.Equals(dt.StringType) && right.Type.Equals(dt.CharType) {
-			fn = "__str_concat_char"
+			fn = StringConcatChar
 		} else { // string + string
-			fn = "__str_concat"
+			fn = StringConcat
 		}
 		tempVar := formTempVar(dt.Str_const)
 		call := []TAC{
@@ -293,7 +293,6 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 			Var:  tempVar,
 		}
 	} else {
-
 		var irType dt.IRType
 		var typecast Operation
 		if l_op.Type != r_op.Type {
@@ -555,19 +554,7 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 						Constant: 1,
 					},
 				},
-				Instruction{
-					Operation: Store,
-					Operand1: Operand{
-						Var: Variable{
-							Name:       variable.Name,
-							DataType:   dt.TranslateSourceType(variable.Type),
-							Visibility: VariableScope(variable.Ctx),
-						},
-					},
-					Operand2: Operand{
-						Var: tempVar,
-					},
-				},
+				storeVariable(*variable, Operand{Var: tempVar}),
 			}
 			instructions = append(instructions, increment...)
 		}
@@ -598,19 +585,9 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 					Constant: 1,
 				},
 			},
-			Instruction{
-				Operation: Store,
-				Operand1: Operand{
-					Var: Variable{
-						Name:       variable.Name,
-						DataType:   dt.TranslateSourceType(variable.Type),
-						Visibility: VariableScope(variable.Ctx),
-					},
-				},
-				Operand2: Operand{
-					Var: tempVar,
-				},
-			},
+			storeVariable(*variable, Operand{
+				Var: tempVar,
+			}),
 		}
 		instructions = append(instructions, increment...)
 	}
@@ -708,7 +685,7 @@ func translateIndex(node parser.AST) ([]TAC, Operand) {
 			Destination: tempVar,
 			Operation:   Call,
 			Operand1: Operand{
-				Constant: "__str_index",
+				Constant: StringIndex,
 			},
 			Operand2: Operand{
 				Constant: 2,
@@ -767,7 +744,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 	var end_op Operand
 	rangeIndex := 0
 	length := len(node.Children)
-	fn := "__str_slice"
+	fn := StringSlice
 	switch length {
 	case 1: // str[..]
 		end_in, end_op = getArrayEnd(arr)
@@ -841,7 +818,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 	}
 	slice = formTempVar(dt.I32)
 	if node.Children[rangeIndex].Token.Value == "..=" {
-		fn = "__str_slice_inclusive"
+		fn = StringSliceInclusive
 	}
 	call := []TAC{
 		Instruction{
@@ -1083,7 +1060,7 @@ func getArrayLength(arr Operand) ([]TAC, Operand) {
 			Destination: len,
 			Operation:   Call,
 			Operand1: Operand{
-				Constant: "__str_length",
+				Constant: Stringlen,
 			},
 			Operand2: Operand{
 				Constant: 1,
@@ -1097,20 +1074,20 @@ func getArrayLength(arr Operand) ([]TAC, Operand) {
 	return instructions, operand
 }
 
-func getToStringFn(src dt.SourceType) string {
+func getToStringFn(src dt.SourceType) RuntimeFunction {
 	// TODO: handle struct
 	if src.Equals(dt.Int32Type) || src.Equals(dt.Uint32Type) {
-		return "__str_fromInt32"
+		return StringFromInt32
 	} else if src.Equals(dt.Int64Type) || src.Equals(dt.Uint64Type) {
-		return "__str_fromInt64"
+		return StringFromInt64
 	} else if src.Equals(dt.BoolType) {
-		return "__str_fromBool"
+		return StringFromBool
 	} else if src.Equals(dt.CharType) {
-		return "__str_fromChar"
+		return StringFromChar
 	} else if src.Equals(dt.FloatType) {
-		return "__str_fromFloat32"
+		return StringFromFloat32
 	} else if src.Equals(dt.DoubleType) {
-		return "__str_fromFloat64"
+		return StringFromFloat64
 	}
 	return ""
 }

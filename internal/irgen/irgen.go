@@ -177,3 +177,17 @@ func formTempVar(irType dt.IRType) Variable {
 	return tempVar
 
 }
+
+func storeVariable(variable semantic.VariableSymbol, value Operand) Instruction {
+	return Instruction{
+		Operation: Store,
+		Operand1: Operand{
+			Var: Variable{
+				Name:       variable.Name,
+				DataType:   dt.TranslateSourceType(variable.Type),
+				Visibility: VariableScope(variable.Ctx),
+			},
+		},
+		Operand2: value,
+	}
+}
