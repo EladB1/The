@@ -65,6 +65,33 @@ func (scope *Scope) MarshalJSON() ([]byte, error) {
 	})
 }
 
+func (scope *Scope) UnmarshalJSON(data []byte) error {
+	var serialized SerializedScope
+	if err := json.Unmarshal(data, &serialized); err != nil {
+		return err
+	}
+	*scope = serialized.transform()
+	return nil
+}
+
+func (serialized *SerializedScope) transform() Scope {
+	scope := Scope{
+		Id:          serialized.Id,
+		Kind:        serialized.Kind,
+		Functions:   serialized.Functions,
+		Variables:   serialized.Variables,
+		Interfaces:  serialized.Interfaces,
+		Structs:     serialized.Structs,
+		NamedBlocks: serialized.NamedBlocks,
+	}
+	for _, child := range serialized.Children {
+		copy := *child
+		copy.Parent = &scope
+		scope.Children = append(scope.Children, &copy)
+	}
+	return scope
+}
+
 func (scope *Scope) addChild(id string, kind ScopeType) *Scope {
 	newScope := Scope{
 		Id:          id,
@@ -224,7 +251,8 @@ func (scope *Scope) LookupVariable(name string) *VariableSymbol {
 	curr := scope
 	for curr != nil {
 		if variable, ok := curr.Variables[name]; ok {
-			return &variable
+			vs := variable
+			return &vs
 		}
 		curr = curr.Parent
 	}

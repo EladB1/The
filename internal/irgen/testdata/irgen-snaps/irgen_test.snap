@@ -180,42 +180,123 @@ Program: [
           __t16: i32 = i32.eq __t15 i32(0)
           JMPIF loop_exit@0 __t16
           loop_body@0: {
+            __t17: i32 = GET local.j
+            __t18: i32 = i32.add __t17 i32(1)
+            STORE local.j __t18
             JMP loop@0
           }
         }
       }
   }
 
-  fn getZero(x: i32)->i32 {
-      __t17: i32 = GET param.x
-      __t18: i32 = i32.eq __t17 i32(0)
-      if __t18 {
-          __t19: i32 = GET param.x
-          return __t19
+  fn fib(n: i32)->i32 {
+      __t19: i32 = GET param.n
+      __t20: i32 = i32.eq __t19 i32(0)
+      __t21: i32 = GET param.n
+      __t22: i32 = i32.eq __t21 i32(1)
+      __t23: i32 = i32.or __t20 __t22
+      if __t23 {
+          __t24: i32 = GET param.n
+          return __t24
+      }
+      __t25: i32 = GET param.n
+      __t26: i32 = i32.sub __t25 i32(1)
+      PARAM __t26
+      __t27: none = CALL fib 1
+      __t28: i32 = GET param.n
+      __t29: i32 = i32.sub __t28 i32(2)
+      PARAM __t29
+      __t30: none = CALL fib 1
+      __t31: i32 = i32.add
+      return __t31
+  }
+
+  fn flipSign(x: i32)->i32 {
+      __t32: i32 = GET param.x
+      __t33: i32 = i32.lt __t32 i32(0)
+      if __t33 {
+          __t34: i32 = i32.sub i32(0) i32(1)
+          __t35: i32 = GET param.x
+          __t36: i32 = i32.mul __t34 __t35
+          return __t36
       } else {
-          __t20: i32 = GET param.x
-          __t21: i32 = i32.eq __t20 i32(1)
-          if __t21 {
-              __t22: i32 = GET param.x
-              __t23: i32 = i32.sub __t22 i32(1)
-              return __t23
+          __t37: i32 = GET param.x
+          __t38: i32 = i32.sub i32(0) __t37
+          return __t38
+      }
+  }
+
+  fn fib2(n: i32)->i32 {
+      __t39: i32 = GET param.n
+      __t40: i32 = i32.eq __t39 i32(0)
+      if __t40 {
+          __t41: i32 = GET param.n
+          return __t41
+      } else {
+          __t42: i32 = GET param.n
+          __t43: i32 = i32.eq __t42 i32(1)
+          if __t43 {
+              __t44: i32 = GET param.n
+              return __t44
+          }
+      }
+      __t45: i32 = GET param.n
+      __t46: i32 = i32.sub __t45 i32(1)
+      PARAM __t46
+      __t47: none = CALL fib2 1
+      __t48: i32 = GET param.n
+      __t49: i32 = i32.sub __t48 i32(2)
+      PARAM __t49
+      __t50: none = CALL fib2 1
+      __t51: i32 = i32.add
+      return __t51
+  }
+
+  fn getZero(x: i32)->i32 {
+      __t52: i32 = GET param.x
+      __t53: i32 = i32.eq __t52 i32(0)
+      if __t53 {
+          __t54: i32 = GET param.x
+          return __t54
+      } else {
+          __t55: i32 = GET param.x
+          __t56: i32 = i32.eq __t55 i32(1)
+          if __t56 {
+              __t57: i32 = GET param.x
+              __t58: i32 = i32.sub __t57 i32(1)
+              return __t58
           } else {
-              __t24: i32 = GET param.x
-              __t25: i32 = i32.mod __t24 i32(2)
-              __t26: i32 = i32.eq __t25 i32(0)
-              if __t26 {
+              __t59: i32 = GET param.x
+              __t60: i32 = i32.mod __t59 i32(2)
+              __t61: i32 = i32.eq __t60 i32(0)
+              if __t61 {
                   PARAM str_const(1)
-                  __t27: none = CALL println 1
-                  __t28: i32 = GET param.x
-                  __t29: i32 = i32.div __t28 i32(2)
-                  return __t29
+                  __t62: none = CALL println 1
+                  __t63: i32 = GET param.x
+                  __t64: i32 = i32.div __t63 i32(2)
+                  return __t64
               } else {
-                  __t30: i32 = GET param.x
-                  __t31: i32 = i32.mul __t30 i32(0)
-                  return __t31
+                  __t65: i32 = GET param.x
+                  __t66: i32 = i32.mul __t65 i32(0)
+                  return __t66
               }
           }
       }
+  }
+
+  fn doSomething(x: i32)->i32 {
+      __t67: i32 = GET param.x
+      __t68: i32 = i32.mod __t67 i32(2)
+      __t69: i32 = i32.eq __t68 i32(0)
+      if __t69 {
+          __t70: i32 = GET param.x
+          __t71: i32 = i32.div __t70 i32(2)
+          STORE local.half __t71
+          __t72: i32 = GET local.half
+          return __t72
+      }
+      __t73: i32 = GET param.x
+      return __t73
   }
 
   fn main()->i32 {
