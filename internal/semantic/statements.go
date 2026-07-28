@@ -10,7 +10,19 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-func analyzeForCondition(condition []*parser.AST) {
+type ForLoopType string
+
+const (
+	Foreach         ForLoopType = "foreach"
+	IndexedForeach  ForLoopType = "indexed_foreach"
+	DeclarationLoop ForLoopType = "declaration_loop"
+	AssignmentLoop  ForLoopType = "assignment_loop"
+	RangeLoop       ForLoopType = "range_loop"
+	InvalidLoop     ForLoopType = "error"
+)
+
+func analyzeForCondition(condition []*parser.AST) ForLoopType {
+	loopType := InvalidLoop
 	parts := len(condition)
 	if condition[0].Label == "Variable" {
 		symbol := analyzeVariable(condition[0])
@@ -25,6 +37,8 @@ func analyzeForCondition(condition []*parser.AST) {
 				}
 				if symbol != nil && symbol2 != nil && !(symbol.Type.IsIntType() && symbol2.Type.Equals(dt.CharType) || (symbol.Type.Equals(dt.CharType) && symbol2.Type.IsIntType())) {
 					messages.Complain(diagnostic.TypeError, condition[2].Location, "Cannot use %s and %s as loop variables", symbol.Type.String(), symbol2.Type.String())
+				} else {
+					loopType = IndexedForeach
 				}
 
 			} else {
@@ -33,6 +47,8 @@ func analyzeForCondition(condition []*parser.AST) {
 						expr, hasErr := evalType(condition[parts-1], symbol.Type)
 						if !hasErr && !expr.Equals(symbol.Type) {
 							messages.Complain(diagnostic.TypeError, condition[parts-1].Location, "Variable of type %s not compatible with range expression of type %s", symbol.Type, expr)
+						} else if !hasErr {
+							loopType = RangeLoop
 						}
 					}
 				} else { // char c in string
@@ -42,6 +58,8 @@ func analyzeForCondition(condition []*parser.AST) {
 					rhs, hasErr := evalType(condition[parts-1], dt.StringType)
 					if !hasErr && !rhs.Equals(dt.StringType) {
 						messages.Complain(diagnostic.TypeError, condition[parts-1].Location, "Cannot loop over %s", rhs.String())
+					} else if !hasErr {
+						loopType = Foreach
 					}
 				}
 			}
@@ -60,6 +78,8 @@ func analyzeForCondition(condition []*parser.AST) {
 				}
 				if !hasErr && !symbol.Type.Equals(expr) {
 					messages.Complain(diagnostic.TypeError, condition[2].Location, "Expected %s as loop expression but got %s", symbol.Type.String(), expr.String())
+				} else if !hasErr {
+					loopType = DeclarationLoop
 				}
 			}
 		}
@@ -79,10 +99,12 @@ func analyzeForCondition(condition []*parser.AST) {
 			}
 			if !hasErr && !iter.Equals(expr) {
 				messages.Complain(diagnostic.TypeError, condition[2].Location, "Expected %s as loop expression but got %s", iter.String(), expr.String())
+			} else if !hasErr {
+				loopType = AssignmentLoop
 			}
 		}
-
 	}
+	return loopType
 }
 
 func analyzeAssignment(stmt *parser.AST) (dt.SourceType, bool) {

@@ -6,6 +6,7 @@ import (
 	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
+	"github.com/EladB1/The/internal/semantic"
 )
 
 func translateBlock(nodes []*parser.AST, exitLabel string, startLabel string) []TAC {
@@ -18,9 +19,9 @@ func translateBlock(nodes []*parser.AST, exitLabel string, startLabel string) []
 		} else if node.Token.Kind == lexer.OPERATOR_ASSIGN {
 			instructions = append(instructions, translateAssignment(node)...)
 		} else if node.Label == "while" {
-			instructions = append(instructions, translateWhile(node)...)
+			instructions = append(instructions, translateWhileLoop(node)...)
 		} else if node.Label == "for" {
-			instructions = append(instructions, translateFor(node)...)
+			instructions = append(instructions, translateForLoop(node)...)
 		} else if node.Label == "if-block" {
 			instructions = append(instructions, translateIfBlock(node, exitLabel, startLabel)...)
 		} else {
@@ -116,7 +117,7 @@ func translateAssignment(node *parser.AST) []TAC {
 	return instructions
 }
 
-func translateWhile(node *parser.AST) []TAC {
+func translateWhileLoop(node *parser.AST) []TAC {
 	instructions := []TAC{}
 	cond_in, cond := translateExpression(*node.Children[0])
 	scope := currScope
@@ -173,10 +174,80 @@ func translateWhile(node *parser.AST) []TAC {
 	return instructions
 }
 
-func translateFor(node *parser.AST) []TAC {
+func translateForLoop(node *parser.AST) []TAC {
 	instructions := []TAC{}
-
+	scope := currScope
+	currScope = currScope.GetChildScopeById(node.IRName)
+	outerBlock := Block{
+		Label: fmt.Sprintf("loop_exit@%d", loopIndex),
+	}
+	loop := Loop{
+		Label: fmt.Sprintf("loop@%d", loopIndex),
+	}
+	loopBody := Block{
+		Label: fmt.Sprintf("loop_body@%d", loopIndex),
+	}
+	loopConditions := node.Children[0]
+	loopType := semantic.ForLoopType(loopConditions.IRName)
+	var init []TAC
+	var limit_in []TAC
+	var limit Operand
+	var iter_in []TAC
+	switch loopType {
+	case semantic.DeclarationLoop:
+		init = variableDeclaration(loopConditions.Children[0])
+		limit_in, limit = translateExpression(*loopConditions.Children[1])
+		iter_in, _ = translateExpression(*loopConditions.Children[2])
+	case semantic.AssignmentLoop:
+		init = translateAssignment(loopConditions.Children[0])
+		limit_in, limit = translateExpression(*loopConditions.Children[1])
+		iter_in, _ = translateExpression(*loopConditions.Children[2])
+	case semantic.RangeLoop:
+		//
+	case semantic.Foreach:
+		//
+	case semantic.IndexedForeach:
+		//
+	default:
+		//
+	}
+	outerBlock.Code = append(outerBlock.Code, init...)
+	loop.Code = append(loop.Code, limit_in...)
+	compare := formTempVar(dt.I32)
+	loop.Code = append(loop.Code, Instruction{
+		Destination: compare,
+		Operation:   typedOperation(dt.I32, "eq"),
+		Operand1:    limit,
+		Operand2: Operand{
+			Type:     dt.I32,
+			Constant: 0,
+		},
+	}) // check that the condition is false
+	loop.Code = append(loop.Code, Instruction{
+		Operation: JMPIF,
+		Operand1: Operand{
+			Label: outerBlock.Label,
+		},
+		Operand2: Operand{
+			Type: dt.I32,
+			Var:  compare,
+		},
+	})
+	loopBody.Code = append(loopBody.Code, translateBlock(node.Children[1].Children, outerBlock.Label, loop.Label)...)
+	loopBody.Code = append(loopBody.Code, iter_in...)
+	loopBody.Code = append(loopBody.Code, Instruction{
+		Operation: JMP,
+		Operand1: Operand{
+			Label: loop.Label,
+		},
+	})
+	// calculate limit, start, and increment
+	// come up with loop structure (like while loop)
+	loop.Code = append(loop.Code, loopBody)
+	outerBlock.Code = append(outerBlock.Code, loop)
 	loopIndex++
+	instructions = append(instructions, outerBlock)
+	currScope = scope
 	return instructions
 }
 

@@ -1,88 +1,97 @@
-fn test() {
-    int num = 1;
-    println(num);
-}
-
-fn test2() {
-    mut int i = 0;
-    i = 1;
-    i = i + 1;
-    i *= 5;
-    return;
-}
-
-fn add(int x, int y) -> int {
-    return x + y;
-}
-
-fn add(int x, int y, int z) -> int {
-    return x + y + z;
-}
-
-fn whileLoop() {
-    mut int j = 0;
-    while (j < 10) {
-        j++;
-    }
-}
-
-// fn total() -> int {
-//     mut int sum = 0;
-//     for (mut int i = 0; i < 10; i++) {
-//         sum += i;
-//     }
-//     return sum;
+// fn test() {
+//     int num = 1;
+//     println(num);
 // }
 
-// fn total(int limit) -> int {
-//     mut int sum = 0;
-//     for (int i in 0 ..= limit) {
-//         sum += i;
-//     }
-//     return sum;
+// fn test2() {
+//     mut int i = 0;
+//     i = 1;
+//     i = i + 1;
+//     i *= 5;
+//     return;
 // }
 
-fn fib(int n) -> int {
-    if (n == 0 || n == 1)
-        return n;
-    return fib(n - 1) + fib(n - 2);
-}
+// fn add(int x, int y) -> int {
+//     return x + y;
+// }
 
-fn flipSign(int x) -> int {
-    if (x < 0)
-        return -1 * x;
-    else
-        return -x;
-}
+// fn add(int x, int y, int z) -> int {
+//     return x + y + z;
+// }
 
-fn fib2(int n) -> int {
-    if (n == 0)
-        return n;
-    else if (n == 1)
-        return n;
-    return fib2(n - 1) + fib2(n - 2);
-}
+// fn whileLoop() {
+//     mut int j = 0;
+//     while (j < 10) {
+//         j++;
+//     }
+// }
 
-fn getZero(int x) -> int {
-    if (x == 0) {
-        return x;
-    } else if (x == 1) {
-        return x - 1;
-    } else if (x % 2 == 0) {
-        println("Even");
-        return x / 2;
-    } else {
-        return x * 0;
+fn total() -> int {
+    mut int sum = 0;
+    for (mut int i = 0; i < 10; i++) {
+        sum += i;
     }
+    return sum;
 }
 
-fn doSomething(int x) -> int {
-    if (x % 2 == 0) {
-        int half = x / 2;
-        return half;
+fn total(int n) -> int {
+    mut int sum = 0;
+    mut int i;
+    for (i = n; i < 10; i++) {
+        sum += i;
     }
-    return x;
+    return sum;
 }
+
+fn total(int n, int limit) -> int {
+    mut int sum = 0;
+    for (int i in n ..= limit) {
+        sum += i;
+    }
+    return sum;
+}
+
+// fn fib(int n) -> int {
+//     if (n == 0 || n == 1)
+//         return n;
+//     return fib(n - 1) + fib(n - 2);
+// }
+
+// fn flipSign(int x) -> int {
+//     if (x < 0)
+//         return -1 * x;
+//     else
+//         return -x;
+// }
+
+// fn fib2(int n) -> int {
+//     if (n == 0)
+//         return n;
+//     else if (n == 1)
+//         return n;
+//     return fib2(n - 1) + fib2(n - 2);
+// }
+
+// fn getZero(int x) -> int {
+//     if (x == 0) {
+//         return x;
+//     } else if (x == 1) {
+//         return x - 1;
+//     } else if (x % 2 == 0) {
+//         println("Even");
+//         return x / 2;
+//     } else {
+//         return x * 0;
+//     }
+// }
+
+// fn doSomething(int x) -> int {
+//     if (x % 2 == 0) {
+//         int half = x / 2;
+//         return half;
+//     }
+//     return x;
+// }
 
 fn main() -> int {
 

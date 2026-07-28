@@ -196,7 +196,7 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 			forCounter++
 			stmt.IRName = newScope.Id // tag for IR generation
 			currentScope = newScope
-			analyzeForCondition(stmt.Children[0].Children)
+			stmt.Children[0].IRName = string(analyzeForCondition(stmt.Children[0].Children))
 			analyzeBlockAndCheckForReturn(stmt.Children[1].Children, fn, sig)
 			currentScope = scope
 		} else if stmt.Label == "while" {
