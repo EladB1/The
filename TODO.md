@@ -1,11 +1,84 @@
 # Future State
 
+- [Compiler](#compiler)
+- [Language](#language)
+
 ## Compiler
 
 - Optimization stage
 - Direct WASM byte code generation (skipping WAT)
 - LSP
 - Debugger
+
+#### Semantic/IR Variable cache
+
+For code like this:
+
+```
+if (x == 0)
+    return x;
+else if (x % 2 == 0)
+    return x / 2;
+else
+    return x * x;
+```
+
+Each reference to x, triggers:
+
+1. A call to the symbol table in the semantic analyzer
+2. IR instructions to load the variable into an IR temporary
+
+The IR for this would look like:
+
+```
+_t0: i32 = GET local.x
+_t1: i32 = i32.eq _t0 i32(0)
+if _t1 {
+    _t2: i32 = GET local.x // repeat
+    return _t2
+}
+else {
+    _t3: i32 = GET local.x // repeat
+    _t4: i32 = i32.mod _t3 i32(2)
+    _t5: i32 = i32.eq _t4 i32(0)
+    if _t5 {
+        _t6: i32 = GET local.x // repeat
+        _t7: i32 = i32.div _t6 i32(2)
+        return _t7
+    }
+    else {
+        _t8: i32 = GET local.x // repeat
+        _t9: i32 = i32.mul _t8 _t8
+        return _t9
+    }
+}
+
+```
+
+Want to cut out this repetition but it could make things complicated while the MVP version is still being developed
+
+After Caching:
+
+```
+_t0: i32 = GET local.x
+_t1: i32 = i32.eq _t0 i32(0)
+if _t1 {
+    return _t0
+}
+else {
+    _t3: i32 = i32.mod _t0 i32(2)
+    _t4: i32 = i32.eq _t3 i32(0)
+    if _t4 {
+        _t5: i32 = i32.div _t0 i32(2)
+        return _t5
+    }
+    else {
+        _t6: i32 = i32.mul _t0 _t0
+        return _t6
+    }
+}
+
+```
 
 ## Language
 
