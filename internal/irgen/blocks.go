@@ -205,7 +205,126 @@ func translateForLoop(node *parser.AST) []TAC {
 	case semantic.RangeLoop:
 		//
 	case semantic.Foreach:
-		//
+		// set the index to 0
+		iterator_name := "__foreach_iter"
+		variable := semantic.VariableSymbol{
+			Name:        iterator_name,
+			Type:        dt.Int32Type,
+			Initialized: true,
+			Ctx:         semantic.Local,
+		}
+		currScope.Variables[iterator_name] = variable
+		init = []TAC{
+			Instruction{
+				Operation: Store,
+				Operand1: Operand{
+					Var: Variable{
+						Name:       iterator_name,
+						DataType:   dt.I32,
+						Visibility: VariableScope(variable.Ctx),
+					},
+				},
+				Operand2: getZeroValue(dt.Int32Type),
+			},
+		}
+		container_in, container := translateExpression(*loopConditions.Children[2])
+		outerBlock.Code = append(outerBlock.Code, container_in...)
+		length_in, length := getArrayLength(container)
+		outerBlock.Code = append(outerBlock.Code, length_in...)
+		curr := formTempVar(dt.I32)
+		limit := formTempVar(dt.I32)
+		limit_in = []TAC{
+			Instruction{
+				Destination: curr,
+				Operation:   Get,
+				Operand1: Operand{
+					Var: Variable{
+						Name:       variable.Name,
+						DataType:   dt.I32,
+						Visibility: VariableScope(variable.Ctx),
+					},
+				},
+			},
+			Instruction{
+				Destination: limit,
+				Operation:   typedOperation(dt.I32, "lt"),
+				Operand1: Operand{
+					Type: dt.I32,
+					Var:  curr,
+				},
+				Operand2: length,
+			},
+		}
+		index := formTempVar(dt.TranslateSourceType(loopConditions.Children[0].Type))
+		eachVar := currScope.LookupVariable(loopConditions.Children[0].Children[1].Token.Value)
+		index_in := []TAC{
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  container,
+			},
+			Instruction{
+				Operation: PrepareParam,
+				Operand1: Operand{
+					Type: dt.I32,
+					Var:  curr,
+				},
+			},
+			Instruction{
+				Destination: index,
+				Operation:   Call,
+				Operand1: Operand{
+					Constant: "__str_index",
+				}, // TODO: make this work for any container type
+				Operand2: Operand{
+					Constant: 2,
+				},
+			},
+			Instruction{
+				Operation: Store,
+				Operand1: Operand{
+					Var: Variable{
+						Name:       eachVar.Name,
+						DataType:   dt.TranslateSourceType(eachVar.Type),
+						Visibility: VariableScope(eachVar.Ctx),
+					},
+				},
+				Operand2: Operand{
+					Var: index,
+				},
+			},
+		}
+
+		loopBody.Code = append(loopBody.Code, index_in...)
+		next := formTempVar(dt.I32)
+		iter_in = []TAC{
+			Instruction{
+				Destination: next,
+				Operation:   typedOperation(dt.I32, "add"),
+				Operand1: Operand{
+					Type: dt.I32,
+					Var:  curr,
+				},
+				Operand2: Operand{
+					Type:     dt.I32,
+					Constant: 1,
+				},
+			},
+			Instruction{
+				Operation: Store,
+				Operand1: Operand{
+					Var: Variable{
+						Name:       iterator_name,
+						DataType:   dt.I32,
+						Visibility: VariableScope(variable.Ctx),
+					},
+				},
+				Operand2: Operand{
+					Type: dt.I32,
+					Var:  next,
+				},
+			},
+		}
+		// TODO: refactor
 	case semantic.IndexedForeach:
 		//
 	default:

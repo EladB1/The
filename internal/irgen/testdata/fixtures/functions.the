@@ -26,29 +26,36 @@
 //     }
 // }
 
-fn total() -> int {
-    mut int sum = 0;
-    for (mut int i = 0; i < 10; i++) {
-        sum += i;
-    }
-    return sum;
-}
+// fn total() -> int {
+//     mut int sum = 0;
+//     for (mut int i = 0; i < 10; i++) {
+//         sum += i;
+//     }
+//     return sum;
+// }
 
-fn total(int n) -> int {
-    mut int sum = 0;
-    mut int i;
-    for (i = n; i < 10; i++) {
-        sum += i;
-    }
-    return sum;
-}
+// fn total(int n) -> int {
+//     mut int sum = 0;
+//     mut int i;
+//     for (i = n; i < 10; i++) {
+//         sum += i;
+//     }
+//     return sum;
+// }
 
-fn total(int n, int limit) -> int {
-    mut int sum = 0;
-    for (int i in n ..= limit) {
-        sum += i;
+// fn total(int n, int limit) -> int {
+//     mut int sum = 0;
+//     for (int i in n ..= limit) {
+//         sum += i;
+//     }
+//     return sum;
+// }
+
+fn printStr(String str) {
+    for (char ch in str) {
+        print(ch);
     }
-    return sum;
+    println("");
 }
 
 // fn fib(int n) -> int {
