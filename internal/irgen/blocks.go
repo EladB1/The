@@ -70,9 +70,11 @@ func translateAssignment(node *parser.AST) []TAC {
 	instructions := []TAC{}
 	name := node.Children[0].Token.Value
 	value := node.Children[1]
-	value_in, value_op := translateExpression(*value)
+	var value_in []TAC
+	var value_op Operand
 	if node.Token.Value != "=" {
 		var_in, operand := loadVariable(*node.Children[0])
+		value_in, value_op = translateExpression(*value)
 		instructions = append(instructions, var_in...)
 		var operation Operation
 		result := formTempVar(operand.Type)
@@ -98,6 +100,7 @@ func translateAssignment(node *parser.AST) []TAC {
 			Var:  result,
 		}
 	} else {
+		value_in, value_op = translateExpression(*value)
 		instructions = append(instructions, value_in...)
 	}
 	variable := currScope.LookupVariable(name)
@@ -118,29 +121,13 @@ func translateWhileLoop(node *parser.AST) []TAC {
 		Label: fmt.Sprintf("loop@%d", loopIndex),
 		Code:  cond_in,
 	}
-	compare := formTempVar(dt.I32)
-	check := []TAC{
-		Instruction{
-			Destination: compare,
-			Operation:   typedOperation(dt.I32, "eq"),
-			Operand1:    cond,
-			Operand2: Operand{
-				Type:     dt.I32,
-				Constant: 0,
-			},
+	loop.Code = append(loop.Code, Instruction{
+		Operation: JMPIFNOT,
+		Operand1: Operand{
+			Label: outerBlock.Label,
 		},
-		Instruction{
-			Operation: JMPIF,
-			Operand1: Operand{
-				Label: outerBlock.Label,
-			},
-			Operand2: Operand{
-				Type: dt.I32,
-				Var:  compare,
-			},
-		}, // exit the loop if the condition is not true
-	}
-	loop.Code = append(loop.Code, check...)
+		Operand2: cond,
+	})
 	currScope = scope.GetChildScopeById(node.IRName) // enter the loop scope
 	if currScope == nil {
 		currScope = scope
@@ -187,56 +174,57 @@ func translateForLoop(node *parser.AST) []TAC {
 	case semantic.DeclarationLoop:
 		init = variableDeclaration(loopConditions.Children[0])
 		limit_in, limit = translateExpression(*loopConditions.Children[1])
-		iter_in, _ = translateExpression(*loopConditions.Children[2])
 	case semantic.AssignmentLoop:
 		init = translateAssignment(loopConditions.Children[0])
 		limit_in, limit = translateExpression(*loopConditions.Children[1])
-		iter_in, _ = translateExpression(*loopConditions.Children[2])
 	case semantic.RangeLoop:
 		//
-	case semantic.Foreach:
-		// set the index to 0
-		iterator_name := "__foreach_iter"
-		variable := semantic.VariableSymbol{
-			Name:        iterator_name,
-			Type:        dt.Int32Type,
-			Initialized: true,
-			Ctx:         semantic.Local,
+	case semantic.Foreach, semantic.IndexedForeach:
+		var variable *semantic.VariableSymbol
+		var containerNode *parser.AST
+		var eachNode *parser.AST = loopConditions.Children[0]
+
+		if loopType == semantic.Foreach {
+			iterator_name := "__foreach_iter"
+			variable = &semantic.VariableSymbol{
+				Name:        iterator_name,
+				Type:        dt.Int32Type,
+				Initialized: true,
+				Ctx:         semantic.Local,
+			}
+			currScope.Variables[iterator_name] = *variable
+			containerNode = loopConditions.Children[2]
+		} else {
+			containerNode = loopConditions.Children[3]
+			var nameNode *parser.AST
+			if loopConditions.Children[0].Type.Equals(dt.Int32Type) {
+				nameNode = loopConditions.Children[0].Children[1]
+				eachNode = loopConditions.Children[1]
+			} else {
+				nameNode = loopConditions.Children[1].Children[1]
+			}
+			variable = currScope.LookupVariable(nameNode.Token.Value)
 		}
-		currScope.Variables[iterator_name] = variable
+
 		init = []TAC{
-			storeVariable(variable, getZeroValue(dt.Int32Type)),
+			storeVariable(*variable, getZeroValue(dt.Int32Type)),
 		}
-		container_in, container := translateExpression(*loopConditions.Children[2])
-		outerBlock.Code = append(outerBlock.Code, container_in...)
+		container_in, container := translateExpression(*containerNode)
 		length_in, length := getArrayLength(container)
-		outerBlock.Code = append(outerBlock.Code, length_in...)
 		curr := formTempVar(dt.I32)
-		limit := formTempVar(dt.I32)
-		limit_in = []TAC{
-			Instruction{
-				Destination: curr,
-				Operation:   Get,
-				Operand1: Operand{
-					Var: Variable{
-						Name:       variable.Name,
-						DataType:   dt.I32,
-						Visibility: VariableScope(variable.Ctx),
-					},
+		loop.Code = append(loop.Code, Instruction{
+			Destination: curr,
+			Operation:   Get,
+			Operand1: Operand{
+				Var: Variable{
+					Name:       variable.Name,
+					DataType:   dt.I32,
+					Visibility: VariableScope(variable.Ctx),
 				},
 			},
-			Instruction{
-				Destination: limit,
-				Operation:   typedOperation(dt.I32, "lt"),
-				Operand1: Operand{
-					Type: dt.I32,
-					Var:  curr,
-				},
-				Operand2: length,
-			},
-		}
-		index := formTempVar(dt.TranslateSourceType(loopConditions.Children[0].Type))
-		eachVar := currScope.LookupVariable(loopConditions.Children[0].Children[1].Token.Value)
+		})
+		index := formTempVar(dt.TranslateSourceType(eachNode.Type))
+		eachVar := currScope.LookupVariable(eachNode.Children[1].Token.Value)
 		index_in := []TAC{
 			Instruction{
 				Operation: PrepareParam,
@@ -264,7 +252,22 @@ func translateForLoop(node *parser.AST) []TAC {
 			}),
 		}
 
-		loopBody.Code = append(loopBody.Code, index_in...)
+		loop.Code = append(loop.Code, index_in...)
+		outerBlock.Code = append(outerBlock.Code, container_in...)
+		outerBlock.Code = append(outerBlock.Code, length_in...)
+		limit := formTempVar(dt.I32)
+		limit_in = []TAC{
+			Instruction{
+				Destination: limit,
+				Operation:   typedOperation(dt.I32, "lt"),
+				Operand1: Operand{
+					Type: dt.I32,
+					Var:  curr,
+				},
+				Operand2: length,
+			},
+		}
+
 		next := formTempVar(dt.I32)
 		iter_in = []TAC{
 			Instruction{
@@ -279,40 +282,28 @@ func translateForLoop(node *parser.AST) []TAC {
 					Constant: 1,
 				},
 			},
-			storeVariable(variable, Operand{
+			storeVariable(*variable, Operand{
 				Type: dt.I32,
 				Var:  next,
 			}),
 		}
 		// TODO: refactor
-	case semantic.IndexedForeach:
-		//
 	default:
 		//
 	}
 	outerBlock.Code = append(outerBlock.Code, init...)
 	loop.Code = append(loop.Code, limit_in...)
-	compare := formTempVar(dt.I32)
 	loop.Code = append(loop.Code, Instruction{
-		Destination: compare,
-		Operation:   typedOperation(dt.I32, "eq"),
-		Operand1:    limit,
-		Operand2: Operand{
-			Type:     dt.I32,
-			Constant: 0,
-		},
-	}) // check that the condition is false
-	loop.Code = append(loop.Code, Instruction{
-		Operation: JMPIF,
+		Operation: JMPIFNOT,
 		Operand1: Operand{
 			Label: outerBlock.Label,
 		},
-		Operand2: Operand{
-			Type: dt.I32,
-			Var:  compare,
-		},
+		Operand2: limit,
 	})
 	loopBody.Code = append(loopBody.Code, translateBlock(node.Children[1].Children, outerBlock.Label, loop.Label)...)
+	if len(iter_in) == 0 {
+		iter_in, _ = translateExpression(*loopConditions.Children[2])
+	}
 	loopBody.Code = append(loopBody.Code, iter_in...)
 	loopBody.Code = append(loopBody.Code, Instruction{
 		Operation: JMP,
@@ -327,6 +318,12 @@ func translateForLoop(node *parser.AST) []TAC {
 	loopIndex++
 	instructions = append(instructions, outerBlock)
 	currScope = scope
+	return instructions
+}
+
+func translateForeachLoop(node *parser.AST, indexed bool) []TAC {
+	instructions := []TAC{}
+
 	return instructions
 }
 

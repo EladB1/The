@@ -81,6 +81,7 @@ const (
 	Call         Operation = "CALL"
 	JMP          Operation = "JMP"
 	JMPIF        Operation = "JMPIF"
+	JMPIFNOT     Operation = "JMPIFNOT"
 	Malloc       Operation = "Malloc"
 	// int -> otherType
 	I32ToI64 Operation = "i64.extend_i32_s"

@@ -38,6 +38,10 @@ func analyzeForCondition(condition []*parser.AST) ForLoopType {
 				if symbol != nil && symbol2 != nil && !(symbol.Type.IsIntType() && symbol2.Type.Equals(dt.CharType) || (symbol.Type.Equals(dt.CharType) && symbol2.Type.IsIntType())) {
 					messages.Complain(diagnostic.TypeError, condition[2].Location, "Cannot use %s and %s as loop variables", symbol.Type.String(), symbol2.Type.String())
 				} else {
+					symbol.Ctx = Local
+					currentScope.Variables[symbol.Name] = *symbol
+					symbol2.Ctx = Local
+					currentScope.Variables[symbol2.Name] = *symbol2
 					loopType = IndexedForeach
 				}
 
@@ -48,6 +52,8 @@ func analyzeForCondition(condition []*parser.AST) ForLoopType {
 						if !hasErr && !expr.Equals(symbol.Type) {
 							messages.Complain(diagnostic.TypeError, condition[parts-1].Location, "Variable of type %s not compatible with range expression of type %s", symbol.Type, expr)
 						} else if !hasErr {
+							symbol.Ctx = Local
+							currentScope.Variables[symbol.Name] = *symbol
 							loopType = RangeLoop
 						}
 					}
@@ -59,6 +65,8 @@ func analyzeForCondition(condition []*parser.AST) ForLoopType {
 					if !hasErr && !rhs.Equals(dt.StringType) {
 						messages.Complain(diagnostic.TypeError, condition[parts-1].Location, "Cannot loop over %s", rhs.String())
 					} else if !hasErr {
+						symbol.Ctx = Local
+						currentScope.Variables[symbol.Name] = *symbol
 						loopType = Foreach
 					}
 				}

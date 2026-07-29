@@ -19,40 +19,54 @@
 //     return x + y + z;
 // }
 
-// fn whileLoop() {
-//     mut int j = 0;
-//     while (j < 10) {
-//         j++;
-//     }
-// }
+fn whileLoop() {
+    mut int j = 0;
+    while (j < 10) {
+        j++;
+    }
+}
 
-// fn total() -> int {
-//     mut int sum = 0;
-//     for (mut int i = 0; i < 10; i++) {
-//         sum += i;
-//     }
-//     return sum;
-// }
+fn total() -> int {
+    mut int sum = 0;
+    for (mut int i = 0; i < 10; i++) {
+        sum += i;
+    }
+    return sum;
+}
 
-// fn total(int n) -> int {
-//     mut int sum = 0;
-//     mut int i;
-//     for (i = n; i < 10; i++) {
-//         sum += i;
-//     }
-//     return sum;
-// }
+fn total(int n) -> int {
+    mut int sum = 0;
+    mut int i;
+    for (i = n; i < 10; i++) {
+        sum += i;
+    }
+    return sum;
+}
 
-// fn total(int n, int limit) -> int {
-//     mut int sum = 0;
-//     for (int i in n ..= limit) {
-//         sum += i;
-//     }
-//     return sum;
-// }
+fn total(int n, int limit) -> int {
+    mut int sum = 0;
+    for (int i in n ..= limit) {
+        sum += i;
+    }
+    return sum;
+}
 
 fn printStr(String str) {
     for (char ch in str) {
+        print(ch);
+    }
+    println("");
+}
+
+fn forEachOne(String str) {
+    for (int i, char ch in str) {
+        print(ch);
+    }
+    println("");
+}
+
+fn forEachTwo(String str) {
+    for (char ch, int i in str) {
         print(ch);
     }
     println("");
