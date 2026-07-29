@@ -178,7 +178,54 @@ func translateForLoop(node *parser.AST) []TAC {
 		init = translateAssignment(loopConditions.Children[0])
 		limit_in, limit = translateExpression(*loopConditions.Children[1])
 	case semantic.RangeLoop:
-		//
+		iterator := loopConditions.Children[0].Children[1]
+		variable := currScope.LookupVariable(iterator.Token.Value)
+		rangeExpr := loopConditions.Children[2].Children
+		value_in, value := translateExpression(*rangeExpr[0])
+		outerBlock.Code = append(outerBlock.Code, value_in...)
+		init = []TAC{
+			storeVariable(*variable, value),
+		}
+		loadVar_in, loadVar := loadVariable(*iterator)
+		loop.Code = append(loop.Code, loadVar_in...)
+		var compareOp Operation
+		if rangeExpr[1].Token.Value == ".." {
+			compareOp = typedOperation(value.Type, "lt")
+		} else {
+			compareOp = typedOperation(value.Type, "le")
+		}
+		limit_in, limit = translateExpression(*rangeExpr[2])
+		compare := formTempVar(dt.I32)
+		limit_in = append(limit_in, Instruction{
+			Destination: compare,
+			Operation:   compareOp,
+			Operand1:    loadVar,
+			Operand2:    limit,
+		})
+		limit = Operand{
+			Var: compare,
+		}
+		var incr_val Operand
+		if len(rangeExpr) == 3 {
+			incr_val = Operand{
+				Type:     loadVar.Type,
+				Constant: 1,
+			}
+		} else {
+			iter_in, incr_val = translateExpression(*rangeExpr[4])
+		}
+		addop := formTempVar(loadVar.Type)
+		add := []TAC{
+			Instruction{
+				Destination: addop,
+				Operation:   typedOperation(loadVar.Type, "add"),
+				Operand1:    loadVar,
+				Operand2:    incr_val,
+			},
+			storeVariable(*variable, Operand{Var: addop}),
+		}
+		iter_in = append(iter_in, add...)
+
 	case semantic.Foreach, semantic.IndexedForeach:
 		var variable *semantic.VariableSymbol
 		var containerNode *parser.AST

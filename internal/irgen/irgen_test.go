@@ -87,4 +87,12 @@ func TestLiteralsAndSimpleAssignments(t *testing.T) {
 	t.Run("should run functions and produce IR", func(t *testing.T) {
 		snapshotTestIRGenerator(t, "functions.json")
 	})
+
+	t.Run("should run ifBlocks and produce IR", func(t *testing.T) {
+		snapshotTestIRGenerator(t, "ifBlocks.json")
+	})
+
+	t.Run("should run loops and produce IR", func(t *testing.T) {
+		snapshotTestIRGenerator(t, "loops.json")
+	})
 }

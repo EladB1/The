@@ -290,7 +290,7 @@ children: [
                     ] },
                     Node: { Label: "for", IRName: "for#0@while#0@nestedLoops()"
                     children: [
-                        Node: { Label: "loop-condition"
+                        Node: { Label: "loop-condition", IRName: "assignment_loop"
                         children: [
                             Node: { Token: {Value: =, Type: assign operator, Line: 40, Column: 15}, Type: int
                             children: [
@@ -382,7 +382,7 @@ children: [
         children: [
             Node: { Label: "for", IRName: "for#0@printString(String)"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "foreach"
                 children: [
                     Node: { Label: "Variable", Type: char
                     children: [
@@ -473,7 +473,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#0@main()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "declaration_loop"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -507,7 +507,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#1@main()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "range_loop"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -557,7 +557,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#2@main()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "indexed_foreach"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -670,7 +670,7 @@ children: [
         children: [
             Node: { Label: "for", IRName: "for#0@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "foreach"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -684,7 +684,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#1@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: float
                     children: [
@@ -703,7 +703,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#2@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: char
                     children: [
@@ -722,7 +722,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#3@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: char
                     children: [
@@ -743,7 +743,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#4@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -764,7 +764,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#5@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -785,7 +785,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#6@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -808,7 +808,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#7@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Token: {Value: =, Type: assign operator, Line: 8, Column: 11}
                     children: [
@@ -835,7 +835,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#8@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Token: {Value: =, Type: assign operator, Line: 10, Column: 11}
                     children: [
@@ -857,7 +857,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#9@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -883,7 +883,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#10@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -906,7 +906,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#11@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "foreach"
                 children: [
                     Node: { Label: "Variable", Type: String
                     children: [
@@ -920,7 +920,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#12@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: char
                     children: [
@@ -938,7 +938,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#13@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: char
                     children: [
@@ -957,7 +957,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#14@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: char
                     children: [
@@ -975,7 +975,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#15@forConditions()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "error"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -1189,7 +1189,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#0@main()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "range_loop"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -1224,7 +1224,7 @@ children: [
             ] },
             Node: { Label: "for", IRName: "for#1@main()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "range_loop"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [

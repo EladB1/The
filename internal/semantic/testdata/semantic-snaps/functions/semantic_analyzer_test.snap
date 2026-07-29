@@ -477,7 +477,7 @@ children: [
         children: [
             Node: { Label: "for", IRName: "for#0@returns(uint64,uint64,uint64)"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "range_loop"
                 children: [
                     Node: { Label: "Variable", Type: uint64
                     children: [
@@ -1001,7 +1001,7 @@ children: [
         children: [
             Node: { Label: "for", IRName: "for#0@missingReturn(int,int)"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "range_loop"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
