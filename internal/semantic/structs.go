@@ -10,12 +10,13 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *NamedBlockSymbol {
+func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, offset *uint32) (*NamedBlockSymbol, int) {
+	extraSize := 0
 	details := nbNode.Children
 	name := details[0].Token.Value
 	if !slices.Contains(specialBlocks, name) && !slices.Contains(impl, name) {
 		messages.Complain(diagnostic.NameError, nbNode.Location, "Block '%s' not supported", name)
-		return nil
+		return nil, extraSize
 	}
 	body := details[1].Children
 	scope := currentScope
@@ -81,6 +82,11 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *Na
 						messages.Complain(diagnostic.Warning, node.Location, "Redundant use of private in private block")
 					}
 					symbol.isPrivate = true
+					size := symbol.Type.GetSizeInBytes()
+					symbol.Offset.IsSet = true
+					symbol.Offset.Value = *offset
+					*offset = *offset + uint32(size)
+					extraSize += size
 					currentScope.Variables[symbol.Name] = *symbol
 				}
 				continue
@@ -89,12 +95,12 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string) *Na
 	}
 	currentScope = scope
 	if newScope == nil {
-		return nil
+		return nil, extraSize
 	}
 	return &NamedBlockSymbol{
 		Name:           name,
 		isSpecialBlock: slices.Contains(specialBlocks, name),
 		Def:            nbNode,
 		InnerScope:     newScope,
-	}
+	}, extraSize
 }

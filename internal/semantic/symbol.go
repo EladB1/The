@@ -46,6 +46,7 @@ type (
 		Def         *parser.AST
 		Initialized bool
 		Ctx         VariableCtx
+		Offset      OffsetValue
 	}
 	InterfaceSymbol struct {
 		name       string
@@ -79,6 +80,11 @@ type (
 	}
 
 	PrimitiveTypeTables map[dt.DataType]PrimitiveTypeMembers
+
+	OffsetValue struct {
+		IsSet bool
+		Value uint32
+	}
 )
 
 /* TypeSymbol interface functions */
@@ -157,13 +163,17 @@ func (fn FunctionSymbol) String() string {
 func (variable VariableSymbol) String() string {
 	priv := ""
 	mut := ""
+	off := ""
 	if variable.isPrivate {
 		priv = ", isPrivate: true"
 	}
 	if variable.isMutable {
 		mut = ", isMutable: true"
 	}
-	return fmt.Sprintf("{name: %s, Type: %s%s%s, Initialized: %v}", variable.Name, variable.Type, priv, mut, variable.Initialized)
+	if variable.Offset.IsSet {
+		off = fmt.Sprintf(", Offset: %d", variable.Offset.Value)
+	}
+	return fmt.Sprintf("{name: %s, Type: %s%s%s%s, Initialized: %v}", variable.Name, variable.Type, priv, mut, off, variable.Initialized)
 }
 
 func (nb NamedBlockSymbol) String() string {

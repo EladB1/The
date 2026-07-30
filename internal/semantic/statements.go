@@ -296,7 +296,7 @@ func evalCompare(left *parser.AST, right *parser.AST, operator lexer.Token, expe
 		return dt.NoneType, true
 	}
 	if lhs.Equals(rhs) && lhs.IsDynamic && operator.Value != "==" && operator.Value != "!=" {
-		str := globalScope.lookupStruct(lhs.String())
+		str := globalScope.LookupStruct(lhs.String())
 		if str == nil {
 			messages.Complain(diagnostic.NameError, operator.Location, "Cannot find struct definition for %s", lhs.String())
 		} else {
@@ -400,7 +400,7 @@ func evalTypecast(original *parser.AST, targetType *parser.AST, expectedType dt.
 			messages.Complain(diagnostic.CastError, targetType.Location, typeCastError, lhs, target)
 			hasError = true
 		} else if lhs.IsDynamic {
-			str := globalScope.lookupStruct(lhs.String())
+			str := globalScope.LookupStruct(lhs.String())
 			if str == nil {
 				messages.Complain(diagnostic.CastError, original.Location, "Cannot typecast %s to %s. Could not find definition of '%s'", lhs, target, lhs)
 				hasError = true
@@ -592,7 +592,7 @@ func handleFunctionCall(details []*parser.AST) (dt.SourceType, bool) {
 				messages.Complain(diagnostic.ReferenceError, details[0].Location, "Could not find reference value")
 				hasError = true
 			} else {
-				str := globalScope.lookupStruct(scopes[0].String())
+				str := globalScope.LookupStruct(scopes[0].String())
 				if str == nil {
 					messages.Complain(diagnostic.NameError, details[0].Location, "Could not find struct %s", scopes[0])
 					hasError = true

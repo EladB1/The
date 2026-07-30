@@ -216,7 +216,7 @@ func (scope *Scope) LookupInterface(name string) *InterfaceSymbol {
 	return nil
 }
 
-func (scope *Scope) lookupStruct(name string) *StructSymbol {
+func (scope *Scope) LookupStruct(name string) *StructSymbol {
 	curr := scope
 	for curr != nil {
 		if str, ok := curr.Structs[name]; ok {
@@ -328,7 +328,7 @@ func ImplementsInterface(possibleIntf, type_ dt.SourceType) bool {
 		return false
 	}
 	if intf := globalScope.LookupInterface(possibleIntf.String()); intf != nil {
-		if str := globalScope.lookupStruct(type_.String()); str != nil {
+		if str := globalScope.LookupStruct(type_.String()); str != nil {
 			return slices.Contains(str.Implements, intf.name)
 		}
 	}

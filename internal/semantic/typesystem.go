@@ -37,7 +37,7 @@ func evalLiteral(ast *parser.AST, expectedType dt.SourceType) dt.SourceType {
 
 func evalStructLiteral(ast *parser.AST) dt.SourceType {
 	name := ast.Children[0].Token.Value
-	symbol := globalScope.lookupStruct(name)
+	symbol := globalScope.LookupStruct(name)
 	if symbol == nil {
 		if intf := globalScope.LookupInterface(name); intf != nil {
 			messages.Complain(diagnostic.IllegalStatementError, ast.Location, "Cannot create interface literal value")
@@ -66,6 +66,8 @@ func evalStructLiteral(ast *parser.AST) dt.SourceType {
 		value := prop.Children[1]
 		if valueType, hasErr := evalType(value, property.Type); !property.Type.Equals(valueType) && !ImplementsInterface(property.Type, valueType) && !hasErr {
 			messages.Complain(diagnostic.TypeError, value.Location, "Property type %s expected but found %s", property.Type, valueType)
+		} else if !hasErr {
+			prop.Type = valueType
 		}
 		visited.Append(propId)
 	}

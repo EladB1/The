@@ -1,0 +1,18 @@
+struct Person1 {
+    String name;
+    uint32 age;
+    String nickname;
+
+    private {
+        int id = 1;
+    }
+
+    fn greet() {
+        println("My name is " + name + " and I am " + (age as String) + " years old");
+    }
+}
+
+fn main() -> int {
+    Person1 p = Person1{name: "Aang", age: 112};
+    return 0;
+}

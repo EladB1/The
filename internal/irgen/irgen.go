@@ -3,6 +3,7 @@ package irgen
 import (
 	"fmt"
 
+	ds "github.com/EladB1/The/internal/datastructures"
 	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/lexer"
@@ -166,6 +167,72 @@ func translateLiteral(node parser.AST) Operand {
 		Type:     irType,
 		Constant: value,
 	}
+}
+
+func translateStructLiteral(node parser.AST) ([]TAC, Operand) {
+	instructions := []TAC{}
+
+	struct_name := node.Children[0].Token.Value
+	symbol := currScope.LookupStruct(struct_name)
+	if symbol == nil {
+		return instructions, Operand{}
+	}
+	instance := formTempVar(dt.Ptr)
+	instructions = append(instructions, Instruction{
+		Destination: instance,
+		Operation:   Malloc,
+		Operand1: Operand{
+			Constant: symbol.SizeInBytes,
+		},
+	})
+	foundProps := ds.HashSet{}
+	var offset semantic.OffsetValue
+	for _, prop := range node.Children[1].Children {
+		propname := prop.Children[0].Token.Value
+		foundProps.Append(propname)
+		propVar := symbol.InnerScope.LookupVariable(propname)
+		if propVar != nil {
+			offset = propVar.Offset
+		}
+		propvalue_in, propvalue := translateExpression(*prop.Children[1])
+		instructions = append(instructions, propvalue_in...)
+		instructions = append(instructions, Instruction{
+			Operation: Set,
+			Operand1: Operand{
+				Var:    instance,
+				Offset: offset,
+			},
+			Operand2: propvalue,
+		})
+	}
+
+	var value_op Operand
+	var value_in []TAC
+	// fill in default values for missing properties
+	for _, variable := range symbol.InnerScope.Variables {
+		if _, ok := foundProps[variable.Name]; ok || variable.Type.RootEquals(dt.ScopeRef) || variable.Type.RootEquals(dt.Ref) {
+			continue
+		}
+		if variable.Initialized && variable.Def != nil {
+			value_in, value_op = translateExpression(*variable.Def.Children[len(variable.Def.Children)-1])
+			instructions = append(instructions, value_in...)
+		} else {
+			value_op = getZeroValue(variable.Type)
+		}
+		instructions = append(instructions, value_in...)
+		instructions = append(instructions, Instruction{
+			Operation: Set,
+			Operand1: Operand{
+				Var:    instance,
+				Offset: variable.Offset,
+			},
+			Operand2: value_op,
+		})
+	}
+	operand := Operand{
+		Var: instance,
+	}
+	return instructions, operand
 }
 
 func formTempVar(irType dt.IRType) Variable {

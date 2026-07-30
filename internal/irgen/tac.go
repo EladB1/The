@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/EladB1/The/internal/datatypes"
+	"github.com/EladB1/The/internal/semantic"
 )
 
 const indentDelim string = "  "
@@ -24,6 +25,7 @@ type (
 	Operand struct {
 		Type     datatypes.IRType
 		Var      Variable
+		Offset   semantic.OffsetValue
 		Constant any
 		Label    string // use for JMP/JMPIF
 	}
@@ -257,11 +259,15 @@ func (op Operand) String() string {
 		output.WriteRune(' ')
 		output.WriteString(op.Label)
 	} else if (op.Var != Variable{}) {
+		off := ""
 		vis := ""
 		if op.Var.Visibility != "" {
 			vis = fmt.Sprintf("%s.", op.Var.Visibility)
 		}
-		output.WriteString(fmt.Sprintf(" %s%s", vis, op.Var.Name))
+		if op.Offset.IsSet {
+			off = fmt.Sprintf("+%d", op.Offset.Value)
+		}
+		output.WriteString(fmt.Sprintf(" %s%s%s", vis, op.Var.Name, off))
 	} else {
 		if op.Type == "" {
 			output.WriteString(fmt.Sprintf(" %v", op.Constant))

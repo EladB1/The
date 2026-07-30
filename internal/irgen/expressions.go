@@ -36,7 +36,9 @@ func translateExpression(node parser.AST) ([]TAC, Operand) {
 		instructions, operand = translateDot(node)
 	} else if node.Label == "call" {
 		instructions, operand = translateCall(node)
-	} else if node.IsLiteral() {
+	} else if node.Label == "struct_literal" {
+		instructions, operand = translateStructLiteral(node)
+	} else if node.IsLiteral() && node.Label != "struct_literal" {
 		operand = translateLiteral(node)
 	} else if node.Token.Kind == lexer.ID {
 		instructions, operand = loadVariable(node)

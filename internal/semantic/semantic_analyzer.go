@@ -136,6 +136,7 @@ func analyzeStructFnSignatures() {
 		def := str.Def.Children
 		body := def[1]
 		impl := []string{}
+		var offset uint32 = 0
 		if def[1].Label == "interface_list" {
 			body = def[2]
 			for _, node := range def[1].Children {
@@ -158,13 +159,18 @@ func analyzeStructFnSignatures() {
 					node.IRName = overload.IRName
 				}
 			case "named-block":
-				symbol := analyzeNamedBlock(node, str.Name, impl)
+				symbol, extraSize := analyzeNamedBlock(node, str.Name, impl, &offset)
+				str.SizeInBytes += extraSize
 				if symbol != nil {
 					currentScope.NamedBlocks[symbol.Name] = *symbol
 				}
 			default:
 				symbol := analyzeVariable(node)
-				str.SizeInBytes += symbol.Type.GetSizeInBytes()
+				symbol.Offset.Value = offset
+				symbol.Offset.IsSet = true
+				size := symbol.Type.GetSizeInBytes()
+				offset += uint32(size)
+				str.SizeInBytes += size
 				globalScope.Structs[str.Name] = str
 				if symbol != nil {
 					currentScope.Variables[symbol.Name] = *symbol

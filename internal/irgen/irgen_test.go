@@ -79,7 +79,7 @@ func snapshotTestIRGenerator(t *testing.T, filename string) {
 	snapshots.MatchSnapshot(t, results)
 }
 
-func TestLiteralsAndSimpleAssignments(t *testing.T) {
+func TestIRGeneration(t *testing.T) {
 	t.Run("should run expressions and produce IR", func(t *testing.T) {
 		snapshotTestIRGenerator(t, "expressions.json")
 	})
@@ -94,5 +94,9 @@ func TestLiteralsAndSimpleAssignments(t *testing.T) {
 
 	t.Run("should run loops and produce IR", func(t *testing.T) {
 		snapshotTestIRGenerator(t, "loops.json")
+	})
+
+	t.Run("should run structs and produce IR", func(t *testing.T) {
+		snapshotTestIRGenerator(t, "structs.json")
 	})
 }

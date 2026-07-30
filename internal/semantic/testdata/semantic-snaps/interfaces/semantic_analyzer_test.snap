@@ -158,7 +158,7 @@ children: [
                                     Node: { Token: {Value: TestResult, Type: identifier, Line: 34, Column: 19} },
                                     Node: { Label: "properties"
                                     children: [
-                                        Node: { Label: "property"
+                                        Node: { Label: "property", Type: String
                                         children: [
                                             Node: { Token: {Value: status, Type: identifier, Line: 34, Column: 30} },
                                             Node: { Token: {Value: "passed", Type: string literal, Line: 34, Column: 38}, Type: String }
@@ -215,7 +215,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: Empty, type: 1, parent: @global },
         Scope: { id: AlsoEmpty, type: 2, parent: @global, variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(AlsoEmpty), isPrivate: true, isMutable: true, Initialized: true}] },
         Scope: { id: Result, type: 1, parent: @global, functions: map[display:{name: display, returns: None, overloads: [{parameters: (), implemented: false}]} getStatus:{name: getStatus, returns: String, overloads: [{parameters: (), implemented: false}]}] },
-        Scope: { id: TestResult, type: 2, parent: @global, namedBlocks: map[Result:{name: Result}], variables: map[Result:{name: Result, Type: ScopeRef(TestResult,Result), Initialized: true} global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} status:{name: status, Type: String, Initialized: false} this:{name: this, Type: Ref(TestResult), isPrivate: true, isMutable: true, Initialized: true}], children: [
+        Scope: { id: TestResult, type: 2, parent: @global, namedBlocks: map[Result:{name: Result}], variables: map[Result:{name: Result, Type: ScopeRef(TestResult,Result), Initialized: true} global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} status:{name: status, Type: String, Offset: 0, Initialized: false} this:{name: this, Type: Ref(TestResult), isPrivate: true, isMutable: true, Initialized: true}], children: [
             Scope: { id: Result@TestResult, type: 3, parent: TestResult, functions: map[display:{name: display, returns: None, overloads: [{parameters: (), implemented: true}]} getStatus:{name: getStatus, returns: String, overloads: [{parameters: (), implemented: true}]}], children: [
                 Scope: { id: display()@Result@TestResult, type: 4, parent: Result@TestResult },
                 Scope: { id: getStatus()@Result@TestResult, type: 4, parent: Result@TestResult }
