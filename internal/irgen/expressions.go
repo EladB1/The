@@ -895,7 +895,25 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 	} else if left.Type.RootEquals(dt.Ref) {
 
 	} else {
-		// struct
+		//loadStruct := formTempVar(dt.TranslateSourceType(left.Type))
+		ptr_in, ptr := loadVariable(*left)
+		instructions = append(instructions, ptr_in...)
+		str := currScope.LookupStruct(string(left.Type.Root))
+		if str == nil {
+		}
+		propSymbol := str.InnerScope.LookupVariable(prop.Token.Value)
+		loadProp := formTempVar(dt.TranslateSourceType(propSymbol.Type))
+		instructions = append(instructions, Instruction{
+			Destination: loadProp,
+			Operation:   Load,
+			Operand1:    ptr,
+			Operand2: Operand{
+				Constant: propSymbol.Offset.Value,
+			},
+		})
+		operand = Operand{
+			Var: loadProp,
+		}
 	}
 	return instructions, operand
 }
@@ -991,6 +1009,9 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
 	variable := currScope.LookupVariable(node.Token.Value)
+	if variable.Ctx == semantic.StructProp {
+		// load the property from the struct
+	}
 	varType := dt.TranslateSourceType(variable.Type)
 	tempVar := formTempVar(varType)
 	instructions = append(instructions, Instruction{

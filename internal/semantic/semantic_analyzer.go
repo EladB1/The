@@ -168,6 +168,7 @@ func analyzeStructFnSignatures() {
 				symbol := analyzeVariable(node)
 				symbol.Offset.Value = offset
 				symbol.Offset.IsSet = true
+				symbol.Ctx = StructProp
 				size := symbol.Type.GetSizeInBytes()
 				offset += uint32(size)
 				str.SizeInBytes += size

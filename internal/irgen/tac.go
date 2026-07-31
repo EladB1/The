@@ -77,7 +77,8 @@ const (
 const (
 	Store        Operation = "STORE"
 	Get          Operation = "GET"
-	Set          Operation = "Set"
+	Set          Operation = "SET"
+	Load         Operation = "LOAD"
 	Return       Operation = "return"
 	PrepareParam Operation = "PARAM"
 	Call         Operation = "CALL"

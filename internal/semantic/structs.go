@@ -82,6 +82,7 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 						messages.Complain(diagnostic.Warning, node.Location, "Redundant use of private in private block")
 					}
 					symbol.isPrivate = true
+					symbol.Ctx = StructProp
 					size := symbol.Type.GetSizeInBytes()
 					symbol.Offset.IsSet = true
 					symbol.Offset.Value = *offset

@@ -266,6 +266,7 @@ const (
 	Global        VariableCtx = "global"
 	Param         VariableCtx = "param"
 	PrimitiveProp VariableCtx = "primitive_property"
+	StructProp    VariableCtx = "prop"
 )
 
 var (

@@ -25,6 +25,21 @@ func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.Ph
 	messages = diagnostic.PhaseDiagnostics{}
 	currScope = scopeTree.Children[0] // get the global scope using the built-in scope
 	for _, node := range ast.Children {
+		if node.Token.Value == "struct" {
+			struct_name := node.Children[0].Token.Value
+			str := currScope.LookupStruct(struct_name)
+
+			if str == nil {
+				continue
+			}
+			scope := currScope
+			currScope = str.InnerScope
+			prog.appendCode(structFunctionDefinitions(node, str))
+			currScope = scope
+			// TODO: struct fn definitions
+		}
+	}
+	for _, node := range ast.Children {
 		switch node.Label {
 		case "Variable":
 			prog.appendCode(variableDeclaration(node))
@@ -33,6 +48,24 @@ func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.Ph
 		}
 	}
 	return prog, messages
+}
+
+func structFunctionDefinitions(ast *parser.AST, str *semantic.StructSymbol) []TAC {
+	instructions := []TAC{}
+
+	for _, node := range ast.Children[1].Children {
+		if node.Label == "Variable" {
+			continue
+		} else if node.Label == "named-block" {
+			continue // temporary
+			// TODO
+		}
+		scope := currScope
+		fn := functionDefinition(node)
+		fmt.Println(fn)
+		currScope = scope
+	}
+	return instructions
 }
 
 func functionDefinition(ast *parser.AST) []TAC {

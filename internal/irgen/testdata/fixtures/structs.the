@@ -8,11 +8,12 @@ struct Person1 {
     }
 
     fn greet() {
-        println("My name is " + name + " and I am " + (age as String) + " years old");
+        println("My name is " + name + " and I am " + (this.age as String) + " years old");
     }
 }
 
 fn main() -> int {
     Person1 p = Person1{name: "Aang", age: 112};
+    uint32 age = p.age;
     return 0;
 }

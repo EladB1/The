@@ -30,6 +30,8 @@ func TranslateSourceType(srcType SourceType) IRType {
 		return F32
 	} else if srcType.Equals(DoubleType) {
 		return F64
+	} else if srcType.IsDynamic {
+		return Ptr
 	}
 	return irType
 }
