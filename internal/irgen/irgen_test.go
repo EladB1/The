@@ -26,6 +26,16 @@ type Fixture struct {
 	Literals  ds.LiteralPool
 }
 
+type ScopeMap map[string]*semantic.Scope
+
+func (registry ScopeMap) get(id string) (*semantic.Scope, error) {
+	if scope, ok := registry[id]; ok {
+		return scope, nil
+	} else {
+		return nil, fmt.Errorf("Could not find %s in ScopeMap", id)
+	}
+}
+
 func TestGenerateFixtures(t *testing.T) {
 	if os.Getenv("UPDATE_FIXTURES") != "true" {
 		t.Skip()
@@ -61,11 +71,75 @@ func loadFixture(t *testing.T, testdir string, filename string) Fixture {
 	return fixture
 }
 
+func repairScopeTree(scopeTree *semantic.Scope) error {
+	smap := ScopeMap{}
+	repairScope(scopeTree, nil, smap)
+	err := repairSymbols(scopeTree, smap)
+	return err
+}
+
+// after deserialization need to be point the child scopes back at their parents
+func repairScope(scopeTree *semantic.Scope, parent *semantic.Scope, smap ScopeMap) {
+	smap[scopeTree.Id] = scopeTree
+	scopeTree.Parent = parent
+	for _, child := range scopeTree.Children {
+		repairScope(child, scopeTree, smap)
+	}
+}
+
+// after deserialization need to be point the inner scopes back at scope tree nodes
+func repairSymbols(scopeTree *semantic.Scope, smap ScopeMap) error {
+	var err error
+	// structs
+	for _, str := range scopeTree.Structs {
+		if str.InnerScope != nil {
+			str.InnerScope, err = smap.get(str.InnerScope.Id)
+			if err != nil {
+				return err
+			}
+			scopeTree.Structs[str.Name] = str
+		}
+	}
+	// named blocks
+	for _, nb := range scopeTree.NamedBlocks {
+		if nb.InnerScope != nil {
+			nb.InnerScope, err = smap.get(nb.InnerScope.Id)
+			if err != nil {
+				return err
+			}
+			scopeTree.NamedBlocks[nb.Name] = nb
+		}
+	}
+	// functions
+	for _, fn := range scopeTree.Functions {
+		for i, overload := range fn.Overloads {
+			if overload.InnerScope != nil {
+				overload.InnerScope, err = smap.get(overload.InnerScope.Id)
+				if err != nil {
+					return err
+				}
+				fn.Overloads[i] = overload
+			}
+		}
+		scopeTree.Functions[fn.Name] = fn
+	}
+	for _, child := range scopeTree.Children {
+		if err := repairSymbols(child, smap); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func snapshotTestIRGenerator(t *testing.T, filename string) {
 	snapshots := snaps.WithConfig(
 		snaps.Dir(snapsDir),
 	)
 	fixture := loadFixture(t, dir, filename)
+	err := repairScopeTree(fixture.ScopeTree)
+	if err != nil {
+		t.Fatalf("Failed to re-build scopes from '%s' with error: %v", filename, err)
+	}
 	prog, messages := Generate(fixture.AST, fixture.ScopeTree)
 	var msgBuilder strings.Builder
 	delim := ","

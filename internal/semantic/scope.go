@@ -46,10 +46,8 @@ type SerializedScope struct {
 }
 
 func (scope *Scope) MarshalJSON() ([]byte, error) {
-	var parentId string
-	if scope.Parent == nil {
-		parentId = ""
-	} else {
+	parentId := ""
+	if scope.Parent != nil {
 		parentId = scope.Parent.Id
 	}
 	return json.Marshal(SerializedScope{
@@ -83,11 +81,7 @@ func (serialized *SerializedScope) transform() Scope {
 		Interfaces:  serialized.Interfaces,
 		Structs:     serialized.Structs,
 		NamedBlocks: serialized.NamedBlocks,
-	}
-	for _, child := range serialized.Children {
-		copy := *child
-		copy.Parent = &scope
-		scope.Children = append(scope.Children, &copy)
+		Children:    serialized.Children,
 	}
 	return scope
 }
