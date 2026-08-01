@@ -44,7 +44,7 @@ func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.Ph
 		case "Variable":
 			prog.appendCode(variableDeclaration(node))
 		case "fn":
-			prog.appendCode(functionDefinition(node))
+			prog.appendCode(functionDefinition(node, false))
 		}
 	}
 	return prog, messages
@@ -52,8 +52,7 @@ func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.Ph
 
 func structFunctionDefinitions(ast *parser.AST, str *semantic.StructSymbol) []TAC {
 	instructions := []TAC{}
-
-	for _, node := range ast.Children[1].Children {
+	for _, node := range ast.Children[len(ast.Children)-1].Children {
 		if node.Label == "Variable" {
 			continue
 		} else if node.Label == "named-block" {
@@ -61,14 +60,14 @@ func structFunctionDefinitions(ast *parser.AST, str *semantic.StructSymbol) []TA
 			// TODO
 		}
 		scope := currScope
-		fn := functionDefinition(node)
-		fmt.Println(fn)
+		fn := functionDefinition(node, true)
+		instructions = append(instructions, fn...)
 		currScope = scope
 	}
 	return instructions
 }
 
-func functionDefinition(ast *parser.AST) []TAC {
+func functionDefinition(ast *parser.AST, inStruct bool) []TAC {
 	fn := Function{}
 	fn.Name = ast.IRName
 	returnType := ast.Type
@@ -88,6 +87,12 @@ func functionDefinition(ast *parser.AST) []TAC {
 				Type: dt.TranslateSourceType(overload.Parameters[i]),
 			})
 		}
+	}
+	if inStruct {
+		fn.Parameters = append(fn.Parameters, Parameter{
+			Name: "this",
+			Type: dt.Ptr,
+		})
 	}
 	if overload.HasDefaultImplementation {
 		currScope = overload.InnerScope

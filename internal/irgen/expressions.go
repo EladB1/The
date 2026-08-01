@@ -1010,7 +1010,33 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 	operand := Operand{}
 	variable := currScope.LookupVariable(node.Token.Value)
 	if variable.Ctx == semantic.StructProp {
-		// load the property from the struct
+		get := formTempVar(dt.Ptr)
+		instructions = append(instructions, Instruction{
+			Destination: get,
+			Operation:   Get,
+			Operand1: Operand{
+				Var: Variable{
+					Name:       "this",
+					DataType:   dt.Ptr,
+					Visibility: Param,
+				},
+			},
+		})
+		load := formTempVar(dt.TranslateSourceType(variable.Type))
+		instructions = append(instructions, Instruction{
+			Destination: load,
+			Operation:   Load,
+			Operand1: Operand{
+				Var: get,
+			},
+			Operand2: Operand{
+				Constant: variable.Offset.Value,
+			},
+		})
+		return instructions, Operand{
+			Var:  load,
+			Type: load.DataType,
+		}
 	}
 	varType := dt.TranslateSourceType(variable.Type)
 	tempVar := formTempVar(varType)

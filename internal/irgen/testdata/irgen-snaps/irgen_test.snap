@@ -525,13 +525,48 @@ Compiler messages:
 [TestIRGeneration/should_run_structs_and_produce_IR - 1]
 IR:
 Program: [
+  fn __Person1_greet(this: ptr) {
+      STORE local.alt str_const(1)
+      __t0: ptr = GET param.this
+      __t1: str_const = LOAD __t0 8
+      PARAM __t1
+      PARAM str_const(2)
+      __t2: i32 = CALL __str_ne 2
+      if __t2 {
+          __t3: ptr = GET param.this
+          __t4: str_const = LOAD __t3 8
+          PARAM str_const(3)
+          PARAM __t4
+          __t5: str_const = CALL __str_concat 2
+          STORE local.alt __t5
+      }
+      __t6: ptr = GET param.this
+      __t7: str_const = LOAD __t6 0
+      PARAM str_const(4)
+      PARAM __t7
+      __t8: str_const = CALL __str_concat 2
+      __t9: str_const = GET local.alt
+      PARAM __t8
+      PARAM __t9
+      __t10: str_const = CALL __str_concat 2
+      PARAM __t10
+      PARAM str_const(5)
+      __t11: str_const = CALL __str_concat 2
+      __t12: ptr = GET param.this
+      __t13: u32 = LOAD __t12 4
+      PARAM __t13
+      __t14: str_const = CALL __str_fromInt32 1
+      PARAM __t11
+      PARAM __t14
+      __t15: str_const = CALL __str_concat 2
+      PARAM __t15
+      PARAM str_const(6)
+      __t16: str_const = CALL __str_concat 2
+      PARAM __t16
+      __t17: none = CALL println 1
+  }
+
   fn main()->i32 {
-      __t0: ptr = Malloc 16
-      Set __t0+0 str_const(4)
-      Set __t0+4 u32(112)
-      Set __t0+8 str_const(0)
-      Set __t0+12 i32(1)
-      STORE local.p __t0
       return i32(0)
   }
 

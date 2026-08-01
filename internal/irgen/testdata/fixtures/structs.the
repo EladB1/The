@@ -1,4 +1,7 @@
-struct Person1 {
+interface P {
+    fn do();
+}
+struct Person1 impl P {
     String name;
     uint32 age;
     String nickname;
@@ -8,16 +11,30 @@ struct Person1 {
     }
 
     fn greet() {
-        println("My name is " + name + " and I am " + (this.age as String) + " years old");
+        mut String alt = "";
+        if (nickname != "") {
+            alt = ", but you can call me " + nickname;
+        }
+        println("My name is " + name + alt + "; I am " + age as String + " years old.");
     }
+
+    cast {
+        fn toInt() -> int {
+            return 0;
+        }
+    }
+    P {
+        fn do() {}
+    }
+
 }
 
 fn main() -> int {
-    Person1 p = Person1{name: "A", age: 112};
-    uint32 age = p.age;
-    mut Person1 p2 = Person1{name: "B"};
-    println(p2);
-    p2.age = 25;
-    p2.age += 2;
+    // Person1 p = Person1{name: "A", age: 112};
+    // uint32 age = p.age;
+    // mut Person1 p2 = Person1{name: "B"};
+    // println(p2);
+    // p2.age = 25;
+    // p2.age += 2;
     return 0;
 }

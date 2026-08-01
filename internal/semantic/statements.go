@@ -746,7 +746,7 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 				if prop.isPrivate && !currentScope.HasParentScope(symbol.GetInnerScope()) {
 					messages.Complain(diagnostic.AccessError, right.Location, "Cannot access private property from outside struct definition")
 					hasError = true
-				} else if isAssignment && !variable.isMutable && !prop.isMutable && !hasError {
+				} else if isAssignment && variable != nil && !variable.isMutable && !prop.isMutable && !hasError {
 					messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable property or variable")
 					hasError = true
 				} else {
