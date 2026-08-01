@@ -116,12 +116,12 @@ Program: [
       __t59: i32 = CALL __str_length 1
       STORE global.len __t59
       PARAM str_const(6)
-      __t60: none = CALL getEnv 1
-      STORE global.env
-      PARAM str_const(7)
+      __t60: str_const = CALL getEnv 1
+      STORE global.env __t60
       PARAM i32(97)
-      __t61: none = CALL __str_contains_char 2
-      STORE global.hasA
+      PARAM str_const(7)
+      __t61: i32 = CALL __str_contains_char 2
+      STORE global.hasA __t61
   fn main()->i32 {
       return i32(0)
   }
@@ -140,35 +140,35 @@ Program: [
       STORE local.num i32(1)
       __t0: i32 = GET local.num
       PARAM __t0
-      __t1: none = CALL println 1
+      CALL println 1
   }
 
   fn test2() {
       STORE local.i i32(0)
       STORE local.i i32(1)
-      __t2: i32 = GET local.i
-      __t3: i32 = i32.add __t2 i32(1)
-      STORE local.i __t3
-      __t4: i32 = GET local.i
-      __t5: i32 = i32.mul __t4 i32(5)
-      STORE local.i __t5
+      __t1: i32 = GET local.i
+      __t2: i32 = i32.add __t1 i32(1)
+      STORE local.i __t2
+      __t3: i32 = GET local.i
+      __t4: i32 = i32.mul __t3 i32(5)
+      STORE local.i __t4
       return
   }
 
   fn add(x: i32, y: i32)->i32 {
-      __t6: i32 = GET param.x
-      __t7: i32 = GET param.y
-      __t8: i32 = i32.add __t6 __t7
-      return __t8
+      __t5: i32 = GET param.x
+      __t6: i32 = GET param.y
+      __t7: i32 = i32.add __t5 __t6
+      return __t7
   }
 
   fn add--int--int--int(x: i32, y: i32, z: i32)->i32 {
-      __t9: i32 = GET param.x
-      __t10: i32 = GET param.y
-      __t11: i32 = i32.add __t9 __t10
-      __t12: i32 = GET param.z
-      __t13: i32 = i32.add __t11 __t12
-      return __t13
+      __t8: i32 = GET param.x
+      __t9: i32 = GET param.y
+      __t10: i32 = i32.add __t8 __t9
+      __t11: i32 = GET param.z
+      __t12: i32 = i32.add __t10 __t11
+      return __t12
   }
 
   fn main()->i32 {
@@ -198,12 +198,12 @@ Program: [
       __t6: i32 = GET param.n
       __t7: i32 = i32.sub __t6 i32(1)
       PARAM __t7
-      __t8: none = CALL fib 1
+      __t8: i32 = CALL fib 1
       __t9: i32 = GET param.n
       __t10: i32 = i32.sub __t9 i32(2)
       PARAM __t10
-      __t11: none = CALL fib 1
-      __t12: i32 = i32.add
+      __t11: i32 = CALL fib 1
+      __t12: i32 = i32.add __t8 __t11
       return __t12
   }
 
@@ -239,12 +239,12 @@ Program: [
       __t26: i32 = GET param.n
       __t27: i32 = i32.sub __t26 i32(1)
       PARAM __t27
-      __t28: none = CALL fib2 1
+      __t28: i32 = CALL fib2 1
       __t29: i32 = GET param.n
       __t30: i32 = i32.sub __t29 i32(2)
       PARAM __t30
-      __t31: none = CALL fib2 1
-      __t32: i32 = i32.add
+      __t31: i32 = CALL fib2 1
+      __t32: i32 = i32.add __t28 __t31
       return __t32
   }
 
@@ -267,32 +267,32 @@ Program: [
               __t42: i32 = i32.eq __t41 i32(0)
               if __t42 {
                   PARAM str_const(1)
-                  __t43: none = CALL println 1
-                  __t44: i32 = GET param.x
-                  __t45: i32 = i32.div __t44 i32(2)
-                  return __t45
+                  CALL println 1
+                  __t43: i32 = GET param.x
+                  __t44: i32 = i32.div __t43 i32(2)
+                  return __t44
               } else {
-                  __t46: i32 = GET param.x
-                  __t47: i32 = i32.mul __t46 i32(0)
-                  return __t47
+                  __t45: i32 = GET param.x
+                  __t46: i32 = i32.mul __t45 i32(0)
+                  return __t46
               }
           }
       }
   }
 
   fn doSomething(x: i32)->i32 {
-      __t48: i32 = GET param.x
-      __t49: i32 = i32.mod __t48 i32(2)
-      __t50: i32 = i32.eq __t49 i32(0)
-      if __t50 {
-          __t51: i32 = GET param.x
-          __t52: i32 = i32.div __t51 i32(2)
-          STORE local.half __t52
-          __t53: i32 = GET local.half
-          return __t53
+      __t47: i32 = GET param.x
+      __t48: i32 = i32.mod __t47 i32(2)
+      __t49: i32 = i32.eq __t48 i32(0)
+      if __t49 {
+          __t50: i32 = GET param.x
+          __t51: i32 = i32.div __t50 i32(2)
+          STORE local.half __t51
+          __t52: i32 = GET local.half
+          return __t52
       }
-      __t54: i32 = GET param.x
-      return __t54
+      __t53: i32 = GET param.x
+      return __t53
   }
 
   fn main()->i32 {
@@ -444,7 +444,7 @@ Program: [
           loop_body@5: {
             __t46: i32 = GET local.ch
             PARAM __t46
-            __t47: none = CALL print 1
+            CALL print 1
             __t45: i32 = i32.add __t42 i32(1)
             STORE local.__foreach_iter __t45
             JMP loop@5
@@ -452,63 +452,63 @@ Program: [
         }
       }
       PARAM str_const(1)
-      __t48: none = CALL println 1
+      CALL println 1
   }
 
   fn forEachOne(str: str_const) {
       loop_exit@6: {
-        __t49: str_const = GET param.str
-        PARAM __t49
-        __t50: i32 = CALL __str_length 1
+        __t47: str_const = GET param.str
+        PARAM __t47
+        __t48: i32 = CALL __str_length 1
         STORE local.i i32(0)
         loop@6: {
-          __t51: i32 = GET local.i
+          __t49: i32 = GET local.i
+          PARAM __t47
           PARAM __t49
-          PARAM __t51
-          __t52: i32 = CALL __str_index 2
-          STORE local.ch __t52
-          __t53: i32 = i32.lt __t51 __t50
+          __t50: i32 = CALL __str_index 2
+          STORE local.ch __t50
+          __t51: i32 = i32.lt __t49 __t48
           JMPIFNOT loop_exit@6
           loop_body@6: {
-            __t55: i32 = GET local.ch
-            PARAM __t55
-            __t56: none = CALL print 1
-            __t54: i32 = i32.add __t51 i32(1)
-            STORE local.i __t54
+            __t53: i32 = GET local.ch
+            PARAM __t53
+            CALL print 1
+            __t52: i32 = i32.add __t49 i32(1)
+            STORE local.i __t52
             JMP loop@6
           }
         }
       }
       PARAM str_const(2)
-      __t57: none = CALL println 1
+      CALL println 1
   }
 
   fn forEachTwo(str: str_const) {
       loop_exit@7: {
-        __t58: str_const = GET param.str
-        PARAM __t58
-        __t59: i32 = CALL __str_length 1
+        __t54: str_const = GET param.str
+        PARAM __t54
+        __t55: i32 = CALL __str_length 1
         STORE local.i i32(0)
         loop@7: {
-          __t60: i32 = GET local.i
-          PARAM __t58
-          PARAM __t60
-          __t61: i32 = CALL __str_index 2
-          STORE local.ch __t61
-          __t62: i32 = i32.lt __t60 __t59
+          __t56: i32 = GET local.i
+          PARAM __t54
+          PARAM __t56
+          __t57: i32 = CALL __str_index 2
+          STORE local.ch __t57
+          __t58: i32 = i32.lt __t56 __t55
           JMPIFNOT loop_exit@7
           loop_body@7: {
-            __t64: i32 = GET local.ch
-            PARAM __t64
-            __t65: none = CALL print 1
-            __t63: i32 = i32.add __t60 i32(1)
-            STORE local.i __t63
+            __t60: i32 = GET local.ch
+            PARAM __t60
+            CALL print 1
+            __t59: i32 = i32.add __t56 i32(1)
+            STORE local.i __t59
             JMP loop@7
           }
         }
       }
       PARAM str_const(3)
-      __t66: none = CALL println 1
+      CALL println 1
   }
 
   fn main()->i32 {
@@ -525,22 +525,22 @@ Compiler messages:
 [TestIRGeneration/should_run_structs_and_produce_IR - 1]
 IR:
 Program: [
-  fn __Person1_greet(this: ptr) {
+  fn __Person1_greet(__this: ptr) {
       STORE local.alt str_const(1)
-      __t0: ptr = GET param.this
+      __t0: ptr = GET param.__this
       __t1: str_const = LOAD __t0 8
       PARAM __t1
       PARAM str_const(2)
       __t2: i32 = CALL __str_ne 2
       if __t2 {
-          __t3: ptr = GET param.this
+          __t3: ptr = GET param.__this
           __t4: str_const = LOAD __t3 8
           PARAM str_const(3)
           PARAM __t4
           __t5: str_const = CALL __str_concat 2
           STORE local.alt __t5
       }
-      __t6: ptr = GET param.this
+      __t6: ptr = GET param.__this
       __t7: str_const = LOAD __t6 0
       PARAM str_const(4)
       PARAM __t7
@@ -552,7 +552,7 @@ Program: [
       PARAM __t10
       PARAM str_const(5)
       __t11: str_const = CALL __str_concat 2
-      __t12: ptr = GET param.this
+      __t12: ptr = GET param.__this
       __t13: u32 = LOAD __t12 4
       PARAM __t13
       __t14: str_const = CALL __str_fromInt32 1
@@ -563,10 +563,25 @@ Program: [
       PARAM str_const(6)
       __t16: str_const = CALL __str_concat 2
       PARAM __t16
-      __t17: none = CALL println 1
+      CALL println 1
   }
 
   fn main()->i32 {
+      __t17: ptr = Malloc 16
+      SET __t17+0 str_const(7)
+      SET __t17+4 u32(0)
+      SET __t17+12 i32(1)
+      SET __t17+8 str_const(0)
+      STORE local.p2 __t17
+      __t18: ptr = GET local.p2
+      SET __t18+4 u32(25)
+      __t19: ptr = GET local.p2
+      __t20: u32 = LOAD __t19 4
+      __t21: u32 = u32.add __t19+4 u32(2)
+      SET __t19+4 __t21
+      __t22: ptr = GET local.p2
+      PARAM __t22
+      CALL __Person1_greet 1
       return i32(0)
   }
 

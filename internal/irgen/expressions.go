@@ -2,7 +2,6 @@ package irgen
 
 import (
 	"fmt"
-	"slices"
 
 	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/lexer"
@@ -922,10 +921,14 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
 	var nameNode *parser.AST
+
+	irParamTypes := []dt.IRType{}
+	srcParamTypes := []dt.SourceType{}
+	loadParams := []TAC{}
 	var object *parser.AST = nil
 	if node.Children[0].Label == "dot" {
-		object = node.Children[0].Children[0]
 		nameNode = node.Children[0].Children[1]
+		object = node.Children[0].Children[0]
 	} else {
 		nameNode = node.Children[0]
 	}
@@ -934,30 +937,61 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 	if nameNode.IRName != "" {
 		irName = nameNode.IRName
 	}
-	irParamTypes := []dt.IRType{}
-	srcParamTypes := []dt.SourceType{}
-	params := node.Children[1].Children
-	if object != nil {
-		params = slices.Insert(params, 0, object)
+	if len(node.Children) == 2 {
+		params := node.Children[1].Children
+
+		for _, param := range params {
+			param_in, param_op := translateExpression(*param)
+			instructions = append(instructions, param_in...)
+			srcParamTypes = append(srcParamTypes, param.Type)
+			irParamTypes = append(irParamTypes, dt.TranslateSourceType(param.Type))
+			loadParams = append(loadParams, Instruction{
+				Operation: PrepareParam,
+				Operand1:  param_op,
+			})
+		}
 	}
-	loadParams := []TAC{}
-	for _, param := range params {
-		param_in, param_op := translateExpression(*param)
-		instructions = append(instructions, param_in...)
-		srcParamTypes = append(srcParamTypes, param.Type)
-		irParamTypes = append(irParamTypes, dt.TranslateSourceType(param.Type))
+	if node.Children[0].Label == "dot" {
+		var obj_in []TAC
+		var obj Operand
+		if object.Type.IsDynamic {
+			irParamTypes = append(irParamTypes, dt.Ptr)
+			obj_in, obj = loadVariable(*object)
+		} else {
+			irParamTypes = append(irParamTypes, dt.TranslateSourceType(object.Type))
+			obj_in, obj = translateExpression(*object)
+		}
+		instructions = append(instructions, obj_in...)
 		loadParams = append(loadParams, Instruction{
 			Operation: PrepareParam,
-			Operand1:  param_op,
+			Operand1:  obj,
 		})
 	}
 	symbol := currScope.LookupFunctionByName(name)
 
 	returnType := dt.NoneIR
 	if symbol != nil {
-		dt.TranslateSourceType(symbol.ReturnType)
+		returnType = dt.TranslateSourceType(symbol.ReturnType)
+	} else if object != nil && !object.Type.IsDynamic {
+		if prim, ok := semantic.PrimitiveMembers[object.Type.Root]; ok {
+			if method, ok := prim.Methods[name]; ok {
+				returnType = dt.TranslateSourceType(method.ReturnType)
+			}
+		}
 	}
 	instructions = append(instructions, loadParams...)
+	if returnType == dt.NoneIR {
+		instructions = append(instructions, Instruction{
+			Operation: Call,
+			Operand1: Operand{
+				Constant: irName,
+			},
+			Operand2: Operand{
+				Constant: len(irParamTypes),
+			},
+		})
+		return instructions, operand
+	}
 	result := formTempVar(returnType)
 	instructions = append(instructions, Instruction{
 		Destination: result,
@@ -966,9 +1000,13 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 			Constant: irName,
 		},
 		Operand2: Operand{
-			Constant: len(srcParamTypes),
+			Constant: len(irParamTypes),
 		},
 	})
+	operand = Operand{
+		Type: result.DataType,
+		Var:  result,
+	}
 	return instructions, operand
 }
 
@@ -1016,7 +1054,7 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 			Operation:   Get,
 			Operand1: Operand{
 				Var: Variable{
-					Name:       "this",
+					Name:       "__this",
 					DataType:   dt.Ptr,
 					Visibility: Param,
 				},

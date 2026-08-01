@@ -32,9 +32,11 @@ struct Person1 impl P {
 fn main() -> int {
     // Person1 p = Person1{name: "A", age: 112};
     // uint32 age = p.age;
-    // mut Person1 p2 = Person1{name: "B"};
+    mut Person1 p2 = Person1{name: "B"};
+    p2.age = 25;
+    p2.age += 2;
+    p2.greet();
     // println(p2);
-    // p2.age = 25;
-    // p2.age += 2;
+   
     return 0;
 }

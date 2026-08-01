@@ -90,7 +90,7 @@ func functionDefinition(ast *parser.AST, inStruct bool) []TAC {
 	}
 	if inStruct {
 		fn.Parameters = append(fn.Parameters, Parameter{
-			Name: "this",
+			Name: "__this",
 			Type: dt.Ptr,
 		})
 	}
