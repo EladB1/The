@@ -13,7 +13,11 @@ struct Person1 {
 }
 
 fn main() -> int {
-    Person1 p = Person1{name: "Aang", age: 112};
+    Person1 p = Person1{name: "A", age: 112};
     uint32 age = p.age;
+    mut Person1 p2 = Person1{name: "B"};
+    println(p2);
+    p2.age = 25;
+    p2.age += 2;
     return 0;
 }

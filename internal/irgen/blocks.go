@@ -68,6 +68,10 @@ func translateControlFlow(node *parser.AST, exitLabel string, startLabel string)
 
 func translateAssignment(node *parser.AST) []TAC {
 	instructions := []TAC{}
+	if node.Children[0].Label == "dot" {
+		return translateDotAssignment(node)
+
+	}
 	name := node.Children[0].Token.Value
 	value := node.Children[1]
 	var value_in []TAC
@@ -106,6 +110,83 @@ func translateAssignment(node *parser.AST) []TAC {
 	variable := currScope.LookupVariable(name)
 	if variable != nil {
 		instructions = append(instructions, storeVariable(*variable, value_op))
+	}
+	return instructions
+}
+
+func translateDotAssignment(node *parser.AST) []TAC {
+	instructions := []TAC{}
+	left := node.Children[0].Children[0]
+	prop := node.Children[0].Children[1]
+	if left.Label == "dot" {
+
+	} else if left.Type.Equals(dt.GlobalRefType) {
+
+	} else if left.Type.RootEquals(dt.Ref) {
+
+	} else {
+		ptr_in, ptr := loadVariable(*left)
+		instructions = append(instructions, ptr_in...)
+		str := currScope.LookupStruct(string(left.Type.Root))
+		if str == nil {
+		}
+		propSymbol := str.InnerScope.LookupVariable(prop.Token.Value)
+		var value_in []TAC
+		var value_op Operand
+		if node.Token.Value != "=" {
+			var operation Operation
+			load := formTempVar(dt.TranslateSourceType(propSymbol.Type))
+			instructions = append(instructions, Instruction{
+				Destination: load,
+				Operation:   Load,
+				Operand1:    ptr,
+				Operand2: Operand{
+					Constant: propSymbol.Offset.Value,
+				},
+			})
+			operand := Operand{
+				Type: load.DataType,
+				Var:  load,
+			}
+			switch node.Token.Value {
+			case "+=":
+				operation = typedOperation(operand.Type, "add")
+			case "-=":
+				operation = typedOperation(operand.Type, "sub")
+			case "*=":
+				operation = typedOperation(operand.Type, "mul")
+			case "/=":
+				operation = typedOperation(operand.Type, "div")
+			}
+			value_in, value_op = translateExpression(*node.Children[1])
+			instructions = append(instructions, value_in...)
+			result := formTempVar(operand.Type)
+			instructions = append(instructions, Instruction{
+				Destination: result,
+				Operation:   operation,
+				Operand1: Operand{
+					Var:    ptr.Var,
+					Offset: propSymbol.Offset,
+				},
+				Operand2: value_op,
+			})
+			value_op = Operand{
+				Var: result,
+			}
+		} else {
+			value_in, value_op = translateExpression(*node.Children[1])
+			instructions = append(instructions, value_in...)
+		}
+
+		instructions = append(instructions, Instruction{
+			Operation: Set,
+			Operand1: Operand{
+				Var:    ptr.Var,
+				Offset: propSymbol.Offset,
+			},
+			Operand2: value_op,
+		})
+
 	}
 	return instructions
 }

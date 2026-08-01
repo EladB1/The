@@ -279,6 +279,16 @@ func formTempVar(irType dt.IRType) Variable {
 }
 
 func storeVariable(variable semantic.VariableSymbol, value Operand) Instruction {
+	if variable.Ctx == semantic.StructProp {
+		return Instruction{
+			Operation: Set,
+			Operand1: Operand{
+				Var:    Variable{},
+				Offset: variable.Offset,
+			},
+			Operand2: value,
+		}
+	}
 	return Instruction{
 		Operation: Store,
 		Operand1: Operand{
