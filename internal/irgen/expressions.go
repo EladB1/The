@@ -598,11 +598,50 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 func translateTypecast(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	var tempVar Variable
-	sourceType := dt.TranslateSourceType(node.Children[0].Type)
+	irType := dt.TranslateSourceType(node.Children[0].Type)
 	l_in, l_op := translateExpression(*node.Children[0])
 	instructions = append(instructions, l_in...)
-	// TODO: handle struct as source
 	targetType := dt.TranslateSourceType(node.Type)
+	if sourceType := node.Children[0].Type; sourceType.IsDynamic {
+		str := currScope.LookupStruct(sourceType.String())
+		if str == nil {
+			return instructions, Operand{}
+		}
+		castBlock := str.InnerScope.LookupNamedBlock("cast")
+		if castBlock == nil {
+			if node.Type.Equals(dt.StringType) {
+				// TODO
+			}
+		}
+		fn := castBlock.InnerScope.LookupFunctionsByReturnType(node.Type)
+		fmt.Println(fn)
+		if len(fn) == 0 {
+			if node.Type.Equals(dt.StringType) {
+				fmt.Println("HERE")
+				// TODO
+			}
+		}
+		overload := fn[0].Overloads[0]
+		irName := overload.IRName
+		tempVar = formTempVar(targetType)
+		call := []TAC{
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  l_op,
+			},
+			Instruction{
+				Destination: tempVar,
+				Operation:   Call,
+				Operand1: Operand{
+					Constant: irName,
+				},
+				Operand2: Operand{
+					Constant: 1,
+				},
+			},
+		}
+		instructions = append(instructions, call...)
+	}
 	if targetType == dt.Str_const {
 		fn := getToStringFn(node.Children[0].Type)
 		tempVar = formTempVar(dt.Str_const)
@@ -624,7 +663,7 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 		}
 		instructions = append(instructions, call...)
 	} else {
-		operation := getTypeCastOperation(sourceType, targetType)
+		operation := getTypeCastOperation(irType, targetType)
 		tempVar = formTempVar(targetType)
 		instructions = append(instructions, Instruction{
 			Destination: tempVar,
