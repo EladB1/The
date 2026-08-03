@@ -43,7 +43,7 @@ children: [
                 Node: { Token: {Value: String, Type: type keyword, Line: 9, Column: 4} },
                 Node: { Token: {Value: status, Type: identifier, Line: 9, Column: 11} }
             ] },
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "Result@TestResult"
             children: [
                 Node: { Token: {Value: Result, Type: identifier, Line: 10, Column: 4} },
                 Node: { Label: "named-block-body"
@@ -135,7 +135,7 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "Runner@TestRunner"
             children: [
                 Node: { Token: {Value: Runner, Type: identifier, Line: 31, Column: 4} },
                 Node: { Label: "named-block-body"
@@ -292,12 +292,12 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "A@C"
             children: [
                 Node: { Token: {Value: A, Type: identifier, Line: 13, Column: 4} },
                 Node: { Label: "named-block-body" }
             ] },
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "B@C"
             children: [
                 Node: { Token: {Value: B, Type: identifier, Line: 14, Column: 4} },
                 Node: { Label: "named-block-body"

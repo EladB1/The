@@ -91,7 +91,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "Device@Server"
             children: [
                 Node: { Token: {Value: Device, Type: identifier, Line: 20, Column: 4} },
                 Node: { Label: "named-block-body"
@@ -221,12 +221,12 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "Compiler@CompilerApp"
             children: [
                 Node: { Token: {Value: Compiler, Type: identifier, Line: 51, Column: 4} },
                 Node: { Label: "named-block-body" }
             ] },
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "App@CompilerApp"
             children: [
                 Node: { Token: {Value: App, Type: identifier, Line: 52, Column: 4} },
                 Node: { Label: "named-block-body"
@@ -874,7 +874,7 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "Device@Server"
             children: [
                 Node: { Token: {Value: Device, Type: identifier, Line: 9, Column: 4} },
                 Node: { Label: "named-block-body"
@@ -980,7 +980,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "cast@Container"
             children: [
                 Node: { Token: {Value: cast, Type: identifier, Line: 35, Column: 4} },
                 Node: { Label: "named-block-body"
@@ -1094,7 +1094,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "compare@Container"
             children: [
                 Node: { Token: {Value: compare, Type: identifier, Line: 54, Column: 4} },
                 Node: { Label: "named-block-body"
@@ -1244,7 +1244,7 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "DB@App"
             children: [
                 Node: { Token: {Value: DB, Type: identifier, Line: 81, Column: 4} },
                 Node: { Label: "named-block-body"
@@ -1266,7 +1266,7 @@ children: [
                     ] }
                 ] }
             ] },
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "Backend@App"
             children: [
                 Node: { Token: {Value: Backend, Type: identifier, Line: 86, Column: 4} },
                 Node: { Label: "named-block-body"
@@ -1300,7 +1300,7 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "DB@PostgreSQL"
             children: [
                 Node: { Token: {Value: DB, Type: identifier, Line: 94, Column: 4} },
                 Node: { Label: "named-block-body"
@@ -1406,7 +1406,7 @@ children: [
                 Node: { Token: {Value: getVersion, Type: identifier, Line: 113, Column: 7} },
                 Node: { Token: {Value: String, Type: type keyword, Line: 113, Column: 23} }
             ] },
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "DB@MariaDB"
             children: [
                 Node: { Token: {Value: DB, Type: identifier, Line: 114, Column: 4} },
                 Node: { Label: "named-block-body"

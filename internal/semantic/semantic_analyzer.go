@@ -254,6 +254,7 @@ func analyzeInterfaceImplementation() {
 							str.UpdateImplFnNames(fn.Name, intfName)
 							if overload.HasDefaultImplementation { // copy it over from the interface
 								nb_fn.Overloads[i].Parameters = overload.Parameters
+								nb_fn.Overloads[i].ParameterNames = overload.ParameterNames
 								nb_fn.Overloads[i].InnerScope = namedBlock.InnerScope.addChild(fmt.Sprintf("%s@%s", fn.Name, namedBlock.InnerScope.Id), Function)
 								nb_fn.Overloads[i].InnerScope.Variables = overload.InnerScope.Variables
 								nb_fn.Overloads[i].IRName = strings.Replace(overload.IRName, fmt.Sprintf("__%s", intfName), fmt.Sprintf("__%s_%s", str.Name, intfName), 1)
@@ -266,6 +267,7 @@ func analyzeInterfaceImplementation() {
 							if overload.HasDefaultImplementation {
 								if match == nil {
 									nb_fn.Overloads[i].Parameters = overload.Parameters
+									nb_fn.Overloads[i].ParameterNames = overload.ParameterNames
 									namedBlock.InnerScope.Functions[nb_fn.Name] = *nb_fn
 								}
 							} else {

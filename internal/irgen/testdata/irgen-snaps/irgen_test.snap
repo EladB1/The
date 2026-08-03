@@ -525,63 +525,81 @@ Compiler messages:
 [TestIRGeneration/should_run_structs_and_produce_IR - 1]
 IR:
 Program: [
-  fn __Person1_greet(__this: ptr) {
-      STORE local.alt str_const(1)
+  fn __Person1_increaseAge(__this: ptr) {
       __t0: ptr = GET param.__this
-      __t1: str_const = LOAD __t0 8
-      PARAM __t1
-      PARAM str_const(2)
-      __t2: i32 = CALL __str_ne 2
-      if __t2 {
-          __t3: ptr = GET param.__this
-          __t4: str_const = LOAD __t3 8
-          PARAM str_const(3)
-          PARAM __t4
-          __t5: str_const = CALL __str_concat 2
-          STORE local.alt __t5
+      __t1: u32 = LOAD __t0 4
+      __t2: u32 = u32.add __t1 u32(1)
+      SET <nil> __t2
+  }
+
+  fn __Person1_greet(__this: ptr) {
+      STORE local.alt str_const(2)
+      __t3: ptr = GET param.__this
+      __t4: str_const = LOAD __t3 8
+      PARAM __t4
+      PARAM str_const(3)
+      __t5: i32 = CALL __str_ne 2
+      if __t5 {
+          __t6: ptr = GET param.__this
+          __t7: str_const = LOAD __t6 8
+          PARAM str_const(4)
+          PARAM __t7
+          __t8: str_const = CALL __str_concat 2
+          STORE local.alt __t8
       }
-      __t6: ptr = GET param.__this
-      __t7: str_const = LOAD __t6 0
-      PARAM str_const(4)
-      PARAM __t7
-      __t8: str_const = CALL __str_concat 2
-      __t9: str_const = GET local.alt
-      PARAM __t8
-      PARAM __t9
-      __t10: str_const = CALL __str_concat 2
-      PARAM __t10
+      __t9: ptr = GET param.__this
+      __t10: str_const = LOAD __t9 0
       PARAM str_const(5)
+      PARAM __t10
       __t11: str_const = CALL __str_concat 2
-      __t12: ptr = GET param.__this
-      __t13: u32 = LOAD __t12 4
-      PARAM __t13
-      __t14: str_const = CALL __str_fromInt32 1
+      __t12: str_const = GET local.alt
       PARAM __t11
-      PARAM __t14
-      __t15: str_const = CALL __str_concat 2
-      PARAM __t15
+      PARAM __t12
+      __t13: str_const = CALL __str_concat 2
+      PARAM __t13
       PARAM str_const(6)
-      __t16: str_const = CALL __str_concat 2
+      __t14: str_const = CALL __str_concat 2
+      __t15: ptr = GET param.__this
+      __t16: u32 = LOAD __t15 4
       PARAM __t16
+      __t17: str_const = CALL __str_fromInt32 1
+      PARAM __t14
+      PARAM __t17
+      __t18: str_const = CALL __str_concat 2
+      PARAM __t18
+      PARAM str_const(7)
+      __t19: str_const = CALL __str_concat 2
+      PARAM __t19
+      CALL println 1
+  }
+
+  fn __Person1_cast_toInt(__this: ptr)->i32 {
+      return i32(0)
+  }
+
+  fn __Person1_P_do(__this: ptr) {
+      PARAM str_const(8)
+      CALL println 1
+  }
+
+  fn __Person1_P_donot() {
+      PARAM str_const(1)
       CALL println 1
   }
 
   fn main()->i32 {
-      __t17: ptr = Malloc 16
-      SET __t17+0 str_const(7)
-      SET __t17+4 u32(0)
-      SET __t17+12 i32(1)
-      SET __t17+8 str_const(0)
-      STORE local.p2 __t17
-      __t18: ptr = GET local.p2
-      SET __t18+4 u32(25)
-      __t19: ptr = GET local.p2
-      __t20: u32 = LOAD __t19 4
-      __t21: u32 = u32.add __t19+4 u32(2)
-      SET __t19+4 __t21
+      __t20: ptr = Malloc 16
+      SET __t20+0 str_const(9)
+      SET __t20+12 i32(1)
+      SET __t20+8 str_const(0)
+      SET __t20+4 u32(0)
+      STORE local.p2 __t20
+      __t21: ptr = GET local.p2
+      SET __t21+4 u32(25)
       __t22: ptr = GET local.p2
-      PARAM __t22
-      CALL __Person1_greet 1
+      __t23: u32 = LOAD __t22 4
+      __t24: u32 = u32.add __t22+4 u32(2)
+      SET __t22+4 __t24
       return i32(0)
   }
 

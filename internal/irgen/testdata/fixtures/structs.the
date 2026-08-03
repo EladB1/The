@@ -1,13 +1,19 @@
 interface P {
     fn do();
+    fn donot() {
+        println("no");
+    }
 }
 struct Person1 impl P {
     String name;
-    uint32 age;
+    mut uint32 age;
     String nickname;
 
     private {
         int id = 1;
+        fn increaseAge() {
+            age += 1;
+        }
     }
 
     fn greet() {
@@ -24,7 +30,9 @@ struct Person1 impl P {
         }
     }
     P {
-        fn do() {}
+        fn do() {
+            println("hi");
+        }
     }
 
 }
@@ -35,7 +43,8 @@ fn main() -> int {
     mut Person1 p2 = Person1{name: "B"};
     p2.age = 25;
     p2.age += 2;
-    p2.greet();
+    // p2.greet();
+    // p2.do();
     // println(p2);
    
     return 0;

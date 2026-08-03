@@ -74,6 +74,7 @@ func processFunctionSignature(fnNode *parser.AST) FnCreateSymbol {
 	symbol := FnCreateSymbol{
 		name:                     name,
 		parameters:               paramTypes,
+		parameterNames:           paramNames,
 		returnType:               returnType,
 		hasDefaultImplementation: bodyNode != nil,
 		Body:                     bodyNode,

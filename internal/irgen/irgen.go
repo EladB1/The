@@ -52,19 +52,73 @@ func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.Ph
 
 func structFunctionDefinitions(ast *parser.AST, str *semantic.StructSymbol) []TAC {
 	instructions := []TAC{}
+	// TODO: get inherited functions implementations
+	found_nb_fns := map[string]ds.HashSet{}
 	for _, node := range ast.Children[len(ast.Children)-1].Children {
 		if node.Label == "Variable" {
 			continue
 		} else if node.Label == "named-block" {
-			continue // temporary
-			// TODO
+			scope := currScope
+			var nbscope *semantic.Scope
+			nbName := node.Children[0].Token.Value
+			if nbName == "private" {
+				nbscope = currScope // don't change scope
+			} else {
+				nbscope = currScope.GetChildScopeById(node.IRName)
+			}
+			currScope = nbscope
+			for _, child := range node.Children[1].Children {
+				if child.Label == "fn" {
+					if hs, ok := found_nb_fns[nbName]; ok {
+						hs.Append(child.IRName)
+					} else {
+						found_nb_fns[nbName] = ds.BuildHashSet(child.IRName)
+					}
+					fn := functionDefinition(child, true)
+					instructions = append(instructions, fn...)
+				}
+				currScope = nbscope
+			}
+			currScope = scope
+		} else if node.Label == "fn" {
+			scope := currScope
+			fn := functionDefinition(node, true)
+			instructions = append(instructions, fn...)
+			currScope = scope
 		}
-		scope := currScope
-		fn := functionDefinition(node, true)
-		instructions = append(instructions, fn...)
-		currScope = scope
 	}
+	// get function definitions from interface not in struct def
+	fmt.Println(found_nb_fns)
+	scope := currScope
+	currScope = str.InnerScope
+	for _, nb := range currScope.NamedBlocks {
+		currScope = nb.InnerScope
+		for _, fn := range currScope.Functions {
+			for _, overload := range fn.Overloads {
+				if _, ok := found_nb_fns[nb.Name][overload.IRName]; !ok {
+					instructions = append(instructions, addMissingOverloadDefinition(overload, fn.ReturnType)...)
+					//def := functionDefinition(overload.Body, true)
+
+				}
+			}
+		}
+	}
+	currScope = scope
 	return instructions
+}
+
+func addMissingOverloadDefinition(overload semantic.FnOverloadSymbol, returnType dt.SourceType) []TAC {
+	fn := Function{}
+	fn.Name = overload.IRName
+	fn.ReturnType = dt.TranslateSourceType(returnType)
+	for i := range overload.Parameters {
+		fn.Parameters = append(fn.Parameters, Parameter{
+			Name: overload.ParameterNames[i],
+			Type: dt.TranslateSourceType(overload.Parameters[i]),
+		})
+	}
+	fn.Code = translateBlock(overload.Body.Children, "", "")
+	return []TAC{fn}
 }
 
 func functionDefinition(ast *parser.AST, inStruct bool) []TAC {

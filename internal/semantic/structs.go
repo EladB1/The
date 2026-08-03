@@ -23,6 +23,7 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 	var newScope *Scope = nil
 	if name != "private" {
 		newScope = currentScope.addChild(fmt.Sprintf("%s@%s", name, currentScope.Id), NamedBlock)
+		nbNode.IRName = newScope.Id
 		currentScope = newScope
 	}
 	for _, node := range body {

@@ -22,6 +22,7 @@ type (
 	}
 	FnOverloadSymbol struct {
 		Parameters               []dt.SourceType
+		ParameterNames           []string
 		IsPrivate                bool
 		HasDefaultImplementation bool
 		Body                     *parser.AST
@@ -32,6 +33,7 @@ type (
 		name                     string
 		returnType               dt.SourceType
 		parameters               []dt.SourceType
+		parameterNames           []string
 		isPrivate                bool
 		hasDefaultImplementation bool
 		Body                     *parser.AST
