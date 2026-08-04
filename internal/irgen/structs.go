@@ -21,7 +21,7 @@ func structDefaults(str *semantic.StructSymbol) []TAC {
 			addDefaultToString = true
 		}
 	}
-	if compareBlock := currScope.LookupNamedBlock("compareBlock"); compareBlock == nil {
+	if compareBlock := currScope.LookupNamedBlock("compare"); compareBlock == nil {
 		addDefaultEquals = true
 	} else {
 		if fn := compareBlock.InnerScope.LookupFunctionByName("equals"); fn == nil {

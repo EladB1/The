@@ -171,7 +171,8 @@ func translateDotAssignment(node *parser.AST) []TAC {
 				Operand2: value_op,
 			})
 			value_op = Operand{
-				Var: result,
+				Type: result.DataType,
+				Var:  result,
 			}
 		} else {
 			value_in, value_op = translateExpression(*node.Children[1])
@@ -181,6 +182,7 @@ func translateDotAssignment(node *parser.AST) []TAC {
 		instructions = append(instructions, Instruction{
 			Operation: Set,
 			Operand1: Operand{
+				Type:   value_op.Type,
 				Var:    ptr.Var,
 				Offset: propSymbol.Offset,
 			},

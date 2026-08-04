@@ -102,7 +102,9 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 		comp = "ge"
 	}
 	if left.Type.IsDynamic {
-		return translateStructComparison(l_op, r_op, left.Type.String(), comp)
+		scomp_in, scomp := translateStructComparison(l_op, r_op, left.Type.String(), comp)
+		instructions = append(instructions, scomp_in...)
+		return instructions, scomp
 	} else if l_op.Type == dt.Str_const {
 		tempVar := formTempVar(dt.I32)
 		call := []TAC{
@@ -943,7 +945,8 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 			},
 		})
 		operand = Operand{
-			Var: loadProp,
+			Type: loadProp.DataType,
+			Var:  loadProp,
 		}
 	}
 	return instructions, operand
@@ -1097,7 +1100,8 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 			Destination: load,
 			Operation:   Load,
 			Operand1: Operand{
-				Var: get,
+				Type: load.DataType,
+				Var:  get,
 			},
 			Operand2: Operand{
 				Constant: variable.Offset.Value,
