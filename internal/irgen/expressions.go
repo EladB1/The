@@ -102,8 +102,7 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 		comp = "ge"
 	}
 	if left.Type.IsDynamic {
-		str := currScope.LookupStruct(left.Type.String())
-		fmt.Println(str)
+		return translateStructComparison(l_op, r_op, left.Type.String(), comp)
 	} else if l_op.Type == dt.Str_const {
 		tempVar := formTempVar(dt.I32)
 		call := []TAC{

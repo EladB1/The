@@ -2,6 +2,7 @@ package irgen
 
 import (
 	"fmt"
+	"strings"
 
 	ds "github.com/EladB1/The/internal/datastructures"
 	dt "github.com/EladB1/The/internal/datatypes"
@@ -107,7 +108,9 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 		}
 		var equality []TAC
 		if prop.Type.IsDynamic {
-			// TODO
+			var eq Operand
+			equality, eq = translateStructComparison(Operand{Var: loadProp}, Operand{Var: loadOtherProp}, prop.Type.String(), "eq")
+			equals = eq.Var
 		} else if prop.Type.Equals(dt.StringType) {
 			equality = []TAC{
 				Instruction{
@@ -532,4 +535,139 @@ func getStructToString(struct_name string) string {
 		}
 	}
 	return irName
+}
+
+func getStructEquals(compareBlock *semantic.NamedBlockSymbol, struct_name string) string {
+	equalsName := fmt.Sprintf("__%s_compare__default__equals", struct_name)
+	if compareBlock == nil {
+		return equalsName
+	}
+	equalsFn := compareBlock.InnerScope.LookupFunctionByName("equals")
+	if equalsFn != nil {
+		equalsName = equalsFn.Overloads[0].IRName
+	}
+	return equalsName
+}
+
+func translateStructComparison(l_op, r_op Operand, struct_name string, comp string) ([]TAC, Operand) {
+	instructions := []TAC{}
+	str := currScope.LookupStruct(struct_name)
+	equalsName := getStructEquals(str.InnerScope.LookupNamedBlock("compare"), struct_name)
+	compared := false
+	compare := formTempVar(dt.I32)
+	if compareBlock := str.GetInnerScope().LookupNamedBlock("compare"); compareBlock != nil {
+		if strings.Contains(comp, "l") {
+			if lessFn := compareBlock.InnerScope.LookupFunctionByName("lessThan"); lessFn != nil {
+				lessName := lessFn.Overloads[0].IRName
+				call := []TAC{
+					Instruction{
+						Operation: PrepareParam,
+						Operand1:  l_op,
+					},
+					Instruction{
+						Operation: PrepareParam,
+						Operand1:  r_op,
+					},
+					Instruction{
+						Destination: compare,
+						Operation:   Call,
+						Operand1: Operand{
+							Constant: lessName,
+						},
+						Operand2: Operand{
+							Constant: 2,
+						},
+					},
+				}
+				instructions = append(instructions, call...)
+				compared = true
+			}
+		}
+		if strings.Contains(comp, "g") {
+			if greaterFn := compareBlock.InnerScope.LookupFunctionByName("greaterThan"); greaterFn != nil {
+				greaterName := greaterFn.Overloads[0].IRName
+				call := []TAC{
+					Instruction{
+						Operation: PrepareParam,
+						Operand1:  l_op,
+					},
+					Instruction{
+						Operation: PrepareParam,
+						Operand1:  r_op,
+					},
+					Instruction{
+						Destination: compare,
+						Operation:   Call,
+						Operand1: Operand{
+							Constant: greaterName,
+						},
+						Operand2: Operand{
+							Constant: 2,
+						},
+					},
+				}
+				instructions = append(instructions, call...)
+				compared = true
+			}
+		}
+	}
+	if strings.Contains(comp, "e") {
+		first := compare
+		if compared {
+			compare = formTempVar(dt.I32)
+		}
+		call := []TAC{
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  l_op,
+			},
+			Instruction{
+				Operation: PrepareParam,
+				Operand1:  r_op,
+			},
+			Instruction{
+				Destination: compare,
+				Operation:   Call,
+				Operand1: Operand{
+					Constant: equalsName,
+				},
+				Operand2: Operand{
+					Constant: 2,
+				},
+			},
+		}
+		instructions = append(instructions, call...)
+		if compared {
+			or := formTempVar(dt.I32)
+			instructions = append(instructions, Instruction{
+				Destination: or,
+				Operation:   typedOperation(dt.I32, "or"),
+				Operand1: Operand{
+					Var: first,
+				},
+				Operand2: Operand{
+					Var: compare,
+				},
+			})
+			compare = or
+		}
+	}
+	if comp == "ne" {
+		not := formTempVar(dt.I32)
+		instructions = append(instructions, Instruction{
+			Destination: not,
+			Operation:   typedOperation(dt.I32, "xor"),
+			Operand1: Operand{
+				Var: compare,
+			},
+			Operand2: Operand{
+				Type:     dt.I32,
+				Constant: 1,
+			},
+		})
+		compare = not
+	}
+	return instructions, Operand{
+		Var: compare,
+	}
 }
