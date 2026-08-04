@@ -102,7 +102,8 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 		comp = "ge"
 	}
 	if left.Type.IsDynamic {
-		// TODO: handle structs
+		str := currScope.LookupStruct(left.Type.String())
+		fmt.Println(str)
 	} else if l_op.Type == dt.Str_const {
 		tempVar := formTempVar(dt.I32)
 		call := []TAC{
@@ -598,31 +599,25 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 func translateTypecast(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	var tempVar Variable
+	var irName string
 	irType := dt.TranslateSourceType(node.Children[0].Type)
 	l_in, l_op := translateExpression(*node.Children[0])
 	instructions = append(instructions, l_in...)
 	targetType := dt.TranslateSourceType(node.Type)
 	if sourceType := node.Children[0].Type; sourceType.IsDynamic {
-		str := currScope.LookupStruct(sourceType.String())
-		if str == nil {
-			return instructions, Operand{}
-		}
-		castBlock := str.InnerScope.LookupNamedBlock("cast")
-		if castBlock == nil {
-			if node.Type.Equals(dt.StringType) {
-				// TODO
+		if node.Type.Equals(dt.StringType) {
+			irName = getStructToString(sourceType.String())
+		} else {
+			if str := currScope.LookupStruct(sourceType.String()); str != nil {
+				if castBlock := str.InnerScope.LookupNamedBlock("cast"); castBlock != nil {
+					fn := castBlock.InnerScope.LookupFunctionsByReturnType(node.Type)
+					if len(fn) != 0 {
+						overload := fn[0].Overloads[0]
+						irName = overload.IRName
+					}
+				}
 			}
 		}
-		fn := castBlock.InnerScope.LookupFunctionsByReturnType(node.Type)
-		fmt.Println(fn)
-		if len(fn) == 0 {
-			if node.Type.Equals(dt.StringType) {
-				fmt.Println("HERE")
-				// TODO
-			}
-		}
-		overload := fn[0].Overloads[0]
-		irName := overload.IRName
 		tempVar = formTempVar(targetType)
 		call := []TAC{
 			Instruction{
@@ -641,8 +636,7 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 			},
 		}
 		instructions = append(instructions, call...)
-	}
-	if targetType == dt.Str_const {
+	} else if targetType == dt.Str_const {
 		fn := getToStringFn(node.Children[0].Type)
 		tempVar = formTempVar(dt.Str_const)
 		call := []TAC{
@@ -676,6 +670,25 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 		Var:  tempVar,
 	}
 	return instructions, operand
+}
+
+func getStructToString(struct_name string) string {
+	irName := ""
+	if str := currScope.LookupStruct(struct_name); str != nil {
+		castBlock := str.InnerScope.LookupNamedBlock("cast")
+		if castBlock == nil {
+			irName = fmt.Sprintf("__%s_cast__default_toString", str.Name)
+			return irName
+		}
+		fn := castBlock.InnerScope.LookupFunctionsByReturnType(dt.StringType)
+		if len(fn) == 0 {
+			irName = fmt.Sprintf("__%s_cast__default_toString", str.Name)
+		} else {
+			overload := fn[0].Overloads[0]
+			irName = overload.IRName
+		}
+	}
+	return irName
 }
 
 func translateIndex(node parser.AST) ([]TAC, Operand) {
