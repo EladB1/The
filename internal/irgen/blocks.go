@@ -449,12 +449,6 @@ func translateForLoop(node *parser.AST) []TAC {
 	return instructions
 }
 
-func translateForeachLoop(node *parser.AST, indexed bool) []TAC {
-	instructions := []TAC{}
-
-	return instructions
-}
-
 func translateIfBlock(node *parser.AST, exitLabel string, startLabel string) []TAC {
 	instructions := []TAC{}
 	ifBlock := IfBlock{}

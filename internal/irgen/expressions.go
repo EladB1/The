@@ -672,25 +672,6 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 	return instructions, operand
 }
 
-func getStructToString(struct_name string) string {
-	irName := ""
-	if str := currScope.LookupStruct(struct_name); str != nil {
-		castBlock := str.InnerScope.LookupNamedBlock("cast")
-		if castBlock == nil {
-			irName = fmt.Sprintf("__%s_cast__default_toString", str.Name)
-			return irName
-		}
-		fn := castBlock.InnerScope.LookupFunctionsByReturnType(dt.StringType)
-		if len(fn) == 0 {
-			irName = fmt.Sprintf("__%s_cast__default_toString", str.Name)
-		} else {
-			overload := fn[0].Overloads[0]
-			irName = overload.IRName
-		}
-	}
-	return irName
-}
-
 func translateIndex(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	left := node.Children[0]
