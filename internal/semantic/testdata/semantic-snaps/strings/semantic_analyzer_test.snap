@@ -22,7 +22,7 @@ children: [
                 Node: { Label: "dot", Type: int
                 children: [
                     Node: { Token: {Value: "hello", Type: string literal, Line: 2, Column: 14}, Type: String },
-                    Node: { Token: {Value: length, Type: identifier, Line: 2, Column: 22} }
+                    Node: { Token: {Value: length, Type: identifier, Line: 2, Column: 22}, Type: int }
                 ] }
             ] },
             Node: { Label: "Variable", Type: bool

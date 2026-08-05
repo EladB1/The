@@ -710,6 +710,7 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 		}
 	} else {
 		lhs, hasError = handleDot(left.Children[0], left.Children[1], isFnCall, isAssignment, true)
+		left.Type = lhs
 	}
 	rname := right.Token.Value
 	if mem, ok := PrimitiveMembers[lhs.Root]; ok {
@@ -720,6 +721,7 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 		} else {
 			if prop, ok := mem.Properties[rname]; ok {
 				propType = prop.Type
+				right.Type = propType
 			} else {
 				messages.Complain(diagnostic.NameError, left.Location, "Could not find %s.%s", lhs.Root, rname)
 				hasError = true
@@ -750,6 +752,7 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 					messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable property or variable")
 					hasError = true
 				} else {
+					right.Type = prop.Type
 					return prop.Type, hasError
 				}
 			} else if !hasError {
@@ -764,6 +767,7 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 				messages.Complain(diagnostic.AccessError, left.Location, "Cannot change value of immutable variable '%s'", prop.Name)
 				hasError = true
 			} else {
+				right.Type = prop.Type
 				return prop.Type, hasError
 			}
 		} else {

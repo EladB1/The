@@ -286,10 +286,10 @@ children: [
                     children: [
                         Node: { Label: "dot"
                         children: [
-                            Node: { Label: "dot"
+                            Node: { Label: "dot", Type: ScopeRef(CompilerApp,Compiler)
                             children: [
                                 Node: { Token: {Value: ca, Type: identifier, Line: 62, Column: 12}, Type: CompilerApp },
-                                Node: { Token: {Value: Compiler, Type: identifier, Line: 62, Column: 15} }
+                                Node: { Token: {Value: Compiler, Type: identifier, Line: 62, Column: 15}, Type: ScopeRef(CompilerApp,Compiler) }
                             ] },
                             Node: { Token: {Value: help, Type: identifier, Line: 62, Column: 24}, IRName: "__CompilerApp_Compiler_help" }
                         ] }
@@ -305,10 +305,10 @@ children: [
                     children: [
                         Node: { Label: "dot"
                         children: [
-                            Node: { Label: "dot"
+                            Node: { Label: "dot", Type: ScopeRef(CompilerApp,App)
                             children: [
                                 Node: { Token: {Value: ca, Type: identifier, Line: 63, Column: 12}, Type: CompilerApp },
-                                Node: { Token: {Value: App, Type: identifier, Line: 63, Column: 15} }
+                                Node: { Token: {Value: App, Type: identifier, Line: 63, Column: 15}, Type: ScopeRef(CompilerApp,App) }
                             ] },
                             Node: { Token: {Value: help, Type: identifier, Line: 63, Column: 19}, IRName: "__CompilerApp_App_help" }
                         ] }
@@ -452,7 +452,7 @@ children: [
                     Node: { Label: "dot", Type: int
                     children: [
                         Node: { Token: {Value: global, Type: identifier, Line: 95, Column: 8}, Type: Ref(@global) },
-                        Node: { Token: {Value: x, Type: identifier, Line: 95, Column: 15} }
+                        Node: { Token: {Value: x, Type: identifier, Line: 95, Column: 15}, Type: int }
                     ] },
                     Node: { Label: "call", Type: None
                     children: [
@@ -467,14 +467,14 @@ children: [
                         Node: { Label: "dot", Type: int
                         children: [
                             Node: { Token: {Value: this, Type: identifier, Line: 97, Column: 8}, Type: Ref(TestName) },
-                            Node: { Token: {Value: x, Type: identifier, Line: 97, Column: 13} }
+                            Node: { Token: {Value: x, Type: identifier, Line: 97, Column: 13}, Type: int }
                         ] },
                         Node: { Token: {Value: -, Type: add operator, Line: 97, Column: 26}, Type: int
                         children: [
                             Node: { Label: "dot", Type: int
                             children: [
                                 Node: { Token: {Value: global, Type: identifier, Line: 97, Column: 17}, Type: Ref(@global) },
-                                Node: { Token: {Value: x, Type: identifier, Line: 97, Column: 24} }
+                                Node: { Token: {Value: x, Type: identifier, Line: 97, Column: 24}, Type: int }
                             ] },
                             Node: { Token: {Value: 1, Type: int literal, Line: 97, Column: 28}, Type: int }
                         ] }
@@ -622,12 +622,12 @@ children: [
                 Node: { Label: "dot", Type: String
                 children: [
                     Node: { Token: {Value: p1, Type: identifier, Line: 120, Column: 4}, Type: Person },
-                    Node: { Token: {Value: first, Type: identifier, Line: 120, Column: 7} }
+                    Node: { Token: {Value: first, Type: identifier, Line: 120, Column: 7}, Type: String }
                 ] },
                 Node: { Label: "dot", Type: String
                 children: [
                     Node: { Token: {Value: p2, Type: identifier, Line: 120, Column: 16}, Type: Person },
-                    Node: { Token: {Value: first, Type: identifier, Line: 120, Column: 19} }
+                    Node: { Token: {Value: first, Type: identifier, Line: 120, Column: 19}, Type: String }
                 ] }
             ] },
             Node: { Label: "if-block"
@@ -638,21 +638,21 @@ children: [
                     children: [
                         Node: { Label: "dot", Type: bool
                         children: [
-                            Node: { Label: "dot"
+                            Node: { Label: "dot", Type: EmploymentStatus
                             children: [
                                 Node: { Token: {Value: p1, Type: identifier, Line: 121, Column: 8}, Type: Person },
-                                Node: { Token: {Value: status, Type: identifier, Line: 121, Column: 11} }
+                                Node: { Token: {Value: status, Type: identifier, Line: 121, Column: 11}, Type: EmploymentStatus }
                             ] },
-                            Node: { Token: {Value: employed, Type: identifier, Line: 121, Column: 18} }
+                            Node: { Token: {Value: employed, Type: identifier, Line: 121, Column: 18}, Type: bool }
                         ] },
                         Node: { Label: "dot", Type: bool
                         children: [
-                            Node: { Label: "dot"
+                            Node: { Label: "dot", Type: EmploymentStatus
                             children: [
                                 Node: { Token: {Value: p2, Type: identifier, Line: 121, Column: 30}, Type: Person },
-                                Node: { Token: {Value: status, Type: identifier, Line: 121, Column: 33} }
+                                Node: { Token: {Value: status, Type: identifier, Line: 121, Column: 33}, Type: EmploymentStatus }
                             ] },
-                            Node: { Token: {Value: employed, Type: identifier, Line: 121, Column: 40} }
+                            Node: { Token: {Value: employed, Type: identifier, Line: 121, Column: 40}, Type: bool }
                         ] }
                     ] },
                     Node: { Label: "conditional-body"
@@ -681,12 +681,12 @@ children: [
             children: [
                 Node: { Label: "dot", Type: bool
                 children: [
-                    Node: { Label: "dot"
+                    Node: { Label: "dot", Type: EmploymentStatus
                     children: [
                         Node: { Token: {Value: p2, Type: identifier, Line: 124, Column: 4}, Type: Person },
-                        Node: { Token: {Value: status, Type: identifier, Line: 124, Column: 7} }
+                        Node: { Token: {Value: status, Type: identifier, Line: 124, Column: 7}, Type: EmploymentStatus }
                     ] },
-                    Node: { Token: {Value: employed, Type: identifier, Line: 124, Column: 14} }
+                    Node: { Token: {Value: employed, Type: identifier, Line: 124, Column: 14}, Type: bool }
                 ] },
                 Node: { Token: {Value: true, Type: boolean value keyword, Line: 124, Column: 25}, Type: bool }
             ] },
@@ -726,12 +726,12 @@ children: [
             children: [
                 Node: { Label: "dot", Type: String
                 children: [
-                    Node: { Label: "dot"
+                    Node: { Label: "dot", Type: Inner
                     children: [
                         Node: { Token: {Value: outer, Type: identifier, Line: 130, Column: 4}, Type: Outer },
-                        Node: { Token: {Value: inner, Type: identifier, Line: 130, Column: 10} }
+                        Node: { Token: {Value: inner, Type: identifier, Line: 130, Column: 10}, Type: Inner }
                     ] },
-                    Node: { Token: {Value: value, Type: identifier, Line: 130, Column: 16} }
+                    Node: { Token: {Value: value, Type: identifier, Line: 130, Column: 16}, Type: String }
                 ] },
                 Node: { Token: {Value: "wasd", Type: string literal, Line: 130, Column: 24}, Type: String }
             ] },
@@ -1686,9 +1686,9 @@ children: [
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Label: "dot"
+                        Node: { Label: "dot", Type: Container
                         children: [
-                            Node: { Label: "dot"
+                            Node: { Label: "dot", Type: Container
                             children: [
                                 Node: { Token: {Value: one, Type: identifier, Line: 157, Column: 12}, Type: Container },
                                 Node: { Token: {Value: madeup, Type: identifier, Line: 157, Column: 16} }
@@ -1704,7 +1704,7 @@ children: [
                 Node: { Label: "dot"
                 children: [
                     Node: { Token: {Value: two, Type: identifier, Line: 158, Column: 4}, Type: Container },
-                    Node: { Token: {Value: id, Type: identifier, Line: 158, Column: 8} }
+                    Node: { Token: {Value: id, Type: identifier, Line: 158, Column: 8}, Type: String }
                 ] },
                 Node: { Token: {Value: "2", Type: string literal, Line: 158, Column: 13} }
             ] },
@@ -1756,7 +1756,7 @@ children: [
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Label: "dot"
+                    Node: { Label: "dot", Type: PostgreSQL
                     children: [
                         Node: { Token: {Value: pgsql, Type: identifier, Line: 165, Column: 4}, Type: PostgreSQL },
                         Node: { Token: {Value: Server, Type: identifier, Line: 165, Column: 10} }
@@ -1768,10 +1768,10 @@ children: [
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Label: "dot"
+                    Node: { Label: "dot", Type: ScopeRef(PostgreSQL,DB)
                     children: [
                         Node: { Token: {Value: pgsql, Type: identifier, Line: 166, Column: 4}, Type: PostgreSQL },
-                        Node: { Token: {Value: DB, Type: identifier, Line: 166, Column: 10} }
+                        Node: { Token: {Value: DB, Type: identifier, Line: 166, Column: 10}, Type: ScopeRef(PostgreSQL,DB) }
                     ] },
                     Node: { Token: {Value: getTLSVersion, Type: identifier, Line: 166, Column: 13} }
                 ] }
@@ -1808,7 +1808,7 @@ children: [
             ] },
             Node: { Label: "dot", Type: MariaDB
             children: [
-                Node: { Label: "dot"
+                Node: { Label: "dot", Type: MariaDB
                 children: [
                     Node: { Token: {Value: maria, Type: identifier, Line: 171, Column: 4}, Type: MariaDB },
                     Node: { Token: {Value: this, Type: identifier, Line: 171, Column: 10} }

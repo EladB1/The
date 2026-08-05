@@ -430,7 +430,7 @@ children: [
                         Node: { Label: "dot", Type: int
                         children: [
                             Node: { Token: {Value: type, Type: identifier, Line: 58, Column: 8}, Type: String },
-                            Node: { Token: {Value: length, Type: identifier, Line: 58, Column: 13} }
+                            Node: { Token: {Value: length, Type: identifier, Line: 58, Column: 13}, Type: int }
                         ] },
                         Node: { Token: {Value: 4, Type: int literal, Line: 58, Column: 23}, Type: int }
                     ] },
