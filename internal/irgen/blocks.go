@@ -70,7 +70,6 @@ func translateAssignment(node *parser.AST) []TAC {
 	instructions := []TAC{}
 	if node.Children[0].Label == "dot" {
 		return translateDotAssignment(node)
-
 	}
 	name := node.Children[0].Token.Value
 	value := node.Children[1]
@@ -118,14 +117,12 @@ func translateDotAssignment(node *parser.AST) []TAC {
 	instructions := []TAC{}
 	left := node.Children[0].Children[0]
 	prop := node.Children[0].Children[1]
-	if left.Label == "dot" {
-
-	} else if left.Type.Equals(dt.GlobalRefType) {
+	if left.Type.Equals(dt.GlobalRefType) {
 
 	} else if left.Type.RootEquals(dt.Ref) {
 
 	} else {
-		ptr_in, ptr := loadVariable(*left)
+		ptr_in, ptr := translateExpression(*left)
 		instructions = append(instructions, ptr_in...)
 		str := currScope.LookupStruct(string(left.Type.Root))
 		if str == nil {

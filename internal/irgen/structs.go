@@ -495,7 +495,7 @@ func structFunctionDefinitions(ast *parser.AST, str *semantic.StructSymbol) []TA
 		for _, fn := range currScope.Functions {
 			for _, overload := range fn.Overloads {
 				if _, ok := found_nb_fns[nb.Name][overload.IRName]; !ok {
-					instructions = append(instructions, addMissingOverloadDefinition(overload, fn.ReturnType)...)
+					instructions = append(instructions, addMissingOverloadDefinition(fn.Name, overload, fn.ReturnType)...)
 				}
 			}
 		}
@@ -504,9 +504,11 @@ func structFunctionDefinitions(ast *parser.AST, str *semantic.StructSymbol) []TA
 	return instructions
 }
 
-func addMissingOverloadDefinition(overload semantic.FnOverloadSymbol, returnType dt.SourceType) []TAC {
+func addMissingOverloadDefinition(fnName string, overload semantic.FnOverloadSymbol, returnType dt.SourceType) []TAC {
 	fn := Function{}
 	fn.Name = overload.IRName
+	scope := currScope
+	currScope = currScope.GetChildScopeById(fmt.Sprintf("%s@%s", fnName, currScope.Id))
 	fn.ReturnType = dt.TranslateSourceType(returnType)
 	for i := range overload.Parameters {
 		fn.Parameters = append(fn.Parameters, Parameter{
@@ -515,6 +517,7 @@ func addMissingOverloadDefinition(overload semantic.FnOverloadSymbol, returnType
 		})
 	}
 	fn.Code = translateBlock(overload.Body.Children, "", "")
+	currScope = scope
 	return []TAC{fn}
 }
 

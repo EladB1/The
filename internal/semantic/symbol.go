@@ -193,6 +193,7 @@ func (symbol FnCreateSymbol) getSignature() string {
 func (symbol FnCreateSymbol) toOverload(hasMatch bool) *FnOverloadSymbol {
 	return &FnOverloadSymbol{
 		Parameters:               symbol.parameters,
+		ParameterNames:           symbol.parameterNames,
 		HasDefaultImplementation: symbol.hasDefaultImplementation,
 		IsPrivate:                symbol.isPrivate,
 		Body:                     symbol.Body,

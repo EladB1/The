@@ -13,6 +13,7 @@ import (
 
 var messages diagnostic.PhaseDiagnostics
 var currScope *semantic.Scope
+var globalScope *semantic.Scope
 var scopes *semantic.Scope
 var tempVarIndex uint32
 var loopIndex uint32
@@ -24,6 +25,7 @@ func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.Ph
 	prog := Program{}
 	messages = diagnostic.PhaseDiagnostics{}
 	currScope = scopeTree.Children[0] // get the global scope using the built-in scope
+	globalScope = scopeTree.Children[0]
 	for _, node := range ast.Children {
 		if node.Token.Value == "struct" {
 			struct_name := node.Children[0].Token.Value
@@ -209,25 +211,26 @@ func translateStructLiteral(node parser.AST) ([]TAC, Operand) {
 	})
 	foundProps := ds.HashSet{}
 	var offset semantic.OffsetValue
-	for _, prop := range node.Children[1].Children {
-		propname := prop.Children[0].Token.Value
-		foundProps.Append(propname)
-		propVar := symbol.InnerScope.LookupVariable(propname)
-		if propVar != nil {
-			offset = propVar.Offset
+	if len(node.Children) > 1 {
+		for _, prop := range node.Children[1].Children {
+			propname := prop.Children[0].Token.Value
+			foundProps.Append(propname)
+			propVar := symbol.InnerScope.LookupVariable(propname)
+			if propVar != nil {
+				offset = propVar.Offset
+			}
+			propvalue_in, propvalue := translateExpression(*prop.Children[1])
+			instructions = append(instructions, propvalue_in...)
+			instructions = append(instructions, Instruction{
+				Operation: Set,
+				Operand1: Operand{
+					Var:    instance,
+					Offset: offset,
+				},
+				Operand2: propvalue,
+			})
 		}
-		propvalue_in, propvalue := translateExpression(*prop.Children[1])
-		instructions = append(instructions, propvalue_in...)
-		instructions = append(instructions, Instruction{
-			Operation: Set,
-			Operand1: Operand{
-				Var:    instance,
-				Offset: offset,
-			},
-			Operand2: propvalue,
-		})
 	}
-
 	var value_op Operand
 	var value_in []TAC
 	// fill in default values for missing properties
