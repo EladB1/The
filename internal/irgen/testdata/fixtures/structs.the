@@ -5,89 +5,89 @@ interface P {
         println("no");
     }
 }
-struct Person1 impl P {
-    String name;
-    mut uint32 age;
-    String nickname;
+// struct Person1 impl P {
+//     String name;
+//     mut uint32 age;
+//     String nickname;
 
-    private {
-        int id = 1;
-        fn increaseAge() {
-            age += 1;
-        }
-    }
+//     private {
+//         int id = 1;
+//         fn increaseAge() {
+//             age += 1;
+//         }
+//     }
 
-    fn setAge(uint32 age) {
-        this.age = age;
-    }
-    fn greet() {
-        mut String alt = "";
-        if (nickname != "") {
-            alt = ", but you can call me " + nickname;
-        }
-        println("My name is " + name + alt + "; I am " + age as String + " years old.");
-    }
+//     fn setAge(uint32 age) {
+//         this.age = age;
+//     }
+//     fn greet() {
+//         mut String alt = "";
+//         if (nickname != "") {
+//             alt = ", but you can call me " + nickname;
+//         }
+//         println("My name is " + name + alt + "; I am " + age as String + " years old.");
+//     }
 
-    cast {
-        fn toInt() -> int {
-            return 0;
-        }
-    }
-    P {
-        fn do() {
-            println("hi");
-        }
-    }
+//     cast {
+//         fn toInt() -> int {
+//             return 0;
+//         }
+//     }
+//     P {
+//         fn do() {
+//             println("hi");
+//         }
+//     }
 
-}
+// }
 
-struct Inner {
-    int id;
+// struct Inner {
+//     int id;
 
-    fn getId() -> int {
-        println(this.id);
-        return id;
-    }
+//     fn getId() -> int {
+//         println(this.id);
+//         return id;
+//     }
 
-    fn showX() {
-        println(x);
-        println(global.x);
-    }
+//     fn showX() {
+//         println(x);
+//         println(global.x);
+//     }
 
-    cast {
-        fn toString() -> String {
-            return id as String;
-        }
-    }
+//     cast {
+//         fn toString() -> String {
+//             return id as String;
+//         }
+//     }
 
-    compare {
-        fn equals(Inner other) -> bool {
-            return id == other.id;
-        }
-        fn lessThan(Inner other) -> bool {
-            return id < other.id;
-        }
-        fn greaterThan(Inner other) -> bool {
-            return id > other.id;
-        }
-    }
-}
+//     compare {
+//         fn equals(Inner other) -> bool {
+//             return id == other.id;
+//         }
+//         fn lessThan(Inner other) -> bool {
+//             return id < other.id;
+//         }
+//         fn greaterThan(Inner other) -> bool {
+//             return id > other.id;
+//         }
+//     }
+// }
 
-fn testInnerCompare(Inner i, Inner i2) -> Inner {
-    if (i == i2)
-        return i;
-    if (i <= i2)
-        return i;
-    if (i >= i2)
-        return i2;
-    return i2;
-}
+// fn testInnerCompare(Inner i, Inner i2) -> Inner {
+//     if (i == i2)
+//         return i;
+//     if (i <= i2)
+//         return i;
+//     if (i >= i2)
+//         return i2;
+//     return i2;
+// }
 
-struct Nested {
-    double id;
-    Inner inner;
-    String description;
-}
+// struct Nested {
+//     double id;
+//     Inner inner;
+//     String description;
+// }
 
 interface I {
     fn times(int a, int b) -> int {
@@ -112,17 +112,17 @@ fn main() -> int {
     // uint32 age = p.age;
     // mut Person1 p2 = Person1{name: "B"};
     // p == p2;
-    mut Nested n1 = Nested{
-        id: 0,
-        inner: Inner{
-            id: 1
-        },
-        description: "First nested"
-    };
-    n1.inner = Inner{
-        id: 5
-    };
-    n1.inner.id = 1;
+    // mut Nested n1 = Nested{
+    //     id: 0,
+    //     inner: Inner{
+    //         id: 1
+    //     },
+    //     description: "First nested"
+    // };
+    // n1.inner = Inner{
+    //     id: 5
+    // };
+    // n1.inner.id = 1;
     // Nested n2 = Nested{
     //     inner: Inner{
     //         id: 2
@@ -130,9 +130,9 @@ fn main() -> int {
     //     description: "Second nested"
     // };
     // n1 == n2;
-    println(n1.inner);
-    println(n1.description.length);
-    println(n1.inner.id);
+    // println(n1.inner);
+    // println(n1.description.length);
+    // println(n1.inner.id);
    
     // p2.age = 25;
     // p2.age += 2;

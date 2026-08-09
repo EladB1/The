@@ -932,6 +932,10 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 		prop_in, prop_op := translateExpression(*prop)
 		instructions = append(instructions, prop_in...)
 		operand = prop_op
+	} else if prop.Type.RootEquals(dt.ScopeRef) {
+		ptr_in, ptr := translateExpression(*left)
+		instructions = append(instructions, ptr_in...)
+		operand = ptr
 	} else {
 		//loadStruct := formTempVar(dt.TranslateSourceType(left.Type))
 		ptr_in, ptr := translateExpression(*left)
@@ -1086,7 +1090,6 @@ func getTypeCastOperation(src dt.IRType, target dt.IRType) Operation {
 func loadVariable(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
-	fmt.Println("VAR:", node.Token.Value, currScope.Id)
 	variable := currScope.LookupVariable(node.Token.Value)
 	if variable.Ctx == semantic.StructProp {
 		get := formTempVar(dt.Ptr)
