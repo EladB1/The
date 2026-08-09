@@ -66,12 +66,14 @@ func translateLogicalAndOr(node parser.AST) ([]TAC, Operand) {
 		Operation:   operation,
 		Operand1:    l_op,
 		Operand2:    r_op,
+		SrcPosition: node.Location,
 	})
 	operand := Operand{
 		Var: Variable{
 			Name:     tempVar.Name,
 			DataType: irType,
 		},
+		SrcPosition: node.Location,
 	}
 	return instructions, operand
 }
@@ -109,12 +111,14 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 		tempVar := formTempVar(dt.I32)
 		call := []TAC{
 			Instruction{
-				Operation: PrepareParam,
-				Operand1:  l_op,
+				Operation:   PrepareParam,
+				Operand1:    l_op,
+				SrcPosition: left.Location,
 			},
 			Instruction{
-				Operation: PrepareParam,
-				Operand1:  r_op,
+				Operation:   PrepareParam,
+				Operand1:    r_op,
+				SrcPosition: right.Location,
 			},
 			Instruction{
 				Destination: tempVar,
@@ -125,6 +129,7 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 				Operand2: Operand{
 					Constant: 2,
 				},
+				SrcPosition: node.Location,
 			},
 		}
 		instructions = append(instructions, call...)
@@ -143,6 +148,7 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 				Destination: cast,
 				Operation:   typecast,
 				Operand1:    l_op,
+				SrcPosition: left.Location,
 			})
 			l_op = Operand{
 				Type: irType,
@@ -155,6 +161,7 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 				Destination: cast,
 				Operation:   typecast,
 				Operand1:    r_op,
+				SrcPosition: right.Location,
 			})
 			r_op = Operand{
 				Type: irType,
@@ -171,6 +178,7 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 		Operation:   operation,
 		Operand1:    l_op,
 		Operand2:    r_op,
+		SrcPosition: node.Location,
 	})
 	operand = Operand{
 		Type: dt.I32,
@@ -200,6 +208,7 @@ func translateBitOperation(node parser.AST) ([]TAC, Operand) {
 				Destination: cast,
 				Operation:   typecast,
 				Operand1:    l_op,
+				SrcPosition: left.Location,
 			})
 			l_op = Operand{
 				Type: irType,
@@ -212,6 +221,7 @@ func translateBitOperation(node parser.AST) ([]TAC, Operand) {
 				Destination: cast,
 				Operation:   typecast,
 				Operand1:    r_op,
+				SrcPosition: right.Location,
 			})
 			r_op = Operand{
 				Type: irType,
@@ -239,6 +249,7 @@ func translateBitOperation(node parser.AST) ([]TAC, Operand) {
 		Operation:   operation,
 		Operand1:    l_op,
 		Operand2:    r_op,
+		SrcPosition: node.Location,
 	})
 	operand := Operand{
 		Type: irType,
@@ -272,12 +283,14 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 		tempVar := formTempVar(dt.Str_const)
 		call := []TAC{
 			Instruction{
-				Operation: PrepareParam,
-				Operand1:  l_op,
+				Operation:   PrepareParam,
+				Operand1:    l_op,
+				SrcPosition: left.Location,
 			},
 			Instruction{
-				Operation: PrepareParam,
-				Operand2:  r_op,
+				Operation:   PrepareParam,
+				Operand2:    r_op,
+				SrcPosition: right.Location,
 			},
 			Instruction{
 				Destination: tempVar,
@@ -288,6 +301,7 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 				Operand2: Operand{
 					Constant: 2,
 				},
+				SrcPosition: node.Location,
 			},
 		}
 		instructions = append(instructions, call...)
@@ -307,6 +321,7 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 					Destination: cast,
 					Operation:   typecast,
 					Operand1:    l_op,
+					SrcPosition: left.Location,
 				})
 				l_op = Operand{
 					Type: irType,
@@ -319,6 +334,7 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 					Destination: cast,
 					Operation:   typecast,
 					Operand1:    r_op,
+					SrcPosition: right.Location,
 				})
 				r_op = Operand{
 					Type: irType,
@@ -340,6 +356,7 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 			Operation:   operation,
 			Operand1:    l_op,
 			Operand2:    r_op,
+			SrcPosition: node.Location,
 		}
 		instructions = append(instructions, op)
 		operand = Operand{
@@ -371,6 +388,7 @@ func translateMultiplication(node parser.AST) ([]TAC, Operand) {
 				Destination: cast,
 				Operation:   typecast,
 				Operand1:    l_op,
+				SrcPosition: left.Location,
 			})
 			l_op = Operand{
 				Type: irType,
@@ -383,6 +401,7 @@ func translateMultiplication(node parser.AST) ([]TAC, Operand) {
 				Destination: cast,
 				Operation:   typecast,
 				Operand1:    r_op,
+				SrcPosition: right.Location,
 			})
 			r_op = Operand{
 				Type: irType,
@@ -409,6 +428,7 @@ func translateMultiplication(node parser.AST) ([]TAC, Operand) {
 		Operation:   operation,
 		Operand1:    l_op,
 		Operand2:    r_op,
+		SrcPosition: node.Location,
 	}
 	instructions = append(instructions, op)
 	operand := Operand{
@@ -433,6 +453,7 @@ func translateExponent(node parser.AST) ([]TAC, Operand) {
 		instructions = append(instructions, Instruction{
 			Destination: cast,
 			Operation:   getTypeCastOperation(l_op.Type, irType),
+			SrcPosition: left.Location,
 		})
 		l_op = Operand{
 			Type: irType,
@@ -444,6 +465,7 @@ func translateExponent(node parser.AST) ([]TAC, Operand) {
 		instructions = append(instructions, Instruction{
 			Destination: cast,
 			Operation:   getTypeCastOperation(r_op.Type, irType),
+			SrcPosition: right.Location,
 		})
 		r_op = Operand{
 			Type: irType,
@@ -452,12 +474,14 @@ func translateExponent(node parser.AST) ([]TAC, Operand) {
 	}
 
 	instructions = append(instructions, Instruction{
-		Operation: PrepareParam,
-		Operand1:  l_op,
+		Operation:   PrepareParam,
+		Operand1:    l_op,
+		SrcPosition: left.Location,
 	})
 	instructions = append(instructions, Instruction{
-		Operation: PrepareParam,
-		Operand1:  r_op,
+		Operation:   PrepareParam,
+		Operand1:    r_op,
+		SrcPosition: right.Location,
 	})
 	tempVar := formTempVar(irType)
 	instructions = append(instructions, Instruction{
@@ -469,6 +493,7 @@ func translateExponent(node parser.AST) ([]TAC, Operand) {
 		Operand2: Operand{
 			Constant: 2,
 		},
+		SrcPosition: node.Location,
 	})
 	operand := Operand{
 		Type: irType,
@@ -496,6 +521,7 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 					Type:     dt.I32,
 					Constant: 1,
 				},
+				SrcPosition: left.Location,
 			})
 			operand = Operand{
 				Type: dt.I32,
@@ -509,6 +535,7 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 				Operation:   typedOperation(r_op.Type, "sub"),
 				Operand1:    zero,
 				Operand2:    r_op,
+				SrcPosition: left.Location,
 			})
 			operand = Operand{
 				Type: r_op.Type,
@@ -524,6 +551,7 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 					Type:     r_op.Type,
 					Constant: -1,
 				},
+				SrcPosition: left.Location,
 			})
 			operand = Operand{
 				Type: r_op.Type,
@@ -556,6 +584,7 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 						Type:     r_op.Type,
 						Constant: 1,
 					},
+					SrcPosition: left.Location,
 				},
 				storeVariable(*variable, Operand{Var: tempVar}),
 			}
@@ -587,6 +616,7 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 					Type:     l_op.Type,
 					Constant: 1,
 				},
+				SrcPosition: right.Location,
 			},
 			storeVariable(*variable, Operand{
 				Var: tempVar,
@@ -622,8 +652,9 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 		tempVar = formTempVar(targetType)
 		call := []TAC{
 			Instruction{
-				Operation: PrepareParam,
-				Operand1:  l_op,
+				Operation:   PrepareParam,
+				Operand1:    l_op,
+				SrcPosition: node.Children[0].Location,
 			},
 			Instruction{
 				Destination: tempVar,
@@ -634,6 +665,7 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 				Operand2: Operand{
 					Constant: 1,
 				},
+				SrcPosition: node.Location,
 			},
 		}
 		instructions = append(instructions, call...)
@@ -642,8 +674,9 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 		tempVar = formTempVar(dt.Str_const)
 		call := []TAC{
 			Instruction{
-				Operation: PrepareParam,
-				Operand1:  l_op,
+				Operation:   PrepareParam,
+				Operand1:    l_op,
+				SrcPosition: node.Children[0].Location,
 			},
 			Instruction{
 				Destination: tempVar,
@@ -654,6 +687,7 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 				Operand2: Operand{
 					Constant: 1,
 				},
+				SrcPosition: node.Location,
 			},
 		}
 		instructions = append(instructions, call...)
@@ -664,6 +698,7 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 			Destination: tempVar,
 			Operation:   operation,
 			Operand1:    l_op,
+			SrcPosition: node.Location,
 		})
 	}
 	operand := Operand{
@@ -698,6 +733,7 @@ func translateIndex(node parser.AST) ([]TAC, Operand) {
 				Destination: cast,
 				Operation:   getTypeCastOperation(r_op.Type, dt.I32),
 				Operand1:    r_op,
+				SrcPosition: right.Location,
 			},
 		}
 		instructions = append(instructions, typecast...)
@@ -709,12 +745,14 @@ func translateIndex(node parser.AST) ([]TAC, Operand) {
 	tempVar := formTempVar(dt.I32)
 	call := []TAC{
 		Instruction{
-			Operation: PrepareParam,
-			Operand1:  container_op,
+			Operation:   PrepareParam,
+			Operand1:    container_op,
+			SrcPosition: left.Location,
 		},
 		Instruction{
-			Operation: PrepareParam,
-			Operand1:  r_op,
+			Operation:   PrepareParam,
+			Operand1:    r_op,
+			SrcPosition: right.Location,
 		},
 		Instruction{
 			Destination: tempVar,
@@ -725,6 +763,7 @@ func translateIndex(node parser.AST) ([]TAC, Operand) {
 			Operand2: Operand{
 				Constant: 2,
 			},
+			SrcPosition: node.Location,
 		},
 	}
 	instructions = append(instructions, call...)
@@ -748,6 +787,7 @@ func translateArrayEnd(node parser.AST, arr Operand) ([]TAC, Operand) {
 			Destination: cast,
 			Operation:   operation,
 			Operand1:    op,
+			SrcPosition: node.Children[0].Location,
 		})
 		op = Operand{
 			Type: dt.I32,
@@ -760,6 +800,7 @@ func translateArrayEnd(node parser.AST, arr Operand) ([]TAC, Operand) {
 		Operation:   typedOperation(dt.I32, "sub"),
 		Operand1:    len,
 		Operand2:    op,
+		SrcPosition: node.Children[0].Location,
 	}
 	instructions = append(instructions, sub)
 	operand := Operand{
@@ -795,6 +836,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 					Destination: cast,
 					Operation:   getTypeCastOperation(end_op.Type, dt.I32),
 					Operand1:    end_op,
+					SrcPosition: node.Children[1].Location,
 				})
 				end_op = Operand{
 					Type: dt.I32,
@@ -811,6 +853,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 					Destination: cast,
 					Operation:   getTypeCastOperation(start_op.Type, dt.I32),
 					Operand1:    start_op,
+					SrcPosition: node.Children[0].Location,
 				})
 				start_op = Operand{
 					Type: dt.I32,
@@ -830,6 +873,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 				Destination: cast,
 				Operation:   getTypeCastOperation(start_op.Type, dt.I32),
 				Operand1:    start_op,
+				SrcPosition: node.Children[0].Location,
 			})
 			start_op = Operand{
 				Type: dt.I32,
@@ -844,6 +888,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 				Destination: cast,
 				Operation:   getTypeCastOperation(end_op.Type, dt.I32),
 				Operand1:    end_op,
+				SrcPosition: node.Children[2].Location,
 			})
 			end_op = Operand{
 				Type: dt.I32,
@@ -857,16 +902,19 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 	}
 	call := []TAC{
 		Instruction{
-			Operation: PrepareParam,
-			Operand1:  arr,
+			Operation:   PrepareParam,
+			Operand1:    arr,
+			SrcPosition: arr.SrcPosition,
 		},
 		Instruction{
-			Operation: PrepareParam,
-			Operand1:  start_op,
+			Operation:   PrepareParam,
+			Operand1:    start_op,
+			SrcPosition: start_op.SrcPosition,
 		},
 		Instruction{
-			Operation: PrepareParam,
-			Operand1:  end_op,
+			Operation:   PrepareParam,
+			Operand1:    end_op,
+			SrcPosition: end_op.SrcPosition,
 		},
 		Instruction{
 			Destination: slice,
@@ -877,6 +925,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 			Operand2: Operand{
 				Constant: 3,
 			},
+			SrcPosition: node.Location,
 		},
 	}
 	instructions = append(instructions, call...)
@@ -901,8 +950,9 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 			result := formTempVar(irType)
 			call := []TAC{
 				Instruction{
-					Operation: PrepareParam,
-					Operand1:  l_op,
+					Operation:   PrepareParam,
+					Operand1:    l_op,
+					SrcPosition: left.Location,
 				},
 				Instruction{
 					Destination: result,
@@ -913,6 +963,7 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 					Operand2: Operand{
 						Constant: 1,
 					},
+					SrcPosition: node.Location,
 				},
 			}
 			instructions = append(instructions, call...)
@@ -952,6 +1003,7 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 			Operand2: Operand{
 				Constant: propSymbol.Offset.Value,
 			},
+			SrcPosition: node.Location,
 		})
 		operand = Operand{
 			Type: loadProp.DataType,
@@ -977,7 +1029,7 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 		nameNode = node.Children[0]
 	}
 	name := nameNode.Token.Value
-	irName := name // TODO: handle struct/interface/string
+	irName := name
 	if nameNode.IRName != "" {
 		irName = nameNode.IRName
 	}
@@ -990,8 +1042,9 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 			srcParamTypes = append(srcParamTypes, param.Type)
 			irParamTypes = append(irParamTypes, dt.TranslateSourceType(param.Type))
 			loadParams = append(loadParams, Instruction{
-				Operation: PrepareParam,
-				Operand1:  param_op,
+				Operation:   PrepareParam,
+				Operand1:    param_op,
+				SrcPosition: param.Location,
 			})
 		}
 	}
@@ -1007,8 +1060,9 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 		}
 		instructions = append(instructions, obj_in...)
 		loadParams = append(loadParams, Instruction{
-			Operation: PrepareParam,
-			Operand1:  obj,
+			Operation:   PrepareParam,
+			Operand1:    obj,
+			SrcPosition: obj.SrcPosition,
 		})
 	}
 	symbol := currScope.LookupFunctionByName(name)
@@ -1033,6 +1087,7 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 			Operand2: Operand{
 				Constant: len(irParamTypes),
 			},
+			SrcPosition: node.Location,
 		})
 		return instructions, operand
 	}
@@ -1046,6 +1101,7 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 		Operand2: Operand{
 			Constant: len(irParamTypes),
 		},
+		SrcPosition: node.Location,
 	})
 	operand = Operand{
 		Type: result.DataType,
@@ -1115,10 +1171,12 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 			Operand2: Operand{
 				Constant: variable.Offset.Value,
 			},
+			SrcPosition: node.Location,
 		})
 		return instructions, Operand{
-			Var:  load,
-			Type: load.DataType,
+			Var:         load,
+			Type:        load.DataType,
+			SrcPosition: node.Location,
 		}
 	}
 	varType := dt.TranslateSourceType(variable.Type)
@@ -1133,13 +1191,15 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 				Visibility: VariableScope(variable.Ctx),
 			},
 		},
+		SrcPosition: node.Location,
 	})
 	operand = Operand{
 		Var: Variable{
 			Name:     tempVar.Name,
 			DataType: tempVar.DataType,
 		},
-		Type: tempVar.DataType,
+		Type:        tempVar.DataType,
+		SrcPosition: node.Location,
 	}
 	return instructions, operand
 }
@@ -1174,9 +1234,11 @@ func getArrayEnd(arr Operand) ([]TAC, Operand) {
 			Type:     dt.I32,
 			Constant: 1,
 		},
+		SrcPosition: arr.SrcPosition,
 	})
 	operand := Operand{
-		Var: arrayEnd,
+		Var:         arrayEnd,
+		SrcPosition: arr.SrcPosition,
 	}
 	return instructions, operand
 }
@@ -1185,8 +1247,9 @@ func getArrayLength(arr Operand) ([]TAC, Operand) {
 	len := formTempVar(dt.I32)
 	instructions := []TAC{
 		Instruction{
-			Operation: PrepareParam,
-			Operand1:  arr,
+			Operation:   PrepareParam,
+			Operand1:    arr,
+			SrcPosition: arr.SrcPosition,
 		},
 		Instruction{
 			Destination: len,
@@ -1197,11 +1260,13 @@ func getArrayLength(arr Operand) ([]TAC, Operand) {
 			Operand2: Operand{
 				Constant: 1,
 			},
+			SrcPosition: arr.SrcPosition,
 		},
 	}
 	operand := Operand{
-		Type: dt.I32,
-		Var:  len,
+		Type:        dt.I32,
+		Var:         len,
+		SrcPosition: arr.SrcPosition,
 	}
 	return instructions, operand
 }

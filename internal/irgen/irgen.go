@@ -188,8 +188,9 @@ func translateLiteral(node parser.AST) Operand {
 		value = node.Token.StrIndex
 	}
 	return Operand{
-		Type:     irType,
-		Constant: value,
+		Type:        irType,
+		Constant:    value,
+		SrcPosition: node.Location,
 	}
 }
 
@@ -208,6 +209,7 @@ func translateStructLiteral(node parser.AST) ([]TAC, Operand) {
 		Operand1: Operand{
 			Constant: symbol.SizeInBytes,
 		},
+		SrcPosition: node.Location,
 	})
 	foundProps := ds.HashSet{}
 	var offset semantic.OffsetValue
@@ -227,12 +229,14 @@ func translateStructLiteral(node parser.AST) ([]TAC, Operand) {
 					Var:    instance,
 					Offset: offset,
 				},
-				Operand2: propvalue,
+				Operand2:    propvalue,
+				SrcPosition: prop.Children[1].Location,
 			})
 		}
 	}
 	var value_op Operand
 	var value_in []TAC
+	var loc ds.SourceLocation
 	// fill in default values for missing properties
 	for _, variable := range symbol.InnerScope.Variables {
 		if _, ok := foundProps[variable.Name]; ok || variable.Type.RootEquals(dt.ScopeRef) || variable.Type.RootEquals(dt.Ref) {
@@ -241,8 +245,10 @@ func translateStructLiteral(node parser.AST) ([]TAC, Operand) {
 		if variable.Initialized && variable.Def != nil {
 			value_in, value_op = translateExpression(*variable.Def.Children[len(variable.Def.Children)-1])
 			instructions = append(instructions, value_in...)
+			loc = variable.Def.Children[len(variable.Def.Children)-1].Location
 		} else {
 			value_op = getZeroValue(variable.Type)
+			loc = variable.Def.Location
 		}
 		instructions = append(instructions, value_in...)
 		instructions = append(instructions, Instruction{
@@ -251,7 +257,8 @@ func translateStructLiteral(node parser.AST) ([]TAC, Operand) {
 				Var:    instance,
 				Offset: variable.Offset,
 			},
-			Operand2: value_op,
+			Operand2:    value_op,
+			SrcPosition: loc,
 		})
 	}
 	operand := Operand{

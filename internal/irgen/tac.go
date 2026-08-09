@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	ds "github.com/EladB1/The/internal/datastructures"
 	"github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/semantic"
 )
@@ -23,33 +24,38 @@ type (
 		Code []TAC
 	}
 	Operand struct {
-		Type     datatypes.IRType
-		Var      Variable
-		Offset   semantic.OffsetValue
-		Constant any
-		Label    string // use for JMP/JMPIF
+		Type        datatypes.IRType
+		Var         Variable
+		Offset      semantic.OffsetValue
+		Constant    any
+		Label       string // use for JMP/JMPIF
+		SrcPosition ds.SourceLocation
 	}
 	Instruction struct {
 		Destination Variable
 		Operation   Operation
 		Operand1    Operand
 		Operand2    Operand
+		SrcPosition ds.SourceLocation
 	}
 	Parameter struct {
-		Name string
-		Type datatypes.IRType
+		Name        string
+		Type        datatypes.IRType
+		SrcPosition ds.SourceLocation
 	}
 	Function struct {
-		Name       string
-		Parameters []Parameter
-		ReturnType datatypes.IRType
-		Code       []TAC
+		Name        string
+		Parameters  []Parameter
+		ReturnType  datatypes.IRType
+		Code        []TAC
+		SrcPosition ds.SourceLocation
 	}
 
 	Variable struct {
-		Name       string
-		DataType   datatypes.IRType
-		Visibility VariableScope
+		Name        string
+		DataType    datatypes.IRType
+		Visibility  VariableScope
+		SrcPosition ds.SourceLocation
 	}
 	/* Used within loops to break/continue */
 	Block struct {
@@ -64,6 +70,7 @@ type (
 		IfCondition Variable
 		IfCode      *[]TAC
 		ElseCode    *[]TAC
+		SrcPosition ds.SourceLocation
 		// As of now else if will be an if embedded within an else block
 	}
 )

@@ -38,14 +38,16 @@ func translateControlFlow(node *parser.AST, exitLabel string, startLabel string)
 	case "return":
 		if len(node.Children) == 1 {
 			instructions = append(instructions, Instruction{
-				Operation: Return,
+				Operation:   Return,
+				SrcPosition: node.Location,
 			})
 		} else {
 			value_in, operand := translateExpression(*node.Children[1])
 			instructions = append(instructions, value_in...)
 			instructions = append(instructions, Instruction{
-				Operation: Return,
-				Operand1:  operand,
+				Operation:   Return,
+				Operand1:    operand,
+				SrcPosition: node.Location,
 			})
 		}
 	case "continue":
@@ -54,6 +56,7 @@ func translateControlFlow(node *parser.AST, exitLabel string, startLabel string)
 			Operand1: Operand{
 				Label: startLabel,
 			},
+			SrcPosition: node.Location,
 		})
 	case "break":
 		instructions = append(instructions, Instruction{
@@ -61,6 +64,7 @@ func translateControlFlow(node *parser.AST, exitLabel string, startLabel string)
 			Operand1: Operand{
 				Label: exitLabel,
 			},
+			SrcPosition: node.Location,
 		})
 	}
 	return instructions
@@ -97,10 +101,12 @@ func translateAssignment(node *parser.AST) []TAC {
 			Operation:   operation,
 			Operand1:    operand,
 			Operand2:    value_op,
+			SrcPosition: node.Location,
 		})
 		value_op = Operand{
-			Type: operand.Type,
-			Var:  result,
+			Type:        operand.Type,
+			Var:         result,
+			SrcPosition: node.Location,
 		}
 	} else {
 		value_in, value_op = translateExpression(*value)
@@ -140,10 +146,12 @@ func translateDotAssignment(node *parser.AST) []TAC {
 				Operand2: Operand{
 					Constant: propSymbol.Offset.Value,
 				},
+				SrcPosition: node.Location,
 			})
 			operand := Operand{
-				Type: load.DataType,
-				Var:  load,
+				Type:        load.DataType,
+				Var:         load,
+				SrcPosition: node.Location,
 			}
 			switch node.Token.Value {
 			case "+=":
@@ -165,11 +173,13 @@ func translateDotAssignment(node *parser.AST) []TAC {
 					Var:    ptr.Var,
 					Offset: propSymbol.Offset,
 				},
-				Operand2: value_op,
+				Operand2:    value_op,
+				SrcPosition: node.Location,
 			})
 			value_op = Operand{
-				Type: result.DataType,
-				Var:  result,
+				Type:        result.DataType,
+				Var:         result,
+				SrcPosition: node.Location,
 			}
 		} else {
 			value_in, value_op = translateExpression(*node.Children[1])
@@ -183,7 +193,8 @@ func translateDotAssignment(node *parser.AST) []TAC {
 				Var:    ptr.Var,
 				Offset: propSymbol.Offset,
 			},
-			Operand2: value_op,
+			Operand2:    value_op,
+			SrcPosition: node.Location,
 		})
 
 	}
@@ -281,6 +292,7 @@ func translateForLoop(node *parser.AST) []TAC {
 			Operation:   compareOp,
 			Operand1:    loadVar,
 			Operand2:    limit,
+			SrcPosition: rangeExpr[2].Location,
 		})
 		limit = Operand{
 			Var: compare,
@@ -288,8 +300,9 @@ func translateForLoop(node *parser.AST) []TAC {
 		var incr_val Operand
 		if len(rangeExpr) == 3 {
 			incr_val = Operand{
-				Type:     loadVar.Type,
-				Constant: 1,
+				Type:        loadVar.Type,
+				Constant:    1,
+				SrcPosition: rangeExpr[1].Location,
 			}
 		} else {
 			iter_in, incr_val = translateExpression(*rangeExpr[4])
@@ -301,6 +314,7 @@ func translateForLoop(node *parser.AST) []TAC {
 				Operation:   typedOperation(loadVar.Type, "add"),
 				Operand1:    loadVar,
 				Operand2:    incr_val,
+				SrcPosition: rangeExpr[1].Location,
 			},
 			storeVariable(*variable, Operand{Var: addop}),
 		}
@@ -349,13 +363,15 @@ func translateForLoop(node *parser.AST) []TAC {
 					Visibility: VariableScope(variable.Ctx),
 				},
 			},
+			SrcPosition: eachNode.Location,
 		})
 		index := formTempVar(dt.TranslateSourceType(eachNode.Type))
 		eachVar := currScope.LookupVariable(eachNode.Children[1].Token.Value)
 		index_in := []TAC{
 			Instruction{
-				Operation: PrepareParam,
-				Operand1:  container,
+				Operation:   PrepareParam,
+				Operand1:    container,
+				SrcPosition: containerNode.Location,
 			},
 			Instruction{
 				Operation: PrepareParam,
@@ -363,6 +379,7 @@ func translateForLoop(node *parser.AST) []TAC {
 					Type: dt.I32,
 					Var:  curr,
 				},
+				SrcPosition: eachNode.Location,
 			},
 			Instruction{
 				Destination: index,
@@ -373,6 +390,7 @@ func translateForLoop(node *parser.AST) []TAC {
 				Operand2: Operand{
 					Constant: 2,
 				},
+				SrcPosition: eachNode.Location,
 			},
 			storeVariable(*eachVar, Operand{
 				Var: index,
@@ -391,7 +409,8 @@ func translateForLoop(node *parser.AST) []TAC {
 					Type: dt.I32,
 					Var:  curr,
 				},
-				Operand2: length,
+				Operand2:    length,
+				SrcPosition: eachNode.Location,
 			},
 		}
 
@@ -408,6 +427,7 @@ func translateForLoop(node *parser.AST) []TAC {
 					Type:     dt.I32,
 					Constant: 1,
 				},
+				SrcPosition: eachNode.Location,
 			},
 			storeVariable(*variable, Operand{
 				Type: dt.I32,
@@ -425,7 +445,8 @@ func translateForLoop(node *parser.AST) []TAC {
 		Operand1: Operand{
 			Label: outerBlock.Label,
 		},
-		Operand2: limit,
+		Operand2:    limit,
+		SrcPosition: limit.SrcPosition,
 	})
 	loopBody.Code = append(loopBody.Code, translateBlock(node.Children[1].Children, outerBlock.Label, loop.Label)...)
 	if len(iter_in) == 0 {

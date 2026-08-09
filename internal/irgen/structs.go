@@ -564,12 +564,14 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 				lessName := lessFn.Overloads[0].IRName
 				call := []TAC{
 					Instruction{
-						Operation: PrepareParam,
-						Operand1:  l_op,
+						Operation:   PrepareParam,
+						Operand1:    l_op,
+						SrcPosition: l_op.SrcPosition,
 					},
 					Instruction{
-						Operation: PrepareParam,
-						Operand1:  r_op,
+						Operation:   PrepareParam,
+						Operand1:    r_op,
+						SrcPosition: r_op.SrcPosition,
 					},
 					Instruction{
 						Destination: compare,
@@ -591,12 +593,14 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 				greaterName := greaterFn.Overloads[0].IRName
 				call := []TAC{
 					Instruction{
-						Operation: PrepareParam,
-						Operand1:  l_op,
+						Operation:   PrepareParam,
+						Operand1:    l_op,
+						SrcPosition: l_op.SrcPosition,
 					},
 					Instruction{
-						Operation: PrepareParam,
-						Operand1:  r_op,
+						Operation:   PrepareParam,
+						Operand1:    r_op,
+						SrcPosition: r_op.SrcPosition,
 					},
 					Instruction{
 						Destination: compare,
@@ -621,12 +625,14 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 		}
 		call := []TAC{
 			Instruction{
-				Operation: PrepareParam,
-				Operand1:  l_op,
+				Operation:   PrepareParam,
+				Operand1:    l_op,
+				SrcPosition: l_op.SrcPosition,
 			},
 			Instruction{
-				Operation: PrepareParam,
-				Operand1:  r_op,
+				Operation:   PrepareParam,
+				Operand1:    r_op,
+				SrcPosition: r_op.SrcPosition,
 			},
 			Instruction{
 				Destination: compare,
