@@ -326,7 +326,10 @@ func evalUnary(left *parser.AST, right *parser.AST, expectedType dt.SourceType) 
 	hasError := false
 	hasErr := false
 	var nodeType dt.SourceType = dt.NoneType
-	if leftTok := left.Token; leftTok.Kind == lexer.OPERATOR_UNARY || leftTok.Value == "-" { // left unary
+	if leftTok := left.Token; leftTok.Value == "++" || leftTok.Value == "--" {
+		nodeType, hasErr = checkIncrementOperator(right, left.Token)
+		hasError = hasError || hasErr
+	} else if leftTok.Kind == lexer.OPERATOR_UNARY || leftTok.Value == "-" { // left unary
 		rhs, hasErr := evalType(right, expectedType)
 		hasError = hasError || hasErr
 		switch leftTok.Value {
@@ -351,34 +354,35 @@ func evalUnary(left *parser.AST, right *parser.AST, expectedType dt.SourceType) 
 			} else {
 				nodeType = rhs
 			}
-		default: // ++, --
-			nodeType, hasErr = checkIncrementOperator(right.Token, left.Token)
-			hasError = hasError || hasErr
 		}
 	} else { // right unary
-		nodeType, hasErr = checkIncrementOperator(left.Token, right.Token)
+		nodeType, hasErr = checkIncrementOperator(left, right.Token)
 		hasError = hasError || hasErr
 	}
 	return nodeType, hasError
 }
 
-func checkIncrementOperator(operand lexer.Token, operator lexer.Token) (dt.SourceType, bool) {
+func checkIncrementOperator(operand *parser.AST, operator lexer.Token) (dt.SourceType, bool) {
 	hasError := false
 	var nodeType dt.SourceType = dt.NoneType
-	symbol := currentScope.LookupVariable(operand.Value)
-	if symbol != nil {
-		if !symbol.Type.IsNumeric() {
-			messages.Complain(diagnostic.TypeError, operand.Location, "Cannot use '%s' with type %s", operator.Value, symbol.Type)
-			hasError = true
-		} else if !symbol.isMutable {
-			messages.Complain(diagnostic.AccessError, operand.Location, "Cannot change value of immutable variable '%s'", symbol.Name)
-			hasError = true
-		} else {
-			nodeType = symbol.Type
-		}
+	if operand.Label == "dot" {
+		nodeType, hasError = handleDot(operand.Children[0], operand.Children[1], false, true, false)
 	} else {
-		messages.Complain(diagnostic.NameError, operand.Location, "Could not find variable with name %s", operand.Value)
-		hasError = true
+		symbol := currentScope.LookupVariable(operand.Token.Value)
+		if symbol != nil {
+			if !symbol.Type.IsNumeric() {
+				messages.Complain(diagnostic.TypeError, operand.Location, "Cannot use '%s' with type %s", operator.Value, symbol.Type)
+				hasError = true
+			} else if !symbol.isMutable {
+				messages.Complain(diagnostic.AccessError, operand.Location, "Cannot change value of immutable variable '%s'", symbol.Name)
+				hasError = true
+			} else {
+				nodeType = symbol.Type
+			}
+		} else {
+			messages.Complain(diagnostic.NameError, operand.Location, "Could not find variable with name %s", operand.Token.Value)
+			hasError = true
+		}
 	}
 	return nodeType, hasError
 }
