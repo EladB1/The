@@ -507,7 +507,10 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 	operand := Operand{}
 	left := node.Children[0]
 	right := node.Children[1]
-	var variable *semantic.VariableSymbol
+	//var variable *semantic.VariableSymbol
+	if left.Token.Value == "++" || left.Token.Value == "--" {
+		return translateIncrement(left, right, true)
+	}
 	if leftTok := left.Token; leftTok.Kind == lexer.OPERATOR_UNARY || leftTok.Value == "-" { // left unary
 		r_in, r_op := translateExpression(*right)
 		instructions = append(instructions, r_in...)
@@ -558,156 +561,103 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 				Type: r_op.Type,
 				Var:  tempVar,
 			}
-		default: // ++, --
-			var operation Operation
-			switch leftTok.Value {
-			case "++":
-				operation = typedOperation(r_op.Type, "add")
-			case "--":
-				operation = typedOperation(r_op.Type, "sub")
-			}
-			if right.Label == "dot" {
-				r_in, r_op := translateExpression(*right)
-				instructions = append(instructions, r_in...)
-				last_in := r_in[len(r_in)-1]
-				if last, ok := last_in.(Instruction); ok {
-					addr := last.Operand1
-					offset := semantic.OffsetValue{}
-					if offset_val, ok := last.Operand2.Constant.(uint32); ok {
-						offset = semantic.OffsetValue{
-							IsSet: true,
-							Value: offset_val,
-						}
-						tempVar := formTempVar(r_op.Type)
-						operand = Operand{
-							Var:  tempVar,
-							Type: tempVar.DataType,
-						}
-						increment := []TAC{
-							Instruction{
-								Destination: tempVar,
-								Operation:   operation,
-								Operand1:    r_op,
-								Operand2: Operand{
-									Type:     r_op.Type,
-									Constant: 1,
-								},
-								SrcPosition: left.Location,
-							},
-							Instruction{
-								Operation: Set,
-								Operand1: Operand{
-									Var:    addr.Var,
-									Offset: offset,
-								},
-								Operand2: Operand{
-									Var: tempVar,
-								},
-							},
-						}
-						instructions = append(instructions, increment...)
-					}
-				}
-			} else {
-				variable := currScope.LookupVariable(right.Token.Value)
-				if variable == nil {
-					return instructions, operand
-				}
-
-				tempVar := formTempVar(r_op.Type)
-				operand = Operand{
-					Var:  tempVar,
-					Type: tempVar.DataType,
-				}
-				increment := []TAC{
-					Instruction{
-						Destination: tempVar,
-						Operation:   operation,
-						Operand1:    r_op,
-						Operand2: Operand{
-							Type:     r_op.Type,
-							Constant: 1,
-						},
-						SrcPosition: left.Location,
-					},
-					storeVariable(*variable, Operand{Var: tempVar}),
-				}
-				instructions = append(instructions, increment...)
-			}
 		}
 	} else { // right unary
-		l_in, l_op := translateExpression(*left)
-		instructions = append(instructions, l_in...)
-		var operation Operation
-		switch right.Token.Value {
-		case "++":
-			operation = typedOperation(l_op.Type, "add")
-		case "--":
-			operation = typedOperation(l_op.Type, "sub")
-		}
-		if left.Label == "dot" {
-			last_in := l_in[len(l_in)-1]
-			if last, ok := last_in.(Instruction); ok {
-				addr := last.Operand1
-				offset := semantic.OffsetValue{}
-				if offset_val, ok := last.Operand2.Constant.(uint32); ok {
-					offset = semantic.OffsetValue{
-						IsSet: true,
-						Value: offset_val,
-					}
-				}
-				operand = l_op
-				tempVar := formTempVar(l_op.Type)
-				increment := []TAC{
-					Instruction{
-						Destination: tempVar,
-						Operation:   operation,
-						Operand1:    l_op,
-						Operand2: Operand{
-							Type:     l_op.Type,
-							Constant: 1,
-						},
-						SrcPosition: right.Location,
-					},
-					Instruction{
-						Operation: Set,
-						Operand1: Operand{
-							Var:    addr.Var,
-							Offset: offset,
-						},
-						Operand2: Operand{
-							Var: tempVar,
-						},
-					},
-				}
-				instructions = append(instructions, increment...)
-			}
-		} else {
-			variable = currScope.LookupVariable(left.Token.Value)
-			if variable == nil {
-				return instructions, operand
-			}
+		return translateIncrement(left, right, false)
+	}
+	return instructions, operand
+}
 
-			tempVar := formTempVar(l_op.Type)
-			operand = l_op
-			increment := []TAC{
+func translateIncrement(left, right *parser.AST, isLeft bool) ([]TAC, Operand) {
+	instructions := []TAC{}
+	var operand Operand
+	var value *parser.AST
+	var operator string
+	if isLeft {
+		value = right
+		operator = left.Token.Value
+	} else {
+		value = left
+		operator = right.Token.Value
+	}
+
+	value_in, value_op := translateExpression(*value)
+	instructions = append(instructions, value_in...)
+	var operation Operation
+	switch operator {
+	case "++":
+		operation = typedOperation(value_op.Type, "add")
+	case "--":
+		operation = typedOperation(value_op.Type, "sub")
+	}
+
+	var tempVar Variable
+	increment := []TAC{}
+	if value.Label == "dot" {
+		last_in := value_in[len(value_in)-1]
+		if last, ok := last_in.(Instruction); ok {
+			addr := last.Operand1
+			offset := semantic.OffsetValue{}
+			if offset_val, ok := last.Operand2.Constant.(uint32); ok {
+				offset = semantic.OffsetValue{
+					IsSet: true,
+					Value: offset_val,
+				}
+			}
+			tempVar = formTempVar(value_op.Type)
+
+			increment = []TAC{
 				Instruction{
 					Destination: tempVar,
 					Operation:   operation,
-					Operand1:    l_op,
+					Operand1:    value_op,
 					Operand2: Operand{
-						Type:     l_op.Type,
+						Type:     value_op.Type,
 						Constant: 1,
 					},
 					SrcPosition: right.Location,
 				},
-				storeVariable(*variable, Operand{
-					Var: tempVar,
-				}),
+				Instruction{
+					Operation: Set,
+					Operand1: Operand{
+						Var:    addr.Var,
+						Offset: offset,
+					},
+					Operand2: Operand{
+						Var: tempVar,
+					},
+				},
 			}
-			instructions = append(instructions, increment...)
+		}
+	} else {
+		variable := currScope.LookupVariable(value.Token.Value)
+		tempVar = formTempVar(value_op.Type)
+		increment = []TAC{
+			Instruction{
+				Destination: tempVar,
+				Operation:   operation,
+				Operand1:    value_op,
+				Operand2: Operand{
+					Type:     value_op.Type,
+					Constant: 1,
+				},
+				SrcPosition: right.Location,
+			},
+			storeVariable(*variable, Operand{
+				Var: tempVar,
+			}),
+		}
+
+	}
+	if !isLeft {
+		operand = value_op
+	} else {
+		operand = Operand{
+			Var:  tempVar,
+			Type: tempVar.DataType,
 		}
 	}
+	instructions = append(instructions, increment...)
 	return instructions, operand
 }
 

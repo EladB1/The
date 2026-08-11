@@ -646,7 +646,7 @@ Program: [
       CALL println 1
   }
 
-  fn __T_P_donot() {
+  fn __T_Person1_P_donot() {
       PARAM str_const(1)
       CALL println 1
   }
@@ -787,7 +787,7 @@ Program: [
       return __t108
   }
 
-  fn __T_P_donot() {
+  fn __T_Person1_P_donot() {
       PARAM str_const(1)
       CALL println 1
   }
@@ -908,39 +908,37 @@ Program: [
       STORE local.newage __t157
       __t159: ptr = GET local.p2
       __t160: u32 = LOAD __t159 4
-      __t161: ptr = GET local.p2
-      __t162: u32 = LOAD __t161 4
-      __t163: u32 = u32.sub __t162 u32(1)
-      SET __t161+4 __t163
-      STORE local.newage __t163
+      __t161: u32 = u32.sub __t160 u32(1)
+      SET __t159+4 __t161
+      STORE local.newage __t161
+      __t162: ptr = GET local.p2
+      PARAM __t162
+      __t163: i32 = CALL __Person1_cast_toInt 1
+      STORE local.fromP2 __t163
       __t164: ptr = GET local.p2
       PARAM __t164
-      __t165: i32 = CALL __Person1_cast_toInt 1
-      STORE local.fromP2 __t165
+      __t165: str_const = CALL __Person1_cast__default_toString 1
+      STORE local.str2 __t165
       __t166: ptr = GET local.p2
       PARAM __t166
-      __t167: str_const = CALL __Person1_cast__default_toString 1
-      STORE local.str2 __t167
+      CALL __Person1_greet 1
+      __t167: ptr = GET local.p2
+      PARAM __t167
+      CALL __Person1_P_do 1
       __t168: ptr = GET local.p2
       PARAM __t168
-      CALL __Person1_greet 1
-      __t169: ptr = GET local.p2
-      PARAM __t169
-      CALL __Person1_P_do 1
-      __t170: ptr = GET local.p2
-      PARAM __t170
       CALL println 1
-      __t171: ptr = Malloc 0
-      STORE local.t __t171
-      __t172: ptr = GET local.t
-      PARAM __t172
+      __t169: ptr = Malloc 0
+      STORE local.t __t169
+      __t170: ptr = GET local.t
+      PARAM __t170
       CALL __T_I_do 1
-      __t173: ptr = GET local.t
-      PARAM __t173
+      __t171: ptr = GET local.t
+      PARAM __t171
       CALL __T_P_do 1
-      __t174: ptr = Malloc 4
-      SET __t174+0 i32(0)
-      STORE local.empty __t174
+      __t172: ptr = Malloc 4
+      SET __t172+0 i32(0)
+      STORE local.empty __t172
       return i32(0)
   }
 
