@@ -528,7 +528,7 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 				Var:  tempVar,
 			}
 		case "-":
-			zero := getZeroValue(right.Type)
+			_, zero := getZeroValue(right.Type)
 			tempVar := formTempVar(r_op.Type)
 			instructions = append(instructions, Instruction{
 				Destination: tempVar,
@@ -816,7 +816,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 	var slice Variable
 	start_in := []TAC{}
 	end_in := []TAC{}
-	start_op := getZeroValue(dt.Int32Type)
+	_, start_op := getZeroValue(dt.Int32Type)
 	var end_op Operand
 	rangeIndex := 0
 	length := len(node.Children)
@@ -1272,7 +1272,6 @@ func getArrayLength(arr Operand) ([]TAC, Operand) {
 }
 
 func getToStringFn(src dt.SourceType) RuntimeFunction {
-	// TODO: handle struct
 	if src.Equals(dt.Int32Type) || src.Equals(dt.Uint32Type) {
 		return StringFromInt32
 	} else if src.Equals(dt.Int64Type) || src.Equals(dt.Uint64Type) {

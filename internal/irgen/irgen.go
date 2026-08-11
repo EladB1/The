@@ -39,7 +39,6 @@ func Generate(ast parser.AST, scopeTree *semantic.Scope) (Program, diagnostic.Ph
 			prog.appendCode(structDefaults(str))
 			prog.appendCode(structFunctionDefinitions(node, str))
 			currScope = scope
-			// TODO: struct fn definitions
 		}
 	}
 	for _, node := range ast.Children {
@@ -112,7 +111,9 @@ func variableDeclaration(ast *parser.AST) []TAC {
 	}
 	irType := dt.TranslateSourceType(ast.Type)
 	if valueNode == nil {
-		value = getZeroValue(ast.Type)
+		var value_in []TAC
+		value_in, value = getZeroValue(ast.Type)
+		instructions = append(instructions, value_in...)
 	} else {
 		instructions, value = translateExpression(*valueNode)
 
@@ -131,11 +132,38 @@ func variableDeclaration(ast *parser.AST) []TAC {
 	})
 }
 
-func getZeroValue(sourceType dt.SourceType) Operand {
+func getZeroValue(sourceType dt.SourceType) ([]TAC, Operand) {
 	if sourceType.IsDynamic {
-		// TODO
+		instructions := []TAC{}
+		str := currScope.LookupStruct(sourceType.String())
+		ptr := formTempVar(dt.Ptr)
+		instructions = append(instructions, Instruction{
+			Destination: ptr,
+			Operation:   Malloc,
+			Operand1: Operand{
+				Constant: str.SizeInBytes,
+			},
+		})
+		for _, variable := range str.InnerScope.Variables {
+			if !variable.Offset.IsSet {
+				continue
+			}
+			prop_in, prop := getZeroValue(variable.Type)
+			instructions = append(instructions, prop_in...)
+			instructions = append(instructions, Instruction{
+				Operation: Set,
+				Operand1: Operand{
+					Var:    ptr,
+					Offset: variable.Offset,
+				},
+				Operand2: prop,
+			})
+		}
+		return instructions, Operand{
+			Var: ptr,
+		}
 	}
-	return Operand{
+	return nil, Operand{
 		Type:     dt.TranslateSourceType(sourceType),
 		Constant: 0,
 	}
@@ -247,7 +275,8 @@ func translateStructLiteral(node parser.AST) ([]TAC, Operand) {
 			instructions = append(instructions, value_in...)
 			loc = variable.Def.Children[len(variable.Def.Children)-1].Location
 		} else {
-			value_op = getZeroValue(variable.Type)
+			value_in, value_op = getZeroValue(variable.Type)
+			instructions = append(instructions, value_in...)
 			loc = variable.Def.Location
 		}
 		instructions = append(instructions, value_in...)

@@ -346,9 +346,9 @@ func translateForLoop(node *parser.AST) []TAC {
 			}
 			variable = currScope.LookupVariable(nameNode.Token.Value)
 		}
-
+		_, zero_val := getZeroValue(dt.Int32Type)
 		init = []TAC{
-			storeVariable(*variable, getZeroValue(dt.Int32Type)),
+			storeVariable(*variable, zero_val),
 		}
 		container_in, container := translateExpression(*containerNode)
 		length_in, length := getArrayLength(container)
