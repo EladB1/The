@@ -176,7 +176,7 @@ children: [
                 children: [
                     Node: { Label: "Unary", Type: int
                     children: [
-                        Node: { Token: {Value: i, Type: identifier, Line: 4, Column: 12} },
+                        Node: { Token: {Value: i, Type: identifier, Line: 4, Column: 12}, Type: int },
                         Node: { Token: {Value: ++, Type: unary operator, Line: 4, Column: 13} }
                     ] }
                 ] }
@@ -430,7 +430,6 @@ Compiler messages:
     "TypeError: Must use bool value with unary '!' at line: 5, column: 16",
     "NameError: Variable 'x' is not defined in this scope at line: 8, column: 5",
     "NameError: Could not find variable with name y at line: 9, column: 7",
-    "NameError: Variable 'y' not defined in this scope at line: 9, column: 7",
     "NameError: Could not find variable with name true at line: 10, column: 18",
     "TypeError: Cannot negate value of type char at line: 11, column: 18",
     "TypeError: Cannot use unary '-' with type bool at line: 13, column: 22",

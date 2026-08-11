@@ -439,7 +439,7 @@ children: [
                     ] },
                     Node: { Label: "Unary", Type: uint32
                     children: [
-                        Node: { Token: {Value: count, Type: identifier, Line: 64, Column: 8} },
+                        Node: { Token: {Value: count, Type: identifier, Line: 64, Column: 8}, Type: uint32 },
                         Node: { Token: {Value: ++, Type: unary operator, Line: 64, Column: 13} }
                     ] }
                 ] }

@@ -367,9 +367,11 @@ func checkIncrementOperator(operand *parser.AST, operator lexer.Token) (dt.Sourc
 	var nodeType dt.SourceType = dt.NoneType
 	if operand.Label == "dot" {
 		nodeType, hasError = handleDot(operand.Children[0], operand.Children[1], false, true, false)
+		operand.Type = nodeType
 	} else {
 		symbol := currentScope.LookupVariable(operand.Token.Value)
 		if symbol != nil {
+			operand.Type = symbol.Type
 			if !symbol.Type.IsNumeric() {
 				messages.Complain(diagnostic.TypeError, operand.Location, "Cannot use '%s' with type %s", operator.Value, symbol.Type)
 				hasError = true

@@ -269,7 +269,7 @@ children: [
                             children: [
                                 Node: { Label: "Unary", Type: int
                                 children: [
-                                    Node: { Token: {Value: i, Type: identifier, Line: 36, Column: 12} },
+                                    Node: { Token: {Value: i, Type: identifier, Line: 36, Column: 12}, Type: int },
                                     Node: { Token: {Value: ++, Type: unary operator, Line: 36, Column: 13} }
                                 ] },
                                 Node: { Label: "control-flow"
@@ -492,7 +492,7 @@ children: [
                     ] },
                     Node: { Label: "Unary", Type: int
                     children: [
-                        Node: { Token: {Value: i, Type: identifier, Line: 64, Column: 32} },
+                        Node: { Token: {Value: i, Type: identifier, Line: 64, Column: 32}, Type: int },
                         Node: { Token: {Value: ++, Type: unary operator, Line: 64, Column: 33} }
                     ] }
                 ] },
@@ -800,7 +800,7 @@ children: [
                     ] },
                     Node: { Label: "Unary"
                     children: [
-                        Node: { Token: {Value: i, Type: identifier, Line: 7, Column: 28} },
+                        Node: { Token: {Value: i, Type: identifier, Line: 7, Column: 28}, Type: int },
                         Node: { Token: {Value: ++, Type: unary operator, Line: 7, Column: 29} }
                     ] }
                 ] },
@@ -875,7 +875,7 @@ children: [
                     ] },
                     Node: { Label: "Unary"
                     children: [
-                        Node: { Token: {Value: i, Type: identifier, Line: 11, Column: 32} },
+                        Node: { Token: {Value: i, Type: identifier, Line: 11, Column: 32}, Type: int },
                         Node: { Token: {Value: ++, Type: unary operator, Line: 11, Column: 33} }
                     ] }
                 ] },

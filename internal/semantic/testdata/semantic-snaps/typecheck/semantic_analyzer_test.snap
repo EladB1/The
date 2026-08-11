@@ -354,7 +354,7 @@ children: [
             ] },
             Node: { Label: "Unary", Type: None
             children: [
-                Node: { Token: {Value: c, Type: identifier, Line: 18, Column: 4} },
+                Node: { Token: {Value: c, Type: identifier, Line: 18, Column: 4}, Type: char },
                 Node: { Token: {Value: ++, Type: unary operator, Line: 18, Column: 5} }
             ] },
             Node: { Label: "Unary", Type: None
