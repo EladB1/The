@@ -76,8 +76,9 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 		},
 	})
 	comparisons := []Variable{}
-	for _, prop := range str.InnerScope.Variables {
-		if !prop.Offset.IsSet {
+	for _, propName := range str.OrderedProperties {
+		prop := str.InnerScope.LookupVariable(propName)
+		if prop == nil || !prop.Offset.IsSet {
 			continue
 		}
 		propType := dt.TranslateSourceType(prop.Type)
@@ -230,73 +231,75 @@ func structDefaultToString(str *semantic.StructSymbol) Function {
 		},
 	})
 	propLoads := []Operand{}
-	for _, prop := range str.InnerScope.Variables {
-		if prop.Offset.IsSet {
-			loadProp := formTempVar(dt.TranslateSourceType(prop.Type))
-			fn.Code = append(fn.Code, Instruction{
-				Destination: loadProp,
-				Operation:   Load,
-				Operand1: Operand{
-					Var: load,
-				},
-				Operand2: Operand{
-					Constant: prop.Offset.Value,
-				},
+	for _, propName := range str.OrderedProperties {
+		prop := str.InnerScope.LookupVariable(propName)
+		if prop == nil || !prop.Offset.IsSet {
+			continue
+		}
+		loadProp := formTempVar(dt.TranslateSourceType(prop.Type))
+		fn.Code = append(fn.Code, Instruction{
+			Destination: loadProp,
+			Operation:   Load,
+			Operand1: Operand{
+				Var: load,
+			},
+			Operand2: Operand{
+				Constant: prop.Offset.Value,
+			},
+		})
+		if prop.Type.Equals(dt.StringType) {
+			propLoads = append(propLoads, Operand{
+				Var: loadProp,
 			})
-			if prop.Type.Equals(dt.StringType) {
-				propLoads = append(propLoads, Operand{
-					Var: loadProp,
-				})
-			} else if prop.Type.IsDynamic {
-				toString := getStructToString(prop.Type.String())
-				str_var := formTempVar(dt.Str_const)
-				call := []TAC{
-					Instruction{
-						Operation: PrepareParam,
-						Operand1: Operand{
-							Var: loadProp,
-						},
+		} else if prop.Type.IsDynamic {
+			toString := getStructToString(prop.Type.String())
+			str_var := formTempVar(dt.Str_const)
+			call := []TAC{
+				Instruction{
+					Operation: PrepareParam,
+					Operand1: Operand{
+						Var: loadProp,
 					},
-					Instruction{
-						Destination: str_var,
-						Operation:   Call,
-						Operand1: Operand{
-							Constant: toString,
-						},
-						Operand2: Operand{
-							Constant: 1,
-						},
+				},
+				Instruction{
+					Destination: str_var,
+					Operation:   Call,
+					Operand1: Operand{
+						Constant: toString,
 					},
-				}
-				fn.Code = append(fn.Code, call...)
-				propLoads = append(propLoads, Operand{
-					Var: str_var,
-				})
-			} else {
-				str_var := formTempVar(dt.Str_const)
-				call := []TAC{
-					Instruction{
-						Operation: PrepareParam,
-						Operand1: Operand{
-							Var: loadProp,
-						},
+					Operand2: Operand{
+						Constant: 1,
 					},
-					Instruction{
-						Destination: str_var,
-						Operation:   Call,
-						Operand1: Operand{
-							Constant: getToStringFn(prop.Type),
-						},
-						Operand2: Operand{
-							Constant: 1,
-						},
-					},
-				}
-				fn.Code = append(fn.Code, call...)
-				propLoads = append(propLoads, Operand{
-					Var: str_var,
-				})
+				},
 			}
+			fn.Code = append(fn.Code, call...)
+			propLoads = append(propLoads, Operand{
+				Var: str_var,
+			})
+		} else {
+			str_var := formTempVar(dt.Str_const)
+			call := []TAC{
+				Instruction{
+					Operation: PrepareParam,
+					Operand1: Operand{
+						Var: loadProp,
+					},
+				},
+				Instruction{
+					Destination: str_var,
+					Operation:   Call,
+					Operand1: Operand{
+						Constant: getToStringFn(prop.Type),
+					},
+					Operand2: Operand{
+						Constant: 1,
+					},
+				},
+			}
+			fn.Code = append(fn.Code, call...)
+			propLoads = append(propLoads, Operand{
+				Var: str_var,
+			})
 		}
 	}
 	if len(propLoads) == 0 {

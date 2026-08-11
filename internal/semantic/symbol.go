@@ -56,12 +56,13 @@ type (
 		innerScope *Scope
 	}
 	StructSymbol struct {
-		Name        string
-		Implements  []string
-		SizeInBytes int
-		Def         *parser.AST
-		InnerScope  *Scope
-		implFnNames map[string][]string
+		Name              string
+		Implements        []string
+		SizeInBytes       int
+		Def               *parser.AST
+		InnerScope        *Scope
+		implFnNames       map[string][]string
+		OrderedProperties []string
 	}
 	NamedBlockSymbol struct {
 		Name           string

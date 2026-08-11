@@ -159,8 +159,9 @@ func analyzeStructFnSignatures() {
 					node.IRName = overload.IRName
 				}
 			case "named-block":
-				symbol, extraSize := analyzeNamedBlock(node, str.Name, impl, &offset)
+				symbol, extraSize, extraProps := analyzeNamedBlock(node, str.Name, impl, &offset)
 				str.SizeInBytes += extraSize
+				str.OrderedProperties = append(str.OrderedProperties, extraProps...)
 				if symbol != nil {
 					currentScope.NamedBlocks[symbol.Name] = *symbol
 				}
@@ -169,6 +170,7 @@ func analyzeStructFnSignatures() {
 				symbol.Offset.Value = offset
 				symbol.Offset.IsSet = true
 				symbol.Ctx = StructProp
+				str.OrderedProperties = append(str.OrderedProperties, symbol.Name)
 				size := symbol.Type.GetSizeInBytes()
 				offset += uint32(size)
 				str.SizeInBytes += size

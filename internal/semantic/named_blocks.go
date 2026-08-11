@@ -10,13 +10,14 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, offset *uint32) (*NamedBlockSymbol, int) {
+func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, offset *uint32) (*NamedBlockSymbol, int, []string) {
 	extraSize := 0
+	extraProps := []string{}
 	details := nbNode.Children
 	name := details[0].Token.Value
 	if !slices.Contains(specialBlocks, name) && !slices.Contains(impl, name) {
 		messages.Complain(diagnostic.NameError, nbNode.Location, "Block '%s' not supported", name)
-		return nil, extraSize
+		return nil, extraSize, extraProps
 	}
 	body := details[1].Children
 	scope := currentScope
@@ -84,6 +85,7 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 					}
 					symbol.isPrivate = true
 					symbol.Ctx = StructProp
+					extraProps = append(extraProps, symbol.Name)
 					size := symbol.Type.GetSizeInBytes()
 					symbol.Offset.IsSet = true
 					symbol.Offset.Value = *offset
@@ -97,12 +99,12 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 	}
 	currentScope = scope
 	if newScope == nil {
-		return nil, extraSize
+		return nil, extraSize, extraProps
 	}
 	return &NamedBlockSymbol{
 		Name:           name,
 		isSpecialBlock: slices.Contains(specialBlocks, name),
 		Def:            nbNode,
 		InnerScope:     newScope,
-	}, extraSize
+	}, extraSize, extraProps
 }

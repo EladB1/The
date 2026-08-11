@@ -121,7 +121,6 @@ const (
 	F64ToI64 Operation = "i64.trunc_f64_s"
 	F64ToU64 Operation = "i64.trunc_f64_u"
 	F64ToF32 Operation = "f32.demote_f64"
-	// TODO ptr operations
 )
 
 const (

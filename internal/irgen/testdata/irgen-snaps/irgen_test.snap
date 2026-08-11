@@ -527,25 +527,25 @@ IR:
 Program: [
   fn __Person1_cast__default_toString(__this: ptr)->str_const {
       __t0: ptr = GET param.__this
-      __t1: u32 = LOAD __t0 4
-      PARAM __t1
-      __t2: str_const = CALL __str_fromInt32 1
-      __t3: i32 = LOAD __t0 12
-      PARAM __t3
-      __t4: str_const = CALL __str_fromInt32 1
-      __t5: str_const = LOAD __t0 0
-      __t6: str_const = LOAD __t0 8
-      PARAM i32(123)
+      __t1: str_const = LOAD __t0 0
+      __t2: u32 = LOAD __t0 4
       PARAM __t2
+      __t3: str_const = CALL __str_fromInt32 1
+      __t4: str_const = LOAD __t0 8
+      __t5: i32 = LOAD __t0 12
+      PARAM __t5
+      __t6: str_const = CALL __str_fromInt32 1
+      PARAM i32(123)
+      PARAM __t1
       __t7: str_const = CALL __char_concat_str 2
       PARAM i32(44)
-      PARAM __t4
+      PARAM __t3
       __t8: str_const = CALL __char_concat_str 2
       PARAM __t7
       PARAM __t8
       __t9: str_const = CALL __str_concat 2
       PARAM i32(44)
-      PARAM __t5
+      PARAM __t4
       __t10: str_const = CALL __char_concat_str 2
       PARAM __t9
       PARAM __t10
@@ -565,22 +565,22 @@ Program: [
   fn __Person1_compare__default__equals(__this: ptr, __other: ptr)->i32 {
       __t15: ptr = GET param.__this
       __t16: ptr = GET param.__other
-      __t17: str_const = LOAD __t15 8
-      __t18: str_const = LOAD __t16 8
+      __t17: str_const = LOAD __t15 0
+      __t18: str_const = LOAD __t16 0
       PARAM __t17
       PARAM __t18
       __t19: i32 = CALL __str_eq 2
       __t20: u32 = LOAD __t15 4
       __t21: u32 = LOAD __t16 4
       __t22: i32 = u32.eq __t20 __t21
-      __t23: i32 = LOAD __t15 12
-      __t24: i32 = LOAD __t16 12
-      __t25: i32 = i32.eq __t23 __t24
-      __t26: str_const = LOAD __t15 0
-      __t27: str_const = LOAD __t16 0
-      PARAM __t26
-      PARAM __t27
-      __t28: i32 = CALL __str_eq 2
+      __t23: str_const = LOAD __t15 8
+      __t24: str_const = LOAD __t16 8
+      PARAM __t23
+      PARAM __t24
+      __t25: i32 = CALL __str_eq 2
+      __t26: i32 = LOAD __t15 12
+      __t27: i32 = LOAD __t16 12
+      __t28: i32 = i32.eq __t26 __t27
       __t29: i32 = i32.and __t19 __t22
       __t30: i32 = i32.and __t29 __t25
       __t31: i32 = i32.and __t30 __t28
@@ -707,18 +707,18 @@ Program: [
 
   fn __Nested_cast__default_toString(__this: ptr)->str_const {
       __t76: ptr = GET param.__this
-      __t77: str_const = LOAD __t76 12
-      __t78: f64 = LOAD __t76 0
-      PARAM __t78
-      __t79: str_const = CALL __str_fromFloat64 1
-      __t80: ptr = LOAD __t76 8
-      PARAM __t80
-      __t81: str_const = CALL __Inner_cast_toString 1
-      PARAM i32(123)
+      __t77: f64 = LOAD __t76 0
       PARAM __t77
+      __t78: str_const = CALL __str_fromFloat64 1
+      __t79: ptr = LOAD __t76 8
+      PARAM __t79
+      __t80: str_const = CALL __Inner_cast_toString 1
+      __t81: str_const = LOAD __t76 12
+      PARAM i32(123)
+      PARAM __t78
       __t82: str_const = CALL __char_concat_str 2
       PARAM i32(44)
-      PARAM __t79
+      PARAM __t80
       __t83: str_const = CALL __char_concat_str 2
       PARAM __t82
       PARAM __t83
@@ -738,20 +738,20 @@ Program: [
   fn __Nested_compare__default__equals(__this: ptr, __other: ptr)->i32 {
       __t88: ptr = GET param.__this
       __t89: ptr = GET param.__other
-      __t90: str_const = LOAD __t88 12
-      __t91: str_const = LOAD __t89 12
-      PARAM __t90
-      PARAM __t91
-      __t92: i32 = CALL __str_eq 2
-      __t93: f64 = LOAD __t88 0
-      __t94: f64 = LOAD __t89 0
-      __t95: i32 = f64.eq __t93 __t94
-      __t96: ptr = LOAD __t88 8
-      __t97: ptr = LOAD __t89 8
-      PARAM __t96
+      __t90: f64 = LOAD __t88 0
+      __t91: f64 = LOAD __t89 0
+      __t92: i32 = f64.eq __t90 __t91
+      __t93: ptr = LOAD __t88 8
+      __t94: ptr = LOAD __t89 8
+      PARAM __t93
+      PARAM __t94
+      __t96: i32 = CALL __Inner_compare_equals 2
+      __t97: str_const = LOAD __t88 12
+      __t98: str_const = LOAD __t89 12
       PARAM __t97
-      __t99: i32 = CALL __Inner_compare_equals 2
-      __t100: i32 = i32.and __t92 __t95
+      PARAM __t98
+      __t99: i32 = CALL __str_eq 2
+      __t100: i32 = i32.and __t92 __t96
       __t101: i32 = i32.and __t100 __t99
       return __t101
   }
@@ -837,8 +837,8 @@ Program: [
       __t126: ptr = Malloc 16
       SET __t126+0 str_const(11)
       SET __t126+4 u32(112)
-      SET __t126+12 i32(1)
       SET __t126+8 str_const(0)
+      SET __t126+12 i32(1)
       STORE local.p __t126
       __t127: ptr = GET local.p
       __t128: u32 = LOAD __t127 4
@@ -846,8 +846,8 @@ Program: [
       __t129: ptr = Malloc 16
       SET __t129+0 str_const(12)
       SET __t129+4 u32(0)
-      SET __t129+12 i32(1)
       SET __t129+8 str_const(0)
+      SET __t129+12 i32(1)
       STORE local.p2 __t129
       __t130: ptr = GET local.p
       __t131: ptr = GET local.p2
@@ -926,6 +926,9 @@ Program: [
       __t165: ptr = GET local.t
       PARAM __t165
       CALL __T_P_do 1
+      __t166: ptr = Malloc 4
+      SET __t166+0 i32(0)
+      STORE local.empty __t166
       return i32(0)
   }
 
