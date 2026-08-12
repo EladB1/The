@@ -507,7 +507,6 @@ func translateUnary(node parser.AST) ([]TAC, Operand) {
 	operand := Operand{}
 	left := node.Children[0]
 	right := node.Children[1]
-	//var variable *semantic.VariableSymbol
 	if left.Token.Value == "++" || left.Token.Value == "--" {
 		return translateIncrement(left, right, true)
 	}

@@ -312,16 +312,6 @@ func formTempVar(irType dt.IRType) Variable {
 }
 
 func storeVariable(variable semantic.VariableSymbol, value Operand) Instruction {
-	if variable.Ctx == semantic.StructProp {
-		return Instruction{
-			Operation: Set,
-			Operand1: Operand{
-				Var:    Variable{},
-				Offset: variable.Offset,
-			},
-			Operand2: value,
-		}
-	}
 	return Instruction{
 		Operation: Store,
 		Operand1: Operand{
@@ -330,6 +320,22 @@ func storeVariable(variable semantic.VariableSymbol, value Operand) Instruction 
 				DataType:   dt.TranslateSourceType(variable.Type),
 				Visibility: VariableScope(variable.Ctx),
 			},
+		},
+		Operand2: value,
+	}
+}
+
+func setProperty(variable *semantic.VariableSymbol, value Operand) Instruction {
+	return Instruction{
+		Operation: Set,
+		Operand1: Operand{
+			Var: Variable{
+				Name:        variable.Name,
+				DataType:    dt.TranslateSourceType(variable.Type),
+				Visibility:  VariableScope(variable.Ctx),
+				SrcPosition: variable.Def.Location,
+			},
+			Offset: variable.Offset,
 		},
 		Operand2: value,
 	}

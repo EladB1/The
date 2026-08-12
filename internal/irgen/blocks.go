@@ -123,81 +123,107 @@ func translateDotAssignment(node *parser.AST) []TAC {
 	instructions := []TAC{}
 	left := node.Children[0].Children[0]
 	prop := node.Children[0].Children[1]
+	var propSymbol *semantic.VariableSymbol
+	var ptr_in []TAC
+	var ptr Operand
 	if left.Type.Equals(dt.GlobalRefType) {
 
 	} else if left.Type.RootEquals(dt.Ref) {
-
+		loadThis := formTempVar(dt.Ptr)
+		ptr_in, ptr = []TAC{
+			Instruction{
+				Destination: loadThis,
+				Operation:   Get,
+				Operand1: Operand{
+					Type: dt.Ptr,
+					Var: Variable{
+						DataType:    dt.Ptr,
+						Name:        "__this",
+						Visibility:  Param,
+						SrcPosition: left.Location,
+					},
+				},
+			},
+		}, Operand{
+			Type: dt.Ptr,
+			Var:  loadThis,
+		}
+		instructions = append(instructions, ptr_in...)
+		str := currScope.LookupStruct(left.Type.SubTypes[0].String())
+		if str == nil {
+		}
+		propSymbol = str.InnerScope.LookupVariable(prop.Token.Value)
 	} else {
-		ptr_in, ptr := translateExpression(*left)
+		ptr_in, ptr = translateExpression(*left)
 		instructions = append(instructions, ptr_in...)
 		str := currScope.LookupStruct(string(left.Type.Root))
 		if str == nil {
 		}
-		propSymbol := str.InnerScope.LookupVariable(prop.Token.Value)
-		var value_in []TAC
-		var value_op Operand
-		if node.Token.Value != "=" {
-			var operation Operation
-			load := formTempVar(dt.TranslateSourceType(propSymbol.Type))
-			instructions = append(instructions, Instruction{
-				Destination: load,
-				Operation:   Load,
-				Operand1:    ptr,
-				Operand2: Operand{
-					Constant: propSymbol.Offset.Value,
-				},
-				SrcPosition: node.Location,
-			})
-			operand := Operand{
-				Type:        load.DataType,
-				Var:         load,
-				SrcPosition: node.Location,
-			}
-			switch node.Token.Value {
-			case "+=":
-				operation = typedOperation(operand.Type, "add")
-			case "-=":
-				operation = typedOperation(operand.Type, "sub")
-			case "*=":
-				operation = typedOperation(operand.Type, "mul")
-			case "/=":
-				operation = typedOperation(operand.Type, "div")
-			}
-			value_in, value_op = translateExpression(*node.Children[1])
-			instructions = append(instructions, value_in...)
-			result := formTempVar(operand.Type)
-			instructions = append(instructions, Instruction{
-				Destination: result,
-				Operation:   operation,
-				Operand1: Operand{
-					Var:    ptr.Var,
-					Offset: propSymbol.Offset,
-				},
-				Operand2:    value_op,
-				SrcPosition: node.Location,
-			})
-			value_op = Operand{
-				Type:        result.DataType,
-				Var:         result,
-				SrcPosition: node.Location,
-			}
-		} else {
-			value_in, value_op = translateExpression(*node.Children[1])
-			instructions = append(instructions, value_in...)
-		}
-
+		propSymbol = str.InnerScope.LookupVariable(prop.Token.Value)
+	}
+	var value_in []TAC
+	var value_op Operand
+	if node.Token.Value != "=" {
+		var operation Operation
+		load := formTempVar(dt.TranslateSourceType(propSymbol.Type))
 		instructions = append(instructions, Instruction{
-			Operation: Set,
+			Destination: load,
+			Operation:   Load,
+			Operand1:    ptr,
+			Operand2: Operand{
+				Constant: propSymbol.Offset.Value,
+			},
+			SrcPosition: node.Location,
+		})
+		operand := Operand{
+			Type:        load.DataType,
+			Var:         load,
+			SrcPosition: node.Location,
+		}
+		switch node.Token.Value {
+		case "+=":
+			operation = typedOperation(operand.Type, "add")
+		case "-=":
+			operation = typedOperation(operand.Type, "sub")
+		case "*=":
+			operation = typedOperation(operand.Type, "mul")
+		case "/=":
+			operation = typedOperation(operand.Type, "div")
+		}
+		value_in, value_op = translateExpression(*node.Children[1])
+		instructions = append(instructions, value_in...)
+		result := formTempVar(operand.Type)
+		instructions = append(instructions, Instruction{
+			Destination: result,
+			Operation:   operation,
 			Operand1: Operand{
-				Type:   value_op.Type,
 				Var:    ptr.Var,
 				Offset: propSymbol.Offset,
 			},
 			Operand2:    value_op,
 			SrcPosition: node.Location,
 		})
-
+		value_op = Operand{
+			Type:        result.DataType,
+			Var:         result,
+			SrcPosition: node.Location,
+		}
+	} else {
+		value_in, value_op = translateExpression(*node.Children[1])
+		instructions = append(instructions, value_in...)
 	}
+
+	instructions = append(instructions, Instruction{
+		Operation: Set,
+		Operand1: Operand{
+			Type:   value_op.Type,
+			Var:    ptr.Var,
+			Offset: propSymbol.Offset,
+		},
+		Operand2:    value_op,
+		SrcPosition: node.Location,
+	})
+
 	return instructions
 }
 
