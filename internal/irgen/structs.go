@@ -84,7 +84,7 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 		propType := dt.TranslateSourceType(prop.Type)
 		loadProp := formTempVar(propType)
 		loadOtherProp := formTempVar(propType)
-		equals := formTempVar(dt.I32)
+		var equals Variable
 		compare := []TAC{
 			Instruction{
 				Destination: loadProp,
@@ -109,35 +109,16 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 		}
 		var equality []TAC
 		if prop.Type.IsDynamic {
+			equals = formTempVar(dt.I32)
 			var eq Operand
 			equality, eq = translateStructComparison(Operand{Var: loadProp}, Operand{Var: loadOtherProp}, prop.Type.String(), "eq")
 			equals = eq.Var
 		} else if prop.Type.Equals(dt.StringType) {
-			equality = []TAC{
-				Instruction{
-					Operation: PrepareParam,
-					Operand1: Operand{
-						Var: loadProp,
-					},
-				},
-				Instruction{
-					Operation: PrepareParam,
-					Operand1: Operand{
-						Var: loadOtherProp,
-					},
-				},
-				Instruction{
-					Destination: equals,
-					Operation:   Call,
-					Operand1: Operand{
-						Constant: "__str_eq",
-					},
-					Operand2: Operand{
-						Constant: 2,
-					},
-				},
-			}
+			var operand Operand
+			equality, operand = callFunction("__str_eq", dt.I32, Operand{Var: loadProp}, Operand{Var: loadOtherProp})
+			equals = operand.Var
 		} else {
+			equals = formTempVar(dt.I32)
 			equality = []TAC{
 				Instruction{
 					Destination: equals,
@@ -253,201 +234,48 @@ func structDefaultToString(str *semantic.StructSymbol) Function {
 			})
 		} else if prop.Type.IsDynamic {
 			toString := getStructToString(prop.Type.String())
-			str_var := formTempVar(dt.Str_const)
-			call := []TAC{
-				Instruction{
-					Operation: PrepareParam,
-					Operand1: Operand{
-						Var: loadProp,
-					},
-				},
-				Instruction{
-					Destination: str_var,
-					Operation:   Call,
-					Operand1: Operand{
-						Constant: toString,
-					},
-					Operand2: Operand{
-						Constant: 1,
-					},
-				},
-			}
+			call, operand := callFunction(toString, dt.Str_const, Operand{Var: loadProp})
 			fn.Code = append(fn.Code, call...)
-			propLoads = append(propLoads, Operand{
-				Var: str_var,
-			})
+			propLoads = append(propLoads, operand)
 		} else {
-			str_var := formTempVar(dt.Str_const)
-			call := []TAC{
-				Instruction{
-					Operation: PrepareParam,
-					Operand1: Operand{
-						Var: loadProp,
-					},
-				},
-				Instruction{
-					Destination: str_var,
-					Operation:   Call,
-					Operand1: Operand{
-						Constant: getToStringFn(prop.Type),
-					},
-					Operand2: Operand{
-						Constant: 1,
-					},
-				},
-			}
+			call, operand := callFunction(string(getToStringFn(prop.Type)), dt.Str_const, Operand{Var: loadProp})
 			fn.Code = append(fn.Code, call...)
-			propLoads = append(propLoads, Operand{
-				Var: str_var,
-			})
+			propLoads = append(propLoads, operand)
 		}
 	}
+	open := Operand{
+		Type:     dt.I32,
+		Constant: '{',
+	}
+	close := Operand{
+		Type:     dt.I32,
+		Constant: '}',
+	}
 	if len(propLoads) == 0 {
-		strVal := formTempVar(dt.Str_const)
-		returnStr := []TAC{
-			Instruction{
-				Operation: PrepareParam,
-				Operand1: Operand{
-					Type:     dt.I32,
-					Constant: '{',
-				},
-			},
-			Instruction{
-				Operation: PrepareParam,
-				Operand1: Operand{
-					Type:     dt.I32,
-					Constant: '}',
-				},
-			},
-			Instruction{
-				Destination: strVal,
-				Operation:   Call,
-				Operand1: Operand{
-					Constant: CharConcat,
-				},
-				Operand2: Operand{
-					Constant: 2,
-				},
-			},
-			Instruction{
-				Operation: Return,
-				Operand1: Operand{
-					Var: strVal,
-				},
-			},
-		}
+		returnStr, strVal := callFunction(string(CharConcat), dt.Str_const, open, close)
 		fn.Code = append(fn.Code, returnStr...)
+		fn.Code = append(fn.Code, Instruction{
+			Operation: Return,
+			Operand1:  strVal,
+		})
 	} else {
-		start := formTempVar(dt.Str_const)
-		returnStr := []TAC{
-			Instruction{
-				Operation: PrepareParam,
-				Operand1: Operand{
-					Type:     dt.I32,
-					Constant: '{',
-				},
-			},
-			Instruction{
-				Operation: PrepareParam,
-				Operand1:  propLoads[0],
-			},
-			Instruction{
-				Destination: start,
-				Operation:   Call,
-				Operand1: Operand{
-					Constant: CharConcatString,
-				},
-				Operand2: Operand{
-					Constant: 2,
-				},
-			},
+		returnStr, start := callFunction(string(CharConcatString), dt.Str_const, open, propLoads[0])
+		comma := Operand{
+			Type:     dt.I32,
+			Constant: ',',
 		}
 		for i := 1; i < len(propLoads); i++ {
-			curr := formTempVar(dt.Str_const)
-			currStr := []TAC{
-				Instruction{
-					Operation: PrepareParam,
-					Operand1: Operand{
-						Type:     dt.I32,
-						Constant: ',',
-					},
-				},
-				Instruction{
-					Operation: PrepareParam,
-					Operand1:  propLoads[i],
-				},
-				Instruction{
-					Destination: curr,
-					Operation:   Call,
-					Operand1: Operand{
-						Constant: CharConcatString,
-					},
-					Operand2: Operand{
-						Constant: 2,
-					},
-				},
-			}
+			currStr, curr := callFunction(string(CharConcatString), dt.Str_const, comma, propLoads[i])
 			returnStr = append(returnStr, currStr...)
-			combine := formTempVar(dt.Str_const)
-			combineStrs := []TAC{
-				Instruction{
-					Operation: PrepareParam,
-					Operand1: Operand{
-						Var: start,
-					},
-				},
-				Instruction{
-					Operation: PrepareParam,
-					Operand1: Operand{
-						Var: curr,
-					},
-				},
-				Instruction{
-					Destination: combine,
-					Operation:   Call,
-					Operand1: Operand{
-						Constant: StringConcat,
-					},
-					Operand2: Operand{
-						Constant: 2,
-					},
-				},
-			}
+			combineStrs, combine := callFunction(string(StringConcat), dt.Str_const, start, curr)
 			start = combine
 			returnStr = append(returnStr, combineStrs...)
 		}
-		returnVal := formTempVar(dt.Str_const)
-		end := []TAC{
-			Instruction{
-				Operation: PrepareParam,
-				Operand1: Operand{
-					Var: start,
-				},
-			},
-			Instruction{
-				Operation: PrepareParam,
-				Operand2: Operand{
-					Type:     dt.I32,
-					Constant: '}',
-				},
-			},
-			Instruction{
-				Destination: returnVal,
-				Operation:   Call,
-				Operand1: Operand{
-					Constant: StringConcatChar,
-				},
-				Operand2: Operand{
-					Constant: 2,
-				},
-			},
-			Instruction{
-				Operation: Return,
-				Operand1: Operand{
-					Var: returnVal,
-				},
-			},
-		}
+		end, returnVal := callFunction(string(StringConcatChar), dt.Str_const, start, close)
+		end = append(end, Instruction{
+			Operation: Return,
+			Operand1:  returnVal,
+		})
 		returnStr = append(returnStr, end...)
 		fn.Code = append(fn.Code, returnStr...)
 	}
@@ -560,33 +388,14 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 	str := currScope.LookupStruct(struct_name)
 	equalsName := getStructEquals(str.InnerScope.LookupNamedBlock("compare"), struct_name)
 	compared := false
-	compare := formTempVar(dt.I32)
+	//compare := formTempVar(dt.I32)
+	var compare Operand
+	var call []TAC
 	if compareBlock := str.GetInnerScope().LookupNamedBlock("compare"); compareBlock != nil {
 		if strings.Contains(comp, "l") {
 			if lessFn := compareBlock.InnerScope.LookupFunctionByName("lessThan"); lessFn != nil {
 				lessName := lessFn.Overloads[0].IRName
-				call := []TAC{
-					Instruction{
-						Operation:   PrepareParam,
-						Operand1:    l_op,
-						SrcPosition: l_op.SrcPosition,
-					},
-					Instruction{
-						Operation:   PrepareParam,
-						Operand1:    r_op,
-						SrcPosition: r_op.SrcPosition,
-					},
-					Instruction{
-						Destination: compare,
-						Operation:   Call,
-						Operand1: Operand{
-							Constant: lessName,
-						},
-						Operand2: Operand{
-							Constant: 2,
-						},
-					},
-				}
+				call, compare = callFunction(lessName, dt.I32, l_op, r_op)
 				instructions = append(instructions, call...)
 				compared = true
 			}
@@ -594,28 +403,7 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 		if strings.Contains(comp, "g") {
 			if greaterFn := compareBlock.InnerScope.LookupFunctionByName("greaterThan"); greaterFn != nil {
 				greaterName := greaterFn.Overloads[0].IRName
-				call := []TAC{
-					Instruction{
-						Operation:   PrepareParam,
-						Operand1:    l_op,
-						SrcPosition: l_op.SrcPosition,
-					},
-					Instruction{
-						Operation:   PrepareParam,
-						Operand1:    r_op,
-						SrcPosition: r_op.SrcPosition,
-					},
-					Instruction{
-						Destination: compare,
-						Operation:   Call,
-						Operand1: Operand{
-							Constant: greaterName,
-						},
-						Operand2: Operand{
-							Constant: 2,
-						},
-					},
-				}
+				call, compare = callFunction(greaterName, dt.I32, l_op, r_op)
 				instructions = append(instructions, call...)
 				compared = true
 			}
@@ -623,45 +411,17 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 	}
 	if strings.Contains(comp, "e") {
 		first := compare
-		if compared {
-			compare = formTempVar(dt.I32)
-		}
-		call := []TAC{
-			Instruction{
-				Operation:   PrepareParam,
-				Operand1:    l_op,
-				SrcPosition: l_op.SrcPosition,
-			},
-			Instruction{
-				Operation:   PrepareParam,
-				Operand1:    r_op,
-				SrcPosition: r_op.SrcPosition,
-			},
-			Instruction{
-				Destination: compare,
-				Operation:   Call,
-				Operand1: Operand{
-					Constant: equalsName,
-				},
-				Operand2: Operand{
-					Constant: 2,
-				},
-			},
-		}
+		call, compare = callFunction(equalsName, dt.I32, l_op, r_op)
 		instructions = append(instructions, call...)
 		if compared {
 			or := formTempVar(dt.I32)
 			instructions = append(instructions, Instruction{
 				Destination: or,
 				Operation:   typedOperation(dt.I32, "or"),
-				Operand1: Operand{
-					Var: first,
-				},
-				Operand2: Operand{
-					Var: compare,
-				},
+				Operand1:    first,
+				Operand2:    compare,
 			})
-			compare = or
+			compare.Var = or
 		}
 	}
 	if comp == "ne" {
@@ -669,17 +429,13 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 		instructions = append(instructions, Instruction{
 			Destination: not,
 			Operation:   typedOperation(dt.I32, "xor"),
-			Operand1: Operand{
-				Var: compare,
-			},
+			Operand1:    compare,
 			Operand2: Operand{
 				Type:     dt.I32,
 				Constant: 1,
 			},
 		})
-		compare = not
+		compare.Var = not
 	}
-	return instructions, Operand{
-		Var: compare,
-	}
+	return instructions, compare
 }

@@ -340,3 +340,34 @@ func setProperty(variable *semantic.VariableSymbol, value Operand) Instruction {
 		Operand2: value,
 	}
 }
+
+func callFunction(name string, expectedReturnType dt.IRType, params ...Operand) ([]TAC, Operand) {
+	operand := Operand{}
+	var tempVar Variable
+	instructions := []TAC{}
+	for _, param := range params {
+		instructions = append(instructions, Instruction{
+			Operation: PrepareParam,
+			Operand1:  param,
+		})
+	}
+	call := Instruction{
+		Operation: Call,
+		Operand1: Operand{
+			Constant: name,
+		},
+		Operand2: Operand{
+			Constant: len(params),
+		},
+	}
+	if expectedReturnType != dt.NoneIR {
+		tempVar = formTempVar(expectedReturnType)
+		call.Destination = tempVar
+		operand = Operand{
+			Type: expectedReturnType,
+			Var:  tempVar,
+		}
+	}
+	instructions = append(instructions, call)
+	return instructions, operand
+}

@@ -47,20 +47,19 @@ func translateExpression(node parser.AST) ([]TAC, Operand) {
 
 func translateLogicalAndOr(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
-	irType := dt.I32
 	left := node.Children[0]
 	right := node.Children[1]
 	var operation Operation
 	if node.Token.Value == "&&" {
-		operation = typedOperation(irType, "and")
+		operation = typedOperation(dt.I32, "and")
 	} else {
-		operation = typedOperation(irType, "or")
+		operation = typedOperation(dt.I32, "or")
 	}
 	l_in, l_op := translateExpression(*left)
 	instructions = append(instructions, l_in...)
 	r_in, r_op := translateExpression(*right)
 	instructions = append(instructions, r_in...)
-	tempVar := formTempVar(irType)
+	tempVar := formTempVar(dt.I32)
 	instructions = append(instructions, Instruction{
 		Destination: tempVar,
 		Operation:   operation,
@@ -71,7 +70,7 @@ func translateLogicalAndOr(node parser.AST) ([]TAC, Operand) {
 	operand := Operand{
 		Var: Variable{
 			Name:     tempVar.Name,
-			DataType: irType,
+			DataType: dt.I32,
 		},
 		SrcPosition: node.Location,
 	}
@@ -88,55 +87,15 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 	r_in, r_op := translateExpression(*right)
 	instructions = append(instructions, r_in...)
 	var irType dt.IRType
-	var comp string
-	switch node.Token.Value {
-	case "==":
-		comp = "eq"
-	case "!=":
-		comp = "ne"
-	case "<":
-		comp = "lt"
-	case "<=":
-		comp = "le"
-	case ">":
-		comp = "gt"
-	case ">=":
-		comp = "ge"
-	}
+	comp := getComparisonOperator(node.Token.Value)
 	if left.Type.IsDynamic {
 		scomp_in, scomp := translateStructComparison(l_op, r_op, left.Type.String(), comp)
 		instructions = append(instructions, scomp_in...)
 		return instructions, scomp
 	} else if l_op.Type == dt.Str_const {
-		tempVar := formTempVar(dt.I32)
-		call := []TAC{
-			Instruction{
-				Operation:   PrepareParam,
-				Operand1:    l_op,
-				SrcPosition: left.Location,
-			},
-			Instruction{
-				Operation:   PrepareParam,
-				Operand1:    r_op,
-				SrcPosition: right.Location,
-			},
-			Instruction{
-				Destination: tempVar,
-				Operation:   Call,
-				Operand1: Operand{
-					Constant: fmt.Sprintf("__str_%s", comp),
-				},
-				Operand2: Operand{
-					Constant: 2,
-				},
-				SrcPosition: node.Location,
-			},
-		}
+		var call []TAC
+		call, operand = callFunction(fmt.Sprintf("__str_%s", comp), dt.I32, l_op, r_op)
 		instructions = append(instructions, call...)
-		operand = Operand{
-			Type: dt.I32,
-			Var:  tempVar,
-		}
 		return instructions, operand
 	} else if l_op.Type != r_op.Type {
 		var typecast Operation
@@ -185,6 +144,25 @@ func translateComparison(node parser.AST) ([]TAC, Operand) {
 		Var:  tempVar,
 	}
 	return instructions, operand
+}
+
+func getComparisonOperator(tokenValue string) string {
+	comp := ""
+	switch tokenValue {
+	case "==":
+		comp = "eq"
+	case "!=":
+		comp = "ne"
+	case "<":
+		comp = "lt"
+	case "<=":
+		comp = "le"
+	case ">":
+		comp = "gt"
+	case ">=":
+		comp = "ge"
+	}
+	return comp
 }
 
 func translateBitOperation(node parser.AST) ([]TAC, Operand) {
@@ -280,35 +258,9 @@ func translateAddition(node parser.AST) ([]TAC, Operand) {
 		} else { // string + string
 			fn = StringConcat
 		}
-		tempVar := formTempVar(dt.Str_const)
-		call := []TAC{
-			Instruction{
-				Operation:   PrepareParam,
-				Operand1:    l_op,
-				SrcPosition: left.Location,
-			},
-			Instruction{
-				Operation:   PrepareParam,
-				Operand2:    r_op,
-				SrcPosition: right.Location,
-			},
-			Instruction{
-				Destination: tempVar,
-				Operation:   Call,
-				Operand1: Operand{
-					Constant: fn,
-				},
-				Operand2: Operand{
-					Constant: 2,
-				},
-				SrcPosition: node.Location,
-			},
-		}
+		var call []TAC
+		call, operand = callFunction(string(fn), dt.Str_const, l_op, r_op)
 		instructions = append(instructions, call...)
-		operand = Operand{
-			Type: dt.Str_const,
-			Var:  tempVar,
-		}
 	} else {
 		var irType dt.IRType
 		var typecast Operation
@@ -472,33 +424,8 @@ func translateExponent(node parser.AST) ([]TAC, Operand) {
 			Var:  cast,
 		}
 	}
-
-	instructions = append(instructions, Instruction{
-		Operation:   PrepareParam,
-		Operand1:    l_op,
-		SrcPosition: left.Location,
-	})
-	instructions = append(instructions, Instruction{
-		Operation:   PrepareParam,
-		Operand1:    r_op,
-		SrcPosition: right.Location,
-	})
-	tempVar := formTempVar(irType)
-	instructions = append(instructions, Instruction{
-		Destination: tempVar,
-		Operation:   Call,
-		Operand1: Operand{
-			Constant: fmt.Sprintf("__%s_pow", irType),
-		},
-		Operand2: Operand{
-			Constant: 2,
-		},
-		SrcPosition: node.Location,
-	})
-	operand := Operand{
-		Type: irType,
-		Var:  tempVar,
-	}
+	call, operand := callFunction(fmt.Sprintf("__%s_pow", irType), irType, l_op, r_op)
+	instructions = append(instructions, call...)
 	return instructions, operand
 }
 
@@ -664,6 +591,8 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	var tempVar Variable
 	var irName string
+	var call []TAC
+	var operand Operand
 	irType := dt.TranslateSourceType(node.Children[0].Type)
 	l_in, l_op := translateExpression(*node.Children[0])
 	instructions = append(instructions, l_in...)
@@ -682,47 +611,11 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 				}
 			}
 		}
-		tempVar = formTempVar(targetType)
-		call := []TAC{
-			Instruction{
-				Operation:   PrepareParam,
-				Operand1:    l_op,
-				SrcPosition: node.Children[0].Location,
-			},
-			Instruction{
-				Destination: tempVar,
-				Operation:   Call,
-				Operand1: Operand{
-					Constant: irName,
-				},
-				Operand2: Operand{
-					Constant: 1,
-				},
-				SrcPosition: node.Location,
-			},
-		}
+		call, operand = callFunction(irName, targetType, l_op)
 		instructions = append(instructions, call...)
 	} else if targetType == dt.Str_const {
 		fn := getToStringFn(node.Children[0].Type)
-		tempVar = formTempVar(dt.Str_const)
-		call := []TAC{
-			Instruction{
-				Operation:   PrepareParam,
-				Operand1:    l_op,
-				SrcPosition: node.Children[0].Location,
-			},
-			Instruction{
-				Destination: tempVar,
-				Operation:   Call,
-				Operand1: Operand{
-					Constant: fn,
-				},
-				Operand2: Operand{
-					Constant: 1,
-				},
-				SrcPosition: node.Location,
-			},
-		}
+		call, operand = callFunction(string(fn), dt.Str_const, l_op)
 		instructions = append(instructions, call...)
 	} else {
 		operation := getTypeCastOperation(irType, targetType)
@@ -733,11 +626,12 @@ func translateTypecast(node parser.AST) ([]TAC, Operand) {
 			Operand1:    l_op,
 			SrcPosition: node.Location,
 		})
+		operand = Operand{
+			Type: targetType,
+			Var:  tempVar,
+		}
 	}
-	operand := Operand{
-		Type: targetType,
-		Var:  tempVar,
-	}
+
 	return instructions, operand
 }
 
@@ -775,35 +669,8 @@ func translateIndex(node parser.AST) ([]TAC, Operand) {
 			Var:  cast,
 		}
 	}
-	tempVar := formTempVar(dt.I32)
-	call := []TAC{
-		Instruction{
-			Operation:   PrepareParam,
-			Operand1:    container_op,
-			SrcPosition: left.Location,
-		},
-		Instruction{
-			Operation:   PrepareParam,
-			Operand1:    r_op,
-			SrcPosition: right.Location,
-		},
-		Instruction{
-			Destination: tempVar,
-			Operation:   Call,
-			Operand1: Operand{
-				Constant: StringIndex,
-			},
-			Operand2: Operand{
-				Constant: 2,
-			},
-			SrcPosition: node.Location,
-		},
-	}
+	call, operand := callFunction(string(StringIndex), dt.I32, container_op, r_op)
 	instructions = append(instructions, call...)
-	operand := Operand{
-		Type: dt.I32,
-		Var:  tempVar,
-	}
 	return instructions, operand
 }
 
@@ -846,7 +713,6 @@ func translateArrayEnd(node parser.AST, arr Operand) ([]TAC, Operand) {
 func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 	instructions := []TAC{}
 	var operand Operand
-	var slice Variable
 	start_in := []TAC{}
 	end_in := []TAC{}
 	_, start_op := getZeroValue(dt.Int32Type)
@@ -929,49 +795,18 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 			}
 		}
 	}
-	slice = formTempVar(dt.I32)
 	if node.Children[rangeIndex].Token.Value == "..=" {
 		fn = StringSliceInclusive
 	}
-	call := []TAC{
-		Instruction{
-			Operation:   PrepareParam,
-			Operand1:    arr,
-			SrcPosition: arr.SrcPosition,
-		},
-		Instruction{
-			Operation:   PrepareParam,
-			Operand1:    start_op,
-			SrcPosition: start_op.SrcPosition,
-		},
-		Instruction{
-			Operation:   PrepareParam,
-			Operand1:    end_op,
-			SrcPosition: end_op.SrcPosition,
-		},
-		Instruction{
-			Destination: slice,
-			Operation:   Call,
-			Operand1: Operand{
-				Constant: fn,
-			},
-			Operand2: Operand{
-				Constant: 3,
-			},
-			SrcPosition: node.Location,
-		},
-	}
+	call, operand := callFunction(string(fn), dt.I32, arr, start_op, end_op)
 	instructions = append(instructions, call...)
-	operand = Operand{
-		Type: dt.I32,
-		Var:  slice,
-	}
 	return instructions, operand
 }
 
 func translateDot(node parser.AST) ([]TAC, Operand) {
 	instructions := []TAC{}
 	operand := Operand{}
+	var call []TAC
 	left := node.Children[0]
 	prop := node.Children[1]
 	if mem, ok := semantic.PrimitiveMembers[left.Type.Root]; ok {
@@ -980,30 +815,8 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 			l_in, l_op := translateExpression(*left)
 			instructions = append(instructions, l_in...)
 			irType := dt.TranslateSourceType(pr.Type)
-			result := formTempVar(irType)
-			call := []TAC{
-				Instruction{
-					Operation:   PrepareParam,
-					Operand1:    l_op,
-					SrcPosition: left.Location,
-				},
-				Instruction{
-					Destination: result,
-					Operation:   Call,
-					Operand1: Operand{
-						Constant: fn,
-					},
-					Operand2: Operand{
-						Constant: 1,
-					},
-					SrcPosition: node.Location,
-				},
-			}
+			call, operand = callFunction(fn, irType, l_op)
 			instructions = append(instructions, call...)
-			operand = Operand{
-				Type: irType,
-				Var:  result,
-			}
 		}
 	} else if left.Type.Equals(dt.GlobalRefType) {
 		scope := currScope
@@ -1021,7 +834,6 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 		instructions = append(instructions, ptr_in...)
 		operand = ptr
 	} else {
-		//loadStruct := formTempVar(dt.TranslateSourceType(left.Type))
 		ptr_in, ptr := translateExpression(*left)
 		instructions = append(instructions, ptr_in...)
 		str := currScope.LookupStruct(string(left.Type.Root))
@@ -1277,31 +1089,7 @@ func getArrayEnd(arr Operand) ([]TAC, Operand) {
 }
 
 func getArrayLength(arr Operand) ([]TAC, Operand) {
-	len := formTempVar(dt.I32)
-	instructions := []TAC{
-		Instruction{
-			Operation:   PrepareParam,
-			Operand1:    arr,
-			SrcPosition: arr.SrcPosition,
-		},
-		Instruction{
-			Destination: len,
-			Operation:   Call,
-			Operand1: Operand{
-				Constant: Stringlen,
-			},
-			Operand2: Operand{
-				Constant: 1,
-			},
-			SrcPosition: arr.SrcPosition,
-		},
-	}
-	operand := Operand{
-		Type:        dt.I32,
-		Var:         len,
-		SrcPosition: arr.SrcPosition,
-	}
-	return instructions, operand
+	return callFunction(string(Stringlen), dt.I32, arr)
 }
 
 func getToStringFn(src dt.SourceType) RuntimeFunction {
