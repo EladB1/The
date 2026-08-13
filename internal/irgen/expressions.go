@@ -838,6 +838,7 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 		instructions = append(instructions, ptr_in...)
 		str := currScope.LookupStruct(string(left.Type.Root))
 		if str == nil {
+			panic(fmt.Sprintf("Unable to find struct %s in scopeId %s", left.Type.Root, currScope.Id))
 		}
 		propSymbol := str.InnerScope.LookupVariable(prop.Token.Value)
 		loadProp := formTempVar(dt.TranslateSourceType(propSymbol.Type))

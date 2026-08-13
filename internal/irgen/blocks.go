@@ -151,6 +151,7 @@ func translateDotAssignment(node *parser.AST) []TAC {
 		instructions = append(instructions, ptr_in...)
 		str := currScope.LookupStruct(left.Type.SubTypes[0].String())
 		if str == nil {
+			panic(fmt.Sprintf("Unable to find struct %s in scopeId %s", left.Type.SubTypes[0], currScope.Id))
 		}
 		propSymbol = str.InnerScope.LookupVariable(prop.Token.Value)
 	} else {
@@ -158,6 +159,7 @@ func translateDotAssignment(node *parser.AST) []TAC {
 		instructions = append(instructions, ptr_in...)
 		str := currScope.LookupStruct(string(left.Type.Root))
 		if str == nil {
+			panic(fmt.Sprintf("Unable to find struct %s in scopeId %s", left.Type.Root, currScope.Id))
 		}
 		propSymbol = str.InnerScope.LookupVariable(prop.Token.Value)
 	}
@@ -391,37 +393,12 @@ func translateForLoop(node *parser.AST) []TAC {
 			},
 			SrcPosition: eachNode.Location,
 		})
-		index := formTempVar(dt.TranslateSourceType(eachNode.Type))
 		eachVar := currScope.LookupVariable(eachNode.Children[1].Token.Value)
-		index_in := []TAC{
-			Instruction{
-				Operation:   PrepareParam,
-				Operand1:    container,
-				SrcPosition: containerNode.Location,
-			},
-			Instruction{
-				Operation: PrepareParam,
-				Operand1: Operand{
-					Type: dt.I32,
-					Var:  curr,
-				},
-				SrcPosition: eachNode.Location,
-			},
-			Instruction{
-				Destination: index,
-				Operation:   Call,
-				Operand1: Operand{
-					Constant: StringIndex,
-				}, // TODO: make this work for any container type
-				Operand2: Operand{
-					Constant: 2,
-				},
-				SrcPosition: eachNode.Location,
-			},
-			storeVariable(*eachVar, Operand{
-				Var: index,
-			}),
-		}
+		index_in, index := callFunction(string(StringIndex), dt.TranslateSourceType(eachNode.Type), container, Operand{
+			Type: dt.I32,
+			Var:  curr,
+		})
+		index_in = append(index_in, storeVariable(*eachVar, index))
 
 		loop.Code = append(loop.Code, index_in...)
 		outerBlock.Code = append(outerBlock.Code, container_in...)
@@ -461,8 +438,6 @@ func translateForLoop(node *parser.AST) []TAC {
 			}),
 		}
 		// TODO: refactor
-	default:
-		//
 	}
 	outerBlock.Code = append(outerBlock.Code, init...)
 	loop.Code = append(loop.Code, limit_in...)
@@ -485,8 +460,6 @@ func translateForLoop(node *parser.AST) []TAC {
 			Label: loop.Label,
 		},
 	})
-	// calculate limit, start, and increment
-	// come up with loop structure (like while loop)
 	loop.Code = append(loop.Code, loopBody)
 	outerBlock.Code = append(outerBlock.Code, loop)
 	loopIndex++
@@ -504,8 +477,7 @@ func translateIfBlock(node *parser.AST, exitLabel string, startLabel string) []T
 	scope := currScope
 	currScope = currScope.GetChildScopeById(node.Children[0].IRName)
 	if currScope == nil {
-		currScope = scope
-		return []TAC{}
+		panic(fmt.Sprintf("Could not find scope with Id %s", node.Children[0].IRName))
 	}
 	blocks := [][]TAC{translateBlock(node.Children[0].Children[1].Children, exitLabel, startLabel)}
 	conditionsIndex := 0
@@ -516,8 +488,7 @@ func translateIfBlock(node *parser.AST, exitLabel string, startLabel string) []T
 		block := node.Children[i]
 		currScope = currScope.GetChildScopeById(block.IRName)
 		if currScope == nil {
-			currScope = scope
-			return []TAC{}
+			panic(fmt.Sprintf("Could not find scope with Id %s", block.IRName))
 		}
 		if block.Label == "else if" {
 			cond_in, cond := translateExpression(*block.Children[0])
