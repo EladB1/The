@@ -90,67 +90,67 @@ struct Nested {
     String description;
 }
 
-// interface I {
-//     fn times(int a, int b) -> int {
-//         return a * b;
-//     }
-//     fn do() {
-//         println("maybe");
-//     }
-// }
+interface I {
+    fn times(int a, int b) -> int {
+        return a * b;
+    }
+    fn do() {
+        println("maybe");
+    }
+}
 
-// struct T impl I, P {
-//     I {}
-//     P {
-//         fn do() {
-//             println("yes");
-//         }
-//     }
-// }
+struct T impl I, P {
+    I {}
+    P {
+        fn do() {
+            println("yes");
+        }
+    }
+}
 
 fn main() -> int {
     Person1 p = Person1{name: "A", age: 112};
-    // uint32 age = p.age;
+    uint32 age = p.age;
     mut Person1 p2 = Person1{name: "B"};
     p == p2;
-    // mut Nested n1 = Nested{
-    //     id: 0,
-    //     inner: Inner{
-    //         id: 1
-    //     },
-    //     description: "First nested"
-    // };
-    // n1.inner = Inner{
-    //     id: 5
-    // };
-    // n1.inner.id = 1;
-    // Nested n2 = Nested{
-    //     inner: Inner{
-    //         id: 2
-    //     },
-    //     description: "Second nested"
-    // };
-    // n1 == n2;
-    // println(n1.inner);
-    // println(n1.description.length);
-    // println(n1.inner.id);
+    mut Nested n1 = Nested{
+        id: 0,
+        inner: Inner{
+            id: 1
+        },
+        description: "First nested"
+    };
+    n1.inner = Inner{
+        id: 5
+    };
+    n1.inner.id = 1;
+    Nested n2 = Nested{
+        inner: Inner{
+            id: 2
+        },
+        description: "Second nested"
+    };
+    n1 == n2;
+    println(n1.inner);
+    println(n1.description.length);
+    println(n1.inner.id);
    
-    // p2.age = 25;
-    // p2.age += 2;
-    // mut uint32 newage = p2.age--;
-    // newage = --p2.age;
+    p2.age = 25;
+    p2.age += 2;
+    mut uint32 newage = p2.age--;
+    newage = --p2.age;
     int fromP2 = p2 as int;
     String str2 = p2 as String;
 
-    // p2.greet();
-    // p2.do();
-    // println(p2);
+    p2.greet();
+    p2.do();
+    println(p2);
 
-    // T t = T{};
-    // t.I.do();
-    // t.P.do();
+    T t = T{};
+    t.I.do();
+    t.P.do();
 
-    // Inner empty;
+    Inner empty;
    
     return 0;
 }
