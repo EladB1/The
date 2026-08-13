@@ -72,15 +72,25 @@ func translateControlFlow(node *parser.AST, exitLabel string, startLabel string)
 
 func translateAssignment(node *parser.AST) []TAC {
 	instructions := []TAC{}
+	scope := currScope
+	var nameNode *parser.AST
 	if node.Children[0].Label == "dot" {
-		return translateDotAssignment(node)
+		if node.Children[0].Children[0].Type.Equals(dt.GlobalRefType) {
+			fmt.Println("GLOBAL")
+			nameNode = node.Children[0].Children[1]
+			currScope = globalScope
+		} else {
+			return translateDotAssignment(node)
+		}
+	} else {
+		nameNode = node.Children[0]
 	}
-	name := node.Children[0].Token.Value
+	name := nameNode.Token.Value
 	value := node.Children[1]
 	var value_in []TAC
 	var value_op Operand
 	if node.Token.Value != "=" {
-		var_in, operand := loadVariable(*node.Children[0])
+		var_in, operand := loadVariable(*nameNode)
 		value_in, value_op = translateExpression(*value)
 		instructions = append(instructions, var_in...)
 		var operation Operation
@@ -114,8 +124,36 @@ func translateAssignment(node *parser.AST) []TAC {
 	}
 	variable := currScope.LookupVariable(name)
 	if variable != nil {
-		instructions = append(instructions, storeVariable(*variable, value_op))
+		if variable.Ctx == semantic.StructProp {
+			loadThis := formTempVar(dt.Ptr)
+			instructions = append(instructions, Instruction{
+				Destination: loadThis,
+				Operation:   Get,
+				Operand1: Operand{
+					Var: Variable{
+						Name:        "__this",
+						DataType:    dt.Ptr,
+						Visibility:  Param,
+						SrcPosition: node.Location,
+					},
+				},
+				SrcPosition: node.Location,
+			},
+				Instruction{
+					Operation: Set,
+					Operand1: Operand{
+						Var:         loadThis,
+						Offset:      variable.Offset,
+						SrcPosition: node.Location,
+					},
+					Operand2:    value_op,
+					SrcPosition: node.Location,
+				})
+		} else {
+			instructions = append(instructions, storeVariable(*variable, value_op))
+		}
 	}
+	currScope = scope
 	return instructions
 }
 
@@ -123,81 +161,108 @@ func translateDotAssignment(node *parser.AST) []TAC {
 	instructions := []TAC{}
 	left := node.Children[0].Children[0]
 	prop := node.Children[0].Children[1]
-	if left.Type.Equals(dt.GlobalRefType) {
-
-	} else if left.Type.RootEquals(dt.Ref) {
-
+	var propSymbol *semantic.VariableSymbol
+	var ptr_in []TAC
+	var ptr Operand
+	if left.Type.RootEquals(dt.Ref) {
+		loadThis := formTempVar(dt.Ptr)
+		ptr_in, ptr = []TAC{
+			Instruction{
+				Destination: loadThis,
+				Operation:   Get,
+				Operand1: Operand{
+					Type: dt.Ptr,
+					Var: Variable{
+						DataType:    dt.Ptr,
+						Name:        "__this",
+						Visibility:  Param,
+						SrcPosition: left.Location,
+					},
+				},
+			},
+		}, Operand{
+			Type: dt.Ptr,
+			Var:  loadThis,
+		}
+		instructions = append(instructions, ptr_in...)
+		str := currScope.LookupStruct(left.Type.SubTypes[0].String())
+		if str == nil {
+			panic(fmt.Sprintf("Unable to find struct %s in scopeId %s", left.Type.SubTypes[0], currScope.Id))
+		}
+		propSymbol = str.InnerScope.LookupVariable(prop.Token.Value)
 	} else {
-		ptr_in, ptr := translateExpression(*left)
+		ptr_in, ptr = translateExpression(*left)
 		instructions = append(instructions, ptr_in...)
 		str := currScope.LookupStruct(string(left.Type.Root))
 		if str == nil {
+			panic(fmt.Sprintf("Unable to find struct %s in scopeId %s", left.Type.Root, currScope.Id))
 		}
-		propSymbol := str.InnerScope.LookupVariable(prop.Token.Value)
-		var value_in []TAC
-		var value_op Operand
-		if node.Token.Value != "=" {
-			var operation Operation
-			load := formTempVar(dt.TranslateSourceType(propSymbol.Type))
-			instructions = append(instructions, Instruction{
-				Destination: load,
-				Operation:   Load,
-				Operand1:    ptr,
-				Operand2: Operand{
-					Constant: propSymbol.Offset.Value,
-				},
-				SrcPosition: node.Location,
-			})
-			operand := Operand{
-				Type:        load.DataType,
-				Var:         load,
-				SrcPosition: node.Location,
-			}
-			switch node.Token.Value {
-			case "+=":
-				operation = typedOperation(operand.Type, "add")
-			case "-=":
-				operation = typedOperation(operand.Type, "sub")
-			case "*=":
-				operation = typedOperation(operand.Type, "mul")
-			case "/=":
-				operation = typedOperation(operand.Type, "div")
-			}
-			value_in, value_op = translateExpression(*node.Children[1])
-			instructions = append(instructions, value_in...)
-			result := formTempVar(operand.Type)
-			instructions = append(instructions, Instruction{
-				Destination: result,
-				Operation:   operation,
-				Operand1: Operand{
-					Var:    ptr.Var,
-					Offset: propSymbol.Offset,
-				},
-				Operand2:    value_op,
-				SrcPosition: node.Location,
-			})
-			value_op = Operand{
-				Type:        result.DataType,
-				Var:         result,
-				SrcPosition: node.Location,
-			}
-		} else {
-			value_in, value_op = translateExpression(*node.Children[1])
-			instructions = append(instructions, value_in...)
-		}
-
+		propSymbol = str.InnerScope.LookupVariable(prop.Token.Value)
+	}
+	var value_in []TAC
+	var value_op Operand
+	if node.Token.Value != "=" {
+		var operation Operation
+		load := formTempVar(dt.TranslateSourceType(propSymbol.Type))
 		instructions = append(instructions, Instruction{
-			Operation: Set,
+			Destination: load,
+			Operation:   Load,
+			Operand1:    ptr,
+			Operand2: Operand{
+				Constant: propSymbol.Offset.Value,
+			},
+			SrcPosition: node.Location,
+		})
+		operand := Operand{
+			Type:        load.DataType,
+			Var:         load,
+			SrcPosition: node.Location,
+		}
+		switch node.Token.Value {
+		case "+=":
+			operation = typedOperation(operand.Type, "add")
+		case "-=":
+			operation = typedOperation(operand.Type, "sub")
+		case "*=":
+			operation = typedOperation(operand.Type, "mul")
+		case "/=":
+			operation = typedOperation(operand.Type, "div")
+		}
+		value_in, value_op = translateExpression(*node.Children[1])
+		instructions = append(instructions, value_in...)
+		result := formTempVar(operand.Type)
+		instructions = append(instructions, Instruction{
+			Destination: result,
+			Operation:   operation,
 			Operand1: Operand{
-				Type:   value_op.Type,
 				Var:    ptr.Var,
 				Offset: propSymbol.Offset,
 			},
 			Operand2:    value_op,
 			SrcPosition: node.Location,
 		})
-
+		value_op = Operand{
+			Type:        result.DataType,
+			Var:         result,
+			SrcPosition: node.Location,
+		}
+	} else {
+		value_in, value_op = translateExpression(*node.Children[1])
+		instructions = append(instructions, value_in...)
 	}
+
+	instructions = append(instructions, Instruction{
+		Operation: Set,
+		Operand1: Operand{
+			Type:        value_op.Type,
+			Var:         ptr.Var,
+			Offset:      propSymbol.Offset,
+			SrcPosition: prop.Location,
+		},
+		Operand2:    value_op,
+		SrcPosition: node.Location,
+	})
+
 	return instructions
 }
 
@@ -346,7 +411,7 @@ func translateForLoop(node *parser.AST) []TAC {
 			}
 			variable = currScope.LookupVariable(nameNode.Token.Value)
 		}
-		_, zero_val := getZeroValue(dt.Int32Type)
+		_, zero_val := getZeroValue(dt.Int32Type, loopConditions.Location)
 		init = []TAC{
 			storeVariable(*variable, zero_val),
 		}
@@ -365,37 +430,13 @@ func translateForLoop(node *parser.AST) []TAC {
 			},
 			SrcPosition: eachNode.Location,
 		})
-		index := formTempVar(dt.TranslateSourceType(eachNode.Type))
 		eachVar := currScope.LookupVariable(eachNode.Children[1].Token.Value)
-		index_in := []TAC{
-			Instruction{
-				Operation:   PrepareParam,
-				Operand1:    container,
-				SrcPosition: containerNode.Location,
-			},
-			Instruction{
-				Operation: PrepareParam,
-				Operand1: Operand{
-					Type: dt.I32,
-					Var:  curr,
-				},
-				SrcPosition: eachNode.Location,
-			},
-			Instruction{
-				Destination: index,
-				Operation:   Call,
-				Operand1: Operand{
-					Constant: StringIndex,
-				}, // TODO: make this work for any container type
-				Operand2: Operand{
-					Constant: 2,
-				},
-				SrcPosition: eachNode.Location,
-			},
-			storeVariable(*eachVar, Operand{
-				Var: index,
-			}),
-		}
+		index_in, index := callFunction(string(StringIndex), dt.TranslateSourceType(eachNode.Type), eachNode.Location, container, Operand{
+			Type:        dt.I32,
+			Var:         curr,
+			SrcPosition: eachNode.Children[1].Location,
+		})
+		index_in = append(index_in, storeVariable(*eachVar, index))
 
 		loop.Code = append(loop.Code, index_in...)
 		outerBlock.Code = append(outerBlock.Code, container_in...)
@@ -434,9 +475,6 @@ func translateForLoop(node *parser.AST) []TAC {
 				Var:  next,
 			}),
 		}
-		// TODO: refactor
-	default:
-		//
 	}
 	outerBlock.Code = append(outerBlock.Code, init...)
 	loop.Code = append(loop.Code, limit_in...)
@@ -459,8 +497,6 @@ func translateForLoop(node *parser.AST) []TAC {
 			Label: loop.Label,
 		},
 	})
-	// calculate limit, start, and increment
-	// come up with loop structure (like while loop)
 	loop.Code = append(loop.Code, loopBody)
 	outerBlock.Code = append(outerBlock.Code, loop)
 	loopIndex++
@@ -478,8 +514,7 @@ func translateIfBlock(node *parser.AST, exitLabel string, startLabel string) []T
 	scope := currScope
 	currScope = currScope.GetChildScopeById(node.Children[0].IRName)
 	if currScope == nil {
-		currScope = scope
-		return []TAC{}
+		panic(fmt.Sprintf("Could not find scope with Id %s", node.Children[0].IRName))
 	}
 	blocks := [][]TAC{translateBlock(node.Children[0].Children[1].Children, exitLabel, startLabel)}
 	conditionsIndex := 0
@@ -490,8 +525,7 @@ func translateIfBlock(node *parser.AST, exitLabel string, startLabel string) []T
 		block := node.Children[i]
 		currScope = currScope.GetChildScopeById(block.IRName)
 		if currScope == nil {
-			currScope = scope
-			return []TAC{}
+			panic(fmt.Sprintf("Could not find scope with Id %s", block.IRName))
 		}
 		if block.Label == "else if" {
 			cond_in, cond := translateExpression(*block.Children[0])

@@ -1,7 +1,8 @@
-int x = 1;
+mut int x = 1;
 interface P {
     fn do();
     fn donot() {
+        global.x = 2;
         println("no");
     }
 }
@@ -14,6 +15,8 @@ struct Person1 impl P {
         int id = 1;
         fn increaseAge() {
             age += 1;
+            mut int incr;
+            incr = 1;
         }
     }
 
