@@ -790,12 +790,6 @@ Program: [
       CALL println 1
   }
 
-  fn __T_Person1_P_donot() {
-      STORE global.x i32(2)
-      PARAM str_const(1)
-      CALL println 1
-  }
-
   fn __T_I_do() {
       PARAM str_const(9)
       CALL println 1
@@ -806,6 +800,12 @@ Program: [
       __t109: i32 = GET param.b
       __t110: i32 = i32.mul __t108 __t109
       return __t110
+  }
+
+  fn __T_Person1_P_donot() {
+      STORE global.x i32(2)
+      PARAM str_const(1)
+      CALL println 1
   }
 
       STORE global.x i32(1)

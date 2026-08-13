@@ -112,7 +112,7 @@ func variableDeclaration(ast *parser.AST) []TAC {
 	irType := dt.TranslateSourceType(ast.Type)
 	if valueNode == nil {
 		var value_in []TAC
-		value_in, value = getZeroValue(ast.Type)
+		value_in, value = getZeroValue(ast.Type, ast.Location)
 		instructions = append(instructions, value_in...)
 	} else {
 		instructions, value = translateExpression(*valueNode)
@@ -127,12 +127,14 @@ func variableDeclaration(ast *parser.AST) []TAC {
 				DataType:   irType,
 				Visibility: vis,
 			},
+			SrcPosition: details[1].Location,
 		},
-		Operand2: value,
+		Operand2:    value,
+		SrcPosition: details[1].Location,
 	})
 }
 
-func getZeroValue(sourceType dt.SourceType) ([]TAC, Operand) {
+func getZeroValue(sourceType dt.SourceType, position ds.SourceLocation) ([]TAC, Operand) {
 	if sourceType.IsDynamic {
 		instructions := []TAC{}
 		str := currScope.LookupStruct(sourceType.String())
@@ -141,7 +143,8 @@ func getZeroValue(sourceType dt.SourceType) ([]TAC, Operand) {
 			Destination: ptr,
 			Operation:   Malloc,
 			Operand1: Operand{
-				Constant: str.SizeInBytes,
+				Constant:    str.SizeInBytes,
+				SrcPosition: position,
 			},
 		})
 		for _, varName := range str.OrderedProperties {
@@ -149,24 +152,28 @@ func getZeroValue(sourceType dt.SourceType) ([]TAC, Operand) {
 			if variable == nil || !variable.Offset.IsSet {
 				continue
 			}
-			prop_in, prop := getZeroValue(variable.Type)
+			prop_in, prop := getZeroValue(variable.Type, position)
 			instructions = append(instructions, prop_in...)
 			instructions = append(instructions, Instruction{
 				Operation: Set,
 				Operand1: Operand{
-					Var:    ptr,
-					Offset: variable.Offset,
+					Var:         ptr,
+					Offset:      variable.Offset,
+					SrcPosition: position,
 				},
-				Operand2: prop,
+				Operand2:    prop,
+				SrcPosition: position,
 			})
 		}
 		return instructions, Operand{
-			Var: ptr,
+			Var:         ptr,
+			SrcPosition: position,
 		}
 	}
 	return nil, Operand{
-		Type:     dt.TranslateSourceType(sourceType),
-		Constant: 0,
+		Type:        dt.TranslateSourceType(sourceType),
+		Constant:    0,
+		SrcPosition: position,
 	}
 }
 
@@ -280,7 +287,7 @@ func translateStructLiteral(node parser.AST) ([]TAC, Operand) {
 			instructions = append(instructions, value_in...)
 			loc = variable.Def.Children[len(variable.Def.Children)-1].Location
 		} else {
-			value_in, value_op = getZeroValue(variable.Type)
+			value_in, value_op = getZeroValue(variable.Type, node.Location)
 			instructions = append(instructions, value_in...)
 			loc = variable.Def.Location
 		}
@@ -296,7 +303,8 @@ func translateStructLiteral(node parser.AST) ([]TAC, Operand) {
 		})
 	}
 	operand := Operand{
-		Var: instance,
+		Var:         instance,
+		SrcPosition: node.Location,
 	}
 	return instructions, operand
 }
@@ -320,35 +328,22 @@ func storeVariable(variable semantic.VariableSymbol, value Operand) Instruction 
 				DataType:   dt.TranslateSourceType(variable.Type),
 				Visibility: VariableScope(variable.Ctx),
 			},
+			SrcPosition: value.SrcPosition,
 		},
-		Operand2: value,
+		Operand2:    value,
+		SrcPosition: value.SrcPosition,
 	}
 }
 
-func setProperty(variable *semantic.VariableSymbol, value Operand) Instruction {
-	return Instruction{
-		Operation: Set,
-		Operand1: Operand{
-			Var: Variable{
-				Name:        variable.Name,
-				DataType:    dt.TranslateSourceType(variable.Type),
-				Visibility:  VariableScope(variable.Ctx),
-				SrcPosition: variable.Def.Location,
-			},
-			Offset: variable.Offset,
-		},
-		Operand2: value,
-	}
-}
-
-func callFunction(name string, expectedReturnType dt.IRType, params ...Operand) ([]TAC, Operand) {
+func callFunction(name string, expectedReturnType dt.IRType, position ds.SourceLocation, params ...Operand) ([]TAC, Operand) {
 	operand := Operand{}
 	var tempVar Variable
 	instructions := []TAC{}
 	for _, param := range params {
 		instructions = append(instructions, Instruction{
-			Operation: PrepareParam,
-			Operand1:  param,
+			Operation:   PrepareParam,
+			Operand1:    param,
+			SrcPosition: param.SrcPosition,
 		})
 	}
 	call := Instruction{
@@ -359,13 +354,15 @@ func callFunction(name string, expectedReturnType dt.IRType, params ...Operand) 
 		Operand2: Operand{
 			Constant: len(params),
 		},
+		SrcPosition: position,
 	}
 	if expectedReturnType != dt.NoneIR {
 		tempVar = formTempVar(expectedReturnType)
 		call.Destination = tempVar
 		operand = Operand{
-			Type: expectedReturnType,
-			Var:  tempVar,
+			Type:        expectedReturnType,
+			Var:         tempVar,
+			SrcPosition: position,
 		}
 	}
 	instructions = append(instructions, call)

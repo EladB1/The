@@ -227,9 +227,10 @@ func translateDotAssignment(node *parser.AST) []TAC {
 	instructions = append(instructions, Instruction{
 		Operation: Set,
 		Operand1: Operand{
-			Type:   value_op.Type,
-			Var:    ptr.Var,
-			Offset: propSymbol.Offset,
+			Type:        value_op.Type,
+			Var:         ptr.Var,
+			Offset:      propSymbol.Offset,
+			SrcPosition: prop.Location,
 		},
 		Operand2:    value_op,
 		SrcPosition: node.Location,
@@ -383,7 +384,7 @@ func translateForLoop(node *parser.AST) []TAC {
 			}
 			variable = currScope.LookupVariable(nameNode.Token.Value)
 		}
-		_, zero_val := getZeroValue(dt.Int32Type)
+		_, zero_val := getZeroValue(dt.Int32Type, loopConditions.Location)
 		init = []TAC{
 			storeVariable(*variable, zero_val),
 		}
@@ -403,9 +404,10 @@ func translateForLoop(node *parser.AST) []TAC {
 			SrcPosition: eachNode.Location,
 		})
 		eachVar := currScope.LookupVariable(eachNode.Children[1].Token.Value)
-		index_in, index := callFunction(string(StringIndex), dt.TranslateSourceType(eachNode.Type), container, Operand{
-			Type: dt.I32,
-			Var:  curr,
+		index_in, index := callFunction(string(StringIndex), dt.TranslateSourceType(eachNode.Type), eachNode.Location, container, Operand{
+			Type:        dt.I32,
+			Var:         curr,
+			SrcPosition: eachNode.Children[1].Location,
 		})
 		index_in = append(index_in, storeVariable(*eachVar, index))
 

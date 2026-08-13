@@ -43,12 +43,14 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 	fn.ReturnType = dt.I32
 	fn.Parameters = []Parameter{
 		{
-			Name: "__this",
-			Type: dt.Ptr,
+			Name:        "__this",
+			Type:        dt.Ptr,
+			SrcPosition: str.Def.Location,
 		},
 		{
-			Name: "__other",
-			Type: dt.Ptr,
+			Name:        "__other",
+			Type:        dt.Ptr,
+			SrcPosition: str.Def.Location,
 		},
 	}
 	loadThis := formTempVar(dt.Ptr)
@@ -57,11 +59,13 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 		Operation:   Get,
 		Operand1: Operand{
 			Var: Variable{
-				Name:       "__this",
-				DataType:   dt.Ptr,
-				Visibility: Param,
+				Name:        "__this",
+				DataType:    dt.Ptr,
+				Visibility:  Param,
+				SrcPosition: str.Def.Location,
 			},
 		},
+		SrcPosition: str.Def.Location,
 	})
 	loadOther := formTempVar(dt.Ptr)
 	fn.Code = append(fn.Code, Instruction{
@@ -69,11 +73,13 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 		Operation:   Get,
 		Operand1: Operand{
 			Var: Variable{
-				Name:       "__other",
-				DataType:   dt.Ptr,
-				Visibility: Param,
+				Name:        "__other",
+				DataType:    dt.Ptr,
+				Visibility:  Param,
+				SrcPosition: str.Def.Location,
 			},
 		},
+		SrcPosition: str.Def.Location,
 	})
 	comparisons := []Variable{}
 	for _, propName := range str.OrderedProperties {
@@ -90,21 +96,27 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 				Destination: loadProp,
 				Operation:   Load,
 				Operand1: Operand{
-					Var: loadThis,
+					Var:         loadThis,
+					SrcPosition: str.Def.Location,
 				},
 				Operand2: Operand{
-					Constant: prop.Offset.Value,
+					Constant:    prop.Offset.Value,
+					SrcPosition: str.Def.Location,
 				},
+				SrcPosition: str.Def.Location,
 			},
 			Instruction{
 				Destination: loadOtherProp,
 				Operation:   Load,
 				Operand1: Operand{
-					Var: loadOther,
+					Var:         loadOther,
+					SrcPosition: str.Def.Location,
 				},
 				Operand2: Operand{
-					Constant: prop.Offset.Value,
+					Constant:    prop.Offset.Value,
+					SrcPosition: str.Def.Location,
 				},
+				SrcPosition: str.Def.Location,
 			},
 		}
 		var equality []TAC
@@ -115,7 +127,7 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 			equals = eq.Var
 		} else if prop.Type.Equals(dt.StringType) {
 			var operand Operand
-			equality, operand = callFunction("__str_eq", dt.I32, Operand{Var: loadProp}, Operand{Var: loadOtherProp})
+			equality, operand = callFunction("__str_eq", dt.I32, str.Def.Location, Operand{Var: loadProp}, Operand{Var: loadOtherProp})
 			equals = operand.Var
 		} else {
 			equals = formTempVar(dt.I32)
@@ -124,11 +136,14 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 					Destination: equals,
 					Operation:   typedOperation(propType, "eq"),
 					Operand1: Operand{
-						Var: loadProp,
+						Var:         loadProp,
+						SrcPosition: str.Def.Location,
 					},
 					Operand2: Operand{
-						Var: loadOtherProp,
+						Var:         loadOtherProp,
+						SrcPosition: str.Def.Location,
 					},
+					SrcPosition: str.Def.Location,
 				},
 			}
 		}
@@ -145,6 +160,7 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 				Type:     dt.I32,
 				Constant: 1,
 			},
+			SrcPosition: str.Def.Location,
 		})
 	} else if len(comparisons) == 1 {
 		fn.Code = append(fn.Code, Instruction{
@@ -152,6 +168,7 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 			Operand1: Operand{
 				Var: comparisons[0],
 			},
+			SrcPosition: str.Def.Location,
 		})
 	} else {
 		and := formTempVar(dt.I32)
@@ -164,6 +181,7 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 			Operand2: Operand{
 				Var: comparisons[1],
 			},
+			SrcPosition: str.Def.Location,
 		})
 		for i := 2; i < len(comparisons); i++ {
 			next_and := formTempVar(dt.I32)
@@ -176,6 +194,7 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 				Operand2: Operand{
 					Var: comparisons[i],
 				},
+				SrcPosition: str.Def.Location,
 			})
 			and = next_and
 		}
@@ -184,6 +203,7 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 			Operand1: Operand{
 				Var: and,
 			},
+			SrcPosition: str.Def.Location,
 		})
 	}
 	return fn
@@ -234,47 +254,52 @@ func structDefaultToString(str *semantic.StructSymbol) Function {
 			})
 		} else if prop.Type.IsDynamic {
 			toString := getStructToString(prop.Type.String())
-			call, operand := callFunction(toString, dt.Str_const, Operand{Var: loadProp})
+			call, operand := callFunction(toString, dt.Str_const, str.Def.Location, Operand{Var: loadProp})
 			fn.Code = append(fn.Code, call...)
 			propLoads = append(propLoads, operand)
 		} else {
-			call, operand := callFunction(string(getToStringFn(prop.Type)), dt.Str_const, Operand{Var: loadProp})
+			call, operand := callFunction(string(getToStringFn(prop.Type)), dt.Str_const, str.Def.Location, Operand{Var: loadProp})
 			fn.Code = append(fn.Code, call...)
 			propLoads = append(propLoads, operand)
 		}
 	}
 	open := Operand{
-		Type:     dt.I32,
-		Constant: '{',
+		Type:        dt.I32,
+		Constant:    '{',
+		SrcPosition: str.Def.Location,
 	}
 	close := Operand{
-		Type:     dt.I32,
-		Constant: '}',
+		Type:        dt.I32,
+		Constant:    '}',
+		SrcPosition: str.Def.Location,
 	}
 	if len(propLoads) == 0 {
-		returnStr, strVal := callFunction(string(CharConcat), dt.Str_const, open, close)
+		returnStr, strVal := callFunction(string(CharConcat), dt.Str_const, str.Def.Location, open, close)
 		fn.Code = append(fn.Code, returnStr...)
 		fn.Code = append(fn.Code, Instruction{
-			Operation: Return,
-			Operand1:  strVal,
+			Operation:   Return,
+			Operand1:    strVal,
+			SrcPosition: str.Def.Location,
 		})
 	} else {
-		returnStr, start := callFunction(string(CharConcatString), dt.Str_const, open, propLoads[0])
+		returnStr, start := callFunction(string(CharConcatString), dt.Str_const, str.Def.Location, open, propLoads[0])
 		comma := Operand{
-			Type:     dt.I32,
-			Constant: ',',
+			Type:        dt.I32,
+			Constant:    ',',
+			SrcPosition: str.Def.Location,
 		}
 		for i := 1; i < len(propLoads); i++ {
-			currStr, curr := callFunction(string(CharConcatString), dt.Str_const, comma, propLoads[i])
+			currStr, curr := callFunction(string(CharConcatString), dt.Str_const, str.Def.Location, comma, propLoads[i])
 			returnStr = append(returnStr, currStr...)
-			combineStrs, combine := callFunction(string(StringConcat), dt.Str_const, start, curr)
+			combineStrs, combine := callFunction(string(StringConcat), dt.Str_const, str.Def.Location, start, curr)
 			start = combine
 			returnStr = append(returnStr, combineStrs...)
 		}
-		end, returnVal := callFunction(string(StringConcatChar), dt.Str_const, start, close)
+		end, returnVal := callFunction(string(StringConcatChar), dt.Str_const, str.Def.Location, start, close)
 		end = append(end, Instruction{
-			Operation: Return,
-			Operand1:  returnVal,
+			Operation:   Return,
+			Operand1:    returnVal,
+			SrcPosition: str.Def.Location,
 		})
 		returnStr = append(returnStr, end...)
 		fn.Code = append(fn.Code, returnStr...)
@@ -395,7 +420,7 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 		if strings.Contains(comp, "l") {
 			if lessFn := compareBlock.InnerScope.LookupFunctionByName("lessThan"); lessFn != nil {
 				lessName := lessFn.Overloads[0].IRName
-				call, compare = callFunction(lessName, dt.I32, l_op, r_op)
+				call, compare = callFunction(lessName, dt.I32, l_op.SrcPosition, l_op, r_op)
 				instructions = append(instructions, call...)
 				compared = true
 			}
@@ -403,7 +428,7 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 		if strings.Contains(comp, "g") {
 			if greaterFn := compareBlock.InnerScope.LookupFunctionByName("greaterThan"); greaterFn != nil {
 				greaterName := greaterFn.Overloads[0].IRName
-				call, compare = callFunction(greaterName, dt.I32, l_op, r_op)
+				call, compare = callFunction(greaterName, dt.I32, l_op.SrcPosition, l_op, r_op)
 				instructions = append(instructions, call...)
 				compared = true
 			}
@@ -411,7 +436,7 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 	}
 	if strings.Contains(comp, "e") {
 		first := compare
-		call, compare = callFunction(equalsName, dt.I32, l_op, r_op)
+		call, compare = callFunction(equalsName, dt.I32, l_op.SrcPosition, l_op, r_op)
 		instructions = append(instructions, call...)
 		if compared {
 			or := formTempVar(dt.I32)
