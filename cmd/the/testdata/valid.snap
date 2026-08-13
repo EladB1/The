@@ -39,7 +39,7 @@ children: [
         Node: { Token: {Value: Logger, Type: identifier, Line: 2, Column: 10} },
         Node: { Label: "interface-body"
         children: [
-            Node: { Label: "fn"
+            Node: { Label: "fn", Type: None
             children: [
                 Node: { Token: {Value: log, Type: identifier, Line: 3, Column: 7} },
                 Node: { Label: "params"
@@ -62,12 +62,12 @@ children: [
         ] },
         Node: { Label: "struct-body"
         children: [
-            Node: { Label: "named-block"
+            Node: { Label: "named-block", IRName: "Logger@ErrorLogger"
             children: [
                 Node: { Token: {Value: Logger, Type: identifier, Line: 7, Column: 4} },
                 Node: { Label: "named-block-body"
                 children: [
-                    Node: { Label: "fn"
+                    Node: { Label: "fn", IRName: "__ErrorLogger_Logger_log", Type: None
                     children: [
                         Node: { Token: {Value: log, Type: identifier, Line: 8, Column: 11} },
                         Node: { Label: "params"
@@ -98,7 +98,7 @@ children: [
             ] }
         ] }
     ] },
-    Node: { Label: "fn"
+    Node: { Label: "fn", IRName: "main", Type: int
     children: [
         Node: { Token: {Value: main, Type: identifier, Line: 14, Column: 3} },
         Node: { Token: {Value: int, Type: type keyword, Line: 14, Column: 13} },
@@ -153,7 +153,7 @@ children: [
             ] },
             Node: { Label: "if-block"
             children: [
-                Node: { Label: "if"
+                Node: { Label: "if", IRName: "if#0@main()"
                 children: [
                     Node: { Token: {Value: >, Type: compare operator, Line: 20, Column: 10}, Type: bool
                     children: [
@@ -181,7 +181,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else if"
+                Node: { Label: "else if", IRName: "else if#0.0@main()"
                 children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 24, Column: 19}, Type: bool
                     children: [
@@ -208,7 +208,7 @@ children: [
                         ] }
                     ] }
                 ] },
-                Node: { Label: "else"
+                Node: { Label: "else", IRName: "else#0@main()"
                 children: [
                     Node: { Label: "conditional-body"
                     children: [
@@ -233,9 +233,9 @@ children: [
                 Node: { Token: {Value: str, Type: identifier, Line: 28, Column: 11} },
                 Node: { Token: {Value: "hello", Type: string literal, Line: 28, Column: 17}, Type: String }
             ] },
-            Node: { Label: "for"
+            Node: { Label: "for", IRName: "for#0@main()"
             children: [
-                Node: { Label: "loop-condition"
+                Node: { Label: "loop-condition", IRName: "indexed_foreach"
                 children: [
                     Node: { Label: "Variable", Type: int
                     children: [
@@ -254,7 +254,7 @@ children: [
                 children: [
                     Node: { Label: "if-block"
                     children: [
-                        Node: { Label: "if"
+                        Node: { Label: "if", IRName: "if#0@for#0@main()"
                         children: [
                             Node: { Token: {Value: ||, Type: operator, Line: 30, Column: 19}, Type: bool
                             children: [
@@ -271,7 +271,7 @@ children: [
                                         Node: { Label: "dot", Type: int
                                         children: [
                                             Node: { Token: {Value: str, Type: identifier, Line: 30, Column: 27}, Type: String },
-                                            Node: { Token: {Value: length, Type: identifier, Line: 30, Column: 31} }
+                                            Node: { Token: {Value: length, Type: identifier, Line: 30, Column: 31}, Type: int }
                                         ] },
                                         Node: { Token: {Value: 1, Type: int literal, Line: 30, Column: 40}, Type: int }
                                     ] }
@@ -306,7 +306,7 @@ children: [
                 Node: { Token: {Value: indx, Type: identifier, Line: 34, Column: 12} },
                 Node: { Token: {Value: 0, Type: int literal, Line: 34, Column: 19}, Type: int }
             ] },
-            Node: { Label: "while"
+            Node: { Label: "while", IRName: "while#0@main()"
             children: [
                 Node: { Token: {Value: <, Type: compare operator, Line: 35, Column: 16}, Type: bool
                 children: [
@@ -314,14 +314,14 @@ children: [
                     Node: { Label: "dot", Type: int
                     children: [
                         Node: { Token: {Value: str, Type: identifier, Line: 35, Column: 18}, Type: String },
-                        Node: { Token: {Value: length, Type: identifier, Line: 35, Column: 22} }
+                        Node: { Token: {Value: length, Type: identifier, Line: 35, Column: 22}, Type: int }
                     ] }
                 ] },
                 Node: { Label: "loop-body"
                 children: [
                     Node: { Label: "if-block"
                     children: [
-                        Node: { Label: "if"
+                        Node: { Label: "if", IRName: "if#0@while#0@main()"
                         children: [
                             Node: { Token: {Value: &&, Type: operator, Line: 36, Column: 22}, Type: bool
                             children: [
@@ -351,7 +351,7 @@ children: [
                     ] },
                     Node: { Label: "Unary", Type: int
                     children: [
-                        Node: { Token: {Value: indx, Type: identifier, Line: 38, Column: 8} },
+                        Node: { Token: {Value: indx, Type: identifier, Line: 38, Column: 8}, Type: int },
                         Node: { Token: {Value: ++, Type: unary operator, Line: 38, Column: 12} }
                     ] }
                 ] }
@@ -365,7 +365,137 @@ children: [
     ] }
 ] }
 Program: [
-    STORE global.SOME_CONST u32(50000)
+  fn __ErrorLogger_cast__default_toString(__this: ptr)->str_const {
+      __t0: ptr = GET param.__this
+      PARAM i32(123)
+      PARAM i32(125)
+      __t1: str_const = CALL __char_concat 2
+      return __t1
+  }
+
+  fn __ErrorLogger_compare__default__equals(__this: ptr, __other: ptr)->i32 {
+      __t2: ptr = GET param.__this
+      __t3: ptr = GET param.__other
+      return i32(1)
+  }
+
+  fn __ErrorLogger_Logger_log(error: str_const, __this: ptr) {
+      __t4: str_const = GET param.error
+      PARAM str_const(1)
+      PARAM __t4
+      __t5: str_const = CALL __str_concat 2
+      PARAM __t5
+      CALL println 1
+  }
+
+      STORE global.SOME_CONST u32(50000)
+  fn main()->i32 {
+      __t6: ptr = Malloc 0
+      STORE local.logger __t6
+      __t7: u32 = GET global.SOME_CONST
+      PARAM __t7
+      PARAM u32(2)
+      __t8: u32 = CALL __u32_pow 2
+      STORE local.i __t8
+      __t9: u32 = GET local.i
+      __t10: u32 = u32.add __t9 u32(2)
+      STORE local.i __t10
+      __t11: u32 = GET local.i
+      __t12: u32 = u32.mul __t11 u32(2)
+      STORE local.i __t12
+      __t13: u32 = GET local.i
+      __t14: i32 = u32.lt __t13 u32(10)
+      STORE local.less __t14
+      __t15: u32 = GET local.i
+      __t16: u32 = GET global.UINT32_MAX
+      __t17: i32 = u32.gt __t15 __t16
+      if __t17 {
+          __t18: ptr = GET local.logger
+          PARAM str_const(2)
+          PARAM __t18
+          CALL log 2
+          return i32(1)
+      } else {
+          __t19: u32 = GET local.i
+          __t20: u32 = u32.mod __t19 u32(2)
+          __t21: i32 = u32.eq __t20 u32(0)
+          if __t21 {
+              __t22: ptr = GET local.logger
+              PARAM str_const(3)
+              PARAM __t22
+              CALL log 2
+          } else {
+              __t23: ptr = GET local.logger
+              PARAM str_const(4)
+              PARAM __t23
+              CALL log 2
+          }
+      }
+      STORE local.str str_const(5)
+      loop_exit@0: {
+        __t24: str_const = GET local.str
+        PARAM __t24
+        __t25: i32 = CALL __str_length 1
+        STORE local.k i32(0)
+        loop@0: {
+          __t26: i32 = GET local.k
+          PARAM __t24
+          PARAM __t26
+          __t27: i32 = CALL __str_index 2
+          STORE local.c __t27
+          __t28: i32 = i32.lt __t26 __t25
+          JMPIFNOT loop_exit@0
+          loop_body@0: {
+            __t30: i32 = GET local.k
+            __t31: i32 = i32.eq __t30 i32(0)
+            __t32: i32 = GET local.k
+            __t33: str_const = GET local.str
+            PARAM __t33
+            __t34: i32 = CALL __str_length 1
+            __t35: i32 = i32.sub __t34 i32(1)
+            __t36: i32 = i32.eq __t32 __t35
+            __t37: i32 = i32.or __t31 __t36
+            if __t37 {
+                JMP loop@0
+            }
+            __t38: i32 = GET local.c
+            PARAM __t38
+            CALL println 1
+            __t29: i32 = i32.add __t26 i32(1)
+            STORE local.k __t29
+            JMP loop@0
+          }
+        }
+      }
+      STORE local.indx i32(0)
+      loop_exit@1: {
+        loop@1: {
+          __t39: i32 = GET local.indx
+          __t40: str_const = GET local.str
+          PARAM __t40
+          __t41: i32 = CALL __str_length 1
+          __t42: i32 = i32.lt __t39 __t41
+          JMPIFNOT loop_exit@1 __t42
+          loop_body@1: {
+            __t43: i32 = GET local.indx
+            __t44: i32 = i32.ne __t43 i32(0)
+            __t45: i32 = GET local.indx
+            __t46: i32 = i32.mod __t45 i32(7)
+            __t47: i32 = i32.eq __t46 i32(0)
+            __t48: i32 = i32.and __t44 __t47
+            if __t48 {
+                JMP loop_exit@1
+            }
+            __t49: i32 = GET local.indx
+            __t50: i32 = i32.add __t49 i32(1)
+            STORE local.indx __t50
+            JMP loop@1
+          }
+        }
+      }
+      return i32(0)
+  }
+
 ]
 
 
