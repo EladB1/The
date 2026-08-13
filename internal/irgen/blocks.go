@@ -124,7 +124,34 @@ func translateAssignment(node *parser.AST) []TAC {
 	}
 	variable := currScope.LookupVariable(name)
 	if variable != nil {
-		instructions = append(instructions, storeVariable(*variable, value_op))
+		if variable.Ctx == semantic.StructProp {
+			loadThis := formTempVar(dt.Ptr)
+			instructions = append(instructions, Instruction{
+				Destination: loadThis,
+				Operation:   Get,
+				Operand1: Operand{
+					Var: Variable{
+						Name:        "__this",
+						DataType:    dt.Ptr,
+						Visibility:  Param,
+						SrcPosition: node.Location,
+					},
+				},
+				SrcPosition: node.Location,
+			},
+				Instruction{
+					Operation: Set,
+					Operand1: Operand{
+						Var:         loadThis,
+						Offset:      variable.Offset,
+						SrcPosition: node.Location,
+					},
+					Operand2:    value_op,
+					SrcPosition: node.Location,
+				})
+		} else {
+			instructions = append(instructions, storeVariable(*variable, value_op))
+		}
 	}
 	currScope = scope
 	return instructions

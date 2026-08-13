@@ -15,6 +15,8 @@ struct Person1 impl P {
         int id = 1;
         fn increaseAge() {
             age += 1;
+            mut int incr;
+            incr = 1;
         }
     }
 
