@@ -1,7 +1,8 @@
-int x = 1;
+mut int x = 1;
 interface P {
     fn do();
     fn donot() {
+        global.x = 2;
         println("no");
     }
 }

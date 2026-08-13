@@ -72,15 +72,25 @@ func translateControlFlow(node *parser.AST, exitLabel string, startLabel string)
 
 func translateAssignment(node *parser.AST) []TAC {
 	instructions := []TAC{}
+	scope := currScope
+	var nameNode *parser.AST
 	if node.Children[0].Label == "dot" {
-		return translateDotAssignment(node)
+		if node.Children[0].Children[0].Type.Equals(dt.GlobalRefType) {
+			fmt.Println("GLOBAL")
+			nameNode = node.Children[0].Children[1]
+			currScope = globalScope
+		} else {
+			return translateDotAssignment(node)
+		}
+	} else {
+		nameNode = node.Children[0]
 	}
-	name := node.Children[0].Token.Value
+	name := nameNode.Token.Value
 	value := node.Children[1]
 	var value_in []TAC
 	var value_op Operand
 	if node.Token.Value != "=" {
-		var_in, operand := loadVariable(*node.Children[0])
+		var_in, operand := loadVariable(*nameNode)
 		value_in, value_op = translateExpression(*value)
 		instructions = append(instructions, var_in...)
 		var operation Operation
@@ -116,6 +126,7 @@ func translateAssignment(node *parser.AST) []TAC {
 	if variable != nil {
 		instructions = append(instructions, storeVariable(*variable, value_op))
 	}
+	currScope = scope
 	return instructions
 }
 
@@ -126,9 +137,7 @@ func translateDotAssignment(node *parser.AST) []TAC {
 	var propSymbol *semantic.VariableSymbol
 	var ptr_in []TAC
 	var ptr Operand
-	if left.Type.Equals(dt.GlobalRefType) {
-
-	} else if left.Type.RootEquals(dt.Ref) {
+	if left.Type.RootEquals(dt.Ref) {
 		loadThis := formTempVar(dt.Ptr)
 		ptr_in, ptr = []TAC{
 			Instruction{
