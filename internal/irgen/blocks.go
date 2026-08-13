@@ -448,7 +448,6 @@ func translateForLoop(node *parser.AST) []TAC {
 				Var:  next,
 			}),
 		}
-		// TODO: refactor
 	}
 	outerBlock.Code = append(outerBlock.Code, init...)
 	loop.Code = append(loop.Code, limit_in...)

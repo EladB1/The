@@ -1,0 +1,23 @@
+// Test what happens when an interface is used as a variable type
+
+interface A {
+    fn doSomething() -> int {
+        return 0;
+    }
+}
+
+struct B impl A {
+    int i;
+    A {}
+}
+
+fn callDoSomething(A object) {
+    object.doSomething();
+}
+
+fn main() -> int {
+    A b = B{i: 1};
+    callDoSomething(b);
+    b.doSomething();
+    return 0;
+}
