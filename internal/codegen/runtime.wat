@@ -7,11 +7,17 @@
     (global $iovec_base i32 (i32.const 0))
     (global $iovec_ptr i32 (i32.const 0))
     (global $iovec_len i32 (i32.const 4))
-    (global $return_space i32 (i32.const 8))
+    (global $iovec_newline_ptr i32 (i32.const 8))
+    (global $iovec_newline_len i32 (i32.const 12))
+    (global $return_space i32 (i32.const 16))
+    (global $NEWLINE_CHAR_ADDR i32 (i32.const 1000))
+    
+
+    (data (i32.const 1000) "\n")
     ;;
     ;; compiler library
     ;;
-    (func $__fd_write (param $fd i32) (param $ptr i32)
+    (func $__fd_write (param $fd i32) (param $ptr i32) (param $newline i32)
         (local $len i32)
         (call $__str_length (local.get $ptr))
         (local.set $len)
@@ -26,6 +32,19 @@
 
         )
         drop
+        (if (i32.eq (local.get $newline) (i32.const 1))
+            (then
+                (i32.store (global.get $iovec_newline_ptr) (global.get $NEWLINE_CHAR_ADDR))
+                (i32.store (global.get $iovec_newline_len) (i32.const 1))
+                (call $__print
+                    (local.get $fd)
+                    (global.get $iovec_newline_ptr)
+                    (i32.const 1)
+                    (global.get $return_space)
+                )
+                drop
+            )
+        )
     )
 
     (func $__str_length (param $ptr i32) (result i32)
@@ -105,12 +124,15 @@
     (global $E f64 (f64.const 2.718281828459045))
 
     (func $print (export "print") (param $ptr i32)
-        (call $__fd_write (i32.const 1) (local.get $ptr))
+        (call $__fd_write (i32.const 1) (local.get $ptr) (i32.const 0))
     )
-    ;; TODO: println
+    
+    (func $println (export "println") (param $ptr i32)
+        (call $__fd_write (i32.const 1) (local.get $ptr) (i32.const 1))
+    )
 
     (func $printerr (export "printerr") (param $ptr i32)
-        (call $__fd_write (i32.const 2) (local.get $ptr))
+        (call $__fd_write (i32.const 2) (local.get $ptr) (i32.const 1))
     )
 
     (func $exit_int (export "exit_int") (param $exitCode i32)
@@ -136,13 +158,13 @@
     ;; Generated code
     ;;
 
-    (data (i32.const 100) "hello, world!\n")
+    (data (i32.const 100) "hello, world!")
     
     ;; will eventually get rid of this but using it for POC
     (func $main (result i32)
         ;;(call $__str_length (i32.const 50))
         
-        (call $printerr
+        (call $println
             (i32.const 100)
         )
         (i32.const 0)
