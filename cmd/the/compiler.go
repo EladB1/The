@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/EladB1/The/internal/codegen"
 	"github.com/EladB1/The/internal/config"
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/filehandler"
@@ -38,7 +39,7 @@ func init() {
 	}
 }
 
-func compile(source []string) {
+func compile(filename string, source []string) {
 	tokens, literals, lexerDiagnostics := lexer.Lex(source, false)
 	compilerDiagnostics.Combine(lexerDiagnostics)
 	//lexer.PrintTokens(tokens, literals)
@@ -68,6 +69,7 @@ func compile(source []string) {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}
+	codegen.Generate(filename, ir, literals)
 	errors, warnings := reportStatus(compilerDiagnostics)
 	if (conf.Strict && warnings != 0) || errors != 0 {
 		os.Exit(1)
@@ -127,5 +129,5 @@ func main() {
 	if err != nil {
 		diagnostic.ReportFatal(err.Error(), 1)
 	}
-	compile(src)
+	compile(filename, src)
 }

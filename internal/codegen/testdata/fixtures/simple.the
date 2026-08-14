@@ -1,0 +1,8 @@
+int x = 1;
+int64 y;
+
+fn main() -> int {
+    printerr("Error");
+    String s = "hello";
+    return 0;
+}

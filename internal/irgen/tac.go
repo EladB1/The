@@ -18,7 +18,7 @@ type (
 	RuntimeFunction string
 	/* interface for Instruction, Function, Loop, IfBlock, and Block */
 	TAC interface {
-		getTACType() string
+		GetTACType() string
 	}
 	Program struct {
 		Code []TAC
@@ -146,23 +146,23 @@ func typedOperation(irType datatypes.IRType, operation string) Operation {
 
 // TAC interface consumers
 
-func (ins Instruction) getTACType() string {
+func (ins Instruction) GetTACType() string {
 	return "Instruction"
 }
 
-func (block IfBlock) getTACType() string {
+func (block IfBlock) GetTACType() string {
 	return "IfBlock"
 }
 
-func (block Block) getTACType() string {
+func (block Block) GetTACType() string {
 	return "Block"
 }
 
-func (loop Loop) getTACType() string {
+func (loop Loop) GetTACType() string {
 	return "Loop"
 }
 
-func (fn Function) getTACType() string {
+func (fn Function) GetTACType() string {
 	return "Function"
 }
 
@@ -288,7 +288,7 @@ func (op Operand) String() string {
 func stringifyCode(code []TAC, indentLevel int) string {
 	output := strings.Builder{}
 	for _, line := range code {
-		switch line.getTACType() {
+		switch line.GetTACType() {
 		case "Instruction":
 			inst, ok := line.(Instruction)
 			if !ok {
