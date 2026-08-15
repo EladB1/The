@@ -69,7 +69,8 @@ func compile(filename string, source []string) {
 		reportStatus(compilerDiagnostics)
 		os.Exit(1)
 	}
-	codegen.Generate(filename, ir, literals)
+	target := codegen.Generate(filename, ir, literals)
+	fmt.Println(target)
 	errors, warnings := reportStatus(compilerDiagnostics)
 	if (conf.Strict && warnings != 0) || errors != 0 {
 		os.Exit(1)
