@@ -10,7 +10,7 @@ import (
 
 const (
 	dataStart          = 100
-	indentDelim string = "  "
+	indentDelim string = "    "
 )
 
 type (
@@ -230,7 +230,7 @@ func stringifyBody(body []Statement, indentLevel int) string {
 
 func (inst NumericInstruction) String(indentLevel int) string {
 	output := strings.Builder{}
-	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteRune('(')
 	output.WriteString(fmt.Sprintf("%s.%s", inst.DataType, inst.Operator))
 	if inst.Value != nil {
@@ -242,7 +242,7 @@ func (inst NumericInstruction) String(indentLevel int) string {
 
 func (inst ControlInstruction) String(indentLevel int) string {
 	output := strings.Builder{}
-	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteRune('(')
 	output.WriteString(string(inst.Operator)) // TODO: expand
 	output.WriteString(")")

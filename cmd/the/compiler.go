@@ -71,6 +71,10 @@ func compile(filename string, source []string) {
 	}
 	target := codegen.Generate(filename, ir, literals)
 	fmt.Println(target)
+	err := codegen.BuildExecutable(target)
+	if err != nil {
+		diagnostic.ReportFatal(err.Error(), 1)
+	}
 	errors, warnings := reportStatus(compilerDiagnostics)
 	if (conf.Strict && warnings != 0) || errors != 0 {
 		os.Exit(1)

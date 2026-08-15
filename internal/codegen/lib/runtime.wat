@@ -4,6 +4,9 @@
         (func $__print (param $fd i32) (param $iovec i32) (param $len i32) (param $written i32) (result i32))
     )
     (memory (export "memory") 1)
+    ;;
+    ;; compiler library
+    ;;
     (global $iovec_base i32 (i32.const 0))
     (global $iovec_ptr i32 (i32.const 0))
     (global $iovec_len i32 (i32.const 4))
@@ -11,12 +14,10 @@
     (global $iovec_newline_len i32 (i32.const 12))
     (global $return_space i32 (i32.const 16))
     (global $NEWLINE_CHAR_ADDR i32 (i32.const 1000))
-    
-
+    (data (i32.const 5000) "0123456789")
+    (global $itoa_out_buf i32 (i32.const 5010))
     (data (i32.const 1000) "\n")
-    ;;
-    ;; compiler library
-    ;;
+    
     (func $__fd_write (param $fd i32) (param $ptr i32) (param $newline i32)
         (local $len i32)
         (call $__str_length (local.get $ptr))
@@ -68,6 +69,37 @@
         )
         (local.get $len)
     )
+
+    ;; (func $__itoa (param $value i32) (result i32)
+    ;;     (local $is_negative i32)
+    ;;     (local $digit i32)
+    ;;     (local $index i32)
+    ;;     (local.set $index (i32.const 0))
+    ;;     (if (i32.eqz (local.get $value))
+    ;;         (then
+    ;;             (i32.store (global.get $itoa_out_buf) (i32.load8_u (i32.const 5000)))
+    ;;             (return (global.get $itoa_out_buf))
+    ;;         )
+    ;;     )
+    ;;     (if (i32.lt_s (local.get $value) (i32.const 0))
+    ;;         (then
+    ;;             (local.set $is_negative (i32.const 1))
+    ;;             (local.set $value (i32.mul (i32.const -1) (local.get $value)))
+    ;;             (i32.store8 (global.get $itoa_out_buf) (i32.const 45))
+    ;;             (local.set $index (i32.const 1))
+    ;;         )
+    ;;         ;; (else (
+    ;;         ;;     (local.set $is_negative (i32.const 0))
+    ;;         ;; ))
+    ;;     )
+    ;;     (loop $digit_loop
+    ;;         (local.set $digit (i32.rem_u (local.get $value) (i32.const 10)))
+    ;;         (i32.sub )
+    ;;     )
+    ;;     (i32.const 10)
+    ;;     return 
+
+    ;; )
     ;; (func $__i32_pow (param $base i32) (param $exponent i32) (result i32)
     ;;     ;; TODO
     ;; )
@@ -92,81 +124,4 @@
     ;;     ;; TODO
     ;; )
 
-    ;;
-    ;; built-ins
-    ;;
-    (global $INT_MIN i32 (i32.const -2147483648))
-    (global $INT_MAX i32 (i32.const 2147483647))
 
-    (global $INT64_MIN i64 (i64.const -9223372036854775808))
-    (global $INT64_MAX i64 (i64.const 9223372036854775807))
-
-    (global $UINT32_MAX i32 (i32.const 4294967295))
-    (global $UINT64_MAX i64 (i64.const 18446744073709551615))
-
-    (global $FLOAT_MIN f32 (f32.const -0x1.ff933c78cdfadp+127))
-    (global $FLOAT_MIN_POSITIVE f32 (f32.const 0x1.00fb32c6204c4p-126))
-    (global $FLOAT_MAX f32 (f32.const 0x1.ff933c78cdfadp+127))
-    (global $FLOAT_EPSILON f32 (f32.const 0x1.ff19e23a836fcp-24))
-    (global $FLOAT_NaN f32 (f32.const 0x7FC00000))
-    (global $FLOAT_INF f32 (f32.const 0x7F800000))
-    (global $FLOAT_NEG_INF f32 (f32.const 0xFF800000))
-
-    (global $DOUBLE_MIN f64 (f64.const -0x1.fdcf158adbb99p+1023))
-    (global $DOUBLE_MIN_POSITIVE f64 (f64.const 0x1.0091177587f82p-1022))
-    (global $DOUBLE_MAX f64 (f64.const 0x1.fdcf158adbb99p+1023))
-    (global $DOUBLE_EPSILON f64 (f64.const 0x1.ffe5ab7e8ad5ep-53))
-    (global $DOUBLE_NaN f64 (f64.const 0x7FF8000000000000))
-    (global $DOUBLE_INF f64 (f64.const 0x7FF0000000000000))
-    (global $DOUBLE_NEG_INF f64 (f64.const 0xFFF0000000000000))
-
-    (global $PI f64 (f64.const 3.141592653589793))
-    (global $E f64 (f64.const 2.718281828459045))
-
-    (func $print (export "print") (param $ptr i32)
-        (call $__fd_write (i32.const 1) (local.get $ptr) (i32.const 0))
-    )
-    
-    (func $println (export "println") (param $ptr i32)
-        (call $__fd_write (i32.const 1) (local.get $ptr) (i32.const 1))
-    )
-
-    (func $printerr (export "printerr") (param $ptr i32)
-        (call $__fd_write (i32.const 2) (local.get $ptr) (i32.const 1))
-    )
-
-    (func $exit_int (export "exit_int") (param $exitCode i32)
-        (call $__exit (local.get $exitCode))
-
-    )
-
-    (func $exit_int_String (export "exit_int_String") (param $exitCode i32) (param $message i32)
-        (call $printerr (local.get $message))
-        (call $__exit (local.get $exitCode))
-    )
-
-    ;;
-    ;; entry point 
-    ;;
-
-    (func (export "_start")
-        (call $main)
-        (call $exit_int)
-    )
-
-    ;;
-    ;; Generated code
-    ;;
-
-    (data (i32.const 100) "hello, world!")
-    
-    ;; will eventually get rid of this but using it for POC
-    (func $main (result i32)
-        ;;(call $__str_length (i32.const 50))
-        
-        (call $println
-            (i32.const 100)
-        )
-        (i32.const 0)
-    )
-)
