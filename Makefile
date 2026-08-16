@@ -9,7 +9,10 @@ test:
 IN_FILE ?= ''
 
 run: build
-	./the $(IN_FILE)
+	./the run $(IN_FILE)
+
+run-build: build
+	./the build $(IN_FILE)
 
 # Example: make run IN_FILE=examples/src/strings.the
 

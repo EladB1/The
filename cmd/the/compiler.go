@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/EladB1/The/internal/codegen"
 	"github.com/EladB1/The/internal/config"
@@ -26,6 +27,7 @@ var (
 		SuppressWarnings: *suppressWarnings,
 	}
 	compilerDiagnostics diagnostic.PhaseDiagnostics
+	buildOnly           bool = true
 )
 
 func init() {
@@ -33,7 +35,7 @@ func init() {
 	flag.Usage = func() {
 		output := flag.CommandLine.Output()
 
-		fmt.Fprintf(output, "Usage: %s [options] [file]\n", os.Args[0])
+		fmt.Fprintf(output, "Usage: %s [run | build][options] [file]\n", os.Args[0])
 		fmt.Fprintln(output, "options:")
 		flag.PrintDefaults()
 	}
@@ -74,6 +76,11 @@ func compile(filename string, source []string) {
 	err := codegen.BuildExecutable(target)
 	if err != nil {
 		diagnostic.ReportFatal(err.Error(), 1)
+	}
+	if !buildOnly {
+		cmd := exec.Command("wasmtime", target.Filepath)
+		result, _ := cmd.Output() // ignore the error since the program can have an error
+		fmt.Println(string(result))
 	}
 	errors, warnings := reportStatus(compilerDiagnostics)
 	if (conf.Strict && warnings != 0) || errors != 0 {
@@ -127,9 +134,16 @@ func main() {
 		flag.Usage() // show help message
 		fmt.Fprintln(os.Stderr)
 		diagnostic.ReportFatal("no input file", 1)
-		os.Exit(1)
 	}
-	filename := os.Args[len(args)-1]
+	filename := args[len(args)-1]
+	if len(args) >= 3 {
+		switch args[1] {
+		case "run":
+			buildOnly = false
+		case "build":
+			buildOnly = true
+		}
+	}
 	src, err := filehandler.GetSourceCode(filename)
 	if err != nil {
 		diagnostic.ReportFatal(err.Error(), 1)
