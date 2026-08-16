@@ -2,6 +2,8 @@
 
 # no flags used
 the file.the
+the build file.the # equivalent to the line above
+the run file.the
 
 ### Flags:
 

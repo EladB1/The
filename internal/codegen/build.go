@@ -3,6 +3,8 @@ package codegen
 import (
 	"embed"
 	_ "embed"
+	"os"
+	"os/exec"
 
 	"github.com/EladB1/The/internal/filehandler"
 )
@@ -16,8 +18,8 @@ var stdlib embed.FS
 //go:embed shell.wat
 var shell embed.FS
 
-func BuildExecutable(target CompileTarget) error {
-	filepath := target.Filepath
+func BuildExecutable(target CompileTarget, preserve bool) error {
+	filepath := target.WatFilepath
 	err := filehandler.CopyFile(runtimelib, "lib/runtime.wat", filepath)
 	if err != nil {
 		return err
@@ -31,6 +33,16 @@ func BuildExecutable(target CompileTarget) error {
 	if err = filehandler.AppendToFile(filepath, target.String()); err != nil {
 		return err
 	}
-	err = filehandler.AppendToFile(filepath, ")") // append the closing paren
+	if err = filehandler.AppendToFile(filepath, ")"); err != nil { // append the closing paren
+		return err
+	}
+	cmd := exec.Command("wat2wasm", filepath, "-o", target.WasmFilepath)
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		return err
+	}
+	if !preserve {
+		err = os.Remove(target.WatFilepath)
+	}
 	return err
 }

@@ -10,7 +10,8 @@ import (
 
 func Generate(filename string, ir irgen.Program, literals ds.LiteralPool) CompileTarget {
 	target := CompileTarget{
-		Filepath:        strings.Replace(filename, ".the", ".wat", 1),
+		WatFilepath:     strings.Replace(filename, ".the", ".wat", 1),
+		WasmFilepath:    strings.Replace(filename, ".the", ".wasm", 1),
 		DataSection:     buildData(literals),
 		GlobalVariables: getVariables(ir.Code, true),
 		Functions:       getFunctions(ir),

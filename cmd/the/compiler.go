@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"os"
@@ -20,10 +19,12 @@ import (
 
 var (
 	// cli flags
-	colorOff         *bool         = flag.Bool("no-color", false, "Disable color output")
-	suppressWarnings *bool         = flag.Bool("suppress-warnings", false, "Disable reporting of warnings")
-	strict           *bool         = flag.Bool("strict", false, "Any warnings will cause compilation to fail")
-	conf             config.Config = config.Config{
+	colorOff         *bool = flag.Bool("no-color", false, "Disable color output")
+	suppressWarnings *bool = flag.Bool("suppress-warnings", false, "Disable reporting of warnings")
+	strict           *bool = flag.Bool("strict", false, "Any warnings will cause compilation to fail")
+	preserveWatFile  *bool = flag.Bool("preserve-wat-file", false, "Prevents the compiler from deleting the generated WAT file")
+	//outfile          *string       = flag.String("-o", "", "Path to the generated wasm executable")
+	conf config.Config = config.Config{
 		Strict:           *strict,
 		SuppressWarnings: *suppressWarnings,
 	}
@@ -36,7 +37,7 @@ func init() {
 	flag.Usage = func() {
 		output := flag.CommandLine.Output()
 
-		fmt.Fprintf(output, "Usage: %s [run | build][options] [file]\n", os.Args[0])
+		fmt.Fprintf(output, "Usage: %s [options] [run | build] [file]\n", os.Args[0])
 		fmt.Fprintln(output, "options:")
 		flag.PrintDefaults()
 	}
@@ -73,22 +74,18 @@ func compile(filename string, source []string) {
 		os.Exit(1)
 	}
 	target := codegen.Generate(filename, ir, literals)
-	fmt.Println(target)
-	err := codegen.BuildExecutable(target)
+	err := codegen.BuildExecutable(target, *preserveWatFile)
 	if err != nil {
 		diagnostic.ReportFatal(err.Error(), 1)
 	}
 	status := 0
 	if !buildOnly {
-		cmd := exec.Command("wasmtime", target.Filepath)
-		var stdout, stderr bytes.Buffer
-		cmd.Stdout = &stdout
-		cmd.Stderr = &stderr
-		if err := cmd.Run(); err != nil {
+		cmd := exec.Command("wasmtime", target.WasmFilepath)
+		output, err := cmd.CombinedOutput()
+		if err != nil {
 			status = cmd.ProcessState.ExitCode()
 		}
-		fmt.Println(stdout.String())
-		fmt.Fprintln(os.Stderr, stderr.String())
+		fmt.Println(string(output))
 	}
 	errors, warnings := reportStatus(compilerDiagnostics)
 	if (conf.Strict && warnings != 0) || errors != 0 {

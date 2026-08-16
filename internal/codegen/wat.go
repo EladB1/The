@@ -22,7 +22,8 @@ type (
 	NumericOperator  string
 
 	CompileTarget struct {
-		Filepath        string
+		WatFilepath     string
+		WasmFilepath    string
 		DataSection     []Data
 		GlobalVariables []Variable
 		Functions       []Function
