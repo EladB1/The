@@ -7,6 +7,7 @@ require github.com/fatih/color v1.19.0 // direct
 require github.com/gkampitakis/go-snaps v0.5.22
 
 require (
+	github.com/eliben/watgo v0.8.0
 	github.com/gkampitakis/ciinfo v0.3.4 // indirect
 	github.com/goccy/go-yaml v1.19.2 // indirect
 	github.com/kr/pretty v0.3.1 // indirect

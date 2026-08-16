@@ -4,7 +4,8 @@ import (
 	"embed"
 	_ "embed"
 	"os"
-	"os/exec"
+
+	"github.com/eliben/watgo"
 
 	"github.com/EladB1/The/internal/filehandler"
 )
@@ -47,13 +48,27 @@ func BuildExecutable(target CompileTarget, preserve bool, watfile string, outfil
 	if err = filehandler.AppendToFile(watpath, ")"); err != nil { // append the closing paren
 		return err
 	}
-	cmd := exec.Command("wat2wasm", watpath, "-o", wasmpath)
-	_, err = cmd.CombinedOutput()
+	err = wat2wasm(watpath, wasmpath)
+	// cmd := exec.Command("wat2wasm", watpath, "-o", wasmpath)
+	// _, err = cmd.CombinedOutput()
 	if err != nil {
 		return err
 	}
 	if !preserve {
 		err = os.Remove(watpath)
 	}
+	return err
+}
+
+func wat2wasm(watpath, wasmpath string) error {
+	wat, err := os.ReadFile(watpath)
+	if err != nil {
+		return err
+	}
+	wasm, err := watgo.CompileWATToWASM(wat)
+	if err != nil {
+		return err // TODO: update
+	}
+	err = filehandler.AppendToFile(wasmpath, string(wasm))
 	return err
 }
