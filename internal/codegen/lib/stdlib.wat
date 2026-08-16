@@ -29,6 +29,8 @@
     (global $PI f64 (f64.const 3.141592653589793))
     (global $E f64 (f64.const 2.718281828459045))
 
+    (data (i32.const 4000) "Assertion error")
+
     ;;
     ;; functions
     ;;
@@ -51,5 +53,20 @@
     (func $exit_int_String (export "exit_int_String") (param $exitCode i32) (param $message i32)
         (call $printerr (local.get $message))
         (call $__exit (local.get $exitCode))
+    )
+
+    (func $assert_bool (export "assert_bool") (param $cond i32)
+        (if (i32.eqz (local.get $cond))
+            (then
+                (call $exit_int_String (i32.const 1) (i32.const 4000))
+            )
+        )
+    )
+    (func $assert_bool_String (export "assert_bool_String") (param $cond i32) (param $message i32)
+        (if (i32.eqz (local.get $cond))
+            (then
+                (call $exit_int_String (i32.const 1) (local.get $message))
+            )
+        )
     )
 

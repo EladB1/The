@@ -6,6 +6,8 @@ import (
 	"os"
 	"os/exec"
 
+	"runtime/debug"
+
 	"github.com/EladB1/The/internal/codegen"
 	"github.com/EladB1/The/internal/config"
 	"github.com/EladB1/The/internal/diagnostic"
@@ -38,6 +40,7 @@ func init() {
 	flag.Usage = func() {
 		output := flag.CommandLine.Output()
 
+		fmt.Fprintf(output, "Usage: %s version\n", os.Args[0])
 		fmt.Fprintf(output, "Usage: %s [options] [run | build] [file]\n", os.Args[0])
 		fmt.Fprintln(output, "options:")
 		flag.PrintDefaults()
@@ -140,6 +143,15 @@ func main() {
 		flag.Usage() // show help message
 		fmt.Fprintln(os.Stderr)
 		diagnostic.ReportFatal("no input file", 1)
+	}
+	if len(args) == 2 && args[1] == "version" {
+		if buildinfo, ok := debug.ReadBuildInfo(); ok {
+			fmt.Println(buildinfo.Main.Version)
+		} else {
+			fmt.Fprintln(os.Stderr, "Unknown version")
+			os.Exit(1)
+		}
+		return
 	}
 	filename := args[len(args)-1]
 	if len(args) >= 3 {

@@ -1,4 +1,4 @@
-.PHONY: build test run test-coverage test-coverage-html integration update-snaps-lexer update-snaps-parser update-snaps-semantic update-snaps-irgen update-snaps-codegen update-snaps-integration
+.PHONY: build test run run-build test-coverage test-coverage-html integration update-snaps-lexer update-snaps-parser update-snaps-semantic update-snaps-irgen update-snaps-codegen update-snaps-integration
 
 build:
 	go build -o the ./cmd/the
@@ -9,10 +9,10 @@ test:
 IN_FILE ?= ''
 
 run: build
-	./the -preserve-wat-file run $(IN_FILE)
+	./the -preserve-wat-file -o generated/test.wasm -wat generated/test.wat run $(IN_FILE)
 
 run-build: build
-	./the -preserve-wat-file build $(IN_FILE)
+	./the -preserve-wat-file -o generated/test.wasm -wat generated/test.wat build $(IN_FILE)
 
 # Example: make run IN_FILE=examples/src/strings.the
 
