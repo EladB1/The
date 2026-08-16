@@ -18,31 +18,42 @@ var stdlib embed.FS
 //go:embed shell.wat
 var shell embed.FS
 
-func BuildExecutable(target CompileTarget, preserve bool) error {
-	filepath := target.WatFilepath
-	err := filehandler.CopyFile(runtimelib, "lib/runtime.wat", filepath)
+func BuildExecutable(target CompileTarget, preserve bool, watfile string, outfile string) error {
+	var wasmpath string
+	var watpath string
+	if watfile != "" {
+		watpath = watfile
+	} else {
+		watpath = target.WatFilepath
+	}
+	if outfile != "" {
+		wasmpath = outfile
+	} else {
+		wasmpath = target.WasmFilepath
+	}
+	err := filehandler.CopyFile(runtimelib, "lib/runtime.wat", watpath)
 	if err != nil {
 		return err
 	}
-	if err = filehandler.CombineFiles(filepath, "lib/stdlib.wat", stdlib); err != nil {
+	if err = filehandler.CombineFiles(watpath, "lib/stdlib.wat", stdlib); err != nil {
 		return err
 	}
-	if err = filehandler.CombineFiles(filepath, "shell.wat", shell); err != nil {
+	if err = filehandler.CombineFiles(watpath, "shell.wat", shell); err != nil {
 		return err
 	}
-	if err = filehandler.AppendToFile(filepath, target.String()); err != nil {
+	if err = filehandler.AppendToFile(watpath, target.String()); err != nil {
 		return err
 	}
-	if err = filehandler.AppendToFile(filepath, ")"); err != nil { // append the closing paren
+	if err = filehandler.AppendToFile(watpath, ")"); err != nil { // append the closing paren
 		return err
 	}
-	cmd := exec.Command("wat2wasm", filepath, "-o", target.WasmFilepath)
+	cmd := exec.Command("wat2wasm", watpath, "-o", wasmpath)
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		return err
 	}
 	if !preserve {
-		err = os.Remove(target.WatFilepath)
+		err = os.Remove(watpath)
 	}
 	return err
 }

@@ -19,12 +19,13 @@ import (
 
 var (
 	// cli flags
-	colorOff         *bool = flag.Bool("no-color", false, "Disable color output")
-	suppressWarnings *bool = flag.Bool("suppress-warnings", false, "Disable reporting of warnings")
-	strict           *bool = flag.Bool("strict", false, "Any warnings will cause compilation to fail")
-	preserveWatFile  *bool = flag.Bool("preserve-wat-file", false, "Prevents the compiler from deleting the generated WAT file")
-	//outfile          *string       = flag.String("-o", "", "Path to the generated wasm executable")
-	conf config.Config = config.Config{
+	colorOff         *bool         = flag.Bool("no-color", false, "Disable color output")
+	suppressWarnings *bool         = flag.Bool("suppress-warnings", false, "Disable reporting of warnings")
+	strict           *bool         = flag.Bool("strict", false, "Any warnings will cause compilation to fail")
+	preserveWatFile  *bool         = flag.Bool("preserve-wat-file", false, "Prevents the compiler from deleting the generated WAT file")
+	watfile          *string       = flag.String("wat", "", "Path to the generated wat file")
+	outfile          *string       = flag.String("o", "", "Path to the generated wasm executable")
+	conf             config.Config = config.Config{
 		Strict:           *strict,
 		SuppressWarnings: *suppressWarnings,
 	}
@@ -74,7 +75,7 @@ func compile(filename string, source []string) {
 		os.Exit(1)
 	}
 	target := codegen.Generate(filename, ir, literals)
-	err := codegen.BuildExecutable(target, *preserveWatFile)
+	err := codegen.BuildExecutable(target, *preserveWatFile, *watfile, *outfile)
 	if err != nil {
 		diagnostic.ReportFatal(err.Error(), 1)
 	}
