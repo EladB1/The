@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"os"
@@ -77,16 +78,23 @@ func compile(filename string, source []string) {
 	if err != nil {
 		diagnostic.ReportFatal(err.Error(), 1)
 	}
+	status := 0
 	if !buildOnly {
 		cmd := exec.Command("wasmtime", target.Filepath)
-		result, _ := cmd.Output() // ignore the error since the program can have an error
-		fmt.Println(string(result))
+		var stdout, stderr bytes.Buffer
+		cmd.Stdout = &stdout
+		cmd.Stderr = &stderr
+		if err := cmd.Run(); err != nil {
+			status = cmd.ProcessState.ExitCode()
+		}
+		fmt.Println(stdout.String())
+		fmt.Fprintln(os.Stderr, stderr.String())
 	}
 	errors, warnings := reportStatus(compilerDiagnostics)
 	if (conf.Strict && warnings != 0) || errors != 0 {
 		os.Exit(1)
 	}
-	os.Exit(0)
+	os.Exit(status)
 }
 
 func reportStatus(messages diagnostic.PhaseDiagnostics) (int, int) {
