@@ -3,6 +3,9 @@
     (import "wasi_snapshot_preview1" "fd_write"
         (func $__print (param $fd i32) (param $iovec i32) (param $len i32) (param $written i32) (result i32))
     )
+    (import "wasi_snapshot_preview1" "fd_read"
+        (func $__fd_read (param $fd i32) (param $iovec i32) (param $len i32) (param $written i32) (result i32))
+    )
     (memory (export "memory") 1)
     ;;
     ;; compiler library
@@ -17,6 +20,14 @@
     (data (i32.const 5000) "0123456789")
     (global $itoa_out_buf i32 (i32.const 5010))
     (data (i32.const 1000) "\n")
+    (global $stdin_buffer i32 (i32.const 200))
+    (data (i32.const 200) "\00")
+    (global $iovec_stdin i32 (i32.const 300))
+    (global $iovec_stdin_len i32 (i32.const 304))
+    (data (i32.const 300) "\00\00\00\00\00\00\00\00")
+    ;; byte counter
+    (global $stdin_byte_counter i32 (i32.const 400))
+    (data (i32.const 400) "\00\00\00\00")
     
     (func $__fd_write (param $fd i32) (param $ptr i32) (param $newline i32)
         (local $len i32)
@@ -46,6 +57,20 @@
                 drop
             )
         )
+    )
+
+    (func $__read_stdin (result i32)
+        (i32.store (global.get $iovec_stdin) (global.get $stdin_buffer))
+        (i32.store (global.get $iovec_stdin_len) (i32.const 256)) ;; allow 256 bytes
+        (call $__fd_read
+            (i32.const 0) ;; stdin
+            (global.get $iovec_stdin)
+            (i32.const 1)
+            (global.get $stdin_byte_counter)
+        )
+        drop
+        (i32.store (global.get $iovec_stdin_len) (i32.load (global.get $stdin_byte_counter)))
+        (global.get $stdin_buffer)
     )
 
     (func $__str_length (param $ptr i32) (result i32)

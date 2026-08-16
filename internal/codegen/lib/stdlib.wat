@@ -69,4 +69,11 @@
             )
         )
     )
+    (func $prompt (export "prompt") (param $promptText i32) (result i32)
+        (local $ptr i32)
+        (call $print (local.get $promptText))
+        (call $__read_stdin)
+        (local.tee $ptr)
+        (return)
+    )
 
