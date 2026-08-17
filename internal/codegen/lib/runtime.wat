@@ -17,8 +17,6 @@
     (global $iovec_newline_len i32 (i32.const 12))
     (global $return_space i32 (i32.const 16))
     (global $NEWLINE_CHAR_ADDR i32 (i32.const 1000))
-    (data (i32.const 5000) "0123456789")
-    (global $itoa_out_buf i32 (i32.const 5010))
     (data (i32.const 1000) "\n")
     (global $stdin_buffer i32 (i32.const 200))
     (data (i32.const 200) "\00")
@@ -95,36 +93,6 @@
         (local.get $len)
     )
 
-    ;; (func $__itoa (param $value i32) (result i32)
-    ;;     (local $is_negative i32)
-    ;;     (local $digit i32)
-    ;;     (local $index i32)
-    ;;     (local.set $index (i32.const 0))
-    ;;     (if (i32.eqz (local.get $value))
-    ;;         (then
-    ;;             (i32.store (global.get $itoa_out_buf) (i32.load8_u (i32.const 5000)))
-    ;;             (return (global.get $itoa_out_buf))
-    ;;         )
-    ;;     )
-    ;;     (if (i32.lt_s (local.get $value) (i32.const 0))
-    ;;         (then
-    ;;             (local.set $is_negative (i32.const 1))
-    ;;             (local.set $value (i32.mul (i32.const -1) (local.get $value)))
-    ;;             (i32.store8 (global.get $itoa_out_buf) (i32.const 45))
-    ;;             (local.set $index (i32.const 1))
-    ;;         )
-    ;;         ;; (else (
-    ;;         ;;     (local.set $is_negative (i32.const 0))
-    ;;         ;; ))
-    ;;     )
-    ;;     (loop $digit_loop
-    ;;         (local.set $digit (i32.rem_u (local.get $value) (i32.const 10)))
-    ;;         (i32.sub )
-    ;;     )
-    ;;     (i32.const 10)
-    ;;     return 
-
-    ;; )
     ;; (func $__i32_pow (param $base i32) (param $exponent i32) (result i32)
     ;;     ;; TODO
     ;; )

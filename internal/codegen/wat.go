@@ -226,26 +226,7 @@ func (fn Function) String() string {
 func stringifyBody(body []Statement, indentLevel int) string {
 	output := strings.Builder{}
 	for _, stmt := range body {
-		switch stmt.GetStatementType() {
-		case "NumericInstruction":
-			numeric, ok := stmt.(NumericInstruction)
-			if !ok {
-				break
-			}
-			output.WriteString(numeric.String(indentLevel + 1))
-		case "ControlInstruction":
-			control, ok := stmt.(ControlInstruction)
-			if !ok {
-				break
-			}
-			output.WriteString(control.String(indentLevel + 1))
-		case "VariableInstruction":
-			variable, ok := stmt.(VariableInstruction)
-			if !ok {
-				break
-			}
-			output.WriteString(variable.String(indentLevel + 1))
-		}
+		output.WriteString(stmt.String(indentLevel + 1))
 		output.WriteString("\n")
 	}
 	return output.String()

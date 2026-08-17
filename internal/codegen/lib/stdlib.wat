@@ -1,3 +1,6 @@
+    (data (i32.const 5000) "0123456789")
+    (global $itoa_out_buf i32 (i32.const 5050))
+    
     ;;
     ;; constants
     ;;
@@ -75,5 +78,69 @@
         (call $__read_stdin)
         (local.tee $ptr)
         (return)
+    )
+
+    (func $__str_fromInt32 (export "__str_fromInt32") (param $num i32) (result i32)
+        (local $numtemp i32)
+        (local $numlen i32)
+        (local $writeidx i32)
+        (local $digit i32)
+        (local $dchar i32)
+        (local $isnegative i32)
+        (local $index i32)
+        (local.set $isnegative (i32.lt_s (local.get $num) (i32.const 0)))
+
+        (i32.eq (local.get $isnegative) (i32.const 1))
+        (if
+            (then
+                (local.set $index (i32.const 1))
+                ;; result[0] = '-'
+                (i32.store8 (global.get $itoa_out_buf) (i32.const 45))
+                ;; num *= -1
+                (local.set $num (i32.mul (local.get $num) (i32.const -1)))
+            )
+        )
+
+        ;; count number of characters and save in $numlen
+        (i32.lt_s (local.get $num) (i32.const 10))
+        if
+            (local.set $numlen (i32.const 1))
+        else
+            (local.set $numlen (local.get $index))
+            (local.set $numtemp (local.get $num))
+            (loop $countloop (block $breakcountloop
+                (i32.eqz (local.get $numtemp))
+                br_if $breakcountloop
+
+                (local.set $numtemp (i32.div_u (local.get $numtemp) (i32.const 10)))
+                (local.set $numlen (i32.add (local.get $numlen) (i32.const 1)))
+                br $countloop
+            ))
+        end
+        (local.set $writeidx 
+            (i32.sub 
+                (i32.add (global.get $itoa_out_buf) (local.get $numlen))
+                (i32.const 1)
+            ))
+        
+        (loop $writeloop (block $breakwriteloop
+            ;; digit = num % 10
+            (local.set $digit (i32.rem_u (local.get $num) (i32.const 10)))
+            (local.set $dchar (i32.load8_u offset=5000 (local.get $digit)))
+
+            ;; mem[writeidx] = dchar
+            (i32.store8 (local.get $writeidx) (local.get $dchar))
+
+            ;; num /= 10
+            (local.set $num (i32.div_u (local.get $num) (i32.const 10)))
+
+            ;; if wrote first index, exit loop
+            (i32.eq (local.get $writeidx) (i32.add (global.get $itoa_out_buf) (local.get $index)))
+            br_if $breakwriteloop
+
+            (local.set $writeidx (i32.sub (local.get $writeidx) (i32.const 1)))
+            br $writeloop
+        ))
+        (global.get $itoa_out_buf)
     )
 
