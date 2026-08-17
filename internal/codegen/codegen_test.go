@@ -63,14 +63,14 @@ func snapshotTestCodeGenerator(t *testing.T, filename string) {
 		snaps.Dir(snapsDir),
 	)
 	fixture := loadFixture(t, dir, filename)
+	fmt.Println(fixture)
 	target := Generate(filename, fixture.Prog, fixture.Literals)
 	results := fmt.Sprintf("{Target:\n%v\n}", target)
 	snapshots.MatchSnapshot(t, results)
 }
 
 func TestCodeGeneration(t *testing.T) {
-	// TODO: Fix IR unmarshalling
-	t.Skip("should compile simple.the", func(t *testing.T) {
+	t.Run("should compile simple.the", func(t *testing.T) {
 		snapshotTestCodeGenerator(t, "simple.json")
 	})
 }
