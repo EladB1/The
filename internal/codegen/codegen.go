@@ -67,7 +67,7 @@ func getVariables(ir []irgen.TAC, inGlobalScope bool) []Variable {
 				vars = append(vars, Variable{
 					Name:       variable.Name,
 					DataType:   lowerIRTypeToWatType(variable.DataType),
-					Value:      instruction.Operand2,
+					Value:      translateOperand(instruction.Operand2),
 					Visibility: vis,
 				})
 			}
@@ -111,6 +111,27 @@ func generateFunctionBody(code []irgen.TAC) []Statement {
 	statements := []Statement{}
 	for _, tac := range code {
 		if instruction, ok := tac.(irgen.Instruction); ok {
+			if instruction.Operation == irgen.Store {
+				if instruction.Operand1.Var.Visibility == irgen.Global {
+					statements = append(statements, MemoryInstruction{
+						DataType: lowerIRTypeToWatType(instruction.Operand1.Var.DataType),
+						Operator: Store,
+						Address: VariableInstruction{
+							Visibility: Global,
+							Operator:   Get,
+							Name:       instruction.Operand1.Var.Name,
+						},
+						Value: translateOperand(instruction.Operand2),
+					})
+				} else {
+					statements = append(statements, VariableInstruction{
+						Visibility: Local,
+						Operator:   Set,
+						Name:       instruction.Operand1.Var.Name,
+						Value:      translateOperand(instruction.Operand2),
+					})
+				}
+			}
 			if instruction.Operation == irgen.Return {
 				statements = append(statements, translateOperand(instruction.Operand1))
 				statements = append(statements, ControlInstruction{

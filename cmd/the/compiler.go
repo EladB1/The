@@ -91,6 +91,7 @@ func compile(filename string, source []string) {
 		}
 		fmt.Println(string(output))
 	}
+	fmt.Println(target)
 	errors, warnings := reportStatus(compilerDiagnostics)
 	if (conf.Strict && warnings != 0) || errors != 0 {
 		os.Exit(1)

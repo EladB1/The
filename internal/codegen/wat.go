@@ -53,11 +53,12 @@ type (
 		Name       string
 		DataType   dt.IRType
 		Visibility WatVisibility
-		Value      any
+		Value      Statement
 	}
 
 	Statement interface {
 		GetStatementType() string
+		String(int) string
 	}
 
 	ControlInstruction struct {
@@ -67,12 +68,16 @@ type (
 	VariableInstruction struct {
 		Visibility WatVisibility
 		Operator   VariableOperator
+		Name       string
+		Value      Statement
 	}
 	MemoryInstruction struct {
-		DataType    dt.IRType
-		MemoryValue string
-		Operator    MemoryOperator
+		DataType dt.IRType
+		Operator MemoryOperator
+		Address  Statement
+		Value    Statement
 	}
+
 	NumericInstruction struct {
 		DataType dt.IRType
 		Operator string
@@ -162,6 +167,14 @@ func (inst NumericInstruction) GetStatementType() string {
 	return "NumericInstruction"
 }
 
+func (inst VariableInstruction) GetStatementType() string {
+	return "VariableInstruction"
+}
+
+func (inst MemoryInstruction) GetStatementType() string {
+	return "MemoryInstruction"
+}
+
 // String representations
 func (target CompileTarget) String() string {
 	output := strings.Builder{}
@@ -178,9 +191,9 @@ func (target CompileTarget) String() string {
 		output.WriteString(" ")
 		output.WriteString(fmt.Sprintf("\"%s\")\n", string(data.Value)))
 	}
-	// for _, glob := range target.GlobalVariables {
-	// 	output.WriteString(glob.String())
-	// }
+	for _, glob := range target.GlobalVariables {
+		output.WriteString(glob.String(1))
+	}
 	for _, fn := range target.Functions {
 		output.WriteString(fn.String())
 	}
@@ -201,6 +214,9 @@ func (fn Function) String() string {
 		output.WriteString(fmt.Sprintf(" (result %s)", fn.ReturnType))
 	}
 	output.WriteString("\n")
+	for _, local := range fn.LocalVariables {
+		output.WriteString(local.String(2))
+	}
 	output.WriteString(stringifyBody(fn.Code, 1))
 	output.WriteString(indentDelim)
 	output.WriteString(")\n")
@@ -223,9 +239,36 @@ func stringifyBody(body []Statement, indentLevel int) string {
 				break
 			}
 			output.WriteString(control.String(indentLevel + 1))
+		case "VariableInstruction":
+			variable, ok := stmt.(VariableInstruction)
+			if !ok {
+				break
+			}
+			output.WriteString(variable.String(indentLevel + 1))
 		}
 		output.WriteString("\n")
 	}
+	return output.String()
+}
+
+func (inst MemoryInstruction) String(indentLevel int) string {
+	output := strings.Builder{}
+	output.WriteString("(")
+	output.WriteString(fmt.Sprintf("%s.%s ", string(inst.DataType), inst.Operator))
+	output.WriteString(inst.Address.String(0))
+	output.WriteString(" ")
+	output.WriteString(inst.Value.String(0))
+	output.WriteString(")")
+	return output.String()
+}
+
+func (inst VariableInstruction) String(indentLevel int) string {
+	output := strings.Builder{}
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
+	output.WriteRune('(')
+	output.WriteString(fmt.Sprintf("%s.%s $%s ", inst.Visibility, inst.Operator, inst.Name))
+	output.WriteString(inst.Value.String(0))
+	output.WriteString(")")
 	return output.String()
 }
 
@@ -247,5 +290,29 @@ func (inst ControlInstruction) String(indentLevel int) string {
 	output.WriteRune('(')
 	output.WriteString(string(inst.Operator)) // TODO: expand
 	output.WriteString(")")
+	return output.String()
+}
+
+func (variable Variable) String(indentLevel int) string {
+	name := fmt.Sprintf("$%s", variable.Name)
+	output := strings.Builder{}
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
+
+	output.WriteString("(")
+	output.WriteString(string(variable.Visibility))
+	output.WriteString(" ")
+	output.WriteString(name)
+	output.WriteString(" ")
+	output.WriteString(string(variable.DataType))
+	if variable.Visibility == Global {
+		output.WriteString(" ")
+		if val, ok := variable.Value.(NumericInstruction); ok {
+			output.WriteString(val.String(0))
+		}
+		output.WriteString(")\n")
+	} else {
+		output.WriteString(")\n")
+		// TODO: value
+	}
 	return output.String()
 }
