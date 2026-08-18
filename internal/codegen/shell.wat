@@ -1,7 +1,7 @@
     ;;
     ;; Entry point
     ;;
-    (func (export "_start")
+    (func $_start (export "_start")
         (call $main)
         (call $exit_int)
     )

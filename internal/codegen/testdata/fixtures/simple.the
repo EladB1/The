@@ -9,6 +9,5 @@ fn main() -> int {
     //double g = 9.8;
     //println(1 + 2);
     printerr("Error");
-    //String s = "hello";
     return 0;
 }

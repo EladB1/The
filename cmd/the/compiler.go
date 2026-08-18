@@ -150,10 +150,16 @@ func compile(filename string, source []string) {
 		fmt.Println(ir.String())
 	}
 	irDiagnostics.ExitOnError(conf)
+
 	target := codegen.Generate(filename, ir, literals)
 	if devMode_codegen {
 		fmt.Println(target)
 	}
+	errors, warnings := compilerDiagnostics.ReportStatus(conf)
+	if (conf.Strict && warnings != 0) || errors != 0 {
+		os.Exit(1)
+	}
+
 	err := codegen.BuildExecutable(target, *preserveWatFile, *watfile, *outfile)
 	if err != nil {
 		diagnostic.ReportFatal(err.Error(), 1)
@@ -162,21 +168,34 @@ func compile(filename string, source []string) {
 	if !buildOnly {
 		status = run(target, outfile)
 	}
-	errors, warnings := compilerDiagnostics.ReportStatus(conf)
-	if (conf.Strict && warnings != 0) || errors != 0 {
-		os.Exit(1)
-	}
 	os.Exit(status)
 }
 
 func run(target codegen.CompileTarget, outfile *string) int {
+	var status int = 0
+	cleanExit := false
 	file := target.WasmFilepath
 	if *outfile != "" {
 		file = *outfile
 	}
 	engine := wasmtime.NewEngine()
 	linker := wasmtime.NewLinker(engine)
+	store := wasmtime.NewStore(engine)
 	err := linker.DefineWasi()
+	if err != nil {
+		panic(err)
+	}
+	linker.AllowShadowing(true)
+	err = linker.DefineFunc(
+		store,
+		"wasi_snapshot_preview1",
+		"proc_exit",
+		func(exitCode int32) {
+			status = int(exitCode)
+			cleanExit = true
+			wasmtime.NewTrap("") // terminate the wasmtime process silently
+		},
+	)
 	if err != nil {
 		panic(err)
 	}
@@ -190,22 +209,23 @@ func run(target codegen.CompileTarget, outfile *string) int {
 	if err != nil {
 		panic(err)
 	}
-	store := wasmtime.NewStore(engine)
+
 	store.SetWasi(wasiConf)
 	instance, err := linker.Instantiate(store, mod)
 	if err != nil {
 		panic(err)
 	}
-	run := instance.GetFunc(store, "main")
+	run := instance.GetFunc(store, "_start")
 	if run == nil {
-		panic("main not found")
+		panic("entry point not found")
 	}
-	result, err := run.Call(store)
+	_, err = run.Call(store)
 	if err != nil {
-		panic(err)
+		if cleanExit {
+			return status
+		} else {
+			panic(err)
+		}
 	}
-	if status, ok := result.(int); ok {
-		return status
-	}
-	return 0
+	return status
 }
