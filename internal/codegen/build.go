@@ -49,8 +49,6 @@ func BuildExecutable(target CompileTarget, preserve bool, watfile string, outfil
 		return err
 	}
 	err = wat2wasm(watpath, wasmpath)
-	// cmd := exec.Command("wat2wasm", watpath, "-o", wasmpath)
-	// _, err = cmd.CombinedOutput()
 	if err != nil {
 		return err
 	}
@@ -65,7 +63,7 @@ func wat2wasm(watpath, wasmpath string) error {
 	if err != nil {
 		return err
 	}
-	wasm, err := wasmtime.Wat2Wasm(string(wat)) //watgo.CompileWATToWASM(wat)
+	wasm, err := wasmtime.Wat2Wasm(string(wat))
 	if err != nil {
 		return err // TODO: update
 	}

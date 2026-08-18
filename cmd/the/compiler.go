@@ -174,12 +174,6 @@ func run(target codegen.CompileTarget, outfile *string) int {
 	if *outfile != "" {
 		file = *outfile
 	}
-	// cmd := exec.Command("wasmtime", file)
-	// output, err := cmd.CombinedOutput()
-	// fmt.Println(string(output))
-	// if err != nil {
-	// 	return cmd.ProcessState.ExitCode()
-	// }
 	engine := wasmtime.NewEngine()
 	linker := wasmtime.NewLinker(engine)
 	err := linker.DefineWasi()
@@ -198,7 +192,6 @@ func run(target codegen.CompileTarget, outfile *string) int {
 	}
 	store := wasmtime.NewStore(engine)
 	store.SetWasi(wasiConf)
-	//instance, err := wasmtime.NewInstance(store, mod, []wasmtime.AsExtern{"proc_exit", "fd_write", "fd_read"})
 	instance, err := linker.Instantiate(store, mod)
 	if err != nil {
 		panic(err)
