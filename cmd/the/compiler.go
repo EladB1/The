@@ -78,6 +78,7 @@ func compile(filename string, source []string) {
 		os.Exit(1)
 	}
 	target := codegen.Generate(filename, ir, literals)
+	fmt.Println(target)
 	err := codegen.BuildExecutable(target, *preserveWatFile, *watfile, *outfile)
 	if err != nil {
 		diagnostic.ReportFatal(err.Error(), 1)
@@ -91,7 +92,6 @@ func compile(filename string, source []string) {
 		}
 		fmt.Println(string(output))
 	}
-	fmt.Println(target)
 	errors, warnings := reportStatus(compilerDiagnostics)
 	if (conf.Strict && warnings != 0) || errors != 0 {
 		os.Exit(1)

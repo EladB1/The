@@ -25,7 +25,7 @@ type (
 		WatFilepath     string
 		WasmFilepath    string
 		DataSection     []Data
-		GlobalVariables []Variable
+		GlobalVariables map[string]Variable
 		Functions       []Function
 	}
 
@@ -40,7 +40,7 @@ type (
 		Name           string
 		ReturnType     dt.IRType
 		Parameters     []Parameter
-		LocalVariables []Variable
+		LocalVariables map[string]Variable
 		Code           []Statement
 	}
 
@@ -62,7 +62,8 @@ type (
 	}
 
 	ControlInstruction struct {
-		Operator ControlOperator
+		Operator   ControlOperator
+		Identifier string
 	}
 
 	VariableInstruction struct {
@@ -270,6 +271,10 @@ func (inst ControlInstruction) String(indentLevel int) string {
 	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteRune('(')
 	output.WriteString(string(inst.Operator)) // TODO: expand
+	if inst.Identifier != "" {
+		output.WriteString(" $")
+		output.WriteString(inst.Identifier)
+	}
 	output.WriteString(")")
 	return output.String()
 }

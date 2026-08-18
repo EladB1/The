@@ -76,7 +76,6 @@ func translateAssignment(node *parser.AST) []TAC {
 	var nameNode *parser.AST
 	if node.Children[0].Label == "dot" {
 		if node.Children[0].Children[0].Type.Equals(dt.GlobalRefType) {
-			fmt.Println("GLOBAL")
 			nameNode = node.Children[0].Children[1]
 			currScope = globalScope
 		} else {

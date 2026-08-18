@@ -10,12 +10,12 @@ import (
 
 func Generate(filename string, ir irgen.Program, literals ds.LiteralPool) CompileTarget {
 	target := CompileTarget{
-		WatFilepath:     strings.Replace(filename, ".the", ".wat", 1),
-		WasmFilepath:    strings.Replace(filename, ".the", ".wasm", 1),
-		DataSection:     buildData(literals),
-		GlobalVariables: getVariables(ir.Code, true),
-		Functions:       getFunctions(ir),
+		WatFilepath:  strings.Replace(filename, ".the", ".wat", 1),
+		WasmFilepath: strings.Replace(filename, ".the", ".wasm", 1),
+		DataSection:  buildData(literals),
 	}
+	target.GlobalVariables = target.getVariables(ir.Code, true)
+	target.Functions = target.getFunctions(ir)
 	return target
 }
 
@@ -38,8 +38,8 @@ func buildData(literals ds.LiteralPool) []Data {
 	return data
 }
 
-func getVariables(ir []irgen.TAC, inGlobalScope bool) []Variable {
-	vars := []Variable{}
+func (target CompileTarget) getVariables(ir []irgen.TAC, inGlobalScope bool) map[string]Variable {
+	vars := map[string]Variable{}
 	for _, tac := range ir {
 		if tac.GetTACType() != "Instruction" {
 			continue
@@ -52,11 +52,13 @@ func getVariables(ir []irgen.TAC, inGlobalScope bool) []Variable {
 				if inGlobalScope {
 					vis = Global
 				}
-				vars = append(vars, Variable{
-					Name:       dest.Name,
-					DataType:   lowerIRTypeToWatType(dest.DataType),
-					Visibility: vis,
-				})
+				if _, ok := vars[dest.Name]; !ok {
+					vars[dest.Name] = Variable{
+						Name:       dest.Name,
+						DataType:   lowerIRTypeToWatType(dest.DataType),
+						Visibility: vis,
+					}
+				}
 			}
 			if instruction.Operation == irgen.Store {
 				if instruction.Operand1.Var.Visibility == irgen.Global {
@@ -64,32 +66,34 @@ func getVariables(ir []irgen.TAC, inGlobalScope bool) []Variable {
 				}
 
 				variable := instruction.Operand1.Var
-				vars = append(vars, Variable{
-					Name:       variable.Name,
-					DataType:   lowerIRTypeToWatType(variable.DataType),
-					Value:      translateOperand(instruction.Operand2),
-					Visibility: vis,
-				})
+				if _, ok := vars[variable.Name]; !ok {
+					vars[variable.Name] = Variable{
+						Name:       variable.Name,
+						DataType:   lowerIRTypeToWatType(variable.DataType),
+						Value:      target.translateOperand(instruction.Operand2),
+						Visibility: vis,
+					}
+				}
 			}
 		}
 	}
 	return vars
 }
 
-func getFunctions(ir irgen.Program) []Function {
+func (target CompileTarget) getFunctions(ir irgen.Program) []Function {
 	fns := []Function{}
 	for _, tac := range ir.Code {
 		if tac.GetTACType() != "Function" {
 			continue
 		}
 		if fn, ok := tac.(irgen.Function); ok {
-			fns = append(fns, generateFunction(fn))
+			fns = append(fns, target.generateFunction(fn))
 		}
 	}
 	return fns
 }
 
-func generateFunction(fn irgen.Function) Function {
+func (target CompileTarget) generateFunction(fn irgen.Function) Function {
 	function := Function{
 		Name:       fn.Name,
 		ReturnType: lowerIRTypeToWatType(fn.ReturnType),
@@ -102,54 +106,17 @@ func generateFunction(fn irgen.Function) Function {
 		})
 	}
 	function.Parameters = params
-	function.LocalVariables = getVariables(fn.Code, false)
-	function.Code = generateFunctionBody(fn.Code)
+	function.LocalVariables = target.getVariables(fn.Code, false)
+	function.Code = target.generateFunctionBody(fn)
 	return function
 }
 
-func generateFunctionBody(code []irgen.TAC) []Statement {
+func (target CompileTarget) generateFunctionBody(fn irgen.Function) []Statement {
 	statements := []Statement{}
-	for _, tac := range code {
+	for _, tac := range fn.Code {
 		if instruction, ok := tac.(irgen.Instruction); ok {
-			if instruction.Operation == irgen.Store {
-				if instruction.Operand1.Var.Visibility == irgen.Global {
-					statements = append(statements, MemoryInstruction{
-						DataType: lowerIRTypeToWatType(instruction.Operand1.Var.DataType),
-						Operator: Store,
-						Address: VariableInstruction{
-							Visibility: Global,
-							Operator:   Get,
-							Name:       instruction.Operand1.Var.Name,
-						},
-						Value: translateOperand(instruction.Operand2),
-					})
-				} else {
-					statements = append(statements, VariableInstruction{
-						Visibility: Local,
-						Operator:   Set,
-						Name:       instruction.Operand1.Var.Name,
-						Value:      translateOperand(instruction.Operand2),
-					})
-				}
-			}
-			if instruction.Operation == irgen.Return {
-				statements = append(statements, translateOperand(instruction.Operand1))
-				statements = append(statements, ControlInstruction{
-					Operator: Return,
-				})
-			}
+			statements = append(statements, target.handleInstruction(instruction)...)
 		}
 	}
 	return statements
-}
-
-func translateOperand(op irgen.Operand) Statement {
-	if op.Constant != nil {
-		return NumericInstruction{
-			DataType: lowerIRTypeToWatType(op.Type),
-			Operator: "const",
-			Value:    op.Constant,
-		}
-	}
-	return nil
 }
