@@ -25,6 +25,9 @@ test-coverage-html:
 integration: build
 	go test -tags=integration -v ./cmd/the/...
 
+execution-tests: build
+	go test -tags=execution -v ./cmd/the/...
+
 update-snaps-lexer: 
 	UPDATE_SNAPS=true go test ./internal/lexer/...
 

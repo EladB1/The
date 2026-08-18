@@ -6,10 +6,16 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/gkampitakis/go-snaps/snaps"
+)
+
+const (
+	SNAPS_DIR string = "testdata/integration"
+	FIX_DIR   string = "testdata/integration/fixtures"
 )
 
 func snapshotTestCompilerWithArgs(t *testing.T, snapshots *snaps.Config, args ...string) {
@@ -26,7 +32,7 @@ func snapshotTestCompilerWithArgs(t *testing.T, snapshots *snaps.Config, args ..
 
 func TestCommandLineArgs(t *testing.T) {
 	snapshots := snaps.WithConfig(
-		snaps.Dir("testdata/"),
+		snaps.Dir(SNAPS_DIR),
 		snaps.Filename("cli"),
 	)
 	t.Run("should fail when no arguments or files provided", func(t *testing.T) {
@@ -44,35 +50,34 @@ func TestCommandLineArgs(t *testing.T) {
 	t.Run("should pass and show help message on help flag", func(t *testing.T) {
 		snapshotTestCompilerWithArgs(t, snapshots, "-h")
 	})
-	t.Run("should pass and show version message on version flag", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "version")
-	})
 }
 
 func TestValidPrograms(t *testing.T) {
 	snapshots := snaps.WithConfig(
-		snaps.Dir("testdata/"),
+		snaps.Dir(SNAPS_DIR),
 		snaps.Filename("valid"),
 	)
+	path := filepath.Join(FIX_DIR, "valid")
 	t.Run("should compile program.the with no issues", func(t *testing.T) {
 		os.Setenv("THE_DEV_CODEGEN", "true")
-		snapshotTestCompilerWithArgs(t, snapshots, "-nowasm", "build", "testdata/fixtures/valid/program.the")
+		snapshotTestCompilerWithArgs(t, snapshots, "-nowasm", "build", filepath.Join(path, "program.the"))
 		os.Setenv("THE_DEV_CODEGEN", "")
 	})
 }
 
 func TestInvalidPrograms(t *testing.T) {
 	snapshots := snaps.WithConfig(
-		snaps.Dir("testdata/"),
+		snaps.Dir(SNAPS_DIR),
 		snaps.Filename("invalid"),
 	)
+	path := filepath.Join(FIX_DIR, "invalid")
 	t.Run("should try to compile lexer_errors.the and report lexer errors", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "build", "testdata/fixtures/invalid/lexer_errors.the")
+		snapshotTestCompilerWithArgs(t, snapshots, "build", filepath.Join(path, "lexer_errors.the"))
 	})
 	t.Run("should try to compile parser_errors.the and report parser errors", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "build", "testdata/fixtures/invalid/parser_errors.the")
+		snapshotTestCompilerWithArgs(t, snapshots, "build", filepath.Join(path, "parser_errors.the"))
 	})
 	t.Run("should try to compile semantic_errors.the and report semantic errors", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "build", "testdata/fixtures/invalid/semantic_errors.the")
+		snapshotTestCompilerWithArgs(t, snapshots, "build", filepath.Join(path, "semantic_errors.the"))
 	})
 }

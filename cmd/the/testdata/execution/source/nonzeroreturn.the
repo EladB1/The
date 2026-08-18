@@ -1,0 +1,4 @@
+fn main() -> int {
+    printerr("Something went wrong");
+    return 1;
+}

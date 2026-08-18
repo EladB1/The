@@ -1,6 +1,20 @@
 
 [TestCodeGeneration/should_compile_simple.the - 1]
 {Target:
-%!v(PANIC=String method: runtime error: invalid memory address or nil pointer dereference)
+    (data $__str_const0 (i32.const 100) "")
+    (data $__str_const1 (i32.const 104) "hello")
+    (data $__str_const2 (i32.const 109) "Error")
+    (global $y i64 (i64.const 5))
+    (func $main (export "main") (result i32)
+        (local $s i32)
+        (local $i i32)
+        (local.set $i (i32.const 1))
+        (local.set $i (i32.const 2))
+        (local.set $s )
+        (call $printerr)
+        (i32.const 0)
+        (return)
+    )
+
 }
 ---
