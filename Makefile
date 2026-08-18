@@ -1,4 +1,4 @@
-.PHONY: build test run run-build test-coverage test-coverage-html integration update-snaps-lexer update-snaps-parser update-snaps-semantic update-snaps-irgen update-snaps-codegen update-snaps-integration
+.PHONY: build test run run-build test-coverage test-coverage-html integration-test execution-test update-snaps-lexer update-snaps-parser update-snaps-semantic update-snaps-irgen update-snaps-codegen update-snaps-integration
 
 build:
 	go build -o the ./cmd/the
@@ -22,10 +22,10 @@ test-coverage:
 test-coverage-html:
 	go test -coverprofile cover.out ./internal/...; go tool cover -html=cover.out
 
-integration: build
+integration-test: build
 	go test -tags=integration -v ./cmd/the/...
 
-execution-tests: build
+execution-test: build
 	go test -tags=execution -v ./cmd/the/...
 
 update-snaps-lexer: 
