@@ -58,3 +58,13 @@ func AppendToFile(filename string, content string) error {
 	_, err = file.WriteString(content)
 	return err
 }
+
+func WriteWasmToFile(filename string, wasm []byte) error {
+	file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0600)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	_, err = file.Write(wasm)
+	return err
+}

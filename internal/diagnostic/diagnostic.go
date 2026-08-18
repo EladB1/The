@@ -8,6 +8,7 @@ import (
 
 	"github.com/fatih/color"
 
+	"github.com/EladB1/The/internal/config"
 	ds "github.com/EladB1/The/internal/datastructures"
 )
 
@@ -42,6 +43,12 @@ type PhaseDiagnostics struct {
 	Messages []Diagnostic
 	HasError bool
 }
+
+var (
+	// custom colors
+	BoldRed    func(...interface{}) string = color.New(color.FgHiRed, color.Bold).SprintFunc()
+	BoldYellow func(...interface{}) string = color.New(color.FgYellow, color.Bold).SprintFunc()
+)
 
 func (diagnostics *PhaseDiagnostics) Sort() {
 	sort.Slice(diagnostics.Messages, func(i, j int) bool {
@@ -120,11 +127,44 @@ func ReportFatal(message string, status int) {
 	os.Exit(status)
 }
 
-var (
-	// custom colors
-	BoldRed    func(...interface{}) string = color.New(color.FgHiRed, color.Bold).SprintFunc()
-	BoldYellow func(...interface{}) string = color.New(color.FgYellow, color.Bold).SprintFunc()
-)
+func (messages PhaseDiagnostics) ReportStatus(conf config.Config) (int, int) {
+	var warningCnt int = 0
+	var errorCnt int = 0
+	for _, message := range messages.Messages {
+		if message.Level == Warning {
+			if conf.SuppressWarnings {
+				continue
+			}
+			warningCnt++
+			if conf.Strict {
+				fmt.Fprintln(os.Stderr, message)
+			} else {
+				fmt.Println(message)
+			}
+		} else {
+			if message.Level != Info {
+				errorCnt++
+			}
+			fmt.Fprintln(os.Stderr, message)
+		}
+	}
+	var summary string = ""
+	if warningCnt != 0 || errorCnt != 0 {
+		if conf.SuppressWarnings {
+			summary = fmt.Sprintf("\n%s:\n%s: %d", color.HiBlueString("Summary"), BoldRed("Errors"), errorCnt)
+		}
+		summary = fmt.Sprintf("\n%s:\n%s: %d, %s: %d", color.HiBlueString("Summary"), BoldRed("Errors"), errorCnt, BoldYellow("Warnings"), warningCnt)
+	}
+	fmt.Println(summary)
+	return errorCnt, warningCnt
+}
+
+func (messages PhaseDiagnostics) ExitOnError(conf config.Config) {
+	if messages.HasError {
+		messages.ReportStatus(conf)
+		os.Exit(1)
+	}
+}
 
 func (diagnostic Diagnostic) String() string {
 	if diagnostic.Level == Info {

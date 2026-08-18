@@ -69,6 +69,6 @@ func wat2wasm(watpath, wasmpath string) error {
 	if err != nil {
 		return err // TODO: update
 	}
-	err = filehandler.AppendToFile(wasmpath, string(wasm))
+	err = filehandler.WriteWasmToFile(wasmpath, wasm)
 	return err
 }

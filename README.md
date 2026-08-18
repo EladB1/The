@@ -755,11 +755,35 @@ Phases:
     1. Lexical Analysis
     2. Parsing
     3. Semantic Analysis
-    4. IR Generation <- WIP
-    5. Code Generation (WAT)
+    4. IR Generation
+    5. Code Generation (WAT) <- WIP
     6. Execution via wasmtime
 
 > Optimization phase will come much later
+
+### Developer Environment Variables
+
+In order to work on specific phases of the compiler, it's helpful to see what they're doing. You can set certain environment variables to display the output of different phases (they're all set to false by default); multiple flags can be on at the same time.
+
+each flag maps to a boolean variable    
+
+Flags:
+
+| Env. Variable | Compiler Variable | Description |
+| --- | --- | --- |
+| `THE_DEV_LEXER` | `devMode_lexer` | Print the Tokens |
+| `THE_DEV_PARSER` | `devMode_parser`| Print the AST unless the semantic flag is set |
+| `THE_DEV_SEMANTIC` | `devMode_semantic` | Print the annotated AST and ScopeTree |
+| `THE_DEV_IRGEN` | `devMode_irgen` | Print the generated IR code |
+| `THE_DEV_CODEGEN` | `devMode_codegen` | Print the generated WAT code |
+
+Example:
+
+```bash
+export THE_DEV_IRGEN=true
+export THE_DEV_CODEGEN=true
+the run source.the
+```
 
 ### Tooling
 
