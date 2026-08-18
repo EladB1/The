@@ -4,11 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"os/exec"
 	"strconv"
 
 	"runtime/debug"
 
+	"github.com/bytecodealliance/wasmtime-go"
 	"github.com/fatih/color"
 
 	"github.com/EladB1/The/internal/codegen"
@@ -174,11 +174,45 @@ func run(target codegen.CompileTarget, outfile *string) int {
 	if *outfile != "" {
 		file = *outfile
 	}
-	cmd := exec.Command("wasmtime", file)
-	output, err := cmd.CombinedOutput()
-	fmt.Println(string(output))
+	// cmd := exec.Command("wasmtime", file)
+	// output, err := cmd.CombinedOutput()
+	// fmt.Println(string(output))
+	// if err != nil {
+	// 	return cmd.ProcessState.ExitCode()
+	// }
+	engine := wasmtime.NewEngine()
+	linker := wasmtime.NewLinker(engine)
+	err := linker.DefineWasi()
 	if err != nil {
-		return cmd.ProcessState.ExitCode()
+		panic(err)
+	}
+	wasiConf := wasmtime.NewWasiConfig()
+	wasiConf.InheritStdout()
+	wasiConf.InheritStderr()
+	wasiConf.InheritStdin()
+	wasiConf.InheritEnv()
+	wasiConf.InheritArgv()
+	mod, err := wasmtime.NewModuleFromFile(engine, file)
+	if err != nil {
+		panic(err)
+	}
+	store := wasmtime.NewStore(engine)
+	store.SetWasi(wasiConf)
+	//instance, err := wasmtime.NewInstance(store, mod, []wasmtime.AsExtern{"proc_exit", "fd_write", "fd_read"})
+	instance, err := linker.Instantiate(store, mod)
+	if err != nil {
+		panic(err)
+	}
+	run := instance.GetFunc(store, "main")
+	if run == nil {
+		panic("main not found")
+	}
+	result, err := run.Call(store)
+	if err != nil {
+		panic(err)
+	}
+	if status, ok := result.(int); ok {
+		return status
 	}
 	return 0
 }

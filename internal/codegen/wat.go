@@ -38,6 +38,7 @@ type (
 
 	Function struct {
 		Name           string
+		Export         bool
 		ReturnType     dt.IRType
 		Parameters     []Parameter
 		LocalVariables map[string]Variable
@@ -206,6 +207,9 @@ func (fn Function) String() string {
 	output.WriteString(indentDelim)
 	output.WriteString("(func $")
 	output.WriteString(fn.Name)
+	if fn.Export {
+		output.WriteString(fmt.Sprintf(" (export \"%s\")", fn.Name))
+	}
 	if len(fn.Parameters) > 0 {
 		for _, param := range fn.Parameters {
 			output.WriteString(fmt.Sprintf(" (param $%s %s)", param.Name, param.DataType))

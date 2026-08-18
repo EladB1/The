@@ -6,6 +6,8 @@ require github.com/fatih/color v1.19.0 // direct
 
 require github.com/gkampitakis/go-snaps v0.5.22
 
+require github.com/bytecodealliance/wasmtime-go v1.0.0 // indirect
+
 require (
 	github.com/eliben/watgo v0.8.0
 	github.com/gkampitakis/ciinfo v0.3.4 // indirect

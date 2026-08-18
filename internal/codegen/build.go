@@ -5,7 +5,7 @@ import (
 	_ "embed"
 	"os"
 
-	"github.com/eliben/watgo"
+	"github.com/bytecodealliance/wasmtime-go"
 
 	"github.com/EladB1/The/internal/filehandler"
 )
@@ -65,7 +65,7 @@ func wat2wasm(watpath, wasmpath string) error {
 	if err != nil {
 		return err
 	}
-	wasm, err := watgo.CompileWATToWASM(wat)
+	wasm, err := wasmtime.Wat2Wasm(string(wat)) //watgo.CompileWATToWASM(wat)
 	if err != nil {
 		return err // TODO: update
 	}

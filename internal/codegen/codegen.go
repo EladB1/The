@@ -96,6 +96,7 @@ func (target CompileTarget) getFunctions(ir irgen.Program) []Function {
 func (target CompileTarget) generateFunction(fn irgen.Function) Function {
 	function := Function{
 		Name:       fn.Name,
+		Export:     fn.Name == "main",
 		ReturnType: lowerIRTypeToWatType(fn.ReturnType),
 	}
 	params := []Parameter{}
