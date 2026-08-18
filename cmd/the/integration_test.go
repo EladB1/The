@@ -4,6 +4,7 @@ package main_test
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 	"testing"
@@ -23,7 +24,7 @@ func snapshotTestCompilerWithArgs(t *testing.T, snapshots *snaps.Config, args ..
 
 }
 
-func TestNoCommandLineArgs(t *testing.T) {
+func TestCommandLineArgs(t *testing.T) {
 	snapshots := snaps.WithConfig(
 		snaps.Dir("testdata/"),
 		snaps.Filename("cli"),
@@ -43,6 +44,9 @@ func TestNoCommandLineArgs(t *testing.T) {
 	t.Run("should pass and show help message on help flag", func(t *testing.T) {
 		snapshotTestCompilerWithArgs(t, snapshots, "-h")
 	})
+	t.Run("should pass and show version message on version flag", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "version")
+	})
 }
 
 func TestValidPrograms(t *testing.T) {
@@ -51,7 +55,9 @@ func TestValidPrograms(t *testing.T) {
 		snaps.Filename("valid"),
 	)
 	t.Run("should compile program.the with no issues", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "testdata/fixtures/valid/program.the")
+		os.Setenv("THE_DEV_CODEGEN", "true")
+		snapshotTestCompilerWithArgs(t, snapshots, "-nowasm", "build", "testdata/fixtures/valid/program.the")
+		os.Setenv("THE_DEV_CODEGEN", "")
 	})
 }
 
@@ -61,12 +67,12 @@ func TestInvalidPrograms(t *testing.T) {
 		snaps.Filename("invalid"),
 	)
 	t.Run("should try to compile lexer_errors.the and report lexer errors", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "testdata/fixtures/invalid/lexer_errors.the")
+		snapshotTestCompilerWithArgs(t, snapshots, "build", "testdata/fixtures/invalid/lexer_errors.the")
 	})
 	t.Run("should try to compile parser_errors.the and report parser errors", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "testdata/fixtures/invalid/parser_errors.the")
+		snapshotTestCompilerWithArgs(t, snapshots, "build", "testdata/fixtures/invalid/parser_errors.the")
 	})
 	t.Run("should try to compile semantic_errors.the and report semantic errors", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "testdata/fixtures/invalid/semantic_errors.the")
+		snapshotTestCompilerWithArgs(t, snapshots, "build", "testdata/fixtures/invalid/semantic_errors.the")
 	})
 }

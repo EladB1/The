@@ -19,7 +19,7 @@ var stdlib embed.FS
 //go:embed shell.wat
 var shell embed.FS
 
-func BuildExecutable(target CompileTarget, preserve bool, watfile string, outfile string) error {
+func BuildExecutable(target CompileTarget, preserve bool, watfile string, outfile string, nowasm bool) error {
 	var wasmpath string
 	var watpath string
 	if watfile != "" {
@@ -48,14 +48,20 @@ func BuildExecutable(target CompileTarget, preserve bool, watfile string, outfil
 	if err = filehandler.AppendToFile(watpath, ")"); err != nil { // append the closing paren
 		return err
 	}
-	err = wat2wasm(watpath, wasmpath)
-	if err != nil {
-		return err
+	var wasm_err error
+	if !nowasm {
+		wasm_err = wat2wasm(watpath, wasmpath)
 	}
 	if !preserve {
 		err = os.Remove(watpath)
+		if err != nil {
+			return err
+		}
 	}
-	return err
+	if wasm_err != nil { // defer this for file cleanup
+		return wasm_err
+	}
+	return nil
 }
 
 func wat2wasm(watpath, wasmpath string) error {

@@ -29,7 +29,7 @@ var (
 	preserveWatFile  *bool   = flag.Bool("preserve-wat-file", false, "Prevents the compiler from deleting the generated WAT file")
 	watfile          *string = flag.String("wat", "", "Path to the generated wat file")
 	outfile          *string = flag.String("o", "", "Path to the generated wasm executable")
-
+	nowasm           *bool   = flag.Bool("nowasm", false, "Only produce a WAT file instead of compiling it down to WASM. Cannot be used with run command.")
 	// env flags used to show output from different parts of compiler
 	devMode_lexer    bool = false
 	devMode_parser   bool = false
@@ -109,6 +109,9 @@ func main() {
 	if len(args) >= 3 {
 		switch args[len(args)-2] {
 		case "run":
+			if *nowasm {
+				diagnostic.ReportFatal("Cannot use -nowasm with run command", 1)
+			}
 			buildOnly = false
 		case "build":
 			buildOnly = true
@@ -160,7 +163,7 @@ func compile(filename string, source []string) {
 		os.Exit(1)
 	}
 
-	err := codegen.BuildExecutable(target, *preserveWatFile, *watfile, *outfile)
+	err := codegen.BuildExecutable(target, *preserveWatFile, *watfile, *outfile, *nowasm)
 	if err != nil {
 		diagnostic.ReportFatal(err.Error(), 1)
 	}

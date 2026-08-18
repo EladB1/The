@@ -231,6 +231,9 @@ func (fn Function) String() string {
 func stringifyBody(body []Statement, indentLevel int) string {
 	output := strings.Builder{}
 	for _, stmt := range body {
+		if stmt == nil {
+			continue
+		}
 		output.WriteString(stmt.String(indentLevel + 1))
 		output.WriteString("\n")
 	}
@@ -253,7 +256,9 @@ func (inst VariableInstruction) String(indentLevel int) string {
 	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteRune('(')
 	output.WriteString(fmt.Sprintf("%s.%s $%s ", inst.Visibility, inst.Operator, inst.Name))
-	output.WriteString(inst.Value.String(0))
+	if inst.Value != nil {
+		output.WriteString(inst.Value.String(0))
+	}
 	output.WriteString(")")
 	return output.String()
 }
