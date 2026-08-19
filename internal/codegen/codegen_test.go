@@ -63,7 +63,6 @@ func snapshotTestCodeGenerator(t *testing.T, filename string) {
 		snaps.Dir(snapsDir),
 	)
 	fixture := loadFixture(t, dir, filename)
-	fmt.Println(fixture)
 	target := Generate(filename, fixture.Prog, fixture.Literals)
 	results := fmt.Sprintf("{Target:\n%v\n}", target)
 	snapshots.MatchSnapshot(t, results)

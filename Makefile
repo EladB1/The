@@ -9,10 +9,10 @@ test:
 IN_FILE ?= ''
 
 run: build
-	./the -preserve-wat-file -o generated/test.wasm -wat generated/test.wat run $(IN_FILE)
+	THE_DEV_DEBUG=true ./the -preserve-wat-file -o generated/test.wasm -wat generated/test.wat run $(IN_FILE)
 
 run-build: build
-	./the -preserve-wat-file -o generated/test.wasm -wat generated/test.wat build $(IN_FILE)
+	THE_DEV_DEBUG=true ./the -preserve-wat-file -o generated/test.wasm -wat generated/test.wat build $(IN_FILE)
 
 # Example: make run IN_FILE=examples/src/strings.the
 

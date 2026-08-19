@@ -1,6 +1,7 @@
 package codegen
 
 import (
+	"log"
 	"slices"
 	"strings"
 
@@ -8,38 +9,38 @@ import (
 	"github.com/EladB1/The/internal/irgen"
 )
 
-func (target CompileTarget) handleInstruction(instruction irgen.Instruction) []Statement {
+func handleInstruction(instruction irgen.Instruction) []Statement {
 	statements := []Statement{}
 	switch instruction.Operation {
 	case irgen.Return:
-		statements = target.generateReturn(instruction)
+		statements = generateReturn(instruction)
 	case irgen.Store:
-		statements = target.generateStoreOperation(instruction)
+		statements = generateStoreOperation(instruction)
 	case irgen.PrepareParam:
-		statements = append(statements, target.translateOperand(instruction.Operand1))
+		statements = append(statements, translateOperand(instruction.Operand1))
 	case irgen.Call:
-		statements = append(statements, target.generateCall(instruction)...)
+		statements = append(statements, generateCall(instruction)...)
 	default:
 		if isTypeCast(instruction.Operation) {
-			statements = append(statements, target.generateTypecast(instruction)...)
+			statements = append(statements, generateTypecast(instruction)...)
 		}
 		if strings.HasSuffix(string(instruction.Operation), "add") {
-			statements = append(statements, target.generateAdd(instruction)...)
+			statements = append(statements, generateAdd(instruction)...)
 		}
 	}
 	return statements
 }
 
-func (target CompileTarget) generateReturn(instruction irgen.Instruction) []Statement {
+func generateReturn(instruction irgen.Instruction) []Statement {
 	statements := []Statement{}
-	statements = append(statements, target.translateOperand(instruction.Operand1))
+	statements = append(statements, translateOperand(instruction.Operand1))
 	statements = append(statements, ControlInstruction{
 		Operator: Return,
 	})
 	return statements
 }
 
-func (target CompileTarget) generateStoreOperation(instruction irgen.Instruction) []Statement {
+func generateStoreOperation(instruction irgen.Instruction) []Statement {
 	statements := []Statement{}
 	if instruction.Operand1.Var.Visibility == irgen.Global {
 		statements = append(statements, MemoryInstruction{
@@ -50,20 +51,20 @@ func (target CompileTarget) generateStoreOperation(instruction irgen.Instruction
 				Operator:   Get,
 				Name:       instruction.Operand1.Var.Name,
 			},
-			Value: target.translateOperand(instruction.Operand2),
+			Value: translateOperand(instruction.Operand2),
 		})
 	} else {
 		statements = append(statements, VariableInstruction{
 			Visibility: Local,
 			Operator:   Set,
 			Name:       instruction.Operand1.Var.Name,
-			Value:      target.translateOperand(instruction.Operand2),
+			Value:      translateOperand(instruction.Operand2),
 		})
 	}
 	return statements
 }
 
-func (target CompileTarget) generateCall(instruction irgen.Instruction) []Statement {
+func generateCall(instruction irgen.Instruction) []Statement {
 	statements := []Statement{}
 	if name, ok := instruction.Operand1.Constant.(string); !ok {
 		// TODO
@@ -84,10 +85,10 @@ func (target CompileTarget) generateCall(instruction irgen.Instruction) []Statem
 	return statements
 }
 
-func (target CompileTarget) generateAdd(instruction irgen.Instruction) []Statement {
+func generateAdd(instruction irgen.Instruction) []Statement {
 	statements := []Statement{
-		target.translateOperand(instruction.Operand1),
-		target.translateOperand(instruction.Operand2),
+		translateOperand(instruction.Operand1),
+		translateOperand(instruction.Operand2),
 		NumericInstruction{
 			DataType: lowerIRTypeToWatType(instruction.Destination.DataType),
 			Operator: "add",
@@ -103,9 +104,9 @@ func (target CompileTarget) generateAdd(instruction irgen.Instruction) []Stateme
 	return statements
 }
 
-func (target CompileTarget) generateTypecast(instruction irgen.Instruction) []Statement {
+func generateTypecast(instruction irgen.Instruction) []Statement {
 	statements := []Statement{
-		target.translateOperand(instruction.Operand1),
+		translateOperand(instruction.Operand1),
 		NumericInstruction{
 			DataType: lowerIRTypeToWatType(instruction.Destination.DataType),
 			Operator: string(instruction.Operation),
@@ -116,10 +117,11 @@ func (target CompileTarget) generateTypecast(instruction irgen.Instruction) []St
 			Name:       instruction.Destination.Name,
 		},
 	}
+	log.Println("HERE", instruction.String(0))
 	return statements
 }
 
-func (target CompileTarget) translateOperand(op irgen.Operand) Statement {
+func translateOperand(op irgen.Operand) Statement {
 	emptyVar := irgen.Variable{}
 	if op.Constant != nil {
 		if op.Type == datatypes.Str_const {
@@ -127,7 +129,7 @@ func (target CompileTarget) translateOperand(op irgen.Operand) Statement {
 				return NumericInstruction{
 					DataType: datatypes.I32,
 					Operator: "const",
-					Value:    target.DataSection[index].Offset,
+					Value:    data[index].Offset,
 				}
 			}
 		} else {

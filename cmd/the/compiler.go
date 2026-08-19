@@ -1,12 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
+	"log"
 	"os"
-	"strconv"
-
 	"runtime/debug"
+	"strconv"
 
 	"github.com/bytecodealliance/wasmtime-go"
 	"github.com/fatih/color"
@@ -22,6 +23,7 @@ import (
 )
 
 var (
+	logBuffer bytes.Buffer
 	// cli flags
 	colorOff         *bool   = flag.Bool("no-color", false, "Disable color output")
 	suppressWarnings *bool   = flag.Bool("suppress-warnings", false, "Disable reporting of warnings")
@@ -36,17 +38,21 @@ var (
 	devMode_semantic bool = false
 	devMode_irgen    bool = false
 	devMode_codegen  bool = false
+	compilerDebug    bool = false
 
 	// internal configurations
 	conf config.Config = config.Config{
+		Debug:            &compilerDebug,
 		Strict:           *strict,
 		SuppressWarnings: *suppressWarnings,
+		LogBuffer:        &logBuffer,
 	}
 	compilerDiagnostics diagnostic.PhaseDiagnostics
 	buildOnly           bool = true
 )
 
 func init() {
+	log.SetOutput(&logBuffer)
 	// Override the default help message
 	flag.Usage = func() {
 		output := flag.CommandLine.Output()
@@ -65,6 +71,7 @@ func checkEnvironment() {
 		"THE_DEV_SEMANTIC": &devMode_semantic,
 		"THE_DEV_IRGEN":    &devMode_irgen,
 		"THE_DEV_CODEGEN":  &devMode_codegen,
+		"THE_DEV_DEBUG":    &compilerDebug,
 	}
 	for key, flag := range vars {
 		value, err := fetchEnvironmentVariableValue(key)
@@ -160,17 +167,20 @@ func compile(filename string, source []string) {
 	}
 	errors, warnings := compilerDiagnostics.ReportStatus(conf)
 	if (conf.Strict && warnings != 0) || errors != 0 {
+		conf.PrintDebugLogs()
 		os.Exit(1)
 	}
 
 	err := codegen.BuildExecutable(target, *preserveWatFile, *watfile, *outfile, *nowasm)
 	if err != nil {
+		conf.PrintDebugLogs()
 		diagnostic.ReportFatal(err.Error(), 1)
 	}
 	status := 0
 	if !buildOnly {
 		status = run(target, outfile)
 	}
+	conf.PrintDebugLogs()
 	os.Exit(status)
 }
 

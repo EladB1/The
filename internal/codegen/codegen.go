@@ -8,14 +8,20 @@ import (
 	"github.com/EladB1/The/internal/irgen"
 )
 
+var (
+	data []Data
+)
+
 func Generate(filename string, ir irgen.Program, literals ds.LiteralPool) CompileTarget {
+	data = []Data{}
 	target := CompileTarget{
 		WatFilepath:  strings.Replace(filename, ".the", ".wat", 1),
 		WasmFilepath: strings.Replace(filename, ".the", ".wasm", 1),
 		DataSection:  buildData(literals),
 	}
-	target.GlobalVariables = target.getVariables(ir.Code, true)
-	target.Functions = target.getFunctions(ir)
+	data = target.DataSection
+	target.GlobalVariables = getVariables(ir.Code, true)
+	target.Functions = getFunctions(ir)
 	return target
 }
 
@@ -38,7 +44,7 @@ func buildData(literals ds.LiteralPool) []Data {
 	return data
 }
 
-func (target CompileTarget) getVariables(ir []irgen.TAC, inGlobalScope bool) map[string]Variable {
+func getVariables(ir []irgen.TAC, inGlobalScope bool) map[string]Variable {
 	vars := map[string]Variable{}
 	for _, tac := range ir {
 		if tac.GetTACType() != "Instruction" {
@@ -70,7 +76,7 @@ func (target CompileTarget) getVariables(ir []irgen.TAC, inGlobalScope bool) map
 					vars[variable.Name] = Variable{
 						Name:       variable.Name,
 						DataType:   lowerIRTypeToWatType(variable.DataType),
-						Value:      target.translateOperand(instruction.Operand2),
+						Value:      translateOperand(instruction.Operand2),
 						Visibility: vis,
 					}
 				}
@@ -80,20 +86,20 @@ func (target CompileTarget) getVariables(ir []irgen.TAC, inGlobalScope bool) map
 	return vars
 }
 
-func (target CompileTarget) getFunctions(ir irgen.Program) []Function {
+func getFunctions(ir irgen.Program) []Function {
 	fns := []Function{}
 	for _, tac := range ir.Code {
 		if tac.GetTACType() != "Function" {
 			continue
 		}
 		if fn, ok := tac.(irgen.Function); ok {
-			fns = append(fns, target.generateFunction(fn))
+			fns = append(fns, generateFunction(fn))
 		}
 	}
 	return fns
 }
 
-func (target CompileTarget) generateFunction(fn irgen.Function) Function {
+func generateFunction(fn irgen.Function) Function {
 	function := Function{
 		Name:       fn.Name,
 		Export:     fn.Name == "main",
@@ -107,16 +113,16 @@ func (target CompileTarget) generateFunction(fn irgen.Function) Function {
 		})
 	}
 	function.Parameters = params
-	function.LocalVariables = target.getVariables(fn.Code, false)
-	function.Code = target.generateFunctionBody(fn)
+	function.LocalVariables = getVariables(fn.Code, false)
+	function.Code = generateFunctionBody(fn)
 	return function
 }
 
-func (target CompileTarget) generateFunctionBody(fn irgen.Function) []Statement {
+func generateFunctionBody(fn irgen.Function) []Statement {
 	statements := []Statement{}
 	for _, tac := range fn.Code {
 		if instruction, ok := tac.(irgen.Instruction); ok {
-			statements = append(statements, target.handleInstruction(instruction)...)
+			statements = append(statements, handleInstruction(instruction)...)
 		}
 	}
 	return statements

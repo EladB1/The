@@ -218,7 +218,7 @@ func parseDeclaration() *AST {
  * function = "fn" identifier "(" [ parameters ] ")" [ "->" type ] ( ";" | block ) ;
  */
 func parseFunction() *AST {
-	//fmt.Println("In function with:", peek())
+	//log.Println("In function with:", peek())
 	ast := AST{Label: "fn", Location: expectValue("fn").Location}
 	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue("(")
@@ -242,7 +242,7 @@ func parseFunction() *AST {
  * parameters = parameter { "," parameter } ;
  */
 func parseParameters() *AST {
-	//fmt.Println("In parameters with:", peek())
+	//log.Println("In parameters with:", peek())
 	ast := AST{Label: "params", Location: peek().Location}
 	ast.AddChildren(parseParameter())
 	for checkValue(",") {
@@ -256,7 +256,7 @@ func parseParameters() *AST {
  * parameter = type identifier ;
  */
 func parseParameter() *AST {
-	//fmt.Println("In parameter with:", peek())
+	//log.Println("In parameter with:", peek())
 	ast := AST{Label: "param", Location: peek().Location}
 	ast.AddChildToken(expectType())
 	ast.AddChildToken(expectKind(lexer.ID))
@@ -267,7 +267,7 @@ func parseParameter() *AST {
  * block = "{" { statement | branch } "}" ;
  */
 func parseBlock(label string) *AST {
-	//fmt.Println("In block with:", peek())
+	//log.Println("In block with:", peek())
 	ast := AST{Label: label, Location: peek().Location}
 	expectValue("{")
 	for !checkValue("}") && !checkKind(lexer.EOF) {
@@ -288,7 +288,7 @@ func parseBlock(label string) *AST {
  * statement = ( variable | assignment | expression | control_flow ) ";" ;
  */
 func parseStatement() *AST {
-	//fmt.Println("In statement with:", peek())
+	//log.Println("In statement with:", peek())
 	var ast *AST
 	if checkVariableDeclaration() {
 		ast = parseVariable()
@@ -329,7 +329,7 @@ func parseBranch() *AST {
  * struct = "struct" identifier [ "impl" interface_list ] struct_body ;
  */
 func parseStruct() *AST {
-	//fmt.Println("In struct with:", peek())
+	//log.Println("In struct with:", peek())
 	ast := nodeFromToken(expectValue("struct"))
 	ast.AddChildToken(expectKind(lexer.ID))
 	if checkValue("impl") {
@@ -344,7 +344,7 @@ func parseStruct() *AST {
  * interface_list = identifier { "," identifier };
  */
 func parseInterfaceList() *AST {
-	//fmt.Println("In interface list with:", peek())
+	//log.Println("In interface list with:", peek())
 	ast := AST{Label: "interface_list", Location: peek().Location}
 	ast.AddChildToken(expectKind(lexer.ID))
 	for checkValue(",") {
@@ -358,7 +358,7 @@ func parseInterfaceList() *AST {
  * struct_body =  "{" { ( variable ";" ) | function | named_block } "}" ;
  */
 func parseStructBody() *AST {
-	//fmt.Println("In struct body with:", peek())
+	//log.Println("In struct body with:", peek())
 	ast := AST{Label: "struct-body", Location: peek().Location}
 	expectValue("{")
 	for !checkValue("}") && !checkKind(lexer.EOF) {
@@ -383,7 +383,7 @@ func parseStructBody() *AST {
  * named_block = identifier "{" { function | ( variable ";" ) } "}" ;
  */
 func parseNamedBlock() *AST {
-	//fmt.Println("In named block with:", peek())
+	//log.Println("In named block with:", peek())
 	ast := AST{Label: "named-block", Location: peek().Location}
 	if checkValue("private") {
 		ast.AddChildToken(consume())
@@ -412,7 +412,7 @@ func parseNamedBlock() *AST {
  * interface = "interface" identifier "{" { function } "}" ;
  */
 func parseInterface() *AST {
-	//fmt.Println("In interface: ", peek())
+	//log.Println("In interface: ", peek())
 	ast := AST{Label: "interface", Location: consume().Location}
 	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue("{")
@@ -434,7 +434,7 @@ func parseInterface() *AST {
  * variable = [ modifiers ] type identifier [ "=" expression ] ;
  */
 func parseVariable() *AST {
-	//fmt.Println("In variable with:", peek())
+	//log.Println("In variable with:", peek())
 	ast := AST{Label: "Variable", Location: peek().Location}
 	if checkKind(lexer.KW_MODIFIER) {
 		ast.AddChildren(parseModifiers())
@@ -456,7 +456,7 @@ func parseVariable() *AST {
  * if_block = if { "else" if } [ "else" conditional_body ] ;
  */
 func parseIfBlock() *AST {
-	//fmt.Println("In ifBlock with:", peek())
+	//log.Println("In ifBlock with:", peek())
 	ast := AST{Label: "if-block", Location: peek().Location}
 	ast.AddChildren(parseIf(false))
 	for checkValue("else") && checkValueAhead("if", 1) {
@@ -474,7 +474,7 @@ func parseIfBlock() *AST {
  * if = "if" "(" expression ")" conditional_body ;
  */
 func parseIf(elseIf bool) *AST {
-	//fmt.Println("In if with:", peek())
+	//log.Println("In if with:", peek())
 	var ast AST
 	if elseIf {
 		ast = AST{Label: "else if", Location: expectValue("else").Location}
@@ -493,7 +493,7 @@ func parseIf(elseIf bool) *AST {
  * conditional_body = block | statement ;
  */
 func parseConditionalBody() *AST {
-	//fmt.Println("In conditional body with:", peek())
+	//log.Println("In conditional body with:", peek())
 	ast := AST{Label: "conditional-body", Location: peek().Location}
 	if checkValue("{") {
 		return parseBlock("conditional_body")
@@ -507,11 +507,11 @@ func parseConditionalBody() *AST {
  * while = "while" "(" expression ")" block;
  */
 func parseWhile() *AST {
-	// fmt.Println("In while with: ", peek())
+	// log.Println("In while with: ", peek())
 	loop := consume()
 	ast := AST{Label: "while", Location: loop.Location}
 	expectValue("(")
-	//fmt.Println(checkExpressionStart(), peek())
+	//log.Println(checkExpressionStart(), peek())
 	if !checkExpressionStart() {
 		state.addError("Expected expression but got '%s'", peek().GetValueString(state.pool))
 		sync(whileSignatureCtx)
@@ -538,7 +538,7 @@ func parseWhile() *AST {
  * for = "for" "(" for_conditions ")" block ;
  */
 func parseFor() *AST {
-	//fmt.Println("In for with:", peek())
+	//log.Println("In for with:", peek())
 	loop := consume()
 	ast := AST{Label: "for", Location: loop.Location}
 	expectValue("(")
@@ -562,7 +562,7 @@ func parseFor() *AST {
  * for_conditions = ( ( variable | assignment ) ";" expression ";" ( expression | assignment ) ) | ( variable [ "," variable ] "in" range ) ;
  */
 func parseForConditions() *AST {
-	//fmt.Println("In for condition with:", peek())
+	//log.Println("In for condition with:", peek())
 	ast := AST{Label: "loop-condition", Location: peek().Location}
 	if checkVariableDeclaration() {
 		ast.AddChildren(parseVariable())
@@ -610,7 +610,7 @@ func parseForConditions() *AST {
  * range = expression [ range_operator expression [ ".." expression ] ] ;
  */
 func parseRange() *AST {
-	//fmt.Println("In range with:", peek())
+	//log.Println("In range with:", peek())
 	ast := AST{Label: "range", Location: peek().Location}
 	expr := parseExpression()
 	if !checkKind(lexer.OPERATOR_RANGE) {
@@ -630,7 +630,7 @@ func parseRange() *AST {
  * assignment = postfix assign_operator expression ;
  */
 func parseAssignment() *AST {
-	//fmt.Println("In assignment: ", peek())
+	//log.Println("In assignment: ", peek())
 	postfix := parsePostfix()
 	ast := nodeFromToken(expectKind(lexer.OPERATOR_ASSIGN))
 	ast.AddChildren(postfix, parseExpression())
@@ -641,7 +641,7 @@ func parseAssignment() *AST {
  * expression = logical_or ;
  */
 func parseExpression() *AST {
-	//fmt.Println("In expression with:", peek())
+	//log.Println("In expression with:", peek())
 	if !checkExpressionStart() {
 		state.addError("Expected expression but got '%s'", peek().GetValueString(state.pool))
 		sync(expressionCtx)
@@ -653,7 +653,7 @@ func parseExpression() *AST {
  * logical_or = logical_and { "||" logical_and } ;
  */
 func parseLogicalOr() *AST {
-	//fmt.Println("In logical or with:", peek())
+	//log.Println("In logical or with:", peek())
 	var operand *AST
 	ast := parseLogicalAnd()
 	for checkValue("||") {
@@ -671,7 +671,7 @@ func parseLogicalOr() *AST {
  * logical_and = comparison { "&&" comparison } ;
  */
 func parseLogicalAnd() *AST {
-	//fmt.Println("In logical and with:", peek())
+	//log.Println("In logical and with:", peek())
 	var operand *AST
 	ast := parseComparison()
 	for checkValue("&&") {
@@ -689,7 +689,7 @@ func parseLogicalAnd() *AST {
  * comparison = bitshift [ compare_operator bitshift ] ;
  */
 func parseComparison() *AST {
-	//fmt.Println("In comparison with:", peek())
+	//log.Println("In comparison with:", peek())
 	bw := parseBitshift()
 	if !checkKind(lexer.OPERATOR_COMPARE) {
 		return bw
@@ -704,7 +704,7 @@ func parseComparison() *AST {
  *	bitshift = bitwise { ( "<<" | ">>" ) bitwise } ;
  */
 func parseBitshift() *AST {
-	// fmt.Println("In bitshift with:", peek())
+	// log.Println("In bitshift with:", peek())
 	var operand *AST
 	ast := parseBitwise()
 	for checkKind(lexer.OPERATOR_BS) {
@@ -722,7 +722,7 @@ func parseBitshift() *AST {
  * bitwise =  add { bitwise_operator add };
  */
 func parseBitwise() *AST {
-	//fmt.Println("In bitwise with:", peek())
+	//log.Println("In bitwise with:", peek())
 	var operand *AST
 	ast := parseAdd()
 	for checkKind(lexer.OPERATOR_BW) {
@@ -741,7 +741,7 @@ func parseBitwise() *AST {
  * add = mult { ( "+" | "-" ) mult } ;
  */
 func parseAdd() *AST {
-	//fmt.Println("In add with:", peek())
+	//log.Println("In add with:", peek())
 	var operand *AST
 	ast := parseMult()
 	for checkKind(lexer.OPERATOR_ADD) {
@@ -760,7 +760,7 @@ func parseAdd() *AST {
  * mult = expo { multiplication_operator expo } ;
  */
 func parseMult() *AST {
-	//fmt.Println("In mult with:", peek())
+	//log.Println("In mult with:", peek())
 	var operand *AST
 	ast := parseExpo()
 	for checkKind(lexer.OPERATOR_MULT) {
@@ -779,7 +779,7 @@ func parseMult() *AST {
  * expo = unary { "**" expo } ;
  */
 func parseExpo() *AST {
-	//fmt.Println("In expo with:", peek())
+	//log.Println("In expo with:", peek())
 	var operand *AST
 	ast := parseUnary()
 	for checkValue("**") {
@@ -808,7 +808,7 @@ func parseUnary() *AST {
  * left_unary = [ "-" | "~" | "!" | right_unary_operators ] typecast ;
  */
 func parseLeftUnary() *AST {
-	//fmt.Println("In left unary with:", peek())
+	//log.Println("In left unary with:", peek())
 	ast := AST{Label: "Unary", Location: peek().Location}
 	ast.AddChildToken(consume())
 	ast.AddChildren(parseTypecast())
@@ -819,7 +819,7 @@ func parseLeftUnary() *AST {
  * right_unary = typecast [ right_unary_operators ] ;
  */
 func parseRightUnary() *AST {
-	//fmt.Println("In right unary with:", peek())
+	//log.Println("In right unary with:", peek())
 	ast := AST{Label: "Unary", Location: peek().Location}
 	typecast := parseTypecast()
 	if !checkKind(lexer.OPERATOR_UNARY) {
@@ -834,7 +834,7 @@ func parseRightUnary() *AST {
  * typecast = postfix [ "as" type ] ;
  */
 func parseTypecast() *AST {
-	//fmt.Println("In typecast with:", peek())
+	//log.Println("In typecast with:", peek())
 	ast := AST{Label: "typecast", Location: peek().Location}
 	postfix := parsePostfix()
 	if !checkValue("as") {
@@ -850,7 +850,7 @@ func parseTypecast() *AST {
  * postfix = primary { postfix_op } ;
  */
 func parsePostfix() *AST {
-	//fmt.Println("In postfix with:", peek())
+	//log.Println("In postfix with:", peek())
 	primary := parsePrimary()
 	if !checkValue(".") && !checkValue("(") && !checkValue("[") {
 		return primary
@@ -868,7 +868,7 @@ func parsePostfix() *AST {
  * primary = literal | identifier | "(" expression ")" ;
  */
 func parsePrimary() *AST {
-	//fmt.Println("In primary with:", peek())
+	//log.Println("In primary with:", peek())
 	if isLiteral() {
 		return parseLiteral()
 	}
@@ -888,7 +888,7 @@ func parsePrimary() *AST {
  * postfix_op = "." identifier | "(" [  expression { "," expression } ]")" | "[" index_value "]" ;
  */
 func parsePostfixOp() *AST {
-	//fmt.Println("In postfix_op with:", peek())
+	//log.Println("In postfix_op with:", peek())
 	var ast AST
 	if checkValue(".") {
 		ast = AST{Label: "dot", Location: consume().Location}
@@ -935,7 +935,7 @@ func isLiteral() bool {
  * index_value =  slice | expression | array_end ;
  */
 func parseIndexValue() *AST {
-	//fmt.Println("In index value with:", peek())
+	//log.Println("In index value with:", peek())
 	if isSlice() {
 		return parseSlice()
 	}
@@ -958,7 +958,7 @@ func isSlice() bool {
  * slice = [ expression | array_end ] range_operator [ expression | array_end ] ;
  */
 func parseSlice() *AST {
-	//fmt.Println("In slice with:", peek())
+	//log.Println("In slice with:", peek())
 	ast := AST{Label: "slice", Location: peek().Location}
 	if checkKind(lexer.OPERATOR_RANGE) {
 		rangeOp := nodeFromToken(consume())
@@ -994,7 +994,7 @@ func parseSlice() *AST {
  * array_end = "^" expression ;
  */
 func parseArrayEnd() *AST {
-	//fmt.Println("In array_end with:", peek())
+	//log.Println("In array_end with:", peek())
 	ast := AST{Label: "ARR-END", Location: consume().Location}
 	ast.AddChildren(parseExpression())
 	return &ast
@@ -1017,7 +1017,7 @@ func parseLiteral() *AST {
  * number_literal = [ "+" | "-" ] ( hex | float | int ) ;
  */
 func parseNumLiteral() *AST {
-	//fmt.Println("In number_literal with:", peek())
+	//log.Println("In number_literal with:", peek())
 	sign := "+"
 	var token lexer.Token
 	if checkValue("+") || checkValue("-") {
@@ -1044,7 +1044,7 @@ func parseNumLiteral() *AST {
  * struct_literal = identifier "{" [ properties ] "}";
  */
 func parseStructLiteral() *AST {
-	//fmt.Println("In struct_literal with:", peek())
+	//log.Println("In struct_literal with:", peek())
 	ast := AST{Label: "struct_literal", Location: peek().Location}
 	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue("{")
@@ -1059,7 +1059,7 @@ func parseStructLiteral() *AST {
  * properties =  property { ","  property } [ "," ] ;
  */
 func parseProperties() *AST {
-	//fmt.Println("In properties with:", peek())
+	//log.Println("In properties with:", peek())
 	ast := AST{Label: "properties", Location: peek().Location}
 	ast.AddChildren(parseProperty())
 	for !checkValue("}") && !checkKind(lexer.EOF) {
@@ -1079,7 +1079,7 @@ func parseProperties() *AST {
  * property = identifier ":" expression ;
  */
 func parseProperty() *AST {
-	//fmt.Println("In property with:", peek())
+	//log.Println("In property with:", peek())
 	ast := AST{Label: "property", Location: peek().Location}
 	ast.AddChildToken(expectKind(lexer.ID))
 	expectValue(":")
@@ -1091,7 +1091,7 @@ func parseProperty() *AST {
  * modifiers = "private" [ "mut" ] | "mut" [ "private" ] ;
  */
 func parseModifiers() *AST {
-	//fmt.Println("In modifiers with:", peek())
+	//log.Println("In modifiers with:", peek())
 	ast := AST{Label: "modifiers", Location: peek().Location}
 	modifier := consume()
 	ast.AddChildToken(modifier)
@@ -1110,7 +1110,7 @@ func parseModifiers() *AST {
  * control_flow = "return" [ expression ] | "continue" | "break" ;
  */
 func parseControlFlow() *AST {
-	//fmt.Println("In control_flow with:", peek())
+	//log.Println("In control_flow with:", peek())
 	ast := AST{Label: "control-flow", Location: peek().Location}
 	if checkValue("continue") || checkValue("break") {
 		ast.AddChildToken(consume())

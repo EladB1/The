@@ -1,15 +1,14 @@
-// int x = 1 * 2;
 int64 y = 5;
 
 fn main() -> int {
     mut int i = 1;
-    i += test();
-    double fromInt = i as double;
+    i += test(1, 2);
+    //double fromInt = i as double;
     String s = "hello";
     printerr("Error");
     return 0.01 as int;
 }
 
-fn test() -> int {
-    return 2;
+fn test(int x, int y) -> int {
+    return x + y;
 }

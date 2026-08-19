@@ -162,6 +162,7 @@ func (messages PhaseDiagnostics) ReportStatus(conf config.Config) (int, int) {
 func (messages PhaseDiagnostics) ExitOnError(conf config.Config) {
 	if messages.HasError {
 		messages.ReportStatus(conf)
+		conf.PrintDebugLogs()
 		os.Exit(1)
 	}
 }

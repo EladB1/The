@@ -56,7 +56,7 @@ func (state *lexerState) lexLine(line string) {
 			continue
 		}
 		state.push(curr)
-		//fmt.Printf("line: %d, curr: %c, next: %c\n", state.lineNum, curr, next)
+		//log.Printf("line: %d, curr: %c, next: %c\n", state.lineNum, curr, next)
 		state.startPosition = state.lineIndex
 		switch curr {
 		case '+':
