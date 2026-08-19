@@ -3,11 +3,13 @@ int64 y = 5;
 
 fn main() -> int {
     mut int i = 1;
-    i = 2;
+    i += test();
+    double fromInt = i as double;
     String s = "hello";
-    //int j = i;
-    //double g = 9.8;
-    //println(1 + 2);
     printerr("Error");
-    return 0;
+    return 0.01 as int;
+}
+
+fn test() -> int {
+    return 2;
 }

@@ -1,6 +1,9 @@
 package codegen
 
 import (
+	"slices"
+	"strings"
+
 	"github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/irgen"
 )
@@ -16,6 +19,13 @@ func (target CompileTarget) handleInstruction(instruction irgen.Instruction) []S
 		statements = append(statements, target.translateOperand(instruction.Operand1))
 	case irgen.Call:
 		statements = append(statements, target.generateCall(instruction)...)
+	default:
+		if isTypeCast(instruction.Operation) {
+			statements = append(statements, target.generateTypecast(instruction)...)
+		}
+		if strings.HasSuffix(string(instruction.Operation), "add") {
+			statements = append(statements, target.generateAdd(instruction)...)
+		}
 	}
 	return statements
 }
@@ -64,10 +74,53 @@ func (target CompileTarget) generateCall(instruction irgen.Instruction) []Statem
 		},
 		)
 	}
+	if hasDestination(instruction) {
+		statements = append(statements, VariableInstruction{
+			Visibility: Local,
+			Operator:   Set,
+			Name:       instruction.Destination.Name,
+		})
+	}
+	return statements
+}
+
+func (target CompileTarget) generateAdd(instruction irgen.Instruction) []Statement {
+	statements := []Statement{
+		target.translateOperand(instruction.Operand1),
+		target.translateOperand(instruction.Operand2),
+		NumericInstruction{
+			DataType: lowerIRTypeToWatType(instruction.Destination.DataType),
+			Operator: "add",
+		},
+	}
+	if hasDestination(instruction) {
+		statements = append(statements, VariableInstruction{
+			Visibility: Local,
+			Operator:   Set,
+			Name:       instruction.Destination.Name,
+		})
+	}
+	return statements
+}
+
+func (target CompileTarget) generateTypecast(instruction irgen.Instruction) []Statement {
+	statements := []Statement{
+		target.translateOperand(instruction.Operand1),
+		NumericInstruction{
+			DataType: lowerIRTypeToWatType(instruction.Destination.DataType),
+			Operator: string(instruction.Operation),
+		},
+		VariableInstruction{
+			Visibility: Local,
+			Operator:   Set,
+			Name:       instruction.Destination.Name,
+		},
+	}
 	return statements
 }
 
 func (target CompileTarget) translateOperand(op irgen.Operand) Statement {
+	emptyVar := irgen.Variable{}
 	if op.Constant != nil {
 		if op.Type == datatypes.Str_const {
 			if index, ok := op.Constant.(int); ok {
@@ -85,5 +138,55 @@ func (target CompileTarget) translateOperand(op irgen.Operand) Statement {
 			}
 		}
 	}
+	if op.Var != emptyVar {
+		vis := Local
+		if op.Var.Visibility == irgen.Global {
+			vis = Global
+		}
+		return VariableInstruction{
+			Visibility: vis,
+			Operator:   Get,
+			Name:       op.Var.Name,
+		}
+	}
 	return nil
+}
+
+func isTypeCast(operation irgen.Operation) bool {
+	typecasts := []irgen.Operation{
+		// int -> otherType
+		irgen.I32ToI64,
+		irgen.I32ToF32,
+		irgen.I32ToF64,
+		// int64 -> otherType
+		irgen.I64ToI32,
+		irgen.I64ToF32,
+		irgen.I64ToF64,
+		// uint32 -> otherType
+		irgen.U32ToI64,
+		irgen.U32ToF32,
+		irgen.U32ToF64,
+		// uint64 -> otherType
+		irgen.U64ToI32,
+		irgen.U64ToF32,
+		irgen.U64ToF64,
+		// float -> otherType
+		irgen.F32ToI32,
+		irgen.F32ToU32,
+		irgen.F32ToI64,
+		irgen.F32ToU64,
+		irgen.F32ToF64,
+		// double -> otherType
+		irgen.F64ToI32,
+		irgen.F64ToU32,
+		irgen.F64ToI64,
+		irgen.F64ToU64,
+		irgen.F64ToF32,
+	}
+	return slices.Contains(typecasts, operation)
+}
+
+func hasDestination(instruction irgen.Instruction) bool {
+	emptyVar := irgen.Variable{}
+	return instruction.Destination != emptyVar
 }

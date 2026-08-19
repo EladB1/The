@@ -39,20 +39,20 @@ Program: [
     __t16: i32 = i32.and __t15 i32(1)
     __t17: i32 = i32.or i32(1) __t16
     STORE global.b00l __t17
-    __t18: i32 = i32.trunc_f64_s global.g
+    __t18: i32 = trunc_f64_s global.g
     STORE global.intg __t18
     PARAM global.g
     __t19: str_const = CALL __str_fromFloat64 1
     STORE global.strg __t19
-    __t20: f64 = f64.convert_i32_s global.i
+    __t20: f64 = convert_i32_s global.i
     __t21: i32 = f64.lt global.g __t20
     STORE global.less __t21
-    __t22: f64 = f64.convert_i32_s global.i
+    __t22: f64 = convert_i32_s global.i
     __t23: f64 = f64.mul global.g __t22
-    __t24: f64 = i64.trunc_f64_s global.j
+    __t24: f64 = trunc_f64_s global.j
     __t25: f64 = f64.sub __t23 __t24
     STORE global.g2 __t25
-    __t26: i64 = i64.extend_i32_s global.i
+    __t26: i64 = extend_i32_s global.i
     __t27: i64 = i64.and global.j __t26
     STORE global.bits __t27
     PARAM i32(65)
@@ -568,7 +568,7 @@ Program: [
     CALL println 1
   }
 
-  fn __T_Person1_P_donot() {
+  fn __T_P_donot() {
     STORE global.x i32(2)
     PARAM str_const(1)
     CALL println 1
@@ -691,7 +691,7 @@ Program: [
     return __t80
   }
 
-  fn __T_Person1_P_donot() {
+  fn __T_P_donot() {
     STORE global.x i32(2)
     PARAM str_const(1)
     CALL println 1

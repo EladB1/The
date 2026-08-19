@@ -255,11 +255,11 @@ func (inst VariableInstruction) String(indentLevel int) string {
 	output := strings.Builder{}
 	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteRune('(')
-	output.WriteString(fmt.Sprintf("%s.%s $%s ", inst.Visibility, inst.Operator, inst.Name))
+	value := ""
 	if inst.Value != nil {
-		output.WriteString(inst.Value.String(0))
+		value = " " + inst.Value.String(0)
 	}
-	output.WriteString(")")
+	output.WriteString(fmt.Sprintf("%s.%s $%s%s)", inst.Visibility, inst.Operator, inst.Name, value))
 	return output.String()
 }
 
