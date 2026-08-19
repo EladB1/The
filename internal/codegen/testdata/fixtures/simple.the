@@ -3,12 +3,13 @@ int64 y = 5;
 fn main() -> int {
     mut int i = 1;
     i += test(1, 2);
-    //double fromInt = i as double;
+    double fromInt = i as double;
     String s = "hello";
     printerr("Error");
-    return 0.01 as int;
+    //return 0.01 as int;
+    return i;
 }
 
 fn test(int x, int y) -> int {
-    return x + y;
+    return x  - y;
 }

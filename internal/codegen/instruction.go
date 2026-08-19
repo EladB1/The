@@ -1,7 +1,6 @@
 package codegen
 
 import (
-	"log"
 	"slices"
 	"strings"
 
@@ -19,13 +18,18 @@ func handleInstruction(instruction irgen.Instruction) []Statement {
 	case irgen.PrepareParam:
 		statements = append(statements, translateOperand(instruction.Operand1))
 	case irgen.Call:
-		statements = append(statements, generateCall(instruction)...)
+		statements = generateCall(instruction)
 	default:
-		if isTypeCast(instruction.Operation) {
+		operation := instruction.Operation
+		if isTypeCast(operation) {
 			statements = append(statements, generateTypecast(instruction)...)
-		}
-		if strings.HasSuffix(string(instruction.Operation), "add") {
-			statements = append(statements, generateAdd(instruction)...)
+		} else if op := getNameIfTypedOperation(operation); op != "" {
+			switch op {
+			case "add":
+				statements = generateAdd(instruction)
+			case "sub":
+				statements = generateSub(instruction)
+			}
 		}
 	}
 	return statements
@@ -104,6 +108,25 @@ func generateAdd(instruction irgen.Instruction) []Statement {
 	return statements
 }
 
+func generateSub(instruction irgen.Instruction) []Statement {
+	statements := []Statement{
+		translateOperand(instruction.Operand1),
+		translateOperand(instruction.Operand2),
+		NumericInstruction{
+			DataType: lowerIRTypeToWatType(instruction.Destination.DataType),
+			Operator: "sub",
+		},
+	}
+	if hasDestination(instruction) {
+		statements = append(statements, VariableInstruction{
+			Visibility: Local,
+			Operator:   Set,
+			Name:       instruction.Destination.Name,
+		})
+	}
+	return statements
+}
+
 func generateTypecast(instruction irgen.Instruction) []Statement {
 	statements := []Statement{
 		translateOperand(instruction.Operand1),
@@ -117,7 +140,6 @@ func generateTypecast(instruction irgen.Instruction) []Statement {
 			Name:       instruction.Destination.Name,
 		},
 	}
-	log.Println("HERE", instruction.String(0))
 	return statements
 }
 
@@ -186,6 +208,14 @@ func isTypeCast(operation irgen.Operation) bool {
 		irgen.F64ToF32,
 	}
 	return slices.Contains(typecasts, operation)
+}
+
+func getNameIfTypedOperation(operation irgen.Operation) string {
+	if !strings.Contains(string(operation), ".") {
+		return ""
+	}
+	parts := strings.Split(string(operation), ".")
+	return parts[1]
 }
 
 func hasDestination(instruction irgen.Instruction) bool {

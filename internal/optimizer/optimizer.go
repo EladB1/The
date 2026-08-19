@@ -1,3 +1,5 @@
+//go:build ignore
+
 package optimizer
 
 import "github.com/EladB1/The/internal/irgen"
