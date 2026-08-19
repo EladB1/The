@@ -124,24 +124,22 @@ func translateAssignment(node *parser.AST) []TAC {
 	variable := currScope.LookupVariable(name)
 	if variable != nil {
 		if variable.Ctx == semantic.StructProp {
-			loadThis := formTempVar(dt.Ptr)
+			this := Variable{
+				Name:        "__this",
+				DataType:    dt.Ptr,
+				Visibility:  Param,
+				SrcPosition: node.Location,
+			}
 			instructions = append(instructions, Instruction{
-				Destination: loadThis,
-				Operation:   Get,
 				Operand1: Operand{
-					Var: Variable{
-						Name:        "__this",
-						DataType:    dt.Ptr,
-						Visibility:  Param,
-						SrcPosition: node.Location,
-					},
+					Var: this,
 				},
 				SrcPosition: node.Location,
 			},
 				Instruction{
 					Operation: Set,
 					Operand1: Operand{
-						Var:         loadThis,
+						Var:         this,
 						Offset:      variable.Offset,
 						SrcPosition: node.Location,
 					},
@@ -164,26 +162,15 @@ func translateDotAssignment(node *parser.AST) []TAC {
 	var ptr_in []TAC
 	var ptr Operand
 	if left.Type.RootEquals(dt.Ref) {
-		loadThis := formTempVar(dt.Ptr)
-		ptr_in, ptr = []TAC{
-			Instruction{
-				Destination: loadThis,
-				Operation:   Get,
-				Operand1: Operand{
-					Type: dt.Ptr,
-					Var: Variable{
-						DataType:    dt.Ptr,
-						Name:        "__this",
-						Visibility:  Param,
-						SrcPosition: left.Location,
-					},
-				},
-			},
-		}, Operand{
+		ptr = Operand{
 			Type: dt.Ptr,
-			Var:  loadThis,
+			Var: Variable{
+				DataType:    dt.Ptr,
+				Name:        "__this",
+				Visibility:  Param,
+				SrcPosition: left.Location,
+			},
 		}
-		instructions = append(instructions, ptr_in...)
 		str := currScope.LookupStruct(left.Type.SubTypes[0].String())
 		if str == nil {
 			panic(fmt.Sprintf("Unable to find struct %s in scopeId %s", left.Type.SubTypes[0], currScope.Id))
@@ -416,19 +403,12 @@ func translateForLoop(node *parser.AST) []TAC {
 		}
 		container_in, container := translateExpression(*containerNode)
 		length_in, length := getArrayLength(container)
-		curr := formTempVar(dt.I32)
-		loop.Code = append(loop.Code, Instruction{
-			Destination: curr,
-			Operation:   Get,
-			Operand1: Operand{
-				Var: Variable{
-					Name:       variable.Name,
-					DataType:   dt.I32,
-					Visibility: VariableScope(variable.Ctx),
-				},
-			},
+		curr := Variable{
+			Name:        variable.Name,
+			DataType:    dt.I32,
+			Visibility:  VariableScope(variable.Ctx),
 			SrcPosition: eachNode.Location,
-		})
+		}
 		eachVar := currScope.LookupVariable(eachNode.Children[1].Token.Value)
 		index_in, index := callFunction(string(StringIndex), dt.TranslateSourceType(eachNode.Type), eachNode.Location, container, Operand{
 			Type:        dt.I32,

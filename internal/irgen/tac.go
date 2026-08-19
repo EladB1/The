@@ -83,7 +83,6 @@ const (
 
 const (
 	Store        Operation = "STORE"
-	Get          Operation = "GET"
 	Set          Operation = "SET"
 	Load         Operation = "LOAD"
 	Return       Operation = "return"

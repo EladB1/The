@@ -53,34 +53,18 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 			SrcPosition: str.Def.Location,
 		},
 	}
-	loadThis := formTempVar(dt.Ptr)
-	fn.Code = append(fn.Code, Instruction{
-		Destination: loadThis,
-		Operation:   Get,
-		Operand1: Operand{
-			Var: Variable{
-				Name:        "__this",
-				DataType:    dt.Ptr,
-				Visibility:  Param,
-				SrcPosition: str.Def.Location,
-			},
-		},
+	loadThis := Variable{
+		Name:        "__this",
+		DataType:    dt.Ptr,
+		Visibility:  Param,
 		SrcPosition: str.Def.Location,
-	})
-	loadOther := formTempVar(dt.Ptr)
-	fn.Code = append(fn.Code, Instruction{
-		Destination: loadOther,
-		Operation:   Get,
-		Operand1: Operand{
-			Var: Variable{
-				Name:        "__other",
-				DataType:    dt.Ptr,
-				Visibility:  Param,
-				SrcPosition: str.Def.Location,
-			},
-		},
+	}
+	loadOther := Variable{
+		Name:        "__other",
+		DataType:    dt.Ptr,
+		Visibility:  Param,
 		SrcPosition: str.Def.Location,
-	})
+	}
 	comparisons := []Variable{}
 	for _, propName := range str.OrderedProperties {
 		prop := str.InnerScope.LookupVariable(propName)
@@ -219,18 +203,11 @@ func structDefaultToString(str *semantic.StructSymbol) Function {
 			Type: dt.Ptr,
 		},
 	}
-	load := formTempVar(dt.Ptr)
-	fn.Code = append(fn.Code, Instruction{
-		Destination: load,
-		Operation:   Get,
-		Operand1: Operand{
-			Var: Variable{
-				Name:       "__this",
-				DataType:   dt.Ptr,
-				Visibility: Param,
-			},
-		},
-	})
+	load := Variable{
+		Name:       "__this",
+		DataType:   dt.Ptr,
+		Visibility: Param,
+	}
 	propLoads := []Operand{}
 	for _, propName := range str.OrderedProperties {
 		prop := str.InnerScope.LookupVariable(propName)

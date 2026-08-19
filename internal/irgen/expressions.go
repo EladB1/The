@@ -1019,21 +1019,12 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 	operand := Operand{}
 	variable := currScope.LookupVariable(node.Token.Value)
 	if variable.Ctx == semantic.StructProp {
-		get := formTempVar(dt.Ptr)
-		instructions = append(instructions, Instruction{
-			Destination: get,
-			Operation:   Get,
-			Operand1: Operand{
-				Var: Variable{
-					Name:        "__this",
-					DataType:    dt.Ptr,
-					Visibility:  Param,
-					SrcPosition: node.Location,
-				},
-				SrcPosition: node.Location,
-			},
+		get := Variable{
+			Name:        "__this",
+			DataType:    dt.Ptr,
+			Visibility:  Param,
 			SrcPosition: node.Location,
-		})
+		}
 		load := formTempVar(dt.TranslateSourceType(variable.Type))
 		instructions = append(instructions, Instruction{
 			Destination: load,
@@ -1055,26 +1046,13 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 		}
 	}
 	varType := dt.TranslateSourceType(variable.Type)
-	tempVar := formTempVar(varType)
-	instructions = append(instructions, Instruction{
-		Destination: tempVar,
-		Operation:   Get,
-		Operand1: Operand{
-			Var: Variable{
-				Name:       variable.Name,
-				DataType:   varType,
-				Visibility: VariableScope(variable.Ctx),
-			},
-			SrcPosition: node.Location,
-		},
-		SrcPosition: node.Location,
-	})
 	operand = Operand{
 		Var: Variable{
-			Name:     tempVar.Name,
-			DataType: tempVar.DataType,
+			Name:       variable.Name,
+			DataType:   varType,
+			Visibility: VariableScope(variable.Ctx),
 		},
-		Type:        tempVar.DataType,
+		Type:        varType,
 		SrcPosition: node.Location,
 	}
 	return instructions, operand
