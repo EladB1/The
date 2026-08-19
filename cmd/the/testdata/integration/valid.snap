@@ -7,134 +7,109 @@ Output:
 
 Program: [
   fn __ErrorLogger_cast__default_toString(__this: ptr)->str_const {
-      __t0: ptr = GET param.__this
-      PARAM i32(123)
-      PARAM i32(125)
-      __t1: str_const = CALL __char_concat 2
-      return __t1
+    PARAM i32(123)
+    PARAM i32(125)
+    __t0: str_const = CALL __char_concat 2
+    return __t0
   }
 
   fn __ErrorLogger_compare__default__equals(__this: ptr, __other: ptr)->i32 {
-      __t2: ptr = GET param.__this
-      __t3: ptr = GET param.__other
-      return i32(1)
+    return i32(1)
   }
 
   fn __ErrorLogger_Logger_log(error: str_const, __this: ptr) {
-      __t4: str_const = GET param.error
-      PARAM str_const(1)
-      PARAM __t4
-      __t5: str_const = CALL __str_concat 2
-      PARAM __t5
-      CALL println 1
+    PARAM str_const(1)
+    PARAM param.error
+    __t1: str_const = CALL __str_concat 2
+    PARAM __t1
+    CALL println 1
   }
 
-      STORE global.SOME_CONST u32(50000)
+    STORE global.SOME_CONST u32(50000)
   fn main()->i32 {
-      __t6: ptr = Malloc 0
-      STORE local.logger __t6
-      __t7: u32 = GET global.SOME_CONST
-      PARAM __t7
-      PARAM u32(2)
-      __t8: u32 = CALL __u32_pow 2
-      STORE local.i __t8
-      __t9: u32 = GET local.i
-      __t10: u32 = u32.add __t9 u32(2)
-      STORE local.i __t10
-      __t11: u32 = GET local.i
-      __t12: u32 = u32.mul __t11 u32(2)
-      STORE local.i __t12
-      __t13: u32 = GET local.i
-      __t14: i32 = u32.lt __t13 u32(10)
-      STORE local.less __t14
-      __t15: u32 = GET local.i
-      __t16: u32 = GET global.UINT32_MAX
-      __t17: i32 = u32.gt __t15 __t16
-      if __t17 {
-          __t18: ptr = GET local.logger
-          PARAM str_const(2)
-          PARAM __t18
-          CALL log 2
-          return i32(1)
-      } else {
-          __t19: u32 = GET local.i
-          __t20: u32 = u32.mod __t19 u32(2)
-          __t21: i32 = u32.eq __t20 u32(0)
-          if __t21 {
-              __t22: ptr = GET local.logger
-              PARAM str_const(3)
-              PARAM __t22
-              CALL log 2
-          } else {
-              __t23: ptr = GET local.logger
-              PARAM str_const(4)
-              PARAM __t23
-              CALL log 2
+    __t2: ptr = Malloc 0
+    STORE local.logger __t2
+    PARAM global.SOME_CONST
+    PARAM u32(2)
+    __t3: u32 = CALL __u32_pow 2
+    STORE local.i __t3
+    __t4: u32 = u32.add local.i u32(2)
+    STORE local.i __t4
+    __t5: u32 = u32.mul local.i u32(2)
+    STORE local.i __t5
+    __t6: i32 = u32.lt local.i u32(10)
+    STORE local.less __t6
+    __t7: i32 = u32.gt local.i global.UINT32_MAX
+    if __t7 {
+        PARAM str_const(2)
+        PARAM local.logger
+        CALL log 2
+        return i32(1)
+    } else {
+        __t8: u32 = u32.mod local.i u32(2)
+        __t9: i32 = u32.eq __t8 u32(0)
+        if __t9 {
+            PARAM str_const(3)
+            PARAM local.logger
+            CALL log 2
+        } else {
+            PARAM str_const(4)
+            PARAM local.logger
+            CALL log 2
           }
       }
-      STORE local.str str_const(5)
-      loop_exit@0: {
-        __t24: str_const = GET local.str
-        PARAM __t24
-        __t25: i32 = CALL __str_length 1
+    STORE local.str str_const(5)
+    loop_exit@0: {
+        PARAM local.str
+        __t10: i32 = CALL __str_length 1
         STORE local.k i32(0)
         loop@0: {
-          __t26: i32 = GET local.k
-          PARAM __t24
-          PARAM __t26
-          __t27: i32 = CALL __str_index 2
-          STORE local.c __t27
-          __t28: i32 = i32.lt __t26 __t25
-          JMPIFNOT loop_exit@0
-          loop_body@0: {
-            __t30: i32 = GET local.k
-            __t31: i32 = i32.eq __t30 i32(0)
-            __t32: i32 = GET local.k
-            __t33: str_const = GET local.str
-            PARAM __t33
-            __t34: i32 = CALL __str_length 1
-            __t35: i32 = i32.sub __t34 i32(1)
-            __t36: i32 = i32.eq __t32 __t35
-            __t37: i32 = i32.or __t31 __t36
-            if __t37 {
+            PARAM local.str
+            PARAM local.k
+            __t11: i32 = CALL __str_index 2
+            STORE local.c __t11
+            __t12: i32 = i32.lt local.k __t10
+            JMPIFNOT loop_exit@0
+            loop_body@0: {
+                __t14: i32 = i32.eq local.k i32(0)
+                PARAM local.str
+                __t15: i32 = CALL __str_length 1
+                __t16: i32 = i32.sub __t15 i32(1)
+                __t17: i32 = i32.eq local.k __t16
+                __t18: i32 = i32.or __t14 __t17
+                if __t18 {
+                    JMP loop@0
+                }
+                PARAM local.c
+                CALL println 1
+                __t13: i32 = i32.add local.k i32(1)
+                STORE local.k __t13
                 JMP loop@0
             }
-            __t38: i32 = GET local.c
-            PARAM __t38
-            CALL println 1
-            __t29: i32 = i32.add __t26 i32(1)
-            STORE local.k __t29
-            JMP loop@0
-          }
         }
-      }
-      STORE local.indx i32(0)
-      loop_exit@1: {
+    }
+    STORE local.indx i32(0)
+    loop_exit@1: {
         loop@1: {
-          __t39: i32 = GET local.indx
-          __t40: str_const = GET local.str
-          PARAM __t40
-          __t41: i32 = CALL __str_length 1
-          __t42: i32 = i32.lt __t39 __t41
-          JMPIFNOT loop_exit@1 __t42
-          loop_body@1: {
-            __t43: i32 = GET local.indx
-            __t44: i32 = i32.ne __t43 i32(0)
-            __t45: i32 = GET local.indx
-            __t46: i32 = i32.mod __t45 i32(7)
-            __t47: i32 = i32.eq __t46 i32(0)
-            __t48: i32 = i32.and __t44 __t47
-            if __t48 {
-                JMP loop_exit@1
+            PARAM local.str
+            __t19: i32 = CALL __str_length 1
+            __t20: i32 = i32.lt local.indx __t19
+            JMPIFNOT loop_exit@1 __t20
+            loop_body@1: {
+                __t21: i32 = i32.ne local.indx i32(0)
+                __t22: i32 = i32.mod local.indx i32(7)
+                __t23: i32 = i32.eq __t22 i32(0)
+                __t24: i32 = i32.and __t21 __t23
+                if __t24 {
+                    JMP loop_exit@1
+                }
+                __t25: i32 = i32.add local.indx i32(1)
+                STORE local.indx __t25
+                JMP loop@1
             }
-            __t49: i32 = GET local.indx
-            __t50: i32 = i32.add __t49 i32(1)
-            STORE local.indx __t50
-            JMP loop@1
-          }
         }
-      }
-      return i32(0)
+    }
+    return i32(0)
   }
 
 ]
@@ -147,51 +122,52 @@ Program: [
     (data $__str_const5 (i32.const 161) "hello")
     (global $SOME_CONST i32 (i32.const 50000))
     (func $__ErrorLogger_cast__default_toString (param $__this i32) (result i32)
-        (local $__t1 i32)
         (local $__t0 i32)
         (i32.const 123)
         (i32.const 125)
         (call $__char_concat)
+        (local.set $__t0)
+        (local.get $__t0)
         (return)
     )
     (func $__ErrorLogger_compare__default__equals (param $__this i32) (param $__other i32) (result i32)
-        (local $__t2 i32)
-        (local $__t3 i32)
         (i32.const 1)
         (return)
     )
     (func $__ErrorLogger_Logger_log (param $error i32) (param $__this i32)
-        (local $__t4 i32)
-        (local $__t5 i32)
+        (local $__t1 i32)
         (i32.const 104)
+        (local.get $error)
         (call $__str_concat)
+        (local.set $__t1)
+        (local.get $__t1)
         (call $println)
     )
     (func $main (export "main") (result i32)
         (local $logger i32)
-        (local $__t8 i32)
-        (local $__t9 i32)
-        (local $__t10 i32)
-        (local $__t13 i32)
-        (local $indx i32)
-        (local $__t14 i32)
-        (local $__t15 i32)
-        (local $str i32)
-        (local $__t12 i32)
-        (local $less i32)
-        (local $__t17 i32)
-        (local $__t7 i32)
         (local $i i32)
-        (local $__t11 i32)
-        (local $__t16 i32)
+        (local $__t4 i32)
+        (local $less i32)
+        (local $str i32)
+        (local $indx i32)
+        (local $__t2 i32)
+        (local $__t3 i32)
+        (local $__t5 i32)
         (local $__t6 i32)
-        (local.set $logger )
+        (local $__t7 i32)
+        (local.set $logger (local.get $__t2))
+        (global.get $SOME_CONST)
         (i32.const 2)
         (call $__u32_pow)
-        (local.set $i )
-        (local.set $i )
-        (local.set $i )
-        (local.set $less )
+        (local.set $__t3)
+        (local.set $i (local.get $__t3))
+        (local.get $i)
+        (i32.const 2)
+        (i32.add)
+        (local.set $__t4)
+        (local.set $i (local.get $__t4))
+        (local.set $i (local.get $__t5))
+        (local.set $less (local.get $__t6))
         (local.set $str (i32.const 161))
         (local.set $indx (i32.const 0))
         (i32.const 0)

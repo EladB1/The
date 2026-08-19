@@ -776,6 +776,7 @@ Flags:
 | `THE_DEV_SEMANTIC` | `devMode_semantic` | Print the annotated AST and ScopeTree |
 | `THE_DEV_IRGEN` | `devMode_irgen` | Print the generated IR code |
 | `THE_DEV_CODEGEN` | `devMode_codegen` | Print the generated WAT code |
+| `THE_DEV_DEBUG` | `conf.Debug` | Set to be able to debug different compiler internals using go `log` package |
 
 Example:
 

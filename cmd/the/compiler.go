@@ -38,11 +38,10 @@ var (
 	devMode_semantic bool = false
 	devMode_irgen    bool = false
 	devMode_codegen  bool = false
-	compilerDebug    bool = false
 
 	// internal configurations
 	conf config.Config = config.Config{
-		Debug:            &compilerDebug,
+		Debug:            false,
 		Strict:           *strict,
 		SuppressWarnings: *suppressWarnings,
 		LogBuffer:        &logBuffer,
@@ -71,7 +70,7 @@ func checkEnvironment() {
 		"THE_DEV_SEMANTIC": &devMode_semantic,
 		"THE_DEV_IRGEN":    &devMode_irgen,
 		"THE_DEV_CODEGEN":  &devMode_codegen,
-		"THE_DEV_DEBUG":    &compilerDebug,
+		"THE_DEV_DEBUG":    &conf.Debug,
 	}
 	for key, flag := range vars {
 		value, err := fetchEnvironmentVariableValue(key)
