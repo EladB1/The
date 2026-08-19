@@ -951,9 +951,8 @@ int y = x + 1;
 produces this IR:
 
 ```
-__t0: i32 = GET local.x
-__t1: i32 = i32.add __t0 i32(1)
-STORE local.y __t1
+__t0: i32 = i32.add local.x i32(1)
+STORE local.y __t0
 ```
 
 Each temporary starts with `__t` and is followed by a number. Internally, there is a counter which increments the `tempVarIndex`. The temporaries do not need to be in order unless there is a clear dependency between them.

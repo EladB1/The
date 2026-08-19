@@ -35,26 +35,24 @@ fn main() -> int {
 STORE global.e: f32 f32(2.718)
 
 fn test(param.i: i32) -> i32 {
-    t1: i32 = GET local.i
-    t2: i32 = i32.add t1 i32(1)
-    return t2 
+    __t0: i32 = i32.add local.i i32(1)
+    return __t0 
 }
 fn main() -> i32 {
-    STORE local.i: i32 i32(1)
-    STORE local.pi: f64 f64(3.14159)
-    t3: f32 = GET global.e
-    PARAM: f32 e
-    PARAM: f64 local.pi
-    t4: f64 = CALL __pow 2 // __pow is part of the runtime library
-    t5: f64 = f64.sub t4 i32(1)
-    STORE local.value: f64 t5
-    PARAM: i32 local.i
-    t6: i32 = CALL test 1 // number of arguments
-    t7: f64 = GET local.value
-    t8: f64 = f64.sub t7 t6
-    STORE local.value: f64 t8
-    STORE local.db: ptr STR_CONST(0)
-    STORE local.isOpen: i32 i32(1) // under the hood, treat bools as i32
+    STORE local.i i32(1)
+    STORE local.pi f64(3.14159)
+    PARAM global.e
+    PARAM local.pi
+    __t1: f64 = CALL __pow 2 // __pow is part of the runtime library
+    __t2: f64 = f64.sub __t1 i32(1)
+    STORE local.value __t2
+    PARAM local.i
+    __t3: i32 = CALL test 1 // number of arguments
+    __t4: f64 = GET local.value
+    __t5: f64 = f64.sub __t4 __t3
+    STORE local.value: f64 __t5
+    STORE local.db STR_CONST(0)
+    STORE local.isOpen i32(1) // under the hood, treat bools as i32
     return i32(0)
 }
 ```
@@ -104,40 +102,41 @@ fn main() -> int {
 
 ```
 fn main() -> i32 {
-    STORE local.limit: i32 i32(100)
+    STORE local.limit i32(100)
     block loop_exit@0: {
         // Loop initialization(s)
-        STORE local.i: i32 i32(0)
+        STORE local.i i32(0)
         loop for@0: {
             // Loop condition
-            t1: i32 = i32.le local.i local.limit
-            t2: i32 = i32.eq t1 i32(0) // condition is false
-            JMPIF loop_exit@0 t2
+            __t0: i32 = i32.le local.i local.limit
+            __t1: i32 = i32.eq __t0 i32(0) // condition is false
+            JMPIF loop_exit@0 __t1
             block loop_body@0: {
-                t3: i32 = i32.mod local.i i32(7)
-                t4: i32 = i32.eq t3 i32(0)
-                if t4 {
+                __t2: i32 = i32.mod local.i i32(7)
+                __t3: i32 = i32.eq __t2 i32(0)
+                if __t3 {
                     STORE local.j: i32 local.i
                     block loop_exit@1: {
                         loop for@1: {
                             // Loop condition
-                            t5: i32 = add local.i i32(7)
-                            t6: i32 = i32.lt j t5
-                            t7: i32 = i32.eq t6 i32(0)
-                            JMPIF loop_exit@1 t7
+                            __t4: i32 = add local.i i32(7)
+                            __t5: i32 = i32.lt local.j __t4
+                            __t6: i32 = i32.eq __t5 i32(0)
+                            JMPIF loop_exit@1 __t6
                             block loop_body@1: {
-                                t8: i32 = add local.j local.i
-                                t9: i32 = i32.mod t8 i32(12)
-                                t10: i32 = i32.eq t9 i32(0)
-                                if t10 {
+                                __t7: i32 = add local.j local.i
+                                __t8: i32 = i32.mod __t7 i32(12)
+                                __t9: i32 = i32.eq __t8 i32(0)
+                                if __t9 {
                                     JMP loop_exit@1
                                 }
-                                PARAM: i32 t8
-                                t11: ptr = CALL __str_cast_i32 1
-                                PARAM: ptr t11
-                                CALL __println 1
-                                t12: i32 = add local.j i32(1)
-                                STORE local.j: i32 t12
+                                 __t10: i32 = add local.j local.i
+                                PARAM __t10
+                                __t11: str_const = CALL __str_cast_i32 1
+                                PARAM __t11
+                                CALL println 1
+                                __t12: i32 = add local.j i32(1)
+                                STORE local.j __t12
                                 }
                                 // repeat loop
                                 JMP for@1
@@ -145,21 +144,21 @@ fn main() -> i32 {
                     }
                 }
                 else {
-                    t13 i32 = i32.mod local.i i32(2)
-                    t14: i32 = i32.eq t13 i32(0)
-                    if t14 {
+                    __t13 i32 = i32.mod local.i i32(2)
+                    __t14: i32 = i32.eq t13 i32(0)
+                    if __t14 {
                         JMP @loop_body0
                     }             
                     else {
-                        PARAM: i32 local.i
-                        t15: ptr = CALL __str_cast_i32 1
-                        PARAM: ptr t15
-                        CALL __println 1
+                        PARAM local.i
+                        __t15: str_const = CALL __str_cast_i32 1
+                        PARAM __t15
+                        CALL println 1
                     }
                 }
             }
-            t16: i32 = i32.add local.i i32(1) 
-            STORE local.i: i32 t16
+            __t16: i32 = i32.add local.i i32(1) 
+            STORE local.i __t16
             JMP for@0
         }
     }
