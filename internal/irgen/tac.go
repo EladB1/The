@@ -206,12 +206,12 @@ func (fn Function) String() string {
 
 func (block IfBlock) String(indentLevel int) string {
 	output := strings.Builder{}
-	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteString("if ")
 	output.WriteString(block.IfCondition.Name)
 	output.WriteString(" {\n")
 	output.WriteString(stringifyCode(*block.IfCode, indentLevel+1))
-	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteString("}")
 	if block.ElseCode != nil && len(*block.ElseCode) > 0 {
 		output.WriteString(" else {\n")
@@ -224,29 +224,29 @@ func (block IfBlock) String(indentLevel int) string {
 
 func (block Block) String(indentLevel int) string {
 	output := strings.Builder{}
-	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteString(block.Label)
 	output.WriteString(": {\n")
-	output.WriteString(stringifyCode(block.Code, indentLevel))
-	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString(stringifyCode(block.Code, indentLevel+1))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteString("}")
 	return output.String()
 }
 
 func (loop Loop) String(indentLevel int) string {
 	output := strings.Builder{}
-	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteString(loop.Label)
 	output.WriteString(": {\n")
-	output.WriteString(stringifyCode(loop.Code, indentLevel))
-	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString(stringifyCode(loop.Code, indentLevel+1))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteString("}")
 	return output.String()
 }
 
 func (inst Instruction) String(indentLevel int) string {
 	output := strings.Builder{}
-	output.WriteString(strings.Repeat(indentDelim, indentLevel+1))
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	if (inst.Destination != Variable{}) {
 		output.WriteString(fmt.Sprintf("%s: %s = ", inst.Destination.Name, inst.Destination.DataType))
 	}
