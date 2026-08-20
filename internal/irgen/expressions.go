@@ -217,9 +217,9 @@ func translateBitOperation(node parser.AST) ([]TAC, Operand) {
 	case "|":
 		operation = typedOperation(irType, "or")
 	case "<<":
-		operation = typedOperation(irType, "lshift")
+		operation = typedOperation(irType, "shl")
 	case ">>":
-		operation = typedOperation(irType, "rshift")
+		operation = typedOperation(irType, "shr")
 	}
 	tempVar := formTempVar(irType)
 	instructions = append(instructions, Instruction{
@@ -373,7 +373,7 @@ func translateMultiplication(node parser.AST) ([]TAC, Operand) {
 		operation = typedOperation(operationType, "div")
 	case "%":
 		// Handle: unsigned vs signed
-		operation = typedOperation(operationType, "mod")
+		operation = typedOperation(operationType, "rem")
 	}
 	tempVar := formTempVar(operationType)
 	op := Instruction{

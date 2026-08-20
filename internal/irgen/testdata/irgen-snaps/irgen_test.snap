@@ -28,8 +28,8 @@ Program: [
     __t9: i32 = i32.xor i32(6) i32(5)
     __t10: i32 = i32.and __t9 i32(1)
     __t11: i32 = i32.or __t10 i32(0)
-    __t12: i32 = i32.lshift __t11 i32(2)
-    __t13: i32 = i32.rshift __t12 i32(1)
+    __t12: i32 = i32.shl __t11 i32(2)
+    __t13: i32 = i32.shr __t12 i32(1)
     STORE global.b __t13
     PARAM i32(2)
     PARAM i32(8)
@@ -230,7 +230,7 @@ Program: [
             __t21: i32 = i32.sub param.x i32(1)
             return __t21
         } else {
-            __t22: i32 = i32.mod param.x i32(2)
+            __t22: i32 = i32.rem param.x i32(2)
             __t23: i32 = i32.eq __t22 i32(0)
             if __t23 {
                 PARAM str_const(1)
@@ -246,7 +246,7 @@ Program: [
   }
 
   fn doSomething(x: i32)->i32 {
-    __t26: i32 = i32.mod param.x i32(2)
+    __t26: i32 = i32.rem param.x i32(2)
     __t27: i32 = i32.eq __t26 i32(0)
     if __t27 {
         __t28: i32 = i32.div param.x i32(2)
@@ -568,7 +568,7 @@ Program: [
     CALL println 1
   }
 
-  fn __T_P_donot() {
+  fn __T_Person1_P_donot() {
     STORE global.x i32(2)
     PARAM str_const(1)
     CALL println 1
@@ -681,17 +681,17 @@ Program: [
     CALL println 1
   }
 
-  fn __T_I_do() {
-    PARAM str_const(9)
-    CALL println 1
-  }
-
   fn __T_I_times(a: i32, b: i32)->i32 {
     __t80: i32 = i32.mul param.a param.b
     return __t80
   }
 
-  fn __T_P_donot() {
+  fn __T_I_do() {
+    PARAM str_const(9)
+    CALL println 1
+  }
+
+  fn __T_Person1_P_donot() {
     STORE global.x i32(2)
     PARAM str_const(1)
     CALL println 1

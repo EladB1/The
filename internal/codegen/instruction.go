@@ -25,10 +25,10 @@ func handleInstruction(instruction irgen.Instruction) []Statement {
 			statements = append(statements, generateTypecast(instruction)...)
 		} else if op := getNameIfTypedOperation(operation); op != "" {
 			switch op {
-			case "add":
-				statements = generateAdd(instruction)
-			case "sub":
-				statements = generateSub(instruction)
+			case "add", "sub", "mul", "eq", "ne", "xor", "and", "or", "shl":
+				statements = generateBinarySignAgnosticTypedOperation(instruction, op)
+			case "div", "mod", "lt", "le", "gt", "ge", "shr":
+				statements = append(statements, generateBinaryTypedOperation(instruction, op)...)
 			}
 		}
 	}
@@ -89,13 +89,13 @@ func generateCall(instruction irgen.Instruction) []Statement {
 	return statements
 }
 
-func generateAdd(instruction irgen.Instruction) []Statement {
+func generateBinarySignAgnosticTypedOperation(instruction irgen.Instruction, operator string) []Statement {
 	statements := []Statement{
 		translateOperand(instruction.Operand1),
 		translateOperand(instruction.Operand2),
 		NumericInstruction{
-			DataType: lowerIRTypeToWatType(instruction.Destination.DataType),
-			Operator: "add",
+			DataType: lowerIRTypeToWatType(instruction.Operand1.Type),
+			Operator: operator,
 		},
 	}
 	if hasDestination(instruction) {
@@ -108,15 +108,19 @@ func generateAdd(instruction irgen.Instruction) []Statement {
 	return statements
 }
 
-func generateSub(instruction irgen.Instruction) []Statement {
+func generateBinaryTypedOperation(instruction irgen.Instruction, operator string) []Statement {
+	suffix := "_s"
 	statements := []Statement{
 		translateOperand(instruction.Operand1),
 		translateOperand(instruction.Operand2),
-		NumericInstruction{
-			DataType: lowerIRTypeToWatType(instruction.Destination.DataType),
-			Operator: "sub",
-		},
 	}
+	if instruction.Operand1.Type == datatypes.U32 || instruction.Operand1.Type == datatypes.U64 {
+		suffix = "_u"
+	}
+	statements = append(statements, NumericInstruction{
+		DataType: lowerIRTypeToWatType(instruction.Operand1.Type),
+		Operator: operator + suffix,
+	})
 	if hasDestination(instruction) {
 		statements = append(statements, VariableInstruction{
 			Visibility: Local,
