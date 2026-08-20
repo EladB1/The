@@ -36,9 +36,9 @@ func buildData(literals ds.LiteralPool) []Data {
 			Value:    literal,
 		})
 		if len(literal) == 0 {
-			offset += 4
+			offset += 5
 		} else {
-			offset += len(literal)
+			offset += len(literal) + 1
 		}
 	}
 	return data

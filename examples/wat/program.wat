@@ -1,4 +1,4 @@
-(module
+(module $the
     (import "wasi_snapshot_preview1" "proc_exit" (func $__exit (param i32)))
     (import "wasi_snapshot_preview1" "fd_write"
         (func $__print (param $fd i32) (param $iovec i32) (param $len i32) (param $written i32) (result i32))
@@ -239,6 +239,36 @@
         (global.get $itoa_out_buf)
     )
 
+    (func $__str_indexOf (export "__str_indexOf") (param $char i32) (param $ptr i32) (result i32)
+       (local $i i32)
+       (local $curr i32)
+       (loop $str_loop (block $exit__str_loop
+        (i32.load8_u (i32.add (local.get $ptr) (local.get $i)))
+        (local.tee $curr)
+        (if (i32.eqz)
+            (then
+                (br $exit__str_loop)
+            )
+        )
+        (if (i32.eq (local.get $curr) (local.get $char))
+            (then
+                (return (local.get $i))
+            )
+        )
+        (local.set $i (i32.add (local.get $i) (i32.const 1)))
+        (br $str_loop)
+       ))
+       (i32.const -1)
+       (return)
+    )
+
+    (func $__str_contains_char (export "__str_contains_char") (param $char i32) (param $ptr i32) (result i32)
+        (local $index i32)
+        (call $__str_indexOf (local.get $char) (local.get $ptr))
+        (i32.ne (i32.const -1))
+        (return)
+    )
+
     ;;
     ;; Entry point
     ;;
@@ -254,12 +284,16 @@
     (data $__str_const1 (i32.const 104) "Name: ")
     (func $main (result i32)
         (local $x i32)
+        ;;(local $name i32)
         ;;(local.set $x (i32.const 2))
         ;;(call $prompt (i32.const 104))
-        (call $__str_fromInt32 (i32.const -401))
-        (local.set $x)
-        (call $println (local.get $x))
-        (i32.const 0)
+        ;;(local.set $name)
+        (call $__str_contains_char (i32.const 45) (i32.const 104))
+        ;;(call $__str_fromInt32 (i32.const -401))
+        ;;(local.set $x)
+        
+        ;;(call $println (local.get $x))
+        ;;(i32.const 0)
         (return)
     )
 )

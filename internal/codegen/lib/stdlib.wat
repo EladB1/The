@@ -144,3 +144,32 @@
         (global.get $itoa_out_buf)
     )
 
+    (func $__str_indexOf (export "__str_indexOf") (param $char i32) (param $ptr i32) (result i32)
+       (local $i i32)
+       (local $curr i32)
+       (loop $str_loop (block $exit__str_loop
+        (i32.load8_u (i32.add (local.get $ptr) (local.get $i)))
+        (local.tee $curr)
+        (if (i32.eqz)
+            (then
+                (br $exit__str_loop)
+            )
+        )
+        (if (i32.eq (local.get $curr) (local.get $char))
+            (then
+                (return (local.get $i))
+            )
+        )
+        (local.set $i (i32.add (local.get $i) (i32.const 1)))
+        (br $str_loop)
+       ))
+       (i32.const -1)
+       (return)
+    )
+
+    (func $__str_contains_char (export "__str_contains_char") (param $char i32) (param $ptr i32) (result i32)
+        (local $index i32)
+        (call $__str_indexOf (local.get $char) (local.get $ptr))
+        (i32.ne (i32.const -1))
+        (return)
+    )
