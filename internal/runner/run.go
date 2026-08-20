@@ -46,7 +46,7 @@ func Run(target codegen.CompileTarget, outfile *string, enableTraces bool) int {
 	wasiConf.InheritArgv()
 	mod, err := wasmtime.NewModuleFromFile(engine, file)
 	if err != nil {
-		panic(err)
+		diagnostic.ReportFatal(err.Error(), 1, false)
 	}
 
 	store.SetWasi(wasiConf)

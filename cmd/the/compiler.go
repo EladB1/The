@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"runtime/debug"
 	"strconv"
+	"strings"
 
 	"github.com/fatih/color"
 
@@ -28,8 +30,8 @@ var (
 	colorOff         *bool   = flag.Bool("no-color", false, "Disable color output")
 	suppressWarnings *bool   = flag.Bool("suppress-warnings", false, "Disable reporting of warnings")
 	strict           *bool   = flag.Bool("strict", false, "Any warnings will cause compilation to fail")
-	preserveWatFile  *bool   = flag.Bool("preserve-wat-file", false, "Prevents the compiler from deleting the generated WAT file")
-	watfile          *string = flag.String("wat", "", "Path to the generated wat file")
+	preserveWatFile  *bool   = flag.Bool("preserve-wat-file", false, "Writes generated WAT file to disk")
+	watfile          *string = flag.String("wat", "", "Path to the generated wat file (if preserved)")
 	outfile          *string = flag.String("o", "", "Path to the generated wasm executable")
 	nowasm           *bool   = flag.Bool("nowasm", false, "Only produce a WAT file instead of compiling it down to WASM. Cannot be used with run command.")
 	enableTraces     *bool   = flag.Bool("enable-traces", false, "Show backtraces on runtime errors (only available in run mode)")
@@ -112,6 +114,18 @@ func main() {
 			os.Exit(1)
 		}
 		return
+	}
+	if *preserveWatFile && watfile != nil && *watfile != "" {
+		*watfile = filepath.Clean(*watfile)
+		if !strings.HasSuffix(*watfile, ".wat") {
+			diagnostic.ReportFatal("wat file must have '.wat' extension", 1, false)
+		}
+	}
+	if !*nowasm && outfile != nil && *outfile != "" {
+		*outfile = filepath.Clean(*outfile)
+		if !strings.HasSuffix(*outfile, ".wasm") {
+			diagnostic.ReportFatal("outfile file must have '.wasm' extension", 1, false)
+		}
 	}
 	filename := args[len(args)-1]
 	if len(args) >= 3 {

@@ -3,7 +3,7 @@ package codegen
 import (
 	"embed"
 	_ "embed"
-	"os"
+	"strings"
 
 	"github.com/bytecodealliance/wasmtime-go"
 
@@ -32,44 +32,42 @@ func BuildExecutable(target CompileTarget, preserve bool, watfile string, outfil
 	} else {
 		wasmpath = target.WasmFilepath
 	}
-	err := filehandler.CopyFile(runtimelib, "lib/runtime.wat", watpath)
+	watcode, err := filehandler.ReadAllAndCombine([]string{
+		"lib/runtime.wat",
+		"lib/stdlib.wat",
+		"shell.wat",
+	}, []embed.FS{
+		runtimelib,
+		stdlib,
+		shell,
+	})
 	if err != nil {
 		return err
 	}
-	if err = filehandler.CombineFiles(watpath, "lib/stdlib.wat", stdlib); err != nil {
-		return err
-	}
-	if err = filehandler.CombineFiles(watpath, "shell.wat", shell); err != nil {
-		return err
-	}
-	if err = filehandler.AppendToFile(watpath, target.String()); err != nil {
-		return err
-	}
-	if err = filehandler.AppendToFile(watpath, ")"); err != nil { // append the closing paren
-		return err
-	}
-	var wasm_err error
+	watcode = append(watcode, target.String())
+	watcode = append(watcode, ")") // close the top level module paren
+	wat := strings.Join(watcode, "\n")
 	if !nowasm {
-		wasm_err = wat2wasm(watpath, wasmpath)
-	}
-	if !preserve {
-		err = os.Remove(watpath)
+		err = wat2wasm(wat, wasmpath)
 		if err != nil {
 			return err
 		}
 	}
-	if wasm_err != nil { // defer this for file cleanup
-		return wasm_err
+	if preserve {
+		err = filehandler.ClearFileIfExists(watpath)
+		if err != nil {
+			return err
+		}
+		err = filehandler.WriteWatToFile(watpath, wat)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
-func wat2wasm(watpath, wasmpath string) error {
-	wat, err := os.ReadFile(watpath)
-	if err != nil {
-		return err
-	}
-	wasm, err := wasmtime.Wat2Wasm(string(wat))
+func wat2wasm(wat, wasmpath string) error {
+	wasm, err := wasmtime.Wat2Wasm(wat)
 	if err != nil {
 		return err // TODO: update
 	}

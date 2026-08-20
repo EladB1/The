@@ -47,6 +47,18 @@ func TestCommandLineArgs(t *testing.T) {
 	t.Run("should fail when file does not exist", func(t *testing.T) {
 		snapshotTestCompilerWithArgs(t, snapshots, "something.the")
 	})
+	t.Run("should fail when invalid WAT path provided", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "-preserve-wat-file", "-watfile", "something.txt", "build", "something.the")
+	})
+	t.Run("should ignore invalid WAT path when no preserve flag", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "-watfile", "something.txt", "build", "something.the")
+	})
+	t.Run("should fail when invalid WASM path provided", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "-o", "out.txt", "build", "something.the")
+	})
+	t.Run("should ignore invalid WASM when nowasm flag present", func(t *testing.T) {
+		snapshotTestCompilerWithArgs(t, snapshots, "-nowasm", "-o", "out.txt", "build", "something.the")
+	})
 	t.Run("should pass and show help message on help flag", func(t *testing.T) {
 		snapshotTestCompilerWithArgs(t, snapshots, "-h")
 	})
