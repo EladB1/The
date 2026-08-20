@@ -29,6 +29,7 @@ const (
 	ImplementationError   Severity = "ImplementationError"
 	AmbiguityError        Severity = "AmbiguityError"
 	ReferenceError        Severity = "ReferenceError"
+	RuntimeError          Severity = "RuntimeError"
 )
 
 type Diagnostic struct {
@@ -114,9 +115,13 @@ func (diagnostics *PhaseDiagnostics) Combine(other PhaseDiagnostics) {
 }
 
 // Use for errors outside of source code
-func ReportFatal(message string, status int) {
+func ReportFatal(message string, status int, runtime bool) {
+	level := Error
+	if runtime {
+		level = RuntimeError
+	}
 	fatal_err := Diagnostic{
-		Level:   Error,
+		Level:   level,
 		Message: message,
 		Position: ds.SourceLocation{
 			Line:   -1,

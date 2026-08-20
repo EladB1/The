@@ -1,4 +1,4 @@
-(module
+(module $the
     (import "wasi_snapshot_preview1" "proc_exit" (func $__exit (param i32)))
     (import "wasi_snapshot_preview1" "fd_write"
         (func $__print (param $fd i32) (param $iovec i32) (param $len i32) (param $written i32) (result i32))

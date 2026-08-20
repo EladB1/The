@@ -9,7 +9,6 @@ import (
 	"runtime/debug"
 	"strconv"
 
-	"github.com/bytecodealliance/wasmtime-go"
 	"github.com/fatih/color"
 
 	"github.com/EladB1/The/internal/codegen"
@@ -19,6 +18,7 @@ import (
 	"github.com/EladB1/The/internal/irgen"
 	"github.com/EladB1/The/internal/lexer"
 	"github.com/EladB1/The/internal/parser"
+	"github.com/EladB1/The/internal/runner"
 	"github.com/EladB1/The/internal/semantic"
 )
 
@@ -32,6 +32,8 @@ var (
 	watfile          *string = flag.String("wat", "", "Path to the generated wat file")
 	outfile          *string = flag.String("o", "", "Path to the generated wasm executable")
 	nowasm           *bool   = flag.Bool("nowasm", false, "Only produce a WAT file instead of compiling it down to WASM. Cannot be used with run command.")
+	enableTraces     *bool   = flag.Bool("enable-traces", false, "Show backtraces on runtime errors (only available in run mode)")
+
 	// env flags used to show output from different parts of compiler
 	devMode_lexer    bool = false
 	devMode_parser   bool = false
@@ -91,7 +93,7 @@ func main() {
 	flag.Parse()
 	checkEnvironment()
 	if *strict && *suppressWarnings {
-		diagnostic.ReportFatal("Cannot use strict and suppress-warnings flags together", 2)
+		diagnostic.ReportFatal("Cannot use strict and suppress-warnings flags together", 2, false)
 	}
 	if *colorOff {
 		color.NoColor = true
@@ -100,7 +102,7 @@ func main() {
 	if len(args) == 1 {
 		flag.Usage() // show help message
 		fmt.Fprintln(os.Stderr)
-		diagnostic.ReportFatal("no input file", 1)
+		diagnostic.ReportFatal("no input file", 1, false)
 	}
 	if len(args) == 2 && args[1] == "version" {
 		if buildinfo, ok := debug.ReadBuildInfo(); ok {
@@ -116,7 +118,7 @@ func main() {
 		switch args[len(args)-2] {
 		case "run":
 			if *nowasm {
-				diagnostic.ReportFatal("Cannot use -nowasm with run command", 1)
+				diagnostic.ReportFatal("Cannot use -nowasm with run command", 1, false)
 			}
 			buildOnly = false
 		case "build":
@@ -125,7 +127,7 @@ func main() {
 	}
 	src, err := filehandler.GetSourceCode(filename)
 	if err != nil {
-		diagnostic.ReportFatal(err.Error(), 1)
+		diagnostic.ReportFatal(err.Error(), 1, false)
 	}
 	compile(filename, src)
 }
@@ -173,71 +175,12 @@ func compile(filename string, source []string) {
 	err := codegen.BuildExecutable(target, *preserveWatFile, *watfile, *outfile, *nowasm)
 	if err != nil {
 		conf.PrintDebugLogs()
-		diagnostic.ReportFatal(err.Error(), 1)
+		diagnostic.ReportFatal(err.Error(), 1, false)
 	}
 	status := 0
 	if !buildOnly {
-		status = run(target, outfile)
+		status = runner.Run(target, outfile, *enableTraces)
 	}
 	conf.PrintDebugLogs()
 	os.Exit(status)
-}
-
-func run(target codegen.CompileTarget, outfile *string) int {
-	var status int = 0
-	cleanExit := false
-	file := target.WasmFilepath
-	if *outfile != "" {
-		file = *outfile
-	}
-	engine := wasmtime.NewEngine()
-	linker := wasmtime.NewLinker(engine)
-	store := wasmtime.NewStore(engine)
-	err := linker.DefineWasi()
-	if err != nil {
-		panic(err)
-	}
-	linker.AllowShadowing(true)
-	err = linker.DefineFunc(
-		store,
-		"wasi_snapshot_preview1",
-		"proc_exit",
-		func(exitCode int32) {
-			status = int(exitCode)
-			cleanExit = true
-			wasmtime.NewTrap("") // terminate the wasmtime process silently
-		},
-	)
-	if err != nil {
-		panic(err)
-	}
-	wasiConf := wasmtime.NewWasiConfig()
-	wasiConf.InheritStdout()
-	wasiConf.InheritStderr()
-	wasiConf.InheritStdin()
-	wasiConf.InheritEnv()
-	wasiConf.InheritArgv()
-	mod, err := wasmtime.NewModuleFromFile(engine, file)
-	if err != nil {
-		panic(err)
-	}
-
-	store.SetWasi(wasiConf)
-	instance, err := linker.Instantiate(store, mod)
-	if err != nil {
-		panic(err)
-	}
-	run := instance.GetFunc(store, "_start")
-	if run == nil {
-		panic("entry point not found")
-	}
-	_, err = run.Call(store)
-	if err != nil {
-		if cleanExit {
-			return status
-		} else {
-			panic(err)
-		}
-	}
-	return status
 }

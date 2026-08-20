@@ -42,6 +42,11 @@ var executionTests = []struct {
 		stdout: "",
 		stderr: "Something went wrong\n",
 	}},
+	{"divisionbyzero.the", ExecutionResult{
+		status: 1,
+		stdout: "",
+		stderr: "RuntimeError: integer divide by zero \n",
+	}},
 }
 
 func TestExecution(t *testing.T) {
