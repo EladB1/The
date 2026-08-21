@@ -54,11 +54,7 @@ func BuildExecutable(target CompileTarget, preserve bool, watfile string, outfil
 		}
 	}
 	if preserve {
-		err = filehandler.ClearFileIfExists(watpath)
-		if err != nil {
-			return err
-		}
-		err = filehandler.WriteWatToFile(watpath, wat)
+		err = filehandler.WriteToFile(watpath, []byte(wat))
 		if err != nil {
 			return err
 		}
@@ -71,6 +67,6 @@ func wat2wasm(wat, wasmpath string) error {
 	if err != nil {
 		return err // TODO: update
 	}
-	err = filehandler.WriteWasmToFile(wasmpath, wasm)
+	err = filehandler.WriteToFile(wasmpath, wasm)
 	return err
 }

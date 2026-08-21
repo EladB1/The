@@ -2,6 +2,7 @@ package irgen
 
 import (
 	"fmt"
+	"slices"
 
 	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/lexer"
@@ -880,6 +881,8 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 }
 
 func translateCall(node parser.AST) ([]TAC, Operand) {
+	castRequiredFunctions := []string{"print", "println", "printerr"}
+	var castTo dt.SourceType = dt.NoneType
 	instructions := []TAC{}
 	operand := Operand{}
 	var nameNode *parser.AST
@@ -893,6 +896,9 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 		object = node.Children[0].Children[0]
 	} else {
 		nameNode = node.Children[0]
+		if slices.Contains(castRequiredFunctions, nameNode.Token.Value) {
+			castTo = dt.StringType
+		}
 	}
 	name := nameNode.Token.Value
 	irName := name
@@ -905,8 +911,35 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 		for _, param := range params {
 			param_in, param_op := translateExpression(*param)
 			instructions = append(instructions, param_in...)
-			srcParamTypes = append(srcParamTypes, param.Type)
-			irParamTypes = append(irParamTypes, dt.TranslateSourceType(param.Type))
+			paramType := param.Type
+			irParamType := dt.TranslateSourceType(paramType)
+			if !castTo.Equals(dt.NoneType) && !paramType.Equals(castTo) {
+				// TODO: struct
+				paramType = castTo
+				irParamType = dt.TranslateSourceType(paramType)
+				op := getTypeCastOperation(param_op.Type, irParamType)
+				if op != "" {
+					cast := formTempVar(irParamType)
+					loadParams = append(loadParams, Instruction{
+						Destination: cast,
+						Operation:   op,
+						Operand1:    param_op,
+						SrcPosition: param.Location,
+					})
+					param_op = Operand{
+						Var:         cast,
+						Type:        irParamType,
+						SrcPosition: param.Location,
+					}
+				} else {
+					var call []TAC
+					fn := getToStringFn(param.Type)
+					call, param_op = callFunction(string(fn), dt.Str_const, param.Location, param_op)
+					instructions = append(instructions, call...)
+				}
+			}
+			srcParamTypes = append(srcParamTypes, paramType)
+			irParamTypes = append(irParamTypes, irParamType)
 			loadParams = append(loadParams, Instruction{
 				Operation:   PrepareParam,
 				Operand1:    param_op,

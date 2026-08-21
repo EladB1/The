@@ -2,7 +2,6 @@ package filehandler
 
 import (
 	"embed"
-	"errors"
 	"fmt"
 	"math"
 	"os"
@@ -61,38 +60,6 @@ func ReadAllAndCombine(names []string, files []embed.FS) ([]string, error) {
 	return combined, nil
 }
 
-func ClearFileIfExists(filename string) error {
-	_, err := os.Stat(filename)
-	if err != nil && errors.Is(err, os.ErrNotExist) {
-		return nil
-	}
-	return os.Truncate(filename, 0)
-}
-
-func WriteWatToFile(filename string, content string) error {
-	file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0600)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	_, err = file.WriteString(content)
-	if err != nil {
-		return err
-	}
-	err = file.Sync()
-	return err
-}
-
-func WriteWasmToFile(filename string, wasm []byte) error {
-	file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0600)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	_, err = file.Write(wasm)
-	if err != nil {
-		return err
-	}
-	err = file.Sync()
-	return err
+func WriteToFile(filename string, wasm []byte) error {
+	return os.WriteFile(filename, wasm, 0600)
 }
