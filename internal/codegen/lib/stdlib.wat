@@ -1,6 +1,9 @@
+    (data (i32.const 60) "true")
+    (data (i32.const 65) "false")
     (data (i32.const 5000) "0123456789")
     (global $itoa_out_buf i32 (i32.const 5050))
-    
+    (global $__bool_true i32 (i32.const 60))
+    (global $__bool_false i32 (i32.const 65))
     ;;
     ;; constants
     ;;
@@ -100,11 +103,11 @@
                 (local.set $num (i32.mul (local.get $num) (i32.const -1)))
             )
         )
-
+        (local.set $numlen (local.get $index))
         ;; count number of characters and save in $numlen
         (i32.lt_s (local.get $num) (i32.const 10))
         if
-            (local.set $numlen (i32.const 1))
+            (local.set $numlen (i32.add (i32.const 1) (local.get $index)))
         else
             (local.set $numlen (local.get $index))
             (local.set $numtemp (local.get $num))
@@ -141,6 +144,87 @@
             (local.set $writeidx (i32.sub (local.get $writeidx) (i32.const 1)))
             br $writeloop
         ))
+        (global.get $itoa_out_buf)
+    )
+
+    (func $__str_fromInt64 (export "__str_fromInt64") (param $num i64) (result i32)
+        (local $numtemp i64)
+        (local $numlen i32)
+        (local $writeidx i32)
+        (local $digit i32)
+        (local $dchar i32)
+        (local $isnegative i32)
+        (local $index i32)
+        (local.set $isnegative (i64.lt_s (local.get $num) (i64.const 0)))
+
+        (i32.eq (local.get $isnegative) (i32.const 1))
+        (if
+            (then
+                (local.set $index (i32.const 1))
+                ;; result[0] = '-'
+                (i32.store8 (global.get $itoa_out_buf) (i32.const 45))
+                ;; num *= -1
+                (local.set $num (i64.mul (local.get $num) (i64.const -1)))
+            )
+        )
+        (local.set $numlen (local.get $index))
+        ;; count number of characters and save in $numlen
+        (i64.lt_s (local.get $num) (i64.const 10))
+        if
+            (local.set $numlen (i32.add (i32.const 1) (local.get $index)))
+        else
+            (local.set $numlen (local.get $index))
+            (local.set $numtemp (local.get $num))
+            (loop $countloop (block $breakcountloop
+                (i64.eqz (local.get $numtemp))
+                br_if $breakcountloop
+
+                (local.set $numtemp (i64.div_u (local.get $numtemp) (i64.const 10)))
+                (local.set $numlen (i32.add (local.get $numlen) (i32.const 1)))
+                br $countloop
+            ))
+        end
+        (local.set $writeidx 
+            (i32.sub 
+                (i32.add (global.get $itoa_out_buf) (local.get $numlen))
+                (i32.const 1)
+            )
+        )
+        
+        (loop $writeloop (block $breakwriteloop
+            ;; digit = num % 10
+            (i64.rem_u (local.get $num) (i64.const 10))
+            (i32.wrap_i64)
+            (local.set $digit)
+            (local.set $dchar (i32.load8_u offset=5000 (local.get $digit)))
+
+            ;; mem[writeidx] = dchar
+            (i32.store8 (local.get $writeidx) (local.get $dchar))
+
+            ;; num /= 10
+            (local.set $num (i64.div_u (local.get $num) (i64.const 10)))
+
+            ;; if wrote first index, exit loop
+            (i32.eq (local.get $writeidx) (i32.add (global.get $itoa_out_buf) (local.get $index)))
+            br_if $breakwriteloop
+
+            (local.set $writeidx (i32.sub (local.get $writeidx) (i32.const 1)))
+            br $writeloop
+        ))
+        (global.get $itoa_out_buf)
+    )
+
+    (func $__str_fromBool (export "__str_fromBool") (param $value i32) (result i32)
+        (if (result i32) 
+            (i32.eqz (local.get $value))
+            (then (global.get $__bool_false))
+            (else (global.get $__bool_true))
+        )
+    )
+
+    (func $__str_fromChar (export "__str_fromChar") (param $value i32) (result i32)
+        (i32.store8 (i32.add (global.get $itoa_out_buf) (i32.const 0)) (local.get $value))
+        (i32.store8 (i32.add (global.get $itoa_out_buf) (i32.const 1)) (i32.const 0))
         (global.get $itoa_out_buf)
     )
 
