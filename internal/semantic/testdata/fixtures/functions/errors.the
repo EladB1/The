@@ -106,3 +106,7 @@ fn wrongAndMissingReturnValue(int i, char curr) -> int {
         return curr;
 }
 
+fn __illegal_name() {
+    int __t0 = 0;
+    return;
+}

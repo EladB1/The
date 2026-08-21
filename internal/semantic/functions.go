@@ -2,6 +2,7 @@ package semantic
 
 import (
 	"fmt"
+	"strings"
 
 	dt "github.com/EladB1/The/internal/datatypes"
 	"github.com/EladB1/The/internal/diagnostic"
@@ -13,6 +14,9 @@ func processFunctionSignature(fnNode *parser.AST) FnCreateSymbol {
 	details := fnNode.Children
 	length := len(details)
 	name := details[0].Token.Value
+	if strings.HasPrefix(name, "__") {
+		messages.Complain(diagnostic.NameError, details[0].Location, "Name '%s' uses reserved prefix '__'", name)
+	}
 	var paramNode *parser.AST = nil
 	var returnTypeNode *parser.AST = nil
 	var bodyNode *parser.AST = nil

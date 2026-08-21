@@ -31,3 +31,5 @@ interface D {
         return 1 < 0;
     }
 }
+
+interface __illegal_name {}

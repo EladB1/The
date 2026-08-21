@@ -1,6 +1,8 @@
 package semantic
 
 import (
+	"strings"
+
 	"github.com/EladB1/The/internal/diagnostic"
 	"github.com/EladB1/The/internal/parser"
 )
@@ -9,6 +11,9 @@ func analyzeVariable(varNode *parser.AST) *VariableSymbol {
 	details := varNode.Children
 	typeNode := details[0]
 	name := details[1].Token
+	if strings.HasPrefix(name.Value, "__") {
+		messages.Complain(diagnostic.NameError, details[1].Location, "Name '%s' uses reserved prefix '__'", name.Value)
+	}
 	isPrivate := false
 	isMutable := false
 	var rhs *parser.AST = nil

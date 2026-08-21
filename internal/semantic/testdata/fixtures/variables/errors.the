@@ -19,5 +19,6 @@ fn main() -> int {
     uint32 u = 1;
     int x = 0;
     u += x;
+    int __illegal_name;
     return 0;
 }

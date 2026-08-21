@@ -145,6 +145,8 @@ struct TestName {
     }
 }
 
+struct __illegal_name {}
+
 fn main() -> int {
     App app = App{};
     app.connect();

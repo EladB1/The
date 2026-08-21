@@ -1559,129 +1559,134 @@ children: [
             ] }
         ] }
     ] },
+    Node: { Token: {Value: struct, Type: structure keyword, Line: 147, Column: 0}
+    children: [
+        Node: { Token: {Value: __illegal_name, Type: identifier, Line: 147, Column: 7} },
+        Node: { Label: "struct-body" }
+    ] },
     Node: { Label: "fn", IRName: "main", Type: int
     children: [
-        Node: { Token: {Value: main, Type: identifier, Line: 147, Column: 3} },
-        Node: { Token: {Value: int, Type: type keyword, Line: 147, Column: 13} },
+        Node: { Token: {Value: main, Type: identifier, Line: 149, Column: 3} },
+        Node: { Token: {Value: int, Type: type keyword, Line: 149, Column: 13} },
         Node: { Label: "fn-body"
         children: [
             Node: { Label: "Variable", Type: App
             children: [
-                Node: { Token: {Value: App, Type: identifier, Line: 148, Column: 4} },
-                Node: { Token: {Value: app, Type: identifier, Line: 148, Column: 8} },
+                Node: { Token: {Value: App, Type: identifier, Line: 150, Column: 4} },
+                Node: { Token: {Value: app, Type: identifier, Line: 150, Column: 8} },
                 Node: { Label: "struct_literal", Type: App
                 children: [
-                    Node: { Token: {Value: App, Type: identifier, Line: 148, Column: 14} }
+                    Node: { Token: {Value: App, Type: identifier, Line: 150, Column: 14} }
                 ] }
             ] },
             Node: { Label: "call", Type: None
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: app, Type: identifier, Line: 149, Column: 4}, Type: App },
-                    Node: { Token: {Value: connect, Type: identifier, Line: 149, Column: 8} }
-                ] }
-            ] },
-            Node: { Label: "Variable", Type: Container
-            children: [
-                Node: { Token: {Value: Container, Type: identifier, Line: 150, Column: 4} },
-                Node: { Token: {Value: one, Type: identifier, Line: 150, Column: 14} },
-                Node: { Label: "struct_literal", Type: Container
-                children: [
-                    Node: { Token: {Value: Container, Type: identifier, Line: 150, Column: 20} },
-                    Node: { Label: "properties"
-                    children: [
-                        Node: { Label: "property", Type: String
-                        children: [
-                            Node: { Token: {Value: id, Type: identifier, Line: 150, Column: 30} },
-                            Node: { Token: {Value: "one", Type: string literal, Line: 150, Column: 34}, Type: String }
-                        ] },
-                        Node: { Label: "property"
-                        children: [
-                            Node: { Token: {Value: id, Type: identifier, Line: 150, Column: 41} },
-                            Node: { Token: {Value: "1", Type: string literal, Line: 150, Column: 45} }
-                        ] }
-                    ] }
-                ] }
-            ] },
-            Node: { Label: "Variable", Type: Container
-            children: [
-                Node: { Token: {Value: Container, Type: identifier, Line: 151, Column: 4} },
-                Node: { Token: {Value: two, Type: identifier, Line: 151, Column: 14} },
-                Node: { Label: "struct_literal", Type: Container
-                children: [
-                    Node: { Token: {Value: Container, Type: identifier, Line: 151, Column: 20} },
-                    Node: { Label: "properties"
-                    children: [
-                        Node: { Label: "property", Type: String
-                        children: [
-                            Node: { Token: {Value: id, Type: identifier, Line: 151, Column: 30} },
-                            Node: { Token: {Value: "two", Type: string literal, Line: 151, Column: 34}, Type: String }
-                        ] },
-                        Node: { Label: "property"
-                        children: [
-                            Node: { Token: {Value: image, Type: identifier, Line: 151, Column: 41} },
-                            Node: { Token: {Value: "alpine-linux@latest", Type: string literal, Line: 151, Column: 48} }
-                        ] }
-                    ] }
+                    Node: { Token: {Value: app, Type: identifier, Line: 151, Column: 4}, Type: App },
+                    Node: { Token: {Value: connect, Type: identifier, Line: 151, Column: 8} }
                 ] }
             ] },
             Node: { Label: "Variable", Type: Container
             children: [
                 Node: { Token: {Value: Container, Type: identifier, Line: 152, Column: 4} },
-                Node: { Token: {Value: three, Type: identifier, Line: 152, Column: 14} },
+                Node: { Token: {Value: one, Type: identifier, Line: 152, Column: 14} },
                 Node: { Label: "struct_literal", Type: Container
                 children: [
-                    Node: { Token: {Value: Container, Type: identifier, Line: 152, Column: 22} },
+                    Node: { Token: {Value: Container, Type: identifier, Line: 152, Column: 20} },
                     Node: { Label: "properties"
                     children: [
+                        Node: { Label: "property", Type: String
+                        children: [
+                            Node: { Token: {Value: id, Type: identifier, Line: 152, Column: 30} },
+                            Node: { Token: {Value: "one", Type: string literal, Line: 152, Column: 34}, Type: String }
+                        ] },
                         Node: { Label: "property"
                         children: [
-                            Node: { Token: {Value: id, Type: identifier, Line: 152, Column: 32} },
-                            Node: { Token: {Value: '3', Type: char literal, Line: 152, Column: 36}, Type: char }
+                            Node: { Token: {Value: id, Type: identifier, Line: 152, Column: 41} },
+                            Node: { Token: {Value: "1", Type: string literal, Line: 152, Column: 45} }
                         ] }
                     ] }
                 ] }
             ] },
-            Node: { Token: {Value: >, Type: compare operator, Line: 153, Column: 8}, Type: bool
+            Node: { Label: "Variable", Type: Container
             children: [
-                Node: { Token: {Value: one, Type: identifier, Line: 153, Column: 4}, Type: Container },
-                Node: { Token: {Value: two, Type: identifier, Line: 153, Column: 10}, Type: Container }
+                Node: { Token: {Value: Container, Type: identifier, Line: 153, Column: 4} },
+                Node: { Token: {Value: two, Type: identifier, Line: 153, Column: 14} },
+                Node: { Label: "struct_literal", Type: Container
+                children: [
+                    Node: { Token: {Value: Container, Type: identifier, Line: 153, Column: 20} },
+                    Node: { Label: "properties"
+                    children: [
+                        Node: { Label: "property", Type: String
+                        children: [
+                            Node: { Token: {Value: id, Type: identifier, Line: 153, Column: 30} },
+                            Node: { Token: {Value: "two", Type: string literal, Line: 153, Column: 34}, Type: String }
+                        ] },
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: image, Type: identifier, Line: 153, Column: 41} },
+                            Node: { Token: {Value: "alpine-linux@latest", Type: string literal, Line: 153, Column: 48} }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Label: "Variable", Type: Container
+            children: [
+                Node: { Token: {Value: Container, Type: identifier, Line: 154, Column: 4} },
+                Node: { Token: {Value: three, Type: identifier, Line: 154, Column: 14} },
+                Node: { Label: "struct_literal", Type: Container
+                children: [
+                    Node: { Token: {Value: Container, Type: identifier, Line: 154, Column: 22} },
+                    Node: { Label: "properties"
+                    children: [
+                        Node: { Label: "property"
+                        children: [
+                            Node: { Token: {Value: id, Type: identifier, Line: 154, Column: 32} },
+                            Node: { Token: {Value: '3', Type: char literal, Line: 154, Column: 36}, Type: char }
+                        ] }
+                    ] }
+                ] }
+            ] },
+            Node: { Token: {Value: >, Type: compare operator, Line: 155, Column: 8}, Type: bool
+            children: [
+                Node: { Token: {Value: one, Type: identifier, Line: 155, Column: 4}, Type: Container },
+                Node: { Token: {Value: two, Type: identifier, Line: 155, Column: 10}, Type: Container }
             ] },
             Node: { Label: "Variable", Type: float
             children: [
-                Node: { Token: {Value: float, Type: type keyword, Line: 154, Column: 4} },
-                Node: { Token: {Value: f1, Type: identifier, Line: 154, Column: 10} },
+                Node: { Token: {Value: float, Type: type keyword, Line: 156, Column: 4} },
+                Node: { Token: {Value: f1, Type: identifier, Line: 156, Column: 10} },
                 Node: { Label: "typecast"
                 children: [
-                    Node: { Token: {Value: one, Type: identifier, Line: 154, Column: 15}, Type: Container },
-                    Node: { Token: {Value: float, Type: type keyword, Line: 154, Column: 22} }
+                    Node: { Token: {Value: one, Type: identifier, Line: 156, Column: 15}, Type: Container },
+                    Node: { Token: {Value: float, Type: type keyword, Line: 156, Column: 22} }
                 ] }
             ] },
-            Node: { Token: {Value: +, Type: add operator, Line: 155, Column: 14}, Type: None
+            Node: { Token: {Value: +, Type: add operator, Line: 157, Column: 14}, Type: None
             children: [
-                Node: { Token: {Value: *, Type: multiply operator, Line: 155, Column: 8}
+                Node: { Token: {Value: *, Type: multiply operator, Line: 157, Column: 8}
                 children: [
-                    Node: { Token: {Value: one, Type: identifier, Line: 155, Column: 4}, Type: Container },
-                    Node: { Token: {Value: two, Type: identifier, Line: 155, Column: 10}, Type: Container }
+                    Node: { Token: {Value: one, Type: identifier, Line: 157, Column: 4}, Type: Container },
+                    Node: { Token: {Value: two, Type: identifier, Line: 157, Column: 10}, Type: Container }
                 ] },
-                Node: { Token: {Value: three, Type: identifier, Line: 155, Column: 16}, Type: Container }
+                Node: { Token: {Value: three, Type: identifier, Line: 157, Column: 16}, Type: Container }
             ] },
             Node: { Label: "call", Type: None
             children: [
-                Node: { Token: {Value: println, Type: identifier, Line: 156, Column: 4} },
+                Node: { Token: {Value: println, Type: identifier, Line: 158, Column: 4} },
                 Node: { Label: "params"
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Token: {Value: one, Type: identifier, Line: 156, Column: 12}, Type: Container },
-                        Node: { Token: {Value: runTimeVersion, Type: identifier, Line: 156, Column: 16} }
+                        Node: { Token: {Value: one, Type: identifier, Line: 158, Column: 12}, Type: Container },
+                        Node: { Token: {Value: runTimeVersion, Type: identifier, Line: 158, Column: 16} }
                     ] }
                 ] }
             ] },
             Node: { Label: "call", Type: None
             children: [
-                Node: { Token: {Value: println, Type: identifier, Line: 157, Column: 4} },
+                Node: { Token: {Value: println, Type: identifier, Line: 159, Column: 4} },
                 Node: { Label: "params"
                 children: [
                     Node: { Label: "dot"
@@ -1690,66 +1695,66 @@ children: [
                         children: [
                             Node: { Label: "dot", Type: Container
                             children: [
-                                Node: { Token: {Value: one, Type: identifier, Line: 157, Column: 12}, Type: Container },
-                                Node: { Token: {Value: madeup, Type: identifier, Line: 157, Column: 16} }
+                                Node: { Token: {Value: one, Type: identifier, Line: 159, Column: 12}, Type: Container },
+                                Node: { Token: {Value: madeup, Type: identifier, Line: 159, Column: 16} }
                             ] },
-                            Node: { Token: {Value: not, Type: identifier, Line: 157, Column: 23} }
+                            Node: { Token: {Value: not, Type: identifier, Line: 159, Column: 23} }
                         ] },
-                        Node: { Token: {Value: there, Type: identifier, Line: 157, Column: 27} }
+                        Node: { Token: {Value: there, Type: identifier, Line: 159, Column: 27} }
                     ] }
                 ] }
             ] },
-            Node: { Token: {Value: =, Type: assign operator, Line: 158, Column: 11}
+            Node: { Token: {Value: =, Type: assign operator, Line: 160, Column: 11}
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: two, Type: identifier, Line: 158, Column: 4}, Type: Container },
-                    Node: { Token: {Value: id, Type: identifier, Line: 158, Column: 8}, Type: String }
+                    Node: { Token: {Value: two, Type: identifier, Line: 160, Column: 4}, Type: Container },
+                    Node: { Token: {Value: id, Type: identifier, Line: 160, Column: 8}, Type: String }
                 ] },
-                Node: { Token: {Value: "2", Type: string literal, Line: 158, Column: 13} }
+                Node: { Token: {Value: "2", Type: string literal, Line: 160, Column: 13} }
             ] },
-            Node: { Token: {Value: =, Type: assign operator, Line: 159, Column: 19}
+            Node: { Token: {Value: =, Type: assign operator, Line: 161, Column: 19}
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: "hello", Type: string literal, Line: 159, Column: 4}, Type: String },
-                    Node: { Token: {Value: length, Type: identifier, Line: 159, Column: 12} }
+                    Node: { Token: {Value: "hello", Type: string literal, Line: 161, Column: 4}, Type: String },
+                    Node: { Token: {Value: length, Type: identifier, Line: 161, Column: 12} }
                 ] },
-                Node: { Token: {Value: 0, Type: int literal, Line: 159, Column: 21} }
+                Node: { Token: {Value: 0, Type: int literal, Line: 161, Column: 21} }
             ] },
             Node: { Label: "struct_literal", Type: None
             children: [
-                Node: { Token: {Value: StructLiteral, Type: identifier, Line: 160, Column: 4} }
+                Node: { Token: {Value: StructLiteral, Type: identifier, Line: 162, Column: 4} }
             ] },
             Node: { Label: "Variable", Type: MariaDB
             children: [
-                Node: { Token: {Value: MariaDB, Type: identifier, Line: 161, Column: 4} },
-                Node: { Token: {Value: maria, Type: identifier, Line: 161, Column: 12} },
+                Node: { Token: {Value: MariaDB, Type: identifier, Line: 163, Column: 4} },
+                Node: { Token: {Value: maria, Type: identifier, Line: 163, Column: 12} },
                 Node: { Label: "struct_literal", Type: MariaDB
                 children: [
-                    Node: { Token: {Value: MariaDB, Type: identifier, Line: 161, Column: 20} }
+                    Node: { Token: {Value: MariaDB, Type: identifier, Line: 163, Column: 20} }
                 ] }
             ] },
             Node: { Label: "Variable", Type: PostgreSQL
             children: [
-                Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 162, Column: 4} },
-                Node: { Token: {Value: pgsql, Type: identifier, Line: 162, Column: 15} },
+                Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 164, Column: 4} },
+                Node: { Token: {Value: pgsql, Type: identifier, Line: 164, Column: 15} },
                 Node: { Label: "struct_literal", Type: PostgreSQL
                 children: [
-                    Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 162, Column: 23} }
+                    Node: { Token: {Value: PostgreSQL, Type: identifier, Line: 164, Column: 23} }
                 ] }
             ] },
-            Node: { Token: {Value: <=, Type: compare operator, Line: 163, Column: 10}, Type: None
+            Node: { Token: {Value: <=, Type: compare operator, Line: 165, Column: 10}, Type: None
             children: [
-                Node: { Token: {Value: maria, Type: identifier, Line: 163, Column: 4}, Type: MariaDB },
-                Node: { Token: {Value: pgsql, Type: identifier, Line: 163, Column: 13}, Type: PostgreSQL }
+                Node: { Token: {Value: maria, Type: identifier, Line: 165, Column: 4}, Type: MariaDB },
+                Node: { Token: {Value: pgsql, Type: identifier, Line: 165, Column: 13}, Type: PostgreSQL }
             ] },
             Node: { Label: "call", Type: None
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: pgsql, Type: identifier, Line: 164, Column: 4}, Type: PostgreSQL },
-                    Node: { Token: {Value: disconnect, Type: identifier, Line: 164, Column: 10} }
+                    Node: { Token: {Value: pgsql, Type: identifier, Line: 166, Column: 4}, Type: PostgreSQL },
+                    Node: { Token: {Value: disconnect, Type: identifier, Line: 166, Column: 10} }
                 ] }
             ] },
             Node: { Label: "call", Type: None
@@ -1758,10 +1763,10 @@ children: [
                 children: [
                     Node: { Label: "dot", Type: PostgreSQL
                     children: [
-                        Node: { Token: {Value: pgsql, Type: identifier, Line: 165, Column: 4}, Type: PostgreSQL },
-                        Node: { Token: {Value: Server, Type: identifier, Line: 165, Column: 10} }
+                        Node: { Token: {Value: pgsql, Type: identifier, Line: 167, Column: 4}, Type: PostgreSQL },
+                        Node: { Token: {Value: Server, Type: identifier, Line: 167, Column: 10} }
                     ] },
-                    Node: { Token: {Value: connect, Type: identifier, Line: 165, Column: 17}, IRName: "__PostgreSQL_DB_connect" }
+                    Node: { Token: {Value: connect, Type: identifier, Line: 167, Column: 17}, IRName: "__PostgreSQL_DB_connect" }
                 ] }
             ] },
             Node: { Label: "call", Type: None
@@ -1770,78 +1775,78 @@ children: [
                 children: [
                     Node: { Label: "dot", Type: ScopeRef(PostgreSQL,DB)
                     children: [
-                        Node: { Token: {Value: pgsql, Type: identifier, Line: 166, Column: 4}, Type: PostgreSQL },
-                        Node: { Token: {Value: DB, Type: identifier, Line: 166, Column: 10}, Type: ScopeRef(PostgreSQL,DB) }
+                        Node: { Token: {Value: pgsql, Type: identifier, Line: 168, Column: 4}, Type: PostgreSQL },
+                        Node: { Token: {Value: DB, Type: identifier, Line: 168, Column: 10}, Type: ScopeRef(PostgreSQL,DB) }
                     ] },
-                    Node: { Token: {Value: getTLSVersion, Type: identifier, Line: 166, Column: 13} }
+                    Node: { Token: {Value: getTLSVersion, Type: identifier, Line: 168, Column: 13} }
                 ] }
             ] },
             Node: { Label: "Variable", Type: PrivateTester
             children: [
-                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 167, Column: 4} },
-                Node: { Token: {Value: pt, Type: identifier, Line: 167, Column: 18} },
+                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 169, Column: 4} },
+                Node: { Token: {Value: pt, Type: identifier, Line: 169, Column: 18} },
                 Node: { Label: "struct_literal", Type: PrivateTester
                 children: [
-                    Node: { Token: {Value: PrivateTester, Type: identifier, Line: 167, Column: 23} }
+                    Node: { Token: {Value: PrivateTester, Type: identifier, Line: 169, Column: 23} }
                 ] }
             ] },
             Node: { Label: "call", Type: None
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: pt, Type: identifier, Line: 168, Column: 4}, Type: PrivateTester },
-                    Node: { Token: {Value: test, Type: identifier, Line: 168, Column: 7} }
+                    Node: { Token: {Value: pt, Type: identifier, Line: 170, Column: 4}, Type: PrivateTester },
+                    Node: { Token: {Value: test, Type: identifier, Line: 170, Column: 7} }
                 ] }
             ] },
             Node: { Label: "dot", Type: PrivateTester
             children: [
-                Node: { Token: {Value: pt, Type: identifier, Line: 169, Column: 4}, Type: PrivateTester },
-                Node: { Token: {Value: y, Type: identifier, Line: 169, Column: 7} }
+                Node: { Token: {Value: pt, Type: identifier, Line: 171, Column: 4}, Type: PrivateTester },
+                Node: { Token: {Value: y, Type: identifier, Line: 171, Column: 7} }
             ] },
             Node: { Label: "call", Type: String
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: maria, Type: identifier, Line: 170, Column: 4}, Type: MariaDB },
-                    Node: { Token: {Value: getVersion, Type: identifier, Line: 170, Column: 10} }
+                    Node: { Token: {Value: maria, Type: identifier, Line: 172, Column: 4}, Type: MariaDB },
+                    Node: { Token: {Value: getVersion, Type: identifier, Line: 172, Column: 10} }
                 ] }
             ] },
             Node: { Label: "dot", Type: MariaDB
             children: [
                 Node: { Label: "dot", Type: MariaDB
                 children: [
-                    Node: { Token: {Value: maria, Type: identifier, Line: 171, Column: 4}, Type: MariaDB },
-                    Node: { Token: {Value: this, Type: identifier, Line: 171, Column: 10} }
+                    Node: { Token: {Value: maria, Type: identifier, Line: 173, Column: 4}, Type: MariaDB },
+                    Node: { Token: {Value: this, Type: identifier, Line: 173, Column: 10} }
                 ] },
-                Node: { Token: {Value: y, Type: identifier, Line: 171, Column: 15} }
+                Node: { Token: {Value: y, Type: identifier, Line: 173, Column: 15} }
             ] },
             Node: { Label: "Variable", Type: PrivateTester
             children: [
-                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 172, Column: 4} },
-                Node: { Token: {Value: pt2, Type: identifier, Line: 172, Column: 18} },
+                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 174, Column: 4} },
+                Node: { Token: {Value: pt2, Type: identifier, Line: 174, Column: 18} },
                 Node: { Label: "typecast"
                 children: [
-                    Node: { Token: {Value: maria, Type: identifier, Line: 172, Column: 24}, Type: MariaDB },
-                    Node: { Token: {Value: PrivateTester, Type: identifier, Line: 172, Column: 33} }
+                    Node: { Token: {Value: maria, Type: identifier, Line: 174, Column: 24}, Type: MariaDB },
+                    Node: { Token: {Value: PrivateTester, Type: identifier, Line: 174, Column: 33} }
                 ] }
             ] },
             Node: { Label: "Variable", Type: PrivateTester
             children: [
-                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 173, Column: 4} },
-                Node: { Token: {Value: mariaPT, Type: identifier, Line: 173, Column: 18} },
-                Node: { Token: {Value: maria, Type: identifier, Line: 173, Column: 28}, Type: MariaDB }
+                Node: { Token: {Value: PrivateTester, Type: identifier, Line: 175, Column: 4} },
+                Node: { Token: {Value: mariaPT, Type: identifier, Line: 175, Column: 18} },
+                Node: { Token: {Value: maria, Type: identifier, Line: 175, Column: 28}, Type: MariaDB }
             ] },
             Node: { Label: "control-flow", Type: int
             children: [
-                Node: { Token: {Value: return, Type: flow keyword, Line: 174, Column: 4} },
-                Node: { Token: {Value: 0, Type: int literal, Line: 174, Column: 11}, Type: int }
+                Node: { Token: {Value: return, Type: flow keyword, Line: 176, Column: 4} },
+                Node: { Token: {Value: 0, Type: int literal, Line: 176, Column: 11}, Type: int }
             ] }
         ] }
     ] }
 ] }
 ScopeTree:
 Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: true}{parameters: (bool,String), implemented: true}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: true}{parameters: (int,String), implemented: true}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: true}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: true}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: true}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: true}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: true}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: true}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: true}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: true}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: true}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
-    Scope: { id: @global, parent: @built-in, interfaces: map[Backend:{name: Backend} DB:{name: DB} Device:{name: Device}], structs: map[A:{name: A, size: 0} App:{name: App, size: 0, implements: [DB, Backend]} Container:{name: Container, size: 8} Laptop:{name: Laptop, size: 0, implements: [Device]} Location:{name: Location, size: 0} MariaDB:{name: MariaDB, size: 0, implements: [DB]} Position2D:{name: Position2D, size: 8} PostgreSQL:{name: PostgreSQL, size: 0, implements: [DB]} PrivateTester:{name: PrivateTester, size: 4} Server:{name: Server, size: 0, implements: [Device]} TestName:{name: TestName, size: 4}], functions: map[getX:{name: getX, returns: None, overloads: [{parameters: (), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[x:{name: x, Type: int, isMutable: true, Initialized: true}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[Backend:{name: Backend} DB:{name: DB} Device:{name: Device}], structs: map[A:{name: A, size: 0} App:{name: App, size: 0, implements: [DB, Backend]} Container:{name: Container, size: 8} Laptop:{name: Laptop, size: 0, implements: [Device]} Location:{name: Location, size: 0} MariaDB:{name: MariaDB, size: 0, implements: [DB]} Position2D:{name: Position2D, size: 8} PostgreSQL:{name: PostgreSQL, size: 0, implements: [DB]} PrivateTester:{name: PrivateTester, size: 4} Server:{name: Server, size: 0, implements: [Device]} TestName:{name: TestName, size: 4} __illegal_name:{name: __illegal_name, size: 0}], functions: map[getX:{name: getX, returns: None, overloads: [{parameters: (), implemented: true}]} main:{name: main, returns: int, overloads: [{parameters: (), implemented: true}]}], variables: map[x:{name: x, Type: int, isMutable: true, Initialized: true}], children: [
         Scope: { id: A, type: 2, parent: @global, variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(A), isPrivate: true, isMutable: true, Initialized: true}] },
         Scope: { id: Device, type: 1, parent: @global, functions: map[powerOff:{name: powerOff, returns: None, overloads: [{parameters: (), implemented: false}]} powerOn:{name: powerOn, returns: None, overloads: [{parameters: (), implemented: false}]}] },
         Scope: { id: Server, type: 2, parent: @global, namedBlocks: map[Device:{name: Device}], variables: map[Device:{name: Device, Type: ScopeRef(Server,Device), Initialized: true} global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(Server), isPrivate: true, isMutable: true, Initialized: true}], children: [
@@ -1899,6 +1904,7 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         Scope: { id: TestName, type: 2, parent: @global, functions: map[getX:{name: getX, returns: None, overloads: [{parameters: (), implemented: true}]}], variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(TestName), isPrivate: true, isMutable: true, Initialized: true} x:{name: x, Type: int, Offset: 0, Initialized: false}], children: [
             Scope: { id: getX()@TestName, type: 4, parent: TestName }
         ] },
+        Scope: { id: __illegal_name, type: 2, parent: @global, variables: map[global:{name: global, Type: Ref(@global), isPrivate: true, isMutable: true, Initialized: true} this:{name: this, Type: Ref(__illegal_name), isPrivate: true, isMutable: true, Initialized: true}] },
         Scope: { id: getX(), type: 4, parent: @global },
         Scope: { id: main(), type: 4, parent: @global, variables: map[app:{name: app, Type: App, Initialized: true} f1:{name: f1, Type: float, Initialized: true} maria:{name: maria, Type: MariaDB, Initialized: true} mariaPT:{name: mariaPT, Type: PrivateTester, Initialized: true} one:{name: one, Type: Container, Initialized: true} pgsql:{name: pgsql, Type: PostgreSQL, Initialized: true} pt:{name: pt, Type: PrivateTester, Initialized: true} pt2:{name: pt2, Type: PrivateTester, Initialized: true} three:{name: three, Type: Container, Initialized: true} two:{name: two, Type: Container, Initialized: true}] }
     ] }
@@ -1939,28 +1945,29 @@ Compiler messages:
     "NameError: Could not find function getXY in scope at line: 142, column: 16",
     "AccessError: Cannot change value of immutable variable 'x' at line: 143, column: 9",
     "AccessError: Cannot change value of immutable variable 'x' at line: 144, column: 9",
-    "AmbiguityError: Interfaces Backend,DB both contain function named connect. Change the function call to pick which one to use at line: 150, column: 9",
-    "IllegalStatementError: Cannot define struct property 'id' multiple times in struct literal at line: 151, column: 42",
-    "NameError: Could not find property 'image' in struct Container at line: 152, column: 42",
-    "TypeError: Property type String expected but found char at line: 153, column: 37",
-    "TypeError: Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(Container)->bool' to compare block in Container definition at line: 154, column: 9",
-    "CastError: Cannot typecast Container to float. To support this typecasting add a function returning target type to cast block at line: 155, column: 23",
-    "TypeError: Cannot use operator '*' between Container and Container at line: 156, column: 9",
-    "AccessError: Cannot access private property from outside struct definition at line: 157, column: 17",
-    "NameError: Could not find property madeup in type Container at line: 158, column: 17",
-    "AccessError: Cannot change value of immutable property or variable at line: 159, column: 5",
-    "AccessError: Cannot assign value to String.length at line: 160, column: 5",
-    "NameError: Struct StructLiteral not defined at line: 161, column: 5",
-    "TypeError: Invalid comparison between MariaDB and PostgreSQL at line: 164, column: 11",
-    "NameError: Could not find function disconnect in scope at line: 165, column: 11",
-    "NameError: Could not find property Server in type PostgreSQL at line: 166, column: 11",
-    "NameError: Could not find function getTLSVersion in scope at line: 167, column: 14",
-    "AccessError: Cannot access private function 'test' from outside struct definition at line: 169, column: 7",
-    "AccessError: Cannot access private property from outside struct definition at line: 170, column: 8",
-    "CallError: Function without body cannot be called at line: 171, column: 10",
-    "AccessError: Cannot access private property from outside struct definition at line: 172, column: 11",
-    "CastError: Cannot typecast MariaDB to PrivateTester. To support typecasting add a cast block with a function returning the target type at line: 173, column: 34",
-    "TypeError: Cannot assign type MariaDB to variable type PrivateTester at line: 174, column: 29"
+    "NameError: Name '__illegal_name' uses reserved prefix '__' at line: 148, column: 8",
+    "AmbiguityError: Interfaces Backend,DB both contain function named connect. Change the function call to pick which one to use at line: 152, column: 9",
+    "IllegalStatementError: Cannot define struct property 'id' multiple times in struct literal at line: 153, column: 42",
+    "NameError: Could not find property 'image' in struct Container at line: 154, column: 42",
+    "TypeError: Property type String expected but found char at line: 155, column: 37",
+    "TypeError: Unsupported comparison. To support operators '>' and '>=', add function 'fn greaterThan(Container)->bool' to compare block in Container definition at line: 156, column: 9",
+    "CastError: Cannot typecast Container to float. To support this typecasting add a function returning target type to cast block at line: 157, column: 23",
+    "TypeError: Cannot use operator '*' between Container and Container at line: 158, column: 9",
+    "AccessError: Cannot access private property from outside struct definition at line: 159, column: 17",
+    "NameError: Could not find property madeup in type Container at line: 160, column: 17",
+    "AccessError: Cannot change value of immutable property or variable at line: 161, column: 5",
+    "AccessError: Cannot assign value to String.length at line: 162, column: 5",
+    "NameError: Struct StructLiteral not defined at line: 163, column: 5",
+    "TypeError: Invalid comparison between MariaDB and PostgreSQL at line: 166, column: 11",
+    "NameError: Could not find function disconnect in scope at line: 167, column: 11",
+    "NameError: Could not find property Server in type PostgreSQL at line: 168, column: 11",
+    "NameError: Could not find function getTLSVersion in scope at line: 169, column: 14",
+    "AccessError: Cannot access private function 'test' from outside struct definition at line: 171, column: 7",
+    "AccessError: Cannot access private property from outside struct definition at line: 172, column: 8",
+    "CallError: Function without body cannot be called at line: 173, column: 10",
+    "AccessError: Cannot access private property from outside struct definition at line: 174, column: 11",
+    "CastError: Cannot typecast MariaDB to PrivateTester. To support typecasting add a cast block with a function returning the target type at line: 175, column: 34",
+    "TypeError: Cannot assign type MariaDB to variable type PrivateTester at line: 176, column: 29"
 ]
 
 ---

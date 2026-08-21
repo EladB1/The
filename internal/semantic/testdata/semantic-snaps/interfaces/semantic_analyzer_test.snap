@@ -396,11 +396,16 @@ children: [
                 ] }
             ] }
         ] }
+    ] },
+    Node: { Label: "interface"
+    children: [
+        Node: { Token: {Value: __illegal_name, Type: identifier, Line: 34, Column: 10} },
+        Node: { Label: "interface-body" }
     ] }
 ] }
 ScopeTree:
 Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, overloads: [{parameters: (bool), implemented: true}{parameters: (bool,String), implemented: true}]} exit:{name: exit, returns: None, overloads: [{parameters: (int), implemented: true}{parameters: (int,String), implemented: true}]} getEnv:{name: getEnv, returns: String, overloads: [{parameters: (String), implemented: true}]} print:{name: print, returns: None, overloads: [{parameters: (any), implemented: true}]} printerr:{name: printerr, returns: None, overloads: [{parameters: (any), implemented: true}]} println:{name: println, returns: None, overloads: [{parameters: (any), implemented: true}]} prompt:{name: prompt, returns: String, overloads: [{parameters: (String), implemented: true}]} secretPrompt:{name: secretPrompt, returns: String, overloads: [{parameters: (String), implemented: true}]} setEnv:{name: setEnv, returns: None, overloads: [{parameters: (String,String), implemented: true}]} sleep:{name: sleep, returns: None, overloads: [{parameters: (double), implemented: true}]} typeOf:{name: typeOf, returns: String, overloads: [{parameters: (any), implemented: true}]}], variables: map[DOUBLE_EPSILON:{name: DOUBLE_EPSILON, Type: double, Initialized: false} DOUBLE_INF:{name: DOUBLE_INF, Type: double, Initialized: false} DOUBLE_MAX:{name: DOUBLE_MAX, Type: double, Initialized: false} DOUBLE_MIN:{name: DOUBLE_MIN, Type: double, Initialized: false} DOUBLE_MIN_POSITIVE:{name: DOUBLE_MIN_POSITIVE, Type: double, Initialized: false} DOUBLE_NEG_INF:{name: DOUBLE_NEG_INF, Type: double, Initialized: false} DOUBLE_NaN:{name: DOUBLE_NaN, Type: double, Initialized: false} E:{name: E, Type: double, Initialized: false} FLOAT_EPSILON:{name: FLOAT_EPSILON, Type: float, Initialized: false} FLOAT_INF:{name: FLOAT_INF, Type: float, Initialized: false} FLOAT_MAX:{name: FLOAT_MAX, Type: float, Initialized: false} FLOAT_MIN:{name: FLOAT_MIN, Type: float, Initialized: false} FLOAT_MIN_POSITIVE:{name: FLOAT_MIN_POSITIVE, Type: float, Initialized: false} FLOAT_NEG_INF:{name: FLOAT_NEG_INF, Type: float, Initialized: false} FLOAT_NaN:{name: FLOAT_NaN, Type: float, Initialized: false} INT64_MAX:{name: INT64_MAX, Type: int64, Initialized: false} INT64_MIN:{name: INT64_MIN, Type: int64, Initialized: false} INT_MAX:{name: INT_MAX, Type: int, Initialized: false} INT_MIN:{name: INT_MIN, Type: int, Initialized: false} PI:{name: PI, Type: double, Initialized: false} UINT32_MAX:{name: UINT32_MAX, Type: uint32, Initialized: false} UINT64_MAX:{name: UINT64_MAX, Type: uint64, Initialized: false}], children: [
-    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B} D:{name: D} Empty:{name: Empty}], structs: map[C:{name: C, size: 0, implements: [A, B, A]}], children: [
+    Scope: { id: @global, parent: @built-in, interfaces: map[A:{name: A} B:{name: B} D:{name: D} Empty:{name: Empty} __illegal_name:{name: __illegal_name}], structs: map[C:{name: C, size: 0, implements: [A, B, A]}], children: [
         Scope: { id: Empty, type: 1, parent: @global },
         Scope: { id: A, type: 1, parent: @global, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: false}]}] },
         Scope: { id: B, type: 1, parent: @global, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: false}]}] },
@@ -412,7 +417,8 @@ Scope: { id: @built-in, functions: map[assert:{name: assert, returns: None, over
         ] },
         Scope: { id: D, type: 1, parent: @global, functions: map[do:{name: do, returns: None, overloads: [{parameters: (), implemented: false}]} undo:{name: undo, returns: uint32, overloads: [{parameters: (), implemented: true}]}], children: [
             Scope: { id: undo()@D, type: 4, parent: D, variables: map[a:{name: a, Type: A, Initialized: true}] }
-        ] }
+        ] },
+        Scope: { id: __illegal_name, type: 1, parent: @global }
     ] }
 ] }
 Compiler messages:
@@ -429,6 +435,7 @@ Compiler messages:
     "IllegalStatementError: Cannot create interface literal value at line: 30, column: 15",
     "TypeError: Cannot assign type None to variable type A at line: 30, column: 15",
     "TypeError: Function 'undo()->uint32' expected return type uint32 but got bool at line: 31, column: 9",
+    "NameError: Name '__illegal_name' uses reserved prefix '__' at line: 35, column: 11",
     "Error: Missing entrypoint function 'fn main()->int' "
 ]
 

@@ -67,6 +67,9 @@ func collectTypeNames(ast *parser.AST) {
 		}
 		nameNode := node.Children[0]
 		name := nameNode.Token.Value
+		if strings.HasPrefix(name, "__") {
+			messages.Complain(diagnostic.NameError, nameNode.Location, "Name '%s' uses reserved prefix '__'", name)
+		}
 		result := globalScope.LookupType(name)
 		if result != nil {
 			messages.Complain(diagnostic.NameError, nameNode.Location, "Name '%s' already in use", name)

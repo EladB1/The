@@ -15,6 +15,10 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 	extraProps := []string{}
 	details := nbNode.Children
 	name := details[0].Token.Value
+	if strings.HasPrefix(name, "__") {
+		messages.Complain(diagnostic.NameError, nbNode.Location, "Name '%s' uses reserved prefix '__'", name)
+		return nil, extraSize, extraProps
+	}
 	if !slices.Contains(specialBlocks, name) && !slices.Contains(impl, name) {
 		messages.Complain(diagnostic.NameError, nbNode.Location, "Block '%s' not supported", name)
 		return nil, extraSize, extraProps

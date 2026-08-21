@@ -133,28 +133,30 @@ Program: [
   fn test() {
     STORE local.num i32(1)
     PARAM local.num
+    __t0: str_const = CALL __str_fromInt32 1
+    PARAM __t0
     CALL println 1
   }
 
   fn test2() {
     STORE local.i i32(0)
     STORE local.i i32(1)
-    __t0: i32 = i32.add local.i i32(1)
-    STORE local.i __t0
-    __t1: i32 = i32.mul local.i i32(5)
+    __t1: i32 = i32.add local.i i32(1)
     STORE local.i __t1
+    __t2: i32 = i32.mul local.i i32(5)
+    STORE local.i __t2
     return
   }
 
   fn add(x: i32, y: i32)->i32 {
-    __t2: i32 = i32.add param.x param.y
-    return __t2
+    __t3: i32 = i32.add param.x param.y
+    return __t3
   }
 
   fn add--int--int--int(x: i32, y: i32, z: i32)->i32 {
-    __t3: i32 = i32.add param.x param.y
-    __t4: i32 = i32.add __t3 param.z
-    return __t4
+    __t4: i32 = i32.add param.x param.y
+    __t5: i32 = i32.add __t4 param.z
+    return __t5
   }
 
   fn main()->i32 {
@@ -376,6 +378,8 @@ Program: [
             JMPIFNOT loop_exit@5
             loop_body@5: {
                 PARAM local.ch
+                __t18: str_const = CALL __str_fromChar 1
+                PARAM __t18
                 CALL print 1
                 __t17: i32 = i32.add local.__foreach_iter i32(1)
                 STORE local.__foreach_iter __t17
@@ -390,20 +394,22 @@ Program: [
   fn forEachOne(str: str_const) {
     loop_exit@6: {
         PARAM param.str
-        __t18: i32 = CALL __str_length 1
+        __t19: i32 = CALL __str_length 1
         STORE local.i i32(0)
         loop@6: {
             PARAM param.str
             PARAM local.i
-            __t19: i32 = CALL __str_index 2
-            STORE local.ch __t19
-            __t20: i32 = i32.lt local.i __t18
+            __t20: i32 = CALL __str_index 2
+            STORE local.ch __t20
+            __t21: i32 = i32.lt local.i __t19
             JMPIFNOT loop_exit@6
             loop_body@6: {
                 PARAM local.ch
+                __t23: str_const = CALL __str_fromChar 1
+                PARAM __t23
                 CALL print 1
-                __t21: i32 = i32.add local.i i32(1)
-                STORE local.i __t21
+                __t22: i32 = i32.add local.i i32(1)
+                STORE local.i __t22
                 JMP loop@6
             }
         }
@@ -415,20 +421,22 @@ Program: [
   fn forEachTwo(str: str_const) {
     loop_exit@7: {
         PARAM param.str
-        __t22: i32 = CALL __str_length 1
+        __t24: i32 = CALL __str_length 1
         STORE local.i i32(0)
         loop@7: {
             PARAM param.str
             PARAM local.i
-            __t23: i32 = CALL __str_index 2
-            STORE local.ch __t23
-            __t24: i32 = i32.lt local.i __t22
+            __t25: i32 = CALL __str_index 2
+            STORE local.ch __t25
+            __t26: i32 = i32.lt local.i __t24
             JMPIFNOT loop_exit@7
             loop_body@7: {
                 PARAM local.ch
+                __t28: str_const = CALL __str_fromChar 1
+                PARAM __t28
                 CALL print 1
-                __t25: i32 = i32.add local.i i32(1)
-                STORE local.i __t25
+                __t27: i32 = i32.add local.i i32(1)
+                STORE local.i __t27
                 JMP loop@7
             }
         }
@@ -568,7 +576,7 @@ Program: [
     CALL println 1
   }
 
-  fn __T_Person1_P_donot() {
+  fn __T_P_donot() {
     STORE global.x i32(2)
     PARAM str_const(1)
     CALL println 1
@@ -577,99 +585,105 @@ Program: [
   fn __Inner_getId(__this: ptr)->i32 {
     __t43: i32 = LOAD param.__this 0
     PARAM __t43
+    __t44: str_const = CALL __str_fromInt32 1
+    PARAM __t44
     CALL println 1
-    __t44: i32 = LOAD param.__this 0
-    return __t44
+    __t45: i32 = LOAD param.__this 0
+    return __t45
   }
 
   fn __Inner_showX(__this: ptr) {
     PARAM global.x
+    __t46: str_const = CALL __str_fromInt32 1
+    PARAM __t46
     CALL println 1
     PARAM global.x
+    __t47: str_const = CALL __str_fromInt32 1
+    PARAM __t47
     CALL println 1
   }
 
   fn __Inner_cast_toString(__this: ptr)->str_const {
-    __t45: i32 = LOAD param.__this 0
-    PARAM __t45
-    __t46: str_const = CALL __str_fromInt32 1
-    return __t46
-  }
-
-  fn __Inner_compare_equals(other: ptr, __this: ptr)->i32 {
-    __t47: i32 = LOAD param.__this 0
-    __t48: i32 = LOAD param.other 0
-    __t49: i32 = i32.eq __t47 __t48
+    __t48: i32 = LOAD param.__this 0
+    PARAM __t48
+    __t49: str_const = CALL __str_fromInt32 1
     return __t49
   }
 
-  fn __Inner_compare_lessThan(other: ptr, __this: ptr)->i32 {
+  fn __Inner_compare_equals(other: ptr, __this: ptr)->i32 {
     __t50: i32 = LOAD param.__this 0
     __t51: i32 = LOAD param.other 0
-    __t52: i32 = i32.lt __t50 __t51
+    __t52: i32 = i32.eq __t50 __t51
     return __t52
   }
 
-  fn __Inner_compare_greaterThan(other: ptr, __this: ptr)->i32 {
+  fn __Inner_compare_lessThan(other: ptr, __this: ptr)->i32 {
     __t53: i32 = LOAD param.__this 0
     __t54: i32 = LOAD param.other 0
-    __t55: i32 = i32.gt __t53 __t54
+    __t55: i32 = i32.lt __t53 __t54
     return __t55
   }
 
+  fn __Inner_compare_greaterThan(other: ptr, __this: ptr)->i32 {
+    __t56: i32 = LOAD param.__this 0
+    __t57: i32 = LOAD param.other 0
+    __t58: i32 = i32.gt __t56 __t57
+    return __t58
+  }
+
   fn __Nested_cast__default_toString(__this: ptr)->str_const {
-    __t56: f64 = LOAD param.__this 0
-    PARAM __t56
-    __t57: str_const = CALL __str_fromFloat64 1
-    __t58: ptr = LOAD param.__this 8
-    PARAM __t58
-    __t59: str_const = CALL __Inner_cast_toString 1
-    __t60: str_const = LOAD param.__this 12
-    PARAM i32(123)
-    PARAM __t57
-    __t61: str_const = CALL __char_concat_str 2
-    PARAM i32(44)
+    __t59: f64 = LOAD param.__this 0
     PARAM __t59
-    __t62: str_const = CALL __char_concat_str 2
+    __t60: str_const = CALL __str_fromFloat64 1
+    __t61: ptr = LOAD param.__this 8
     PARAM __t61
-    PARAM __t62
-    __t63: str_const = CALL __str_concat 2
-    PARAM i32(44)
+    __t62: str_const = CALL __Inner_cast_toString 1
+    __t63: str_const = LOAD param.__this 12
+    PARAM i32(123)
     PARAM __t60
     __t64: str_const = CALL __char_concat_str 2
-    PARAM __t63
+    PARAM i32(44)
+    PARAM __t62
+    __t65: str_const = CALL __char_concat_str 2
     PARAM __t64
-    __t65: str_const = CALL __str_concat 2
     PARAM __t65
+    __t66: str_const = CALL __str_concat 2
+    PARAM i32(44)
+    PARAM __t63
+    __t67: str_const = CALL __char_concat_str 2
+    PARAM __t66
+    PARAM __t67
+    __t68: str_const = CALL __str_concat 2
+    PARAM __t68
     PARAM i32(125)
-    __t66: str_const = CALL __str_concat_char 2
-    return __t66
+    __t69: str_const = CALL __str_concat_char 2
+    return __t69
   }
 
   fn __Nested_compare__default__equals(__this: ptr, __other: ptr)->i32 {
-    __t67: f64 = LOAD param.__this 0
-    __t68: f64 = LOAD param.__other 0
-    __t69: i32 = f64.eq __t67 __t68
-    __t70: ptr = LOAD param.__this 8
-    __t71: ptr = LOAD param.__other 8
-    PARAM __t70
-    PARAM __t71
-    __t73: i32 = CALL __Inner_compare_equals 2
-    __t74: str_const = LOAD param.__this 12
-    __t75: str_const = LOAD param.__other 12
+    __t70: f64 = LOAD param.__this 0
+    __t71: f64 = LOAD param.__other 0
+    __t72: i32 = f64.eq __t70 __t71
+    __t73: ptr = LOAD param.__this 8
+    __t74: ptr = LOAD param.__other 8
+    PARAM __t73
     PARAM __t74
-    PARAM __t75
-    __t76: i32 = CALL __str_eq 2
-    __t77: i32 = i32.and __t69 __t73
-    __t78: i32 = i32.and __t77 __t76
-    return __t78
+    __t76: i32 = CALL __Inner_compare_equals 2
+    __t77: str_const = LOAD param.__this 12
+    __t78: str_const = LOAD param.__other 12
+    PARAM __t77
+    PARAM __t78
+    __t79: i32 = CALL __str_eq 2
+    __t80: i32 = i32.and __t72 __t76
+    __t81: i32 = i32.and __t80 __t79
+    return __t81
   }
 
   fn __T_cast__default_toString(__this: ptr)->str_const {
     PARAM i32(123)
     PARAM i32(125)
-    __t79: str_const = CALL __char_concat 2
-    return __t79
+    __t82: str_const = CALL __char_concat 2
+    return __t82
   }
 
   fn __T_compare__default__equals(__this: ptr, __other: ptr)->i32 {
@@ -681,9 +695,10 @@ Program: [
     CALL println 1
   }
 
-  fn __T_I_times(a: i32, b: i32)->i32 {
-    __t80: i32 = i32.mul param.a param.b
-    return __t80
+  fn __T_P_donot() {
+    STORE global.x i32(2)
+    PARAM str_const(1)
+    CALL println 1
   }
 
   fn __T_I_do() {
@@ -691,128 +706,135 @@ Program: [
     CALL println 1
   }
 
-  fn __T_Person1_P_donot() {
-    STORE global.x i32(2)
-    PARAM str_const(1)
-    CALL println 1
+  fn __T_I_times(a: i32, b: i32)->i32 {
+    __t83: i32 = i32.mul param.a param.b
+    return __t83
   }
 
     STORE global.x i32(1)
   fn testInnerCompare(i: ptr, i2: ptr)->ptr {
     PARAM param.i
     PARAM param.i2
-    __t81: i32 = CALL __Inner_compare_equals 2
-    if __t81 {
-        return param.i
-    }
-    PARAM param.i
-    PARAM param.i2
-    __t82: i32 = CALL __Inner_compare_lessThan 2
-    PARAM param.i
-    PARAM param.i2
-    __t83: i32 = CALL __Inner_compare_equals 2
-    __t84: i32 = i32.or __t82 __t83
+    __t84: i32 = CALL __Inner_compare_equals 2
     if __t84 {
         return param.i
     }
     PARAM param.i
     PARAM param.i2
-    __t85: i32 = CALL __Inner_compare_greaterThan 2
+    __t85: i32 = CALL __Inner_compare_lessThan 2
     PARAM param.i
     PARAM param.i2
     __t86: i32 = CALL __Inner_compare_equals 2
     __t87: i32 = i32.or __t85 __t86
     if __t87 {
+        return param.i
+    }
+    PARAM param.i
+    PARAM param.i2
+    __t88: i32 = CALL __Inner_compare_greaterThan 2
+    PARAM param.i
+    PARAM param.i2
+    __t89: i32 = CALL __Inner_compare_equals 2
+    __t90: i32 = i32.or __t88 __t89
+    if __t90 {
         return param.i2
     }
     return param.i2
   }
 
   fn main()->i32 {
-    __t88: ptr = Malloc 16
-    SET __t88+0 str_const(11)
-    SET __t88+4 u32(112)
-    SET __t88+8 str_const(0)
-    SET __t88+12 i32(1)
-    STORE local.p __t88
-    __t89: u32 = LOAD local.p 4
-    STORE local.age __t89
-    __t90: ptr = Malloc 16
-    SET __t90+0 str_const(12)
-    SET __t90+4 u32(0)
-    SET __t90+8 str_const(0)
-    SET __t90+12 i32(1)
-    STORE local.p2 __t90
+    __t91: ptr = Malloc 16
+    SET __t91+0 str_const(11)
+    SET __t91+4 u32(112)
+    SET __t91+8 str_const(0)
+    SET __t91+12 i32(1)
+    STORE local.p __t91
+    __t92: u32 = LOAD local.p 4
+    STORE local.age __t92
+    __t93: ptr = Malloc 16
+    SET __t93+0 str_const(12)
+    SET __t93+4 u32(0)
+    SET __t93+8 str_const(0)
+    SET __t93+12 i32(1)
+    STORE local.p2 __t93
     PARAM local.p
     PARAM local.p2
-    __t91: i32 = CALL __Person1_compare__default__equals 2
-    __t92: ptr = Malloc 16
-    SET __t92+0 f64(0)
-    __t93: ptr = Malloc 4
-    SET __t93+0 i32(1)
-    SET __t92+8 __t93
-    SET __t92+12 str_const(13)
-    STORE local.n1 __t92
-    __t94: ptr = Malloc 4
-    SET __t94+0 i32(5)
-    SET local.n1+8 __t94
-    __t95: ptr = LOAD local.n1 8
-    SET __t95+0 i32(1)
-    __t96: ptr = Malloc 16
+    __t94: i32 = CALL __Person1_compare__default__equals 2
+    __t95: ptr = Malloc 16
+    SET __t95+0 f64(0)
+    __t96: ptr = Malloc 4
+    SET __t96+0 i32(1)
+    SET __t95+8 __t96
+    SET __t95+12 str_const(13)
+    STORE local.n1 __t95
     __t97: ptr = Malloc 4
-    SET __t97+0 i32(2)
-    SET __t96+8 __t97
-    SET __t96+12 str_const(14)
-    SET __t96+0 f64(0)
-    STORE local.n2 __t96
+    SET __t97+0 i32(5)
+    SET local.n1+8 __t97
+    __t98: ptr = LOAD local.n1 8
+    SET __t98+0 i32(1)
+    __t99: ptr = Malloc 16
+    __t100: ptr = Malloc 4
+    SET __t100+0 i32(2)
+    SET __t99+8 __t100
+    SET __t99+12 str_const(14)
+    SET __t99+0 f64(0)
+    STORE local.n2 __t99
     PARAM local.n1
     PARAM local.n2
-    __t98: i32 = CALL __Nested_compare__default__equals 2
-    __t99: ptr = LOAD local.n1 8
-    PARAM __t99
-    CALL println 1
-    __t100: str_const = LOAD local.n1 12
-    PARAM __t100
-    __t101: i32 = CALL __str_length 1
-    PARAM __t101
-    CALL println 1
+    __t101: i32 = CALL __Nested_compare__default__equals 2
     __t102: ptr = LOAD local.n1 8
-    __t103: i32 = LOAD __t102 0
+    PARAM __t102
+    __t103: str_const = CALL  1
     PARAM __t103
     CALL println 1
+    __t104: str_const = LOAD local.n1 12
+    PARAM __t104
+    __t105: i32 = CALL __str_length 1
+    PARAM __t105
+    __t106: str_const = CALL __str_fromInt32 1
+    PARAM __t106
+    CALL println 1
+    __t107: ptr = LOAD local.n1 8
+    __t108: i32 = LOAD __t107 0
+    PARAM __t108
+    __t109: str_const = CALL __str_fromInt32 1
+    PARAM __t109
+    CALL println 1
     SET local.p2+4 u32(25)
-    __t104: u32 = LOAD local.p2 4
-    __t105: u32 = u32.add local.p2+4 u32(2)
-    SET local.p2+4 __t105
-    __t106: u32 = LOAD local.p2 4
-    __t107: u32 = u32.sub __t106 u32(1)
-    SET local.p2+4 __t107
-    STORE local.newage __t106
-    __t108: u32 = LOAD local.p2 4
-    __t109: u32 = u32.sub __t108 u32(1)
-    SET local.p2+4 __t109
-    STORE local.newage __t109
+    __t110: u32 = LOAD local.p2 4
+    __t111: u32 = u32.add local.p2+4 u32(2)
+    SET local.p2+4 __t111
+    __t112: u32 = LOAD local.p2 4
+    __t113: u32 = u32.sub __t112 u32(1)
+    SET local.p2+4 __t113
+    STORE local.newage __t112
+    __t114: u32 = LOAD local.p2 4
+    __t115: u32 = u32.sub __t114 u32(1)
+    SET local.p2+4 __t115
+    STORE local.newage __t115
     PARAM local.p2
-    __t110: i32 = CALL __Person1_cast_toInt 1
-    STORE local.fromP2 __t110
+    __t116: i32 = CALL __Person1_cast_toInt 1
+    STORE local.fromP2 __t116
     PARAM local.p2
-    __t111: str_const = CALL __Person1_cast__default_toString 1
-    STORE local.str2 __t111
+    __t117: str_const = CALL __Person1_cast__default_toString 1
+    STORE local.str2 __t117
     PARAM local.p2
     CALL __Person1_greet 1
     PARAM local.p2
     CALL __Person1_P_do 1
     PARAM local.p2
+    __t118: str_const = CALL  1
+    PARAM __t118
     CALL println 1
-    __t112: ptr = Malloc 0
-    STORE local.t __t112
+    __t119: ptr = Malloc 0
+    STORE local.t __t119
     PARAM local.t
     CALL __T_I_do 1
     PARAM local.t
     CALL __T_P_do 1
-    __t113: ptr = Malloc 4
-    SET __t113+0 i32(0)
-    STORE local.empty __t113
+    __t120: ptr = Malloc 4
+    SET __t120+0 i32(0)
+    STORE local.empty __t120
     return i32(0)
   }
 

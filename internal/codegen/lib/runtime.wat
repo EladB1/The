@@ -16,16 +16,16 @@
     (global $iovec_newline_ptr i32 (i32.const 8))
     (global $iovec_newline_len i32 (i32.const 12))
     (global $return_space i32 (i32.const 16))
-    (global $NEWLINE_CHAR_ADDR i32 (i32.const 1000))
-    (data (i32.const 1000) "\n")
-    (global $stdin_buffer i32 (i32.const 200))
-    (data (i32.const 200) "\00")
-    (global $iovec_stdin i32 (i32.const 300))
-    (global $iovec_stdin_len i32 (i32.const 304))
-    (data (i32.const 300) "\00\00\00\00\00\00\00\00")
+    (global $NEWLINE_CHAR_ADDR i32 (i32.const 20))
+    (data (i32.const 20) "\n")
+    (global $stdin_buffer i32 (i32.const 24))
+    (data (i32.const 24) "\00")
+    (global $iovec_stdin i32 (i32.const 28))
+    (global $iovec_stdin_len i32 (i32.const 32))
+    (data (i32.const 32) "\00\00\00\00\00\00\00\00")
     ;; byte counter
-    (global $stdin_byte_counter i32 (i32.const 400))
-    (data (i32.const 400) "\00\00\00\00")
+    (global $stdin_byte_counter i32 (i32.const 36))
+    (data (i32.const 36) "\00\00\00\00")
     
     (func $__fd_write (param $fd i32) (param $ptr i32) (param $newline i32)
         (local $len i32)
@@ -92,29 +92,3 @@
         )
         (local.get $len)
     )
-
-    ;; (func $__i32_pow (param $base i32) (param $exponent i32) (result i32)
-    ;;     ;; TODO
-    ;; )
-
-    ;; (func $__i64_pow (param $base i64) (param $exponent i64) (result i64)
-    ;;     ;; TODO
-    ;; )
-
-    ;; (func $__u32_pow (param $base i32) (param $exponent i32) (result i32)
-    ;;     ;; TODO
-    ;; )
-
-    ;; (func $__u64_pow (param $base i64) (param $exponent i64) (result i64)
-    ;;     ;; TODO
-    ;; )
-
-    ;; (func $__f32_pow (param $base f32) (param $exponent f32) (result f32)
-    ;;     ;; TODO
-    ;; )
-
-    ;; (func $__f64_pow (param $base f64) (param $exponent f64) (result f64)
-    ;;     ;; TODO
-    ;; )
-
-
