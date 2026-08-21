@@ -65,14 +65,14 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 				symbol.isPrivate = true
 				currentScope = scope
 				// private is not a real named block; it is only a shortcut to mark everything in it as private
-				if overload, err := currentScope.Functions.add(symbol); err != nil {
+				if overload, err := create(currentScope.Functions, symbol); err != nil {
 					messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 				} else {
 					node.IRName = overload.IRName
 				}
 				continue
 			}
-			if overload, err := currentScope.Functions.add(symbol); err != nil {
+			if overload, err := create(currentScope.Functions, symbol); err != nil {
 				messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 			} else {
 				node.IRName = overload.IRName
@@ -95,7 +95,7 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 					symbol.Offset.Value = *offset
 					*offset = *offset + uint32(size)
 					extraSize += size
-					currentScope.Variables[symbol.Name] = *symbol
+					currentScope.Variables.Add(*symbol, symbol.Name)
 				}
 				continue
 			}

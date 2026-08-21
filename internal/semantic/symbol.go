@@ -71,15 +71,16 @@ type (
 		InnerScope     *Scope
 	}
 
-	FunctionSymbolTable   map[string]FunctionSymbol
-	VariableSymbolTable   map[string]VariableSymbol
-	InterfaceSymbolTable  map[string]InterfaceSymbol
-	StructSymbolTable     map[string]StructSymbol
-	NamedBlockSymbolTable map[string]NamedBlockSymbol
+	SymbolTable[T any] struct {
+		OrderedNames []string
+		Symbols      map[string]T
+	}
+
+	FunctionTable = SymbolTable[FunctionSymbol]
 
 	PrimitiveTypeMembers struct {
-		Properties VariableSymbolTable
-		Methods    FunctionSymbolTable
+		Properties SymbolTable[VariableSymbol]
+		Methods    FunctionTable
 	}
 
 	PrimitiveTypeTables map[dt.DataType]PrimitiveTypeMembers
@@ -89,6 +90,41 @@ type (
 		Value uint32
 	}
 )
+
+func NewTable[T any]() *SymbolTable[T] {
+	return &SymbolTable[T]{
+		OrderedNames: []string{},
+		Symbols:      map[string]T{},
+	}
+}
+
+func (table *SymbolTable[T]) Add(symbol T, name string) {
+	table.OrderedNames = append(table.OrderedNames, name)
+	table.Symbols[name] = symbol
+}
+
+func (table *SymbolTable[T]) update(symbol T, name string) {
+	table.Symbols[name] = symbol
+}
+
+func (table *SymbolTable[T]) isEmpty() bool {
+	return len(table.Symbols) == 0
+}
+
+func (table *SymbolTable[T]) Lookup(name string) *T {
+	if symbol, ok := table.Symbols[name]; ok {
+		return &symbol
+	}
+	return nil
+}
+
+func (table *SymbolTable[T]) GetByIndex(index int) *T {
+	if symbol, ok := table.Symbols[table.OrderedNames[index]]; ok {
+		return &symbol
+	} else {
+		return nil
+	}
+}
 
 /* TypeSymbol interface functions */
 func (intf InterfaceSymbol) GetSymbolType() string {
@@ -276,142 +312,163 @@ const (
 var (
 	PrimitiveMembers PrimitiveTypeTables = PrimitiveTypeTables{
 		dt.String: PrimitiveTypeMembers{
-			Properties: VariableSymbolTable{
-				"length": VariableSymbol{
-					Name: "length",
-					Type: dt.Int32Type,
-					Ctx:  PrimitiveProp,
+			Properties: SymbolTable[VariableSymbol]{
+				OrderedNames: []string{
+					"length",
+				},
+				Symbols: map[string]VariableSymbol{
+					"length": {
+						Name: "length",
+						Type: dt.Int32Type,
+						Ctx:  PrimitiveProp,
+					},
 				},
 			},
-			Methods: FunctionSymbolTable{
-				"indexOf": FunctionSymbol{
-					Name: "indexOf",
-					Overloads: []FnOverloadSymbol{{
-						Parameters:               []dt.SourceType{dt.CharType},
-						HasDefaultImplementation: true,
-						IRName:                   "__str_indexOf",
-					}},
-					ReturnType: dt.Int32Type,
+			Methods: FunctionTable{
+				OrderedNames: []string{
+					"indexOf",
+					"contains",
+					"startsWith",
+					"endsWith",
+					"replace",
+					"replaceAll",
+					"reverse",
+					"toUpper",
+					"toLower",
+					"trim",
+					"trimStart",
+					"trimEnd",
 				},
-				"contains": FunctionSymbol{
-					Name: "contains",
-					Overloads: []FnOverloadSymbol{
-						{
+				Symbols: map[string]FunctionSymbol{
+					"indexOf": {
+						Name: "indexOf",
+						Overloads: []FnOverloadSymbol{{
 							Parameters:               []dt.SourceType{dt.CharType},
 							HasDefaultImplementation: true,
-							IRName:                   "__str_contains_char",
+							IRName:                   "__str_indexOf",
+						}},
+						ReturnType: dt.Int32Type,
+					},
+					"contains": {
+						Name: "contains",
+						Overloads: []FnOverloadSymbol{
+							{
+								Parameters:               []dt.SourceType{dt.CharType},
+								HasDefaultImplementation: true,
+								IRName:                   "__str_contains_char",
+							},
+							{
+								Parameters:               []dt.SourceType{dt.StringType},
+								HasDefaultImplementation: true,
+								IRName:                   "__str_contains_String",
+							},
 						},
-						{
+						ReturnType: dt.BoolType,
+					},
+					"startsWith": {
+						Name: "startsWith",
+						Overloads: []FnOverloadSymbol{{
 							Parameters:               []dt.SourceType{dt.StringType},
 							HasDefaultImplementation: true,
-							IRName:                   "__str_contains_String",
-						},
+							IRName:                   "__str_startsWith",
+						}},
+						ReturnType: dt.BoolType,
 					},
-					ReturnType: dt.BoolType,
-				},
-				"startsWith": FunctionSymbol{
-					Name: "startsWith",
-					Overloads: []FnOverloadSymbol{{
-						Parameters:               []dt.SourceType{dt.StringType},
-						HasDefaultImplementation: true,
-						IRName:                   "__str_startsWith",
-					}},
-					ReturnType: dt.BoolType,
-				},
-				"endsWith": FunctionSymbol{
-					Name: "endsWith",
-					Overloads: []FnOverloadSymbol{{
-						Parameters:               []dt.SourceType{dt.StringType},
-						HasDefaultImplementation: true,
-						IRName:                   "__str_endsWith",
-					}},
-					ReturnType: dt.BoolType,
-				},
-				"replace": FunctionSymbol{
-					Name: "replace",
-					Overloads: []FnOverloadSymbol{
-						{
-							Parameters:               []dt.SourceType{dt.StringType, dt.StringType},
+					"endsWith": {
+						Name: "endsWith",
+						Overloads: []FnOverloadSymbol{{
+							Parameters:               []dt.SourceType{dt.StringType},
 							HasDefaultImplementation: true,
-							IRName:                   "__str_replace_String_String",
-						},
-						{
-							Parameters:               []dt.SourceType{dt.CharType, dt.CharType},
-							HasDefaultImplementation: true,
-							IRName:                   "__str_replace_char_char",
-						},
+							IRName:                   "__str_endsWith",
+						}},
+						ReturnType: dt.BoolType,
 					},
-					ReturnType: dt.StringType,
-				},
-				"replaceAll": FunctionSymbol{
-					Name: "replaceAll",
-					Overloads: []FnOverloadSymbol{
-						{
-							Parameters:               []dt.SourceType{dt.StringType, dt.StringType},
-							HasDefaultImplementation: true,
-							IRName:                   "__str_replaceAll_String_String",
+					"replace": {
+						Name: "replace",
+						Overloads: []FnOverloadSymbol{
+							{
+								Parameters:               []dt.SourceType{dt.StringType, dt.StringType},
+								HasDefaultImplementation: true,
+								IRName:                   "__str_replace_String_String",
+							},
+							{
+								Parameters:               []dt.SourceType{dt.CharType, dt.CharType},
+								HasDefaultImplementation: true,
+								IRName:                   "__str_replace_char_char",
+							},
 						},
-						{
-							Parameters:               []dt.SourceType{dt.CharType, dt.CharType},
-							HasDefaultImplementation: true,
-							IRName:                   "__str_replaceAll_char_char",
-						},
+						ReturnType: dt.StringType,
 					},
-					ReturnType: dt.StringType,
-				},
-				"reverse": FunctionSymbol{
-					Name: "reverse",
-					Overloads: []FnOverloadSymbol{{
-						Parameters:               []dt.SourceType{},
-						HasDefaultImplementation: true,
-						IRName:                   "__str_reverse",
-					}},
-					ReturnType: dt.StringType,
-				},
-				"toUpper": FunctionSymbol{
-					Name: "toUpper",
-					Overloads: []FnOverloadSymbol{{
-						Parameters:               []dt.SourceType{},
-						HasDefaultImplementation: true,
-						IRName:                   "__str_toUpper",
-					}},
-					ReturnType: dt.StringType,
-				},
-				"toLower": FunctionSymbol{
-					Name: "toLower",
-					Overloads: []FnOverloadSymbol{{
-						Parameters:               []dt.SourceType{},
-						HasDefaultImplementation: true,
-						IRName:                   "__str_toLower",
-					}},
-					ReturnType: dt.StringType,
-				},
-				"trim": FunctionSymbol{
-					Name: "trim",
-					Overloads: []FnOverloadSymbol{{
-						Parameters:               []dt.SourceType{},
-						HasDefaultImplementation: true,
-						IRName:                   "__str_trim",
-					}},
-					ReturnType: dt.StringType,
-				},
-				"trimStart": FunctionSymbol{
-					Name: "trimStart",
-					Overloads: []FnOverloadSymbol{{
-						Parameters:               []dt.SourceType{},
-						HasDefaultImplementation: true,
-						IRName:                   "__str_trimStart",
-					}},
-					ReturnType: dt.StringType,
-				},
-				"trimEnd": FunctionSymbol{
-					Name: "trimEnd",
-					Overloads: []FnOverloadSymbol{{
-						Parameters:               []dt.SourceType{},
-						HasDefaultImplementation: true,
-						IRName:                   "__str_trimEnd",
-					}},
-					ReturnType: dt.StringType,
+					"replaceAll": {
+						Name: "replaceAll",
+						Overloads: []FnOverloadSymbol{
+							{
+								Parameters:               []dt.SourceType{dt.StringType, dt.StringType},
+								HasDefaultImplementation: true,
+								IRName:                   "__str_replaceAll_String_String",
+							},
+							{
+								Parameters:               []dt.SourceType{dt.CharType, dt.CharType},
+								HasDefaultImplementation: true,
+								IRName:                   "__str_replaceAll_char_char",
+							},
+						},
+						ReturnType: dt.StringType,
+					},
+					"reverse": {
+						Name: "reverse",
+						Overloads: []FnOverloadSymbol{{
+							Parameters:               []dt.SourceType{},
+							HasDefaultImplementation: true,
+							IRName:                   "__str_reverse",
+						}},
+						ReturnType: dt.StringType,
+					},
+					"toUpper": {
+						Name: "toUpper",
+						Overloads: []FnOverloadSymbol{{
+							Parameters:               []dt.SourceType{},
+							HasDefaultImplementation: true,
+							IRName:                   "__str_toUpper",
+						}},
+						ReturnType: dt.StringType,
+					},
+					"toLower": {
+						Name: "toLower",
+						Overloads: []FnOverloadSymbol{{
+							Parameters:               []dt.SourceType{},
+							HasDefaultImplementation: true,
+							IRName:                   "__str_toLower",
+						}},
+						ReturnType: dt.StringType,
+					},
+					"trim": {
+						Name: "trim",
+						Overloads: []FnOverloadSymbol{{
+							Parameters:               []dt.SourceType{},
+							HasDefaultImplementation: true,
+							IRName:                   "__str_trim",
+						}},
+						ReturnType: dt.StringType,
+					},
+					"trimStart": {
+						Name: "trimStart",
+						Overloads: []FnOverloadSymbol{{
+							Parameters:               []dt.SourceType{},
+							HasDefaultImplementation: true,
+							IRName:                   "__str_trimStart",
+						}},
+						ReturnType: dt.StringType,
+					},
+					"trimEnd": {
+						Name: "trimEnd",
+						Overloads: []FnOverloadSymbol{{
+							Parameters:               []dt.SourceType{},
+							HasDefaultImplementation: true,
+							IRName:                   "__str_trimEnd",
+						}},
+						ReturnType: dt.StringType,
+					},
 				},
 			},
 		},

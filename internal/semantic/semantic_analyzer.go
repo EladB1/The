@@ -2,6 +2,7 @@ package semantic
 
 import (
 	"fmt"
+	"log"
 	"slices"
 	"strings"
 
@@ -82,45 +83,58 @@ func collectTypeNames(ast *parser.AST) {
 				continue
 			}
 			childScope := globalScope.addChild(name, Interface)
-			globalScope.Interfaces[name] = InterfaceSymbol{
-				name:       name,
-				innerScope: childScope,
-				Def:        node,
-			}
-		} else if node.Token.Value == "struct" {
-			childScope := globalScope.addChild(name, Struct)
-			childScope.Variables["this"] = VariableSymbol{
-				Name:        "this",
-				Type:        dt.NewContainerType(dt.Ref, dt.NewReferenceSubType(childScope.Id)),
-				isPrivate:   true,
-				isMutable:   true,
-				Initialized: true,
-				Def:         nil,
-			}
-			childScope.Variables["global"] = VariableSymbol{
+			childScope.Variables.Add(VariableSymbol{
 				Name:        "global",
 				Type:        dt.GlobalRefType,
 				isPrivate:   true,
 				isMutable:   true,
 				Initialized: true,
 				Def:         nil,
-			}
-			globalScope.Structs[name] = StructSymbol{
+			}, "global")
+			globalScope.Interfaces.Add(InterfaceSymbol{
+				name:       name,
+				innerScope: childScope,
+				Def:        node,
+			}, name)
+		} else if node.Token.Value == "struct" {
+			childScope := globalScope.addChild(name, Struct)
+			childScope.Variables.Add(VariableSymbol{
+				Name:        "this",
+				Type:        dt.NewContainerType(dt.Ref, dt.NewReferenceSubType(childScope.Id)),
+				isPrivate:   true,
+				isMutable:   true,
+				Initialized: true,
+				Def:         nil,
+			}, "this")
+			childScope.Variables.Add(VariableSymbol{
+				Name:        "global",
+				Type:        dt.GlobalRefType,
+				isPrivate:   true,
+				isMutable:   true,
+				Initialized: true,
+				Def:         nil,
+			}, "global")
+			globalScope.Structs.Add(StructSymbol{
 				Name:       name,
 				InnerScope: childScope,
 				Def:        node,
-			}
+			}, name)
 		}
 	}
 }
 
 // Pass two
 func analyzeInterfaceFnSignatures() {
-	for _, intf := range globalScope.Interfaces {
+	interfaces := globalScope.Interfaces
+	for i := range globalScope.Interfaces.OrderedNames {
+		intf := interfaces.GetByIndex(i)
+		if intf == nil {
+			continue
+		}
 		currentScope = intf.innerScope
 		for _, node := range intf.Def.Children[1].Children {
 			symbol := processFunctionSignature(node)
-			overload, err := currentScope.Functions.add(symbol)
+			overload, err := create(currentScope.Functions, symbol)
 			if err != nil {
 				messages.Complain(diagnostic.IllegalStatementError, node.Location, "%v", err)
 			} else {
@@ -133,7 +147,12 @@ func analyzeInterfaceFnSignatures() {
 
 // Pass three
 func analyzeStructFnSignatures() {
-	for _, str := range globalScope.Structs {
+	structs := globalScope.Structs
+	for i := range structs.OrderedNames {
+		str := structs.GetByIndex(i)
+		if str == nil {
+			continue
+		}
 		currentScope = str.InnerScope
 		// collect impl values
 		def := str.Def.Children
@@ -148,7 +167,7 @@ func analyzeStructFnSignatures() {
 				} else {
 					impl = append(impl, node.Token.Value)
 					str.Implements = impl
-					globalScope.Structs[str.Name] = str
+					globalScope.Structs.update(*str, str.Name)
 				}
 			}
 		}
@@ -156,7 +175,7 @@ func analyzeStructFnSignatures() {
 			switch node.Label {
 			case "fn":
 				symbol := processFunctionSignature(node)
-				if overload, err := currentScope.Functions.add(symbol); err != nil {
+				if overload, err := create(currentScope.Functions, symbol); err != nil {
 					messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 				} else {
 					node.IRName = overload.IRName
@@ -166,7 +185,7 @@ func analyzeStructFnSignatures() {
 				str.SizeInBytes += extraSize
 				str.OrderedProperties = append(str.OrderedProperties, extraProps...)
 				if symbol != nil {
-					currentScope.NamedBlocks[symbol.Name] = *symbol
+					currentScope.NamedBlocks.Add(*symbol, symbol.Name)
 				}
 			default:
 				symbol := analyzeVariable(node)
@@ -177,20 +196,31 @@ func analyzeStructFnSignatures() {
 				size := symbol.Type.GetSizeInBytes()
 				offset += uint32(size)
 				str.SizeInBytes += size
-				globalScope.Structs[str.Name] = str
+				globalScope.Structs.update(*str, str.Name)
 				if symbol != nil {
-					currentScope.Variables[symbol.Name] = *symbol
+					currentScope.Variables.Add(*symbol, symbol.Name)
 				}
 			}
 		}
 		str.implFnNames = map[string][]string{}
-		for _, nb := range currentScope.NamedBlocks {
-			for _, fn := range nb.InnerScope.Functions {
+		namedblocks := currentScope.NamedBlocks
+		for j := range namedblocks.OrderedNames {
+			nb := namedblocks.GetByIndex(j)
+			if nb == nil {
+				continue
+			}
+			functions := nb.InnerScope.Functions
+			for k := range functions.OrderedNames {
+				fn := functions.GetByIndex(k)
+				if fn == nil {
+					continue
+				}
 				str.implFnNames[fn.Name] = append(str.implFnNames[fn.Name], nb.Name)
 			}
 		}
-		globalScope.Structs[str.Name] = str
+		globalScope.Structs.update(*str, str.Name)
 	}
+
 	currentScope = globalScope // reset the current scope
 }
 
@@ -199,7 +229,7 @@ func collectFunctionSignatures(ast *parser.AST) {
 	for _, node := range ast.Children {
 		if node.Label == "fn" {
 			symbol := processFunctionSignature(node)
-			if overload, err := globalScope.Functions.add(symbol); err != nil {
+			if overload, err := create(globalScope.Functions, symbol); err != nil {
 				messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 			} else {
 				node.IRName = overload.IRName
@@ -210,7 +240,12 @@ func collectFunctionSignatures(ast *parser.AST) {
 
 // Pass five
 func analyzeInterfaceImplementation() {
-	for _, str := range globalScope.Structs {
+	structs := globalScope.Structs
+	for i := range structs.OrderedNames {
+		str := structs.GetByIndex(i)
+		if str == nil {
+			continue
+		}
 		if len(str.Implements) == 0 { // no interface_list node
 			continue
 		}
@@ -230,15 +265,20 @@ func analyzeInterfaceImplementation() {
 			if namedBlock == nil {
 				messages.Complain(diagnostic.ImplementationError, str.Def.Location, "struct %s is missing named block for interface %s", str.Name, intfName)
 			} else {
-				str.InnerScope.Variables[intfName] = VariableSymbol{
+				str.InnerScope.Variables.Add(VariableSymbol{
 					Name:        intfName,
 					Type:        dt.NewContainerType(dt.ScopeRef, dt.NewReferenceSubType(str.Name), dt.NewReferenceSubType(intfName)),
 					isPrivate:   false,
 					isMutable:   false,
 					Def:         namedBlock.Def,
 					Initialized: true,
-				}
-				for _, fn := range intf.innerScope.Functions {
+				}, intfName)
+				functions := intf.innerScope.Functions
+				for j := range functions.OrderedNames {
+					fn := functions.GetByIndex(j)
+					if fn == nil {
+						continue
+					}
 					missing := false
 					returnStr := ""
 					if !fn.ReturnType.Equals(dt.NoneType) {
@@ -247,23 +287,25 @@ func analyzeInterfaceImplementation() {
 					nb_fn := namedBlock.InnerScope.LookupFunctionByName(fn.Name)
 					if nb_fn == nil {
 						missing = true
-						namedBlock.InnerScope.Functions[fn.Name] = fn
+						namedBlock.InnerScope.Functions.Add(*fn, fn.Name)
 						nb_fn = namedBlock.InnerScope.LookupFunctionByName(fn.Name)
 					} else if !nb_fn.ReturnType.Equals(fn.ReturnType) {
 						messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Implementation function %s returns %s but interface %s returns %s", fn.Name, nb_fn.ReturnType, intfName, fn.ReturnType)
 						continue
 					}
-					for i, overload := range fn.Overloads {
+					copy := *nb_fn
+					for k, overload := range fn.Overloads {
 						params := dt.JoinTypes(overload.Parameters)
 						if missing {
 							str.UpdateImplFnNames(fn.Name, intfName)
 							if overload.HasDefaultImplementation { // copy it over from the interface
-								nb_fn.Overloads[i].Parameters = overload.Parameters
-								nb_fn.Overloads[i].ParameterNames = overload.ParameterNames
-								nb_fn.Overloads[i].InnerScope = namedBlock.InnerScope.addChild(fmt.Sprintf("%s@%s", fn.Name, namedBlock.InnerScope.Id), Function)
-								nb_fn.Overloads[i].InnerScope.Variables = overload.InnerScope.Variables
-								nb_fn.Overloads[i].IRName = strings.Replace(overload.IRName, fmt.Sprintf("__%s", intfName), fmt.Sprintf("__%s_%s", str.Name, intfName), 1)
-								namedBlock.InnerScope.Functions[fn.Name] = *nb_fn
+								log.Println(k, overload.IRName, namedBlock.Name, str.Name)
+								nb_fn.Overloads[k].Parameters = overload.Parameters
+								nb_fn.Overloads[k].ParameterNames = overload.ParameterNames
+								nb_fn.Overloads[k].InnerScope = namedBlock.InnerScope.addChild(fmt.Sprintf("%s@%s", fn.Name, namedBlock.InnerScope.Id), Function)
+								nb_fn.Overloads[k].InnerScope.Variables = overload.InnerScope.Variables
+								nb_fn.Overloads[k].IRName = strings.Replace(overload.IRName, fmt.Sprintf("__%s", intfName), fmt.Sprintf("__%s_%s", str.Name, intfName), 1)
+								namedBlock.InnerScope.Functions.update(*nb_fn, fn.Name)
 							} else {
 								messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Interface %s implementation missing 'fn %s(%s)%s'", intfName, fn.Name, params, returnStr)
 							}
@@ -271,9 +313,9 @@ func analyzeInterfaceImplementation() {
 							match := nb_fn.GetMatchingOverload(overload.Parameters)
 							if overload.HasDefaultImplementation {
 								if match == nil {
-									nb_fn.Overloads[i].Parameters = overload.Parameters
-									nb_fn.Overloads[i].ParameterNames = overload.ParameterNames
-									namedBlock.InnerScope.Functions[nb_fn.Name] = *nb_fn
+									copy.Overloads[k].Parameters = overload.Parameters
+									copy.Overloads[k].ParameterNames = overload.ParameterNames
+									namedBlock.InnerScope.Functions.update(copy, nb_fn.Name)
 								}
 							} else {
 								if match == nil {
@@ -283,7 +325,12 @@ func analyzeInterfaceImplementation() {
 						}
 					}
 				}
-				for _, fn := range namedBlock.InnerScope.Functions {
+				functions = namedBlock.InnerScope.Functions
+				for j := range functions.OrderedNames {
+					fn := functions.GetByIndex(j)
+					if fn == nil {
+						continue
+					}
 					returnStr := ""
 					if !fn.ReturnType.Equals(dt.NoneType) {
 						returnStr = fmt.Sprintf("->%s", fn.ReturnType)
@@ -321,29 +368,51 @@ func analyzeGlobals(ast *parser.AST) {
 				continue
 			}
 			symbol.Ctx = Global
-			globalScope.Variables[symbol.Name] = *symbol
+			globalScope.Variables.Add(*symbol, symbol.Name)
 		}
 	}
 }
 
 // Pass seven
 func analyzeInterfaceFnBodies() {
-	for _, intf := range globalScope.Interfaces {
-		for _, fn := range intf.innerScope.Functions {
-			analyzeFunctionBody(fn)
+	interfaces := globalScope.Interfaces
+	for i := range interfaces.OrderedNames {
+		intf := interfaces.GetByIndex(i)
+		if intf == nil {
+			continue
+		}
+		functions := intf.innerScope.Functions
+		for j := range functions.OrderedNames {
+			if fn := functions.GetByIndex(j); fn != nil {
+				analyzeFunctionBody(*fn)
+			}
 		}
 	}
 }
 
 // Pass eight
 func analyzeStructMethodBodies() {
-	for _, str := range globalScope.Structs {
-		for _, fn := range str.InnerScope.Functions {
-			analyzeFunctionBody(fn)
+	for i := range globalScope.Structs.OrderedNames {
+		str := globalScope.Structs.GetByIndex(i)
+		if str == nil {
+			continue
 		}
-		for _, nb := range str.InnerScope.NamedBlocks {
-			for _, fn := range nb.InnerScope.Functions {
-				analyzeFunctionBody(fn)
+		functions := str.InnerScope.Functions
+		for j := range functions.OrderedNames {
+			if fn := functions.GetByIndex(j); fn != nil {
+				analyzeFunctionBody(*fn)
+			}
+		}
+		for j := range str.InnerScope.NamedBlocks.OrderedNames {
+			nb := str.InnerScope.NamedBlocks.GetByIndex(j)
+			if nb == nil {
+				continue
+			}
+			functions := nb.InnerScope.Functions
+			for k := range functions.OrderedNames {
+				if fn := functions.GetByIndex(k); fn != nil {
+					analyzeFunctionBody(*fn)
+				}
 			}
 		}
 	}
@@ -351,7 +420,10 @@ func analyzeStructMethodBodies() {
 
 // Pass nine
 func analyzeFunctionsBodies() {
-	for _, fn := range globalScope.Functions {
-		analyzeFunctionBody(fn)
+	functions := globalScope.Functions
+	for i := range functions.OrderedNames {
+		if fn := functions.GetByIndex(i); fn != nil {
+			analyzeFunctionBody(*fn)
+		}
 	}
 }

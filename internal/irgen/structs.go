@@ -2,6 +2,7 @@ package irgen
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	ds "github.com/EladB1/The/internal/datastructures"
@@ -323,11 +324,23 @@ func structFunctionDefinitions(ast *parser.AST, str *semantic.StructSymbol) []TA
 	// get function definitions from interface not in struct def
 	scope := currScope
 	currScope = str.InnerScope
-	for _, nb := range currScope.NamedBlocks {
+	namedblocks := currScope.NamedBlocks
+	for i := range namedblocks.OrderedNames {
+		nb := namedblocks.GetByIndex(i)
+		if nb == nil {
+			continue
+		}
 		currScope = nb.InnerScope
-		for _, fn := range currScope.Functions {
+		functions := currScope.Functions
+		for j := range functions.OrderedNames {
+			fn := functions.GetByIndex(j)
+			if fn == nil {
+				continue
+			}
+			log.Println(found_nb_fns)
 			for _, overload := range fn.Overloads {
 				if _, ok := found_nb_fns[nb.Name][overload.IRName]; !ok {
+					log.Println(fn, overload)
 					instructions = append(instructions, addMissingOverloadDefinition(fn.Name, overload, fn.ReturnType)...)
 				}
 			}

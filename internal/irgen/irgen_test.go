@@ -91,38 +91,66 @@ func repairScope(scopeTree *semantic.Scope, parent *semantic.Scope, smap ScopeMa
 func repairSymbols(scopeTree *semantic.Scope, smap ScopeMap) error {
 	var err error
 	// structs
-	for _, str := range scopeTree.Structs {
+	structs := scopeTree.Structs
+	for i := range structs.OrderedNames {
+		str := structs.GetByIndex(i)
+		if str == nil {
+			continue
+		}
 		if str.InnerScope != nil {
 			str.InnerScope, err = smap.get(str.InnerScope.Id)
 			if err != nil {
 				return err
 			}
-			scopeTree.Structs[str.Name] = str
+			scopeTree.Structs.Add(*str, str.Name)
 		}
 	}
+
 	// named blocks
-	for _, nb := range scopeTree.NamedBlocks {
+	namedblocks := scopeTree.NamedBlocks
+	for i := range namedblocks.OrderedNames {
+		nb := namedblocks.GetByIndex(i)
+		if nb == nil {
+			continue
+		}
 		if nb.InnerScope != nil {
 			nb.InnerScope, err = smap.get(nb.InnerScope.Id)
 			if err != nil {
 				return err
 			}
-			scopeTree.NamedBlocks[nb.Name] = nb
+			scopeTree.NamedBlocks.Add(*nb, nb.Name)
 		}
 	}
+
 	// functions
-	for _, fn := range scopeTree.Functions {
-		for i, overload := range fn.Overloads {
+	functions := scopeTree.Functions
+	for i := range functions.OrderedNames {
+		fn := functions.GetByIndex(i)
+		if fn == nil {
+			continue
+		}
+		for j, overload := range fn.Overloads {
 			if overload.InnerScope != nil {
 				overload.InnerScope, err = smap.get(overload.InnerScope.Id)
 				if err != nil {
 					return err
 				}
-				fn.Overloads[i] = overload
+				fn.Overloads[j] = overload
 			}
 		}
-		scopeTree.Functions[fn.Name] = fn
+		scopeTree.Functions.Add(*fn, fn.Name)
 	}
+
+	// // Variables
+	// variables := scopeTree.Variables
+	// for i := range variables.OrderedNames {
+	// 	vs := variables.GetByIndex(i)
+	// 	if vs == nil {
+	// 		continue
+	// 	}
+	// 	scopeTree.Variables.Add(*vs, vs.Name)
+	// }
+
 	for _, child := range scopeTree.Children {
 		if err := repairSymbols(child, smap); err != nil {
 			return err

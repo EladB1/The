@@ -576,7 +576,25 @@ Program: [
     CALL println 1
   }
 
-  fn __T_P_donot() {
+  fn __T_Person1_P_donot() {
+    STORE global.x i32(2)
+    PARAM str_const(1)
+    CALL println 1
+  }
+
+  fn __T_Person1_P_donot() {
+    STORE global.x i32(2)
+    PARAM str_const(1)
+    CALL println 1
+  }
+
+  fn __T_Person1_P_donot() {
+    STORE global.x i32(2)
+    PARAM str_const(1)
+    CALL println 1
+  }
+
+  fn __T_Person1_P_donot() {
     STORE global.x i32(2)
     PARAM str_const(1)
     CALL println 1
@@ -695,10 +713,9 @@ Program: [
     CALL println 1
   }
 
-  fn __T_P_donot() {
-    STORE global.x i32(2)
-    PARAM str_const(1)
-    CALL println 1
+  fn __T_I_times(a: i32, b: i32)->i32 {
+    __t83: i32 = i32.mul param.a param.b
+    return __t83
   }
 
   fn __T_I_do() {
@@ -707,134 +724,183 @@ Program: [
   }
 
   fn __T_I_times(a: i32, b: i32)->i32 {
-    __t83: i32 = i32.mul param.a param.b
-    return __t83
+    __t84: i32 = i32.mul param.a param.b
+    return __t84
+  }
+
+  fn __T_I_do() {
+    PARAM str_const(9)
+    CALL println 1
+  }
+
+  fn __T_Person1_P_donot() {
+    STORE global.x i32(2)
+    PARAM str_const(1)
+    CALL println 1
+  }
+
+  fn __T_Person1_P_donot() {
+    STORE global.x i32(2)
+    PARAM str_const(1)
+    CALL println 1
+  }
+
+  fn __T_I_times(a: i32, b: i32)->i32 {
+    __t85: i32 = i32.mul param.a param.b
+    return __t85
+  }
+
+  fn __T_I_do() {
+    PARAM str_const(9)
+    CALL println 1
+  }
+
+  fn __T_I_times(a: i32, b: i32)->i32 {
+    __t86: i32 = i32.mul param.a param.b
+    return __t86
+  }
+
+  fn __T_I_do() {
+    PARAM str_const(9)
+    CALL println 1
+  }
+
+  fn __T_Person1_P_donot() {
+    STORE global.x i32(2)
+    PARAM str_const(1)
+    CALL println 1
+  }
+
+  fn __T_Person1_P_donot() {
+    STORE global.x i32(2)
+    PARAM str_const(1)
+    CALL println 1
   }
 
     STORE global.x i32(1)
   fn testInnerCompare(i: ptr, i2: ptr)->ptr {
     PARAM param.i
     PARAM param.i2
-    __t84: i32 = CALL __Inner_compare_equals 2
-    if __t84 {
-        return param.i
-    }
-    PARAM param.i
-    PARAM param.i2
-    __t85: i32 = CALL __Inner_compare_lessThan 2
-    PARAM param.i
-    PARAM param.i2
-    __t86: i32 = CALL __Inner_compare_equals 2
-    __t87: i32 = i32.or __t85 __t86
+    __t87: i32 = CALL __Inner_compare_equals 2
     if __t87 {
         return param.i
     }
     PARAM param.i
     PARAM param.i2
-    __t88: i32 = CALL __Inner_compare_greaterThan 2
+    __t88: i32 = CALL __Inner_compare_lessThan 2
     PARAM param.i
     PARAM param.i2
     __t89: i32 = CALL __Inner_compare_equals 2
     __t90: i32 = i32.or __t88 __t89
     if __t90 {
+        return param.i
+    }
+    PARAM param.i
+    PARAM param.i2
+    __t91: i32 = CALL __Inner_compare_greaterThan 2
+    PARAM param.i
+    PARAM param.i2
+    __t92: i32 = CALL __Inner_compare_equals 2
+    __t93: i32 = i32.or __t91 __t92
+    if __t93 {
         return param.i2
     }
     return param.i2
   }
 
   fn main()->i32 {
-    __t91: ptr = Malloc 16
-    SET __t91+0 str_const(11)
-    SET __t91+4 u32(112)
-    SET __t91+8 str_const(0)
-    SET __t91+12 i32(1)
-    STORE local.p __t91
-    __t92: u32 = LOAD local.p 4
-    STORE local.age __t92
-    __t93: ptr = Malloc 16
-    SET __t93+0 str_const(12)
-    SET __t93+4 u32(0)
-    SET __t93+8 str_const(0)
-    SET __t93+12 i32(1)
-    STORE local.p2 __t93
+    __t94: ptr = Malloc 16
+    SET __t94+0 str_const(11)
+    SET __t94+4 u32(112)
+    SET __t94+8 str_const(0)
+    SET __t94+12 i32(1)
+    STORE local.p __t94
+    __t95: u32 = LOAD local.p 4
+    STORE local.age __t95
+    __t96: ptr = Malloc 16
+    SET __t96+0 str_const(12)
+    SET __t96+4 u32(0)
+    SET __t96+8 str_const(0)
+    SET __t96+12 i32(1)
+    STORE local.p2 __t96
     PARAM local.p
     PARAM local.p2
-    __t94: i32 = CALL __Person1_compare__default__equals 2
-    __t95: ptr = Malloc 16
-    SET __t95+0 f64(0)
-    __t96: ptr = Malloc 4
-    SET __t96+0 i32(1)
-    SET __t95+8 __t96
-    SET __t95+12 str_const(13)
-    STORE local.n1 __t95
-    __t97: ptr = Malloc 4
-    SET __t97+0 i32(5)
-    SET local.n1+8 __t97
-    __t98: ptr = LOAD local.n1 8
-    SET __t98+0 i32(1)
-    __t99: ptr = Malloc 16
+    __t97: i32 = CALL __Person1_compare__default__equals 2
+    __t98: ptr = Malloc 16
+    SET __t98+0 f64(0)
+    __t99: ptr = Malloc 4
+    SET __t99+0 i32(1)
+    SET __t98+8 __t99
+    SET __t98+12 str_const(13)
+    STORE local.n1 __t98
     __t100: ptr = Malloc 4
-    SET __t100+0 i32(2)
-    SET __t99+8 __t100
-    SET __t99+12 str_const(14)
-    SET __t99+0 f64(0)
-    STORE local.n2 __t99
+    SET __t100+0 i32(5)
+    SET local.n1+8 __t100
+    __t101: ptr = LOAD local.n1 8
+    SET __t101+0 i32(1)
+    __t102: ptr = Malloc 16
+    __t103: ptr = Malloc 4
+    SET __t103+0 i32(2)
+    SET __t102+8 __t103
+    SET __t102+12 str_const(14)
+    SET __t102+0 f64(0)
+    STORE local.n2 __t102
     PARAM local.n1
     PARAM local.n2
-    __t101: i32 = CALL __Nested_compare__default__equals 2
-    __t102: ptr = LOAD local.n1 8
-    PARAM __t102
-    __t103: str_const = CALL  1
-    PARAM __t103
-    CALL println 1
-    __t104: str_const = LOAD local.n1 12
-    PARAM __t104
-    __t105: i32 = CALL __str_length 1
+    __t104: i32 = CALL __Nested_compare__default__equals 2
+    __t105: ptr = LOAD local.n1 8
     PARAM __t105
-    __t106: str_const = CALL __str_fromInt32 1
+    __t106: str_const = CALL  1
     PARAM __t106
     CALL println 1
-    __t107: ptr = LOAD local.n1 8
-    __t108: i32 = LOAD __t107 0
+    __t107: str_const = LOAD local.n1 12
+    PARAM __t107
+    __t108: i32 = CALL __str_length 1
     PARAM __t108
     __t109: str_const = CALL __str_fromInt32 1
     PARAM __t109
     CALL println 1
+    __t110: ptr = LOAD local.n1 8
+    __t111: i32 = LOAD __t110 0
+    PARAM __t111
+    __t112: str_const = CALL __str_fromInt32 1
+    PARAM __t112
+    CALL println 1
     SET local.p2+4 u32(25)
-    __t110: u32 = LOAD local.p2 4
-    __t111: u32 = u32.add local.p2+4 u32(2)
-    SET local.p2+4 __t111
-    __t112: u32 = LOAD local.p2 4
-    __t113: u32 = u32.sub __t112 u32(1)
-    SET local.p2+4 __t113
-    STORE local.newage __t112
-    __t114: u32 = LOAD local.p2 4
-    __t115: u32 = u32.sub __t114 u32(1)
-    SET local.p2+4 __t115
+    __t113: u32 = LOAD local.p2 4
+    __t114: u32 = u32.add local.p2+4 u32(2)
+    SET local.p2+4 __t114
+    __t115: u32 = LOAD local.p2 4
+    __t116: u32 = u32.sub __t115 u32(1)
+    SET local.p2+4 __t116
     STORE local.newage __t115
+    __t117: u32 = LOAD local.p2 4
+    __t118: u32 = u32.sub __t117 u32(1)
+    SET local.p2+4 __t118
+    STORE local.newage __t118
     PARAM local.p2
-    __t116: i32 = CALL __Person1_cast_toInt 1
-    STORE local.fromP2 __t116
+    __t119: i32 = CALL __Person1_cast_toInt 1
+    STORE local.fromP2 __t119
     PARAM local.p2
-    __t117: str_const = CALL __Person1_cast__default_toString 1
-    STORE local.str2 __t117
+    __t120: str_const = CALL __Person1_cast__default_toString 1
+    STORE local.str2 __t120
     PARAM local.p2
     CALL __Person1_greet 1
     PARAM local.p2
     CALL __Person1_P_do 1
     PARAM local.p2
-    __t118: str_const = CALL  1
-    PARAM __t118
+    __t121: str_const = CALL  1
+    PARAM __t121
     CALL println 1
-    __t119: ptr = Malloc 0
-    STORE local.t __t119
+    __t122: ptr = Malloc 0
+    STORE local.t __t122
     PARAM local.t
     CALL __T_I_do 1
     PARAM local.t
     CALL __T_P_do 1
-    __t120: ptr = Malloc 4
-    SET __t120+0 i32(0)
-    STORE local.empty __t120
+    __t123: ptr = Malloc 4
+    SET __t123+0 i32(0)
+    STORE local.empty __t123
     return i32(0)
   }
 

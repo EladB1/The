@@ -384,7 +384,7 @@ func translateForLoop(node *parser.AST) []TAC {
 				Initialized: true,
 				Ctx:         semantic.Local,
 			}
-			currScope.Variables[iterator_name] = *variable
+			currScope.Variables.Add(*variable, iterator_name)
 			containerNode = loopConditions.Children[2]
 		} else {
 			containerNode = loopConditions.Children[3]

@@ -27,21 +27,21 @@ func analyzeForCondition(condition []*parser.AST) ForLoopType {
 	if condition[0].Label == "Variable" {
 		symbol := analyzeVariable(condition[0])
 		if symbol != nil {
-			currentScope.Variables[symbol.Name] = *symbol
+			currentScope.Variables.Add(*symbol, symbol.Name)
 		}
 		if condition[parts-2].Token.Value == "in" {
 			if parts == 4 { // int i, char c in string
 				symbol2 := analyzeVariable(condition[1])
 				if symbol2 != nil {
-					currentScope.Variables[symbol2.Name] = *symbol2
+					currentScope.Variables.Add(*symbol2, symbol2.Name)
 				}
 				if symbol != nil && symbol2 != nil && !(symbol.Type.IsIntType() && symbol2.Type.Equals(dt.CharType) || (symbol.Type.Equals(dt.CharType) && symbol2.Type.IsIntType())) {
 					messages.Complain(diagnostic.TypeError, condition[2].Location, "Cannot use %s and %s as loop variables", symbol.Type.String(), symbol2.Type.String())
 				} else {
 					symbol.Ctx = Local
-					currentScope.Variables[symbol.Name] = *symbol
+					currentScope.Variables.Add(*symbol, symbol.Name)
 					symbol2.Ctx = Local
-					currentScope.Variables[symbol2.Name] = *symbol2
+					currentScope.Variables.Add(*symbol2, symbol2.Name)
 					loopType = IndexedForeach
 				}
 
@@ -53,7 +53,7 @@ func analyzeForCondition(condition []*parser.AST) ForLoopType {
 							messages.Complain(diagnostic.TypeError, condition[parts-1].Location, "Variable of type %s not compatible with range expression of type %s", symbol.Type, expr)
 						} else if !hasErr {
 							symbol.Ctx = Local
-							currentScope.Variables[symbol.Name] = *symbol
+							currentScope.Variables.Add(*symbol, symbol.Name)
 							loopType = RangeLoop
 						}
 					}
@@ -66,7 +66,7 @@ func analyzeForCondition(condition []*parser.AST) ForLoopType {
 						messages.Complain(diagnostic.TypeError, condition[parts-1].Location, "Cannot loop over %s", rhs.String())
 					} else if !hasErr {
 						symbol.Ctx = Local
-						currentScope.Variables[symbol.Name] = *symbol
+						currentScope.Variables.Add(*symbol, symbol.Name)
 						loopType = Foreach
 					}
 				}
@@ -614,7 +614,7 @@ func handleFunctionCall(details []*parser.AST) (dt.SourceType, bool) {
 			scope = FindAncestorScopeById(lhs.SubTypes[0].String())
 		} else if mem, ok := PrimitiveMembers[lhs.Root]; ok {
 			returnType := dt.NoneType
-			if method, ok := mem.Methods[name.Value]; ok {
+			if method := mem.Methods.Lookup(name.Value); method != nil {
 				var params []dt.SourceType = []dt.SourceType{}
 				if len(details) == 2 {
 					for _, param := range details[1].Children {
@@ -725,7 +725,7 @@ func handleDot(left *parser.AST, right *parser.AST, isFnCall bool, isAssignment 
 			messages.Complain(diagnostic.AccessError, left.Location, "Cannot assign value to %s.%s", lhs.Root, rname)
 			hasError = true
 		} else {
-			if prop, ok := mem.Properties[rname]; ok {
+			if prop := mem.Properties.Lookup(rname); prop != nil {
 				propType = prop.Type
 				right.Type = propType
 			} else {
