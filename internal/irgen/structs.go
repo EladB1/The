@@ -323,9 +323,9 @@ func structFunctionDefinitions(ast *parser.AST, str *semantic.StructSymbol) []TA
 	// get function definitions from interface not in struct def
 	scope := currScope
 	currScope = str.InnerScope
-	for _, nb := range currScope.NamedBlocks {
+	for nb := range currScope.NamedBlocks.All() {
 		currScope = nb.InnerScope
-		for _, fn := range currScope.Functions {
+		for fn := range currScope.Functions.All() {
 			for _, overload := range fn.Overloads {
 				if _, ok := found_nb_fns[nb.Name][overload.IRName]; !ok {
 					instructions = append(instructions, addMissingOverloadDefinition(fn.Name, overload, fn.ReturnType)...)

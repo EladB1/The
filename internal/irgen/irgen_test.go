@@ -91,27 +91,27 @@ func repairScope(scopeTree *semantic.Scope, parent *semantic.Scope, smap ScopeMa
 func repairSymbols(scopeTree *semantic.Scope, smap ScopeMap) error {
 	var err error
 	// structs
-	for _, str := range scopeTree.Structs {
+	for str := range scopeTree.Structs.All() {
 		if str.InnerScope != nil {
 			str.InnerScope, err = smap.get(str.InnerScope.Id)
 			if err != nil {
 				return err
 			}
-			scopeTree.Structs[str.Name] = str
+			scopeTree.Structs.Add(str, str.Name)
 		}
 	}
 	// named blocks
-	for _, nb := range scopeTree.NamedBlocks {
+	for nb := range scopeTree.NamedBlocks.All() {
 		if nb.InnerScope != nil {
 			nb.InnerScope, err = smap.get(nb.InnerScope.Id)
 			if err != nil {
 				return err
 			}
-			scopeTree.NamedBlocks[nb.Name] = nb
+			scopeTree.NamedBlocks.Add(nb, nb.Name)
 		}
 	}
 	// functions
-	for _, fn := range scopeTree.Functions {
+	for fn := range scopeTree.Functions.All() {
 		for i, overload := range fn.Overloads {
 			if overload.InnerScope != nil {
 				overload.InnerScope, err = smap.get(overload.InnerScope.Id)
@@ -121,7 +121,7 @@ func repairSymbols(scopeTree *semantic.Scope, smap ScopeMap) error {
 				fn.Overloads[i] = overload
 			}
 		}
-		scopeTree.Functions[fn.Name] = fn
+		scopeTree.Functions.Add(fn, fn.Name)
 	}
 	for _, child := range scopeTree.Children {
 		if err := repairSymbols(child, smap); err != nil {
