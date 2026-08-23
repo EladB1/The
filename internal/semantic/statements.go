@@ -39,9 +39,9 @@ func analyzeForCondition(condition []*parser.AST) ForLoopType {
 					messages.Complain(diagnostic.TypeError, condition[2].Location, "Cannot use %s and %s as loop variables", symbol.Type.String(), symbol2.Type.String())
 				} else {
 					symbol.Ctx = Local
-					currentScope.Variables.Add(*symbol, symbol.Name)
+					currentScope.Variables.update(*symbol, symbol.Name)
 					symbol2.Ctx = Local
-					currentScope.Variables.Add(*symbol2, symbol2.Name)
+					currentScope.Variables.update(*symbol2, symbol2.Name)
 					loopType = IndexedForeach
 				}
 
@@ -53,7 +53,7 @@ func analyzeForCondition(condition []*parser.AST) ForLoopType {
 							messages.Complain(diagnostic.TypeError, condition[parts-1].Location, "Variable of type %s not compatible with range expression of type %s", symbol.Type, expr)
 						} else if !hasErr {
 							symbol.Ctx = Local
-							currentScope.Variables.Add(*symbol, symbol.Name)
+							currentScope.Variables.update(*symbol, symbol.Name)
 							loopType = RangeLoop
 						}
 					}
@@ -66,7 +66,7 @@ func analyzeForCondition(condition []*parser.AST) ForLoopType {
 						messages.Complain(diagnostic.TypeError, condition[parts-1].Location, "Cannot loop over %s", rhs.String())
 					} else if !hasErr {
 						symbol.Ctx = Local
-						currentScope.Variables.Add(*symbol, symbol.Name)
+						currentScope.Variables.update(*symbol, symbol.Name)
 						loopType = Foreach
 					}
 				}

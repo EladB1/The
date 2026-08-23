@@ -118,19 +118,19 @@ func (scope *Scope) to_string(indentLevel int) string {
 		builder.WriteString(", parent: ")
 		builder.WriteString(scope.Parent.Id)
 	}
-	if scope.Interfaces.isEmpty() {
+	if !scope.Interfaces.isEmpty() {
 		builder.WriteString(fmt.Sprintf(", interfaces: %v", scope.Interfaces))
 	}
-	if scope.Structs.isEmpty() {
+	if !scope.Structs.isEmpty() {
 		builder.WriteString(fmt.Sprintf(", structs: %v", scope.Structs))
 	}
-	if scope.NamedBlocks.isEmpty() {
+	if !scope.NamedBlocks.isEmpty() {
 		builder.WriteString(fmt.Sprintf(", namedBlocks: %v", scope.NamedBlocks))
 	}
-	if scope.Functions.isEmpty() {
+	if !scope.Functions.isEmpty() {
 		builder.WriteString(fmt.Sprintf(", functions: %v", scope.Functions))
 	}
-	if scope.Variables.isEmpty() {
+	if !scope.Variables.isEmpty() {
 		builder.WriteString(fmt.Sprintf(", variables: %v", scope.Variables))
 	}
 	count := len(scope.Children)

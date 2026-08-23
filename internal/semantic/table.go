@@ -3,6 +3,7 @@ package semantic
 import (
 	"fmt"
 	"iter"
+	"strings"
 )
 
 type (
@@ -53,6 +54,22 @@ func (table *SymbolTable[T]) All() iter.Seq[T] {
 	}
 }
 
+func (table *SymbolTable[T]) AllWithIndex() iter.Seq2[int, T] {
+	return func(yield func(int, T) bool) {
+		counter := 0
+		for i := 0; i < len(table.OrderedNames); i++ {
+			symbol := table.GetByIndex(i)
+			if symbol == nil {
+				continue
+			}
+			if !yield(counter, *symbol) {
+				return
+			}
+			counter++
+		}
+	}
+}
+
 func (table *SymbolTable[T]) GetByIndex(index int) *T {
 	name := table.OrderedNames[index]
 	if symbol, ok := table.Symbols[name]; ok {
@@ -66,5 +83,16 @@ func (table *SymbolTable[T]) String() string {
 	if table == nil {
 		return ""
 	}
-	return fmt.Sprintf("%v", table.Symbols)
+	output := strings.Builder{}
+	output.WriteString("map[")
+	for i, symbol := range table.AllWithIndex() {
+		output.WriteString(table.OrderedNames[i])
+		output.WriteString(":")
+		output.WriteString(fmt.Sprintf("%v", symbol))
+		if i != len(table.OrderedNames)-1 {
+			output.WriteString(" ")
+		}
+	}
+	output.WriteString("]")
+	return output.String()
 }
