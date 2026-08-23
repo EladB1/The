@@ -147,9 +147,8 @@ func getZeroValue(sourceType dt.SourceType, position ds.SourceLocation) ([]TAC, 
 				SrcPosition: position,
 			},
 		})
-		for _, varName := range str.OrderedProperties {
-			variable := str.InnerScope.LookupVariable(varName)
-			if variable == nil || !variable.Offset.IsSet {
+		for variable := range str.InnerScope.Variables.All() {
+			if !variable.Offset.IsSet {
 				continue
 			}
 			prop_in, prop := getZeroValue(variable.Type, position)
@@ -274,11 +273,7 @@ func translateStructLiteral(node parser.AST) ([]TAC, Operand) {
 	var value_in []TAC
 	var loc ds.SourceLocation
 	// fill in default values for missing properties
-	for _, varName := range symbol.OrderedProperties {
-		variable := symbol.InnerScope.LookupVariable(varName)
-		if variable == nil {
-			continue
-		}
+	for variable := range symbol.InnerScope.Variables.All() {
 		if _, ok := foundProps[variable.Name]; ok || variable.Type.RootEquals(dt.ScopeRef) || variable.Type.RootEquals(dt.Ref) {
 			continue
 		}

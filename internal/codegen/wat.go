@@ -25,7 +25,7 @@ type (
 		WatFilepath     string
 		WasmFilepath    string
 		DataSection     []Data
-		GlobalVariables map[string]Variable
+		GlobalVariables *ds.OrderedMap[Variable]
 		Functions       []Function
 	}
 
@@ -41,7 +41,7 @@ type (
 		Export         bool
 		ReturnType     dt.IRType
 		Parameters     []Parameter
-		LocalVariables map[string]Variable
+		LocalVariables *ds.OrderedMap[Variable]
 		Code           []Statement
 	}
 
@@ -193,7 +193,7 @@ func (target CompileTarget) String() string {
 		output.WriteString(" ")
 		output.WriteString(fmt.Sprintf("\"%s\")\n", string(data.Value)))
 	}
-	for _, glob := range target.GlobalVariables {
+	for glob := range target.GlobalVariables.All() {
 		output.WriteString(glob.String(1))
 	}
 	for _, fn := range target.Functions {
@@ -219,7 +219,7 @@ func (fn Function) String() string {
 		output.WriteString(fmt.Sprintf(" (result %s)", fn.ReturnType))
 	}
 	output.WriteString("\n")
-	for _, local := range fn.LocalVariables {
+	for local := range fn.LocalVariables.All() {
 		output.WriteString(local.String(2))
 	}
 	output.WriteString(stringifyBody(fn.Code, 1))

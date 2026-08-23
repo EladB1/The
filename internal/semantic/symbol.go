@@ -56,13 +56,12 @@ type (
 		innerScope *Scope
 	}
 	StructSymbol struct {
-		Name              string
-		Implements        []string
-		SizeInBytes       int
-		Def               *parser.AST
-		InnerScope        *Scope
-		implFnNames       map[string][]string
-		OrderedProperties []string
+		Name        string
+		Implements  []string
+		SizeInBytes int
+		Def         *parser.AST
+		InnerScope  *Scope
+		implFnNames map[string][]string
 	}
 	NamedBlockSymbol struct {
 		Name           string
@@ -70,12 +69,6 @@ type (
 		Def            *parser.AST
 		InnerScope     *Scope
 	}
-
-	FunctionSymbolTable   map[string]FunctionSymbol
-	VariableSymbolTable   map[string]VariableSymbol
-	InterfaceSymbolTable  map[string]InterfaceSymbol
-	StructSymbolTable     map[string]StructSymbol
-	NamedBlockSymbolTable map[string]NamedBlockSymbol
 
 	OffsetValue struct {
 		IsSet bool

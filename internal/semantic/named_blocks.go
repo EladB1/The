@@ -10,18 +10,17 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, offset *uint32) (*NamedBlockSymbol, int, []string) {
+func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, offset *uint32) (*NamedBlockSymbol, int) {
 	extraSize := 0
-	extraProps := []string{}
 	details := nbNode.Children
 	name := details[0].Token.Value
 	if strings.HasPrefix(name, "__") {
 		messages.Complain(diagnostic.NameError, nbNode.Location, "Name '%s' uses reserved prefix '__'", name)
-		return nil, extraSize, extraProps
+		return nil, extraSize
 	}
 	if !slices.Contains(specialBlocks, name) && !slices.Contains(impl, name) {
 		messages.Complain(diagnostic.NameError, nbNode.Location, "Block '%s' not supported", name)
-		return nil, extraSize, extraProps
+		return nil, extraSize
 	}
 	body := details[1].Children
 	scope := currentScope
@@ -89,7 +88,6 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 					}
 					symbol.isPrivate = true
 					symbol.Ctx = StructProp
-					extraProps = append(extraProps, symbol.Name)
 					size := symbol.Type.GetSizeInBytes()
 					symbol.Offset.IsSet = true
 					symbol.Offset.Value = *offset
@@ -103,12 +101,12 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 	}
 	currentScope = scope
 	if newScope == nil {
-		return nil, extraSize, extraProps
+		return nil, extraSize
 	}
 	return &NamedBlockSymbol{
 		Name:           name,
 		isSpecialBlock: slices.Contains(specialBlocks, name),
 		Def:            nbNode,
 		InnerScope:     newScope,
-	}, extraSize, extraProps
+	}, extraSize
 }

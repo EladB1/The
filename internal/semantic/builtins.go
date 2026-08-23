@@ -1,16 +1,19 @@
 package semantic
 
-import dt "github.com/EladB1/The/internal/datatypes"
+import (
+	ds "github.com/EladB1/The/internal/datastructures"
+	dt "github.com/EladB1/The/internal/datatypes"
+)
 
 var rootScope *Scope = &Scope{
 	Id:          "@built-in",
 	Kind:        Default,
 	Parent:      nil,
-	Interfaces:  NewTable[InterfaceSymbol](),
-	Structs:     NewTable[StructSymbol](),
-	NamedBlocks: NewTable[NamedBlockSymbol](),
-	Functions: &SymbolTable[FunctionSymbol]{
-		OrderedNames: []string{
+	Interfaces:  ds.NewOrderedMap[InterfaceSymbol](),
+	Structs:     ds.NewOrderedMap[StructSymbol](),
+	NamedBlocks: ds.NewOrderedMap[NamedBlockSymbol](),
+	Functions: &ds.OrderedMap[FunctionSymbol]{
+		OrderedKeys: []string{
 			"print",
 			"println",
 			"printerr",
@@ -23,7 +26,7 @@ var rootScope *Scope = &Scope{
 			"setEnv",
 			"secretPrompt",
 		},
-		Symbols: map[string]FunctionSymbol{
+		Values: map[string]FunctionSymbol{
 			"print": {
 				Name: "print",
 				Overloads: []FnOverloadSymbol{{
@@ -132,8 +135,8 @@ var rootScope *Scope = &Scope{
 			},
 		},
 	},
-	Variables: &SymbolTable[VariableSymbol]{
-		OrderedNames: []string{
+	Variables: &ds.OrderedMap[VariableSymbol]{
+		OrderedKeys: []string{
 			"global",
 			"INT_MIN",
 			"INT_MAX",
@@ -158,7 +161,7 @@ var rootScope *Scope = &Scope{
 			"PI",
 			"E",
 		},
-		Symbols: map[string]VariableSymbol{
+		Values: map[string]VariableSymbol{
 			"global": {
 				Name:        "global",
 				Type:        dt.GlobalRefType,

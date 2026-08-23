@@ -140,7 +140,7 @@ func analyzeStructFnSignatures() {
 				} else {
 					impl = append(impl, node.Token.Value)
 					str.Implements = impl
-					globalScope.Structs.update(str, str.Name)
+					globalScope.Structs.Update(str, str.Name)
 				}
 			}
 		}
@@ -154,9 +154,8 @@ func analyzeStructFnSignatures() {
 					node.IRName = overload.IRName
 				}
 			case "named-block":
-				symbol, extraSize, extraProps := analyzeNamedBlock(node, str.Name, impl, &offset)
+				symbol, extraSize := analyzeNamedBlock(node, str.Name, impl, &offset)
 				str.SizeInBytes += extraSize
-				str.OrderedProperties = append(str.OrderedProperties, extraProps...)
 				if symbol != nil {
 					currentScope.NamedBlocks.Add(*symbol, symbol.Name)
 				}
@@ -165,11 +164,10 @@ func analyzeStructFnSignatures() {
 				symbol.Offset.Value = offset
 				symbol.Offset.IsSet = true
 				symbol.Ctx = StructProp
-				str.OrderedProperties = append(str.OrderedProperties, symbol.Name)
 				size := symbol.Type.GetSizeInBytes()
 				offset += uint32(size)
 				str.SizeInBytes += size
-				globalScope.Structs.update(str, str.Name)
+				globalScope.Structs.Update(str, str.Name)
 				if symbol != nil {
 					currentScope.Variables.Add(*symbol, symbol.Name)
 				}
@@ -181,7 +179,7 @@ func analyzeStructFnSignatures() {
 				str.implFnNames[fn.Name] = append(str.implFnNames[fn.Name], nb.Name)
 			}
 		}
-		globalScope.Structs.update(str, str.Name)
+		globalScope.Structs.Update(str, str.Name)
 	}
 	currentScope = globalScope // reset the current scope
 }
@@ -257,7 +255,7 @@ func analyzeInterfaceImplementation() {
 								copy.Overloads[i].InnerScope = namedBlock.InnerScope.addChild(fmt.Sprintf("%s@%s", fn.Name, namedBlock.InnerScope.Id), Function)
 								copy.Overloads[i].InnerScope.Variables = overload.InnerScope.Variables
 								copy.Overloads[i].IRName = strings.Replace(overload.IRName, fmt.Sprintf("__%s", intfName), fmt.Sprintf("__%s_%s", str.Name, intfName), 1)
-								namedBlock.InnerScope.Functions.update(copy, fn.Name)
+								namedBlock.InnerScope.Functions.Update(copy, fn.Name)
 							} else {
 								messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Interface %s implementation missing 'fn %s(%s)%s'", intfName, fn.Name, params, returnStr)
 							}
@@ -267,7 +265,7 @@ func analyzeInterfaceImplementation() {
 								if match == nil {
 									copy.Overloads[i].Parameters = overload.Parameters
 									copy.Overloads[i].ParameterNames = overload.ParameterNames
-									namedBlock.InnerScope.Functions.update(copy, nb_fn.Name)
+									namedBlock.InnerScope.Functions.Update(copy, nb_fn.Name)
 								}
 							} else {
 								if match == nil {

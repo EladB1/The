@@ -95,7 +95,7 @@ func repairSymbols(scopeTree *semantic.Scope, smap ScopeMap) error {
 			if err != nil {
 				return err
 			}
-			scopeTree.Structs.Add(str, str.Name)
+			scopeTree.Structs.Update(str, str.Name)
 		}
 	}
 	// named blocks
@@ -105,7 +105,7 @@ func repairSymbols(scopeTree *semantic.Scope, smap ScopeMap) error {
 			if err != nil {
 				return err
 			}
-			scopeTree.NamedBlocks.Add(nb, nb.Name)
+			scopeTree.NamedBlocks.Update(nb, nb.Name)
 		}
 	}
 	// functions
@@ -119,7 +119,7 @@ func repairSymbols(scopeTree *semantic.Scope, smap ScopeMap) error {
 				fn.Overloads[i] = overload
 			}
 		}
-		scopeTree.Functions.Add(fn, fn.Name)
+		scopeTree.Functions.Update(fn, fn.Name)
 	}
 	for _, child := range scopeTree.Children {
 		if err := repairSymbols(child, smap); err != nil {

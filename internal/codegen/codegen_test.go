@@ -46,14 +46,12 @@ func loadFixture(t *testing.T, testdir string, filename string) Fixture {
 	path := filepath.Join(testdir, filename)
 	content, err := os.ReadFile(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to read file %s\n%v", filename, err)
-		os.Exit(1)
+		t.Errorf("Failed to read file %s\n%v\n", filename, err)
 	}
 	var fixture Fixture
 	err = json.Unmarshal(content, &fixture)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to unmarshal json", err)
-		os.Exit(1)
+		t.Errorf("Failed to unmarshal json %v\n", err)
 	}
 	return fixture
 }

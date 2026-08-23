@@ -1,11 +1,14 @@
 package semantic
 
-import dt "github.com/EladB1/The/internal/datatypes"
+import (
+	ds "github.com/EladB1/The/internal/datastructures"
+	dt "github.com/EladB1/The/internal/datatypes"
+)
 
 type (
 	PrimitiveTypeMembers struct {
-		Properties SymbolTable[VariableSymbol]
-		Methods    SymbolTable[FunctionSymbol]
+		Properties ds.OrderedMap[VariableSymbol]
+		Methods    ds.OrderedMap[FunctionSymbol]
 	}
 
 	PrimitiveTypeTables map[dt.DataType]PrimitiveTypeMembers
@@ -14,9 +17,9 @@ type (
 var (
 	PrimitiveMembers PrimitiveTypeTables = PrimitiveTypeTables{
 		dt.String: PrimitiveTypeMembers{
-			Properties: SymbolTable[VariableSymbol]{
-				OrderedNames: []string{"length"},
-				Symbols: map[string]VariableSymbol{
+			Properties: ds.OrderedMap[VariableSymbol]{
+				OrderedKeys: []string{"length"},
+				Values: map[string]VariableSymbol{
 					"length": {
 						Name: "length",
 						Type: dt.Int32Type,
@@ -24,8 +27,8 @@ var (
 					},
 				},
 			},
-			Methods: SymbolTable[FunctionSymbol]{
-				OrderedNames: []string{
+			Methods: ds.OrderedMap[FunctionSymbol]{
+				OrderedKeys: []string{
 					"indexOf",
 					"contains",
 					"startsWith",
@@ -39,7 +42,7 @@ var (
 					"trimStart",
 					"trimEnd",
 				},
-				Symbols: map[string]FunctionSymbol{
+				Values: map[string]FunctionSymbol{
 					"indexOf": {
 						Name: "indexOf",
 						Overloads: []FnOverloadSymbol{{

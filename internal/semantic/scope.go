@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 
+	ds "github.com/EladB1/The/internal/datastructures"
 	dt "github.com/EladB1/The/internal/datatypes"
 )
 
@@ -26,11 +27,11 @@ type Scope struct {
 	Kind        ScopeType
 	Parent      *Scope
 	Children    []*Scope
-	Functions   *SymbolTable[FunctionSymbol]
-	Variables   *SymbolTable[VariableSymbol]
-	Interfaces  *SymbolTable[InterfaceSymbol]
-	Structs     *SymbolTable[StructSymbol]
-	NamedBlocks *SymbolTable[NamedBlockSymbol]
+	Functions   *ds.OrderedMap[FunctionSymbol]
+	Variables   *ds.OrderedMap[VariableSymbol]
+	Interfaces  *ds.OrderedMap[InterfaceSymbol]
+	Structs     *ds.OrderedMap[StructSymbol]
+	NamedBlocks *ds.OrderedMap[NamedBlockSymbol]
 }
 
 type SerializedScope struct {
@@ -38,11 +39,11 @@ type SerializedScope struct {
 	Kind        ScopeType
 	ParentId    string
 	Children    []*Scope
-	Functions   *SymbolTable[FunctionSymbol]
-	Variables   *SymbolTable[VariableSymbol]
-	Interfaces  *SymbolTable[InterfaceSymbol]
-	Structs     *SymbolTable[StructSymbol]
-	NamedBlocks *SymbolTable[NamedBlockSymbol]
+	Functions   *ds.OrderedMap[FunctionSymbol]
+	Variables   *ds.OrderedMap[VariableSymbol]
+	Interfaces  *ds.OrderedMap[InterfaceSymbol]
+	Structs     *ds.OrderedMap[StructSymbol]
+	NamedBlocks *ds.OrderedMap[NamedBlockSymbol]
 }
 
 func (scope *Scope) MarshalJSON() ([]byte, error) {
@@ -91,11 +92,11 @@ func (scope *Scope) addChild(id string, kind ScopeType) *Scope {
 		Id:          id,
 		Kind:        kind,
 		Parent:      scope,
-		Functions:   NewTable[FunctionSymbol](),
-		Variables:   NewTable[VariableSymbol](),
-		Interfaces:  NewTable[InterfaceSymbol](),
-		Structs:     NewTable[StructSymbol](),
-		NamedBlocks: NewTable[NamedBlockSymbol](),
+		Functions:   ds.NewOrderedMap[FunctionSymbol](),
+		Variables:   ds.NewOrderedMap[VariableSymbol](),
+		Interfaces:  ds.NewOrderedMap[InterfaceSymbol](),
+		Structs:     ds.NewOrderedMap[StructSymbol](),
+		NamedBlocks: ds.NewOrderedMap[NamedBlockSymbol](),
 	}
 	scope.Children = append(scope.Children, &newScope)
 	return &newScope
@@ -118,19 +119,19 @@ func (scope *Scope) to_string(indentLevel int) string {
 		builder.WriteString(", parent: ")
 		builder.WriteString(scope.Parent.Id)
 	}
-	if !scope.Interfaces.isEmpty() {
+	if !scope.Interfaces.IsEmpty() {
 		builder.WriteString(fmt.Sprintf(", interfaces: %v", scope.Interfaces))
 	}
-	if !scope.Structs.isEmpty() {
+	if !scope.Structs.IsEmpty() {
 		builder.WriteString(fmt.Sprintf(", structs: %v", scope.Structs))
 	}
-	if !scope.NamedBlocks.isEmpty() {
+	if !scope.NamedBlocks.IsEmpty() {
 		builder.WriteString(fmt.Sprintf(", namedBlocks: %v", scope.NamedBlocks))
 	}
-	if !scope.Functions.isEmpty() {
+	if !scope.Functions.IsEmpty() {
 		builder.WriteString(fmt.Sprintf(", functions: %v", scope.Functions))
 	}
-	if !scope.Variables.isEmpty() {
+	if !scope.Variables.IsEmpty() {
 		builder.WriteString(fmt.Sprintf(", variables: %v", scope.Variables))
 	}
 	count := len(scope.Children)
@@ -288,7 +289,7 @@ func (scope *Scope) LookupFunctionByNameAndIRName(name, irName string) *FnOverlo
 	return nil
 }
 
-func add(symbol FnCreateSymbol, table *FunctionTable) (*FnOverloadSymbol, error) {
+func add(symbol FnCreateSymbol, table *ds.OrderedMap[FunctionSymbol]) (*FnOverloadSymbol, error) {
 	var overload *FnOverloadSymbol = nil
 	fn, ok := table.Lookup(symbol.name)
 	if ok {
@@ -303,7 +304,7 @@ func add(symbol FnCreateSymbol, table *FunctionTable) (*FnOverloadSymbol, error)
 		} else {
 			overload = symbol.toOverload(true)
 			fn.Overloads = append(fn.Overloads, *overload)
-			table.update(fn, fn.Name)
+			table.Update(fn, fn.Name)
 		}
 	} else {
 		overload = symbol.toOverload(false)

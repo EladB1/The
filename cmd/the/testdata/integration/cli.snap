@@ -13,7 +13,7 @@ options:
   -no-color
      Disable color output
   -nowasm
-     Only produce a WAT file instead of compiling it down to WASM. Cannot be used with run command.
+     Produce wasm but don't write it to a file
   -o string
      Path to the generated wasm executable
   -preserve-wat-file
@@ -73,7 +73,7 @@ options:
   -no-color
      Disable color output
   -nowasm
-     Only produce a WAT file instead of compiling it down to WASM. Cannot be used with run command.
+     Produce wasm but don't write it to a file
   -o string
      Path to the generated wasm executable
   -preserve-wat-file
@@ -112,7 +112,7 @@ options:
   -no-color
      Disable color output
   -nowasm
-     Only produce a WAT file instead of compiling it down to WASM. Cannot be used with run command.
+     Produce wasm but don't write it to a file
   -o string
      Path to the generated wasm executable
   -preserve-wat-file
@@ -141,7 +141,7 @@ options:
   -no-color
      Disable color output
   -nowasm
-     Only produce a WAT file instead of compiling it down to WASM. Cannot be used with run command.
+     Produce wasm but don't write it to a file
   -o string
      Path to the generated wasm executable
   -preserve-wat-file
