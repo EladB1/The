@@ -1,6 +1,9 @@
 package semantic
 
-import "iter"
+import (
+	"fmt"
+	"iter"
+)
 
 type (
 	SymbolTable[T any] struct {
@@ -57,4 +60,11 @@ func (table *SymbolTable[T]) GetByIndex(index int) *T {
 		return &copy
 	}
 	return nil
+}
+
+func (table *SymbolTable[T]) String() string {
+	if table == nil {
+		return ""
+	}
+	return fmt.Sprintf("%v", table.Symbols)
 }

@@ -97,14 +97,6 @@ func collectTypeNames(ast *parser.AST) {
 				Initialized: true,
 				Def:         nil,
 			}, "this")
-			childScope.Variables.Add(VariableSymbol{
-				Name:        "global",
-				Type:        dt.GlobalRefType,
-				isPrivate:   true,
-				isMutable:   true,
-				Initialized: true,
-				Def:         nil,
-			}, "global")
 			globalScope.Structs.Add(StructSymbol{
 				Name:       name,
 				InnerScope: childScope,
@@ -255,15 +247,17 @@ func analyzeInterfaceImplementation() {
 					}
 					for i, overload := range fn.Overloads {
 						params := dt.JoinTypes(overload.Parameters)
+						copy := *nb_fn
+						copy.Overloads = slices.Clone(nb_fn.Overloads)
 						if missing {
 							str.UpdateImplFnNames(fn.Name, intfName)
 							if overload.HasDefaultImplementation { // copy it over from the interface
-								nb_fn.Overloads[i].Parameters = overload.Parameters
-								nb_fn.Overloads[i].ParameterNames = overload.ParameterNames
-								nb_fn.Overloads[i].InnerScope = namedBlock.InnerScope.addChild(fmt.Sprintf("%s@%s", fn.Name, namedBlock.InnerScope.Id), Function)
-								nb_fn.Overloads[i].InnerScope.Variables = overload.InnerScope.Variables
-								nb_fn.Overloads[i].IRName = strings.Replace(overload.IRName, fmt.Sprintf("__%s", intfName), fmt.Sprintf("__%s_%s", str.Name, intfName), 1)
-								namedBlock.InnerScope.Functions.update(*nb_fn, fn.Name)
+								copy.Overloads[i].Parameters = overload.Parameters
+								copy.Overloads[i].ParameterNames = overload.ParameterNames
+								copy.Overloads[i].InnerScope = namedBlock.InnerScope.addChild(fmt.Sprintf("%s@%s", fn.Name, namedBlock.InnerScope.Id), Function)
+								copy.Overloads[i].InnerScope.Variables = overload.InnerScope.Variables
+								copy.Overloads[i].IRName = strings.Replace(overload.IRName, fmt.Sprintf("__%s", intfName), fmt.Sprintf("__%s_%s", str.Name, intfName), 1)
+								namedBlock.InnerScope.Functions.update(copy, fn.Name)
 							} else {
 								messages.Complain(diagnostic.ImplementationError, namedBlock.Def.Location, "Interface %s implementation missing 'fn %s(%s)%s'", intfName, fn.Name, params, returnStr)
 							}
@@ -271,9 +265,9 @@ func analyzeInterfaceImplementation() {
 							match := nb_fn.GetMatchingOverload(overload.Parameters)
 							if overload.HasDefaultImplementation {
 								if match == nil {
-									nb_fn.Overloads[i].Parameters = overload.Parameters
-									nb_fn.Overloads[i].ParameterNames = overload.ParameterNames
-									namedBlock.InnerScope.Functions.update(*nb_fn, nb_fn.Name)
+									copy.Overloads[i].Parameters = overload.Parameters
+									copy.Overloads[i].ParameterNames = overload.ParameterNames
+									namedBlock.InnerScope.Functions.update(copy, nb_fn.Name)
 								}
 							} else {
 								if match == nil {

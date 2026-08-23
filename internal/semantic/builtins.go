@@ -134,6 +134,7 @@ var rootScope *Scope = &Scope{
 	},
 	Variables: &SymbolTable[VariableSymbol]{
 		OrderedNames: []string{
+			"global",
 			"INT_MIN",
 			"INT_MAX",
 			"INT64_MIN",
@@ -158,6 +159,14 @@ var rootScope *Scope = &Scope{
 			"E",
 		},
 		Symbols: map[string]VariableSymbol{
+			"global": {
+				Name:        "global",
+				Type:        dt.GlobalRefType,
+				isPrivate:   true,
+				isMutable:   true,
+				Initialized: true,
+				Def:         nil,
+			},
 			"INT_MIN": {
 				Name: "INT_MIN",
 				Type: dt.Int32Type,
