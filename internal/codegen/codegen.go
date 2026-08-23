@@ -44,8 +44,8 @@ func buildData(literals ds.LiteralPool) []Data {
 	return data
 }
 
-func getVariables(ir []irgen.TAC, inGlobalScope bool) map[string]Variable {
-	vars := map[string]Variable{}
+func getVariables(ir []irgen.TAC, inGlobalScope bool) *ds.OrderedMap[Variable] {
+	vars := ds.NewOrderedMap[Variable]()
 	for _, tac := range ir {
 		if tac.GetTACType() != "Instruction" {
 			continue
@@ -58,12 +58,12 @@ func getVariables(ir []irgen.TAC, inGlobalScope bool) map[string]Variable {
 				if inGlobalScope {
 					vis = Global
 				}
-				if _, ok := vars[dest.Name]; !ok {
-					vars[dest.Name] = Variable{
+				if _, ok := vars.Lookup(dest.Name); !ok {
+					vars.Add(Variable{
 						Name:       dest.Name,
 						DataType:   lowerIRTypeToWatType(dest.DataType),
 						Visibility: vis,
-					}
+					}, dest.Name)
 				}
 			}
 			if instruction.Operation == irgen.Store {
@@ -72,13 +72,13 @@ func getVariables(ir []irgen.TAC, inGlobalScope bool) map[string]Variable {
 				}
 
 				variable := instruction.Operand1.Var
-				if _, ok := vars[variable.Name]; !ok {
-					vars[variable.Name] = Variable{
+				if _, ok := vars.Lookup(variable.Name); !ok {
+					vars.Add(Variable{
 						Name:       variable.Name,
 						DataType:   lowerIRTypeToWatType(variable.DataType),
 						Value:      translateOperand(instruction.Operand2),
 						Visibility: vis,
-					}
+					}, variable.Name)
 				}
 			}
 		}

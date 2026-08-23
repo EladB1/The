@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 
+	ds "github.com/EladB1/The/internal/datastructures"
 	dt "github.com/EladB1/The/internal/datatypes"
 )
 
@@ -26,11 +27,11 @@ type Scope struct {
 	Kind        ScopeType
 	Parent      *Scope
 	Children    []*Scope
-	Functions   FunctionSymbolTable
-	Variables   VariableSymbolTable
-	Interfaces  InterfaceSymbolTable
-	Structs     StructSymbolTable
-	NamedBlocks NamedBlockSymbolTable
+	Functions   *ds.OrderedMap[FunctionSymbol]
+	Variables   *ds.OrderedMap[VariableSymbol]
+	Interfaces  *ds.OrderedMap[InterfaceSymbol]
+	Structs     *ds.OrderedMap[StructSymbol]
+	NamedBlocks *ds.OrderedMap[NamedBlockSymbol]
 }
 
 type SerializedScope struct {
@@ -38,11 +39,11 @@ type SerializedScope struct {
 	Kind        ScopeType
 	ParentId    string
 	Children    []*Scope
-	Functions   FunctionSymbolTable
-	Variables   VariableSymbolTable
-	Interfaces  InterfaceSymbolTable
-	Structs     StructSymbolTable
-	NamedBlocks NamedBlockSymbolTable
+	Functions   *ds.OrderedMap[FunctionSymbol]
+	Variables   *ds.OrderedMap[VariableSymbol]
+	Interfaces  *ds.OrderedMap[InterfaceSymbol]
+	Structs     *ds.OrderedMap[StructSymbol]
+	NamedBlocks *ds.OrderedMap[NamedBlockSymbol]
 }
 
 func (scope *Scope) MarshalJSON() ([]byte, error) {
@@ -91,11 +92,11 @@ func (scope *Scope) addChild(id string, kind ScopeType) *Scope {
 		Id:          id,
 		Kind:        kind,
 		Parent:      scope,
-		Functions:   FunctionSymbolTable{},
-		Variables:   VariableSymbolTable{},
-		Interfaces:  InterfaceSymbolTable{},
-		Structs:     StructSymbolTable{},
-		NamedBlocks: NamedBlockSymbolTable{},
+		Functions:   ds.NewOrderedMap[FunctionSymbol](),
+		Variables:   ds.NewOrderedMap[VariableSymbol](),
+		Interfaces:  ds.NewOrderedMap[InterfaceSymbol](),
+		Structs:     ds.NewOrderedMap[StructSymbol](),
+		NamedBlocks: ds.NewOrderedMap[NamedBlockSymbol](),
 	}
 	scope.Children = append(scope.Children, &newScope)
 	return &newScope
@@ -118,19 +119,19 @@ func (scope *Scope) to_string(indentLevel int) string {
 		builder.WriteString(", parent: ")
 		builder.WriteString(scope.Parent.Id)
 	}
-	if len(scope.Interfaces) != 0 {
+	if !scope.Interfaces.IsEmpty() {
 		builder.WriteString(fmt.Sprintf(", interfaces: %v", scope.Interfaces))
 	}
-	if len(scope.Structs) != 0 {
+	if !scope.Structs.IsEmpty() {
 		builder.WriteString(fmt.Sprintf(", structs: %v", scope.Structs))
 	}
-	if len(scope.NamedBlocks) != 0 {
+	if !scope.NamedBlocks.IsEmpty() {
 		builder.WriteString(fmt.Sprintf(", namedBlocks: %v", scope.NamedBlocks))
 	}
-	if len(scope.Functions) != 0 {
+	if !scope.Functions.IsEmpty() {
 		builder.WriteString(fmt.Sprintf(", functions: %v", scope.Functions))
 	}
-	if len(scope.Variables) != 0 {
+	if !scope.Variables.IsEmpty() {
 		builder.WriteString(fmt.Sprintf(", variables: %v", scope.Variables))
 	}
 	count := len(scope.Children)
@@ -188,10 +189,10 @@ func (scope *Scope) GetChildScopeById(id string) *Scope {
 func (scope *Scope) LookupType(name string) TypeSymbol {
 	curr := scope
 	for curr != nil {
-		if intf, ok := curr.Interfaces[name]; ok {
+		if intf, ok := curr.Interfaces.Lookup(name); ok {
 			return intf
 		}
-		if str, ok := curr.Structs[name]; ok {
+		if str, ok := curr.Structs.Lookup(name); ok {
 			return str
 		}
 		curr = curr.Parent
@@ -202,7 +203,7 @@ func (scope *Scope) LookupType(name string) TypeSymbol {
 func (scope *Scope) LookupInterface(name string) *InterfaceSymbol {
 	curr := scope
 	for curr != nil {
-		if intf, ok := curr.Interfaces[name]; ok {
+		if intf, ok := curr.Interfaces.Lookup(name); ok {
 			return &intf
 		}
 		curr = curr.Parent
@@ -213,7 +214,7 @@ func (scope *Scope) LookupInterface(name string) *InterfaceSymbol {
 func (scope *Scope) LookupStruct(name string) *StructSymbol {
 	curr := scope
 	for curr != nil {
-		if str, ok := curr.Structs[name]; ok {
+		if str, ok := curr.Structs.Lookup(name); ok {
 			return &str
 		}
 		curr = curr.Parent
@@ -224,7 +225,7 @@ func (scope *Scope) LookupStruct(name string) *StructSymbol {
 func (scope *Scope) LookupNamedBlock(name string) *NamedBlockSymbol {
 	curr := scope
 	for curr != nil {
-		if nb, ok := curr.NamedBlocks[name]; ok {
+		if nb, ok := curr.NamedBlocks.Lookup(name); ok {
 			return &nb
 		}
 		curr = curr.Parent
@@ -233,7 +234,7 @@ func (scope *Scope) LookupNamedBlock(name string) *NamedBlockSymbol {
 }
 
 func (nb NamedBlockSymbol) HasReturnType(returnType dt.SourceType) bool {
-	for _, fnSymbol := range nb.InnerScope.Functions {
+	for fnSymbol := range nb.InnerScope.Functions.All() {
 		if fnSymbol.ReturnType.Equals(returnType) {
 			return true
 		}
@@ -244,9 +245,8 @@ func (nb NamedBlockSymbol) HasReturnType(returnType dt.SourceType) bool {
 func (scope *Scope) LookupVariable(name string) *VariableSymbol {
 	curr := scope
 	for curr != nil {
-		if variable, ok := curr.Variables[name]; ok {
-			vs := variable
-			return &vs
+		if variable, ok := curr.Variables.Lookup(name); ok {
+			return &variable
 		}
 		curr = curr.Parent
 	}
@@ -255,7 +255,7 @@ func (scope *Scope) LookupVariable(name string) *VariableSymbol {
 
 func (scope *Scope) LookupFunctionsByReturnType(returnType dt.SourceType) []*FunctionSymbol {
 	matching := []*FunctionSymbol{}
-	for _, fn := range scope.Functions {
+	for fn := range scope.Functions.All() {
 		if fn.ReturnType.Equals(returnType) {
 			matching = append(matching, &fn)
 		}
@@ -266,7 +266,7 @@ func (scope *Scope) LookupFunctionsByReturnType(returnType dt.SourceType) []*Fun
 func (scope *Scope) LookupFunctionByName(name string) *FunctionSymbol {
 	curr := scope
 	for curr != nil {
-		if fn, ok := curr.Functions[name]; ok {
+		if fn, ok := curr.Functions.Lookup(name); ok {
 			return &fn
 		}
 		curr = curr.Parent
@@ -277,7 +277,7 @@ func (scope *Scope) LookupFunctionByName(name string) *FunctionSymbol {
 func (scope *Scope) LookupFunctionByNameAndIRName(name, irName string) *FnOverloadSymbol {
 	curr := scope
 	for curr != nil {
-		if fn, ok := curr.Functions[name]; ok {
+		if fn, ok := curr.Functions.Lookup(name); ok {
 			for _, overload := range fn.Overloads {
 				if overload.IRName == irName {
 					return &overload
@@ -289,9 +289,9 @@ func (scope *Scope) LookupFunctionByNameAndIRName(name, irName string) *FnOverlo
 	return nil
 }
 
-func (table FunctionSymbolTable) add(symbol FnCreateSymbol) (*FnOverloadSymbol, error) {
+func add(symbol FnCreateSymbol, table *ds.OrderedMap[FunctionSymbol]) (*FnOverloadSymbol, error) {
 	var overload *FnOverloadSymbol = nil
-	fn, ok := table[symbol.name]
+	fn, ok := table.Lookup(symbol.name)
 	if ok {
 		if !fn.ReturnType.Equals(symbol.returnType) {
 			if fn.ReturnType.Equals(dt.NoneType) {
@@ -304,15 +304,15 @@ func (table FunctionSymbolTable) add(symbol FnCreateSymbol) (*FnOverloadSymbol, 
 		} else {
 			overload = symbol.toOverload(true)
 			fn.Overloads = append(fn.Overloads, *overload)
-			table[fn.Name] = fn
+			table.Update(fn, fn.Name)
 		}
 	} else {
 		overload = symbol.toOverload(false)
-		table[symbol.name] = FunctionSymbol{
+		table.Add(FunctionSymbol{
 			Name:       symbol.name,
 			ReturnType: symbol.returnType,
 			Overloads:  []FnOverloadSymbol{*overload},
-		}
+		}, symbol.name)
 	}
 	return overload, nil
 }

@@ -576,7 +576,7 @@ Program: [
     CALL println 1
   }
 
-  fn __T_P_donot() {
+  fn __Person1_P_donot() {
     STORE global.x i32(2)
     PARAM str_const(1)
     CALL println 1
@@ -695,10 +695,9 @@ Program: [
     CALL println 1
   }
 
-  fn __T_P_donot() {
-    STORE global.x i32(2)
-    PARAM str_const(1)
-    CALL println 1
+  fn __T_I_times(a: i32, b: i32)->i32 {
+    __t83: i32 = i32.mul param.a param.b
+    return __t83
   }
 
   fn __T_I_do() {
@@ -706,9 +705,10 @@ Program: [
     CALL println 1
   }
 
-  fn __T_I_times(a: i32, b: i32)->i32 {
-    __t83: i32 = i32.mul param.a param.b
-    return __t83
+  fn __T_P_donot() {
+    STORE global.x i32(2)
+    PARAM str_const(1)
+    CALL println 1
   }
 
     STORE global.x i32(1)

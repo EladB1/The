@@ -25,7 +25,7 @@ func GetSourceFromDirectory(t *testing.T, dir string) []FixtureFile {
 	}
 	for _, file := range files {
 		if strings.HasSuffix(file.Name(), ".the") {
-			fmt.Printf("Updating fixture for '%s'... ", file.Name())
+			fmt.Printf("Updating fixture for '%s'...\n", file.Name())
 			path := filepath.Join(dir, file.Name())
 			src, err := filehandler.GetSourceCode(path)
 			if err != nil {

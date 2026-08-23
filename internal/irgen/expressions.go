@@ -829,7 +829,7 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 	left := node.Children[0]
 	prop := node.Children[1]
 	if mem, ok := semantic.PrimitiveMembers[left.Type.Root]; ok {
-		if pr, ok := mem.Properties[prop.Token.Value]; ok {
+		if pr, ok := mem.Properties.Lookup(prop.Token.Value); ok {
 			fn := builtinPropToFunction(left.Type, pr)
 			l_in, l_op := translateExpression(*left)
 			instructions = append(instructions, l_in...)
@@ -971,7 +971,7 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 		returnType = dt.TranslateSourceType(symbol.ReturnType)
 	} else if object != nil && !object.Type.IsDynamic {
 		if prim, ok := semantic.PrimitiveMembers[object.Type.Root]; ok {
-			if method, ok := prim.Methods[name]; ok {
+			if method, ok := prim.Methods.Lookup(name); ok {
 				returnType = dt.TranslateSourceType(method.ReturnType)
 			}
 		}

@@ -68,11 +68,11 @@ func processFunctionSignature(fnNode *parser.AST) FnCreateSymbol {
 		}
 		newScope = currentScope.addChild(scopeId, Function)
 		for i := range len(paramNames) {
-			newScope.Variables[paramNames[i]] = VariableSymbol{
+			newScope.Variables.Add(VariableSymbol{
 				Name: paramNames[i],
 				Type: paramTypes[i],
 				Ctx:  Param,
-			}
+			}, paramNames[i])
 		}
 	}
 	symbol := FnCreateSymbol{
@@ -128,7 +128,7 @@ func analyzeBlockAndCheckForReturn(body []*parser.AST, fn FunctionSymbol, sig st
 					messages.Complain(diagnostic.IllegalStatementError, stmt.Location, "Cannot set private variable in function body")
 				} else {
 					symbol.Ctx = Local
-					currentScope.Variables[symbol.Name] = *symbol
+					currentScope.Variables.Add(*symbol, symbol.Name)
 				}
 			}
 		} else if stmt.Token.Kind == lexer.OPERATOR_ASSIGN {

@@ -10,18 +10,17 @@ import (
 	"github.com/EladB1/The/internal/parser"
 )
 
-func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, offset *uint32) (*NamedBlockSymbol, int, []string) {
+func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, offset *uint32) (*NamedBlockSymbol, int) {
 	extraSize := 0
-	extraProps := []string{}
 	details := nbNode.Children
 	name := details[0].Token.Value
 	if strings.HasPrefix(name, "__") {
 		messages.Complain(diagnostic.NameError, nbNode.Location, "Name '%s' uses reserved prefix '__'", name)
-		return nil, extraSize, extraProps
+		return nil, extraSize
 	}
 	if !slices.Contains(specialBlocks, name) && !slices.Contains(impl, name) {
 		messages.Complain(diagnostic.NameError, nbNode.Location, "Block '%s' not supported", name)
-		return nil, extraSize, extraProps
+		return nil, extraSize
 	}
 	body := details[1].Children
 	scope := currentScope
@@ -65,14 +64,14 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 				symbol.isPrivate = true
 				currentScope = scope
 				// private is not a real named block; it is only a shortcut to mark everything in it as private
-				if overload, err := currentScope.Functions.add(symbol); err != nil {
+				if overload, err := add(symbol, currentScope.Functions); err != nil {
 					messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 				} else {
 					node.IRName = overload.IRName
 				}
 				continue
 			}
-			if overload, err := currentScope.Functions.add(symbol); err != nil {
+			if overload, err := add(symbol, currentScope.Functions); err != nil {
 				messages.Complain(diagnostic.IllegalStatementError, node.Location, "%s", err.Error())
 			} else {
 				node.IRName = overload.IRName
@@ -89,13 +88,12 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 					}
 					symbol.isPrivate = true
 					symbol.Ctx = StructProp
-					extraProps = append(extraProps, symbol.Name)
 					size := symbol.Type.GetSizeInBytes()
 					symbol.Offset.IsSet = true
 					symbol.Offset.Value = *offset
 					*offset = *offset + uint32(size)
 					extraSize += size
-					currentScope.Variables[symbol.Name] = *symbol
+					currentScope.Variables.Add(*symbol, symbol.Name)
 				}
 				continue
 			}
@@ -103,12 +101,12 @@ func analyzeNamedBlock(nbNode *parser.AST, structName string, impl []string, off
 	}
 	currentScope = scope
 	if newScope == nil {
-		return nil, extraSize, extraProps
+		return nil, extraSize
 	}
 	return &NamedBlockSymbol{
 		Name:           name,
 		isSpecialBlock: slices.Contains(specialBlocks, name),
 		Def:            nbNode,
 		InnerScope:     newScope,
-	}, extraSize, extraProps
+	}, extraSize
 }

@@ -59,14 +59,12 @@ func loadFixture(t *testing.T, testdir string, filename string) Fixture {
 	path := filepath.Join(testdir, filename)
 	content, err := os.ReadFile(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to read file %s\n%v", filename, err)
-		os.Exit(1)
+		t.Errorf("Failed to read file %s\n%v", filename, err)
 	}
 	var fixture Fixture
 	err = json.Unmarshal(content, &fixture)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to unmarshal json", err)
-		os.Exit(1)
+		t.Errorf("Failed to unmarshal json %v\n", err)
 	}
 	return fixture
 }
@@ -91,27 +89,27 @@ func repairScope(scopeTree *semantic.Scope, parent *semantic.Scope, smap ScopeMa
 func repairSymbols(scopeTree *semantic.Scope, smap ScopeMap) error {
 	var err error
 	// structs
-	for _, str := range scopeTree.Structs {
+	for str := range scopeTree.Structs.All() {
 		if str.InnerScope != nil {
 			str.InnerScope, err = smap.get(str.InnerScope.Id)
 			if err != nil {
 				return err
 			}
-			scopeTree.Structs[str.Name] = str
+			scopeTree.Structs.Update(str, str.Name)
 		}
 	}
 	// named blocks
-	for _, nb := range scopeTree.NamedBlocks {
+	for nb := range scopeTree.NamedBlocks.All() {
 		if nb.InnerScope != nil {
 			nb.InnerScope, err = smap.get(nb.InnerScope.Id)
 			if err != nil {
 				return err
 			}
-			scopeTree.NamedBlocks[nb.Name] = nb
+			scopeTree.NamedBlocks.Update(nb, nb.Name)
 		}
 	}
 	// functions
-	for _, fn := range scopeTree.Functions {
+	for fn := range scopeTree.Functions.All() {
 		for i, overload := range fn.Overloads {
 			if overload.InnerScope != nil {
 				overload.InnerScope, err = smap.get(overload.InnerScope.Id)
@@ -121,7 +119,7 @@ func repairSymbols(scopeTree *semantic.Scope, smap ScopeMap) error {
 				fn.Overloads[i] = overload
 			}
 		}
-		scopeTree.Functions[fn.Name] = fn
+		scopeTree.Functions.Update(fn, fn.Name)
 	}
 	for _, child := range scopeTree.Children {
 		if err := repairSymbols(child, smap); err != nil {

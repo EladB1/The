@@ -1,125 +1,16 @@
 
 [TestValidPrograms/should_compile_program.the_with_no_issues - 1]
-Exit code: 0
+Exit code: 1
 ===
 
 Output:
 
-Program: [
-  fn __ErrorLogger_cast__default_toString(__this: ptr)->str_const {
-    PARAM i32(123)
-    PARAM i32(125)
-    __t0: str_const = CALL __char_concat 2
-    return __t0
-  }
-
-  fn __ErrorLogger_compare__default__equals(__this: ptr, __other: ptr)->i32 {
-    return i32(1)
-  }
-
-  fn __ErrorLogger_Logger_log(error: str_const, __this: ptr) {
-    PARAM str_const(1)
-    PARAM param.error
-    __t1: str_const = CALL __str_concat 2
-    PARAM __t1
-    CALL println 1
-  }
-
-    STORE global.SOME_CONST u32(50000)
-  fn main()->i32 {
-    __t2: ptr = Malloc 0
-    STORE local.logger __t2
-    PARAM global.SOME_CONST
-    PARAM u32(2)
-    __t3: u32 = CALL __u32_pow 2
-    STORE local.i __t3
-    __t4: u32 = u32.add local.i u32(2)
-    STORE local.i __t4
-    __t5: u32 = u32.mul local.i u32(2)
-    STORE local.i __t5
-    __t6: i32 = u32.lt local.i u32(10)
-    STORE local.less __t6
-    __t7: i32 = u32.gt local.i global.UINT32_MAX
-    if __t7 {
-        PARAM str_const(2)
-        PARAM local.logger
-        CALL log 2
-        return i32(1)
-    } else {
-        __t8: u32 = u32.rem local.i u32(2)
-        __t9: i32 = u32.eq __t8 u32(0)
-        if __t9 {
-            PARAM str_const(3)
-            PARAM local.logger
-            CALL log 2
-        } else {
-            PARAM str_const(4)
-            PARAM local.logger
-            CALL log 2
-          }
-      }
-    STORE local.str str_const(5)
-    loop_exit@0: {
-        PARAM local.str
-        __t10: i32 = CALL __str_length 1
-        STORE local.k i32(0)
-        loop@0: {
-            PARAM local.str
-            PARAM local.k
-            __t11: i32 = CALL __str_index 2
-            STORE local.c __t11
-            __t12: i32 = i32.lt local.k __t10
-            JMPIFNOT loop_exit@0
-            loop_body@0: {
-                __t14: i32 = i32.eq local.k i32(0)
-                PARAM local.str
-                __t15: i32 = CALL __str_length 1
-                __t16: i32 = i32.sub __t15 i32(1)
-                __t17: i32 = i32.eq local.k __t16
-                __t18: i32 = i32.or __t14 __t17
-                if __t18 {
-                    JMP loop@0
-                }
-                PARAM local.c
-                CALL println 1
-                __t13: i32 = i32.add local.k i32(1)
-                STORE local.k __t13
-                JMP loop@0
-            }
-        }
-    }
-    STORE local.indx i32(0)
-    loop_exit@1: {
-        loop@1: {
-            PARAM local.str
-            __t19: i32 = CALL __str_length 1
-            __t20: i32 = i32.lt local.indx __t19
-            JMPIFNOT loop_exit@1 __t20
-            loop_body@1: {
-                __t21: i32 = i32.ne local.indx i32(0)
-                __t22: i32 = i32.rem local.indx i32(7)
-                __t23: i32 = i32.eq __t22 i32(0)
-                __t24: i32 = i32.and __t21 __t23
-                if __t24 {
-                    JMP loop_exit@1
-                }
-                __t25: i32 = i32.add local.indx i32(1)
-                STORE local.indx __t25
-                JMP loop@1
-            }
-        }
-    }
-    return i32(0)
-  }
-
-]
-
     (data $__str_const0 (i32.const 100) "")
-    (data $__str_const1 (i32.const 104) "Error: ")
-    (data $__str_const2 (i32.const 111) "This number is too big!")
-    (data $__str_const3 (i32.const 134) "Number is even")
-    (data $__str_const4 (i32.const 148) "Number is odd")
-    (data $__str_const5 (i32.const 161) "hello")
+    (data $__str_const1 (i32.const 105) "Error: ")
+    (data $__str_const2 (i32.const 113) "This number is too big!")
+    (data $__str_const3 (i32.const 137) "Number is even")
+    (data $__str_const4 (i32.const 152) "Number is odd")
+    (data $__str_const5 (i32.const 166) "hello")
     (global $SOME_CONST i32 (i32.const 50000))
     (func $__ErrorLogger_cast__default_toString (param $__this i32) (result i32)
         (local $__t0 i32)
@@ -136,7 +27,7 @@ Program: [
     )
     (func $__ErrorLogger_Logger_log (param $error i32) (param $__this i32)
         (local $__t1 i32)
-        (i32.const 104)
+        (i32.const 105)
         (local.get $error)
         (call $__str_concat)
         (local.set $__t1)
@@ -144,17 +35,17 @@ Program: [
         (call $println)
     )
     (func $main (export "main") (result i32)
+        (local $__t2 i32)
         (local $logger i32)
         (local $__t3 i32)
         (local $i i32)
         (local $__t4 i32)
-        (local $indx i32)
         (local $__t5 i32)
         (local $__t6 i32)
         (local $less i32)
         (local $__t7 i32)
         (local $str i32)
-        (local $__t2 i32)
+        (local $indx i32)
         (local.set $logger (local.get $__t2))
         (global.get $SOME_CONST)
         (i32.const 2)
@@ -180,12 +71,16 @@ Program: [
         (global.get $UINT32_MAX)
         (i32.gt_u)
         (local.set $__t7)
-        (local.set $str (i32.const 161))
+        (local.set $str (i32.const 166))
         (local.set $indx (i32.const 0))
         (i32.const 0)
         (return)
     )
 
-
+Error: failed to find func named `$__char_concat`
+     --> <anon>:377:15
+      |
+  377 |         (call $__char_concat)
+      |               ^ 
 
 ---

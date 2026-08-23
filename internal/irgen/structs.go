@@ -66,9 +66,8 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 		SrcPosition: str.Def.Location,
 	}
 	comparisons := []Variable{}
-	for _, propName := range str.OrderedProperties {
-		prop := str.InnerScope.LookupVariable(propName)
-		if prop == nil || !prop.Offset.IsSet {
+	for prop := range str.InnerScope.Variables.All() {
+		if !prop.Offset.IsSet {
 			continue
 		}
 		propType := dt.TranslateSourceType(prop.Type)
@@ -209,9 +208,8 @@ func structDefaultToString(str *semantic.StructSymbol) Function {
 		Visibility: Param,
 	}
 	propLoads := []Operand{}
-	for _, propName := range str.OrderedProperties {
-		prop := str.InnerScope.LookupVariable(propName)
-		if prop == nil || !prop.Offset.IsSet {
+	for prop := range str.InnerScope.Variables.All() {
+		if !prop.Offset.IsSet {
 			continue
 		}
 		loadProp := formTempVar(dt.TranslateSourceType(prop.Type))
@@ -323,9 +321,9 @@ func structFunctionDefinitions(ast *parser.AST, str *semantic.StructSymbol) []TA
 	// get function definitions from interface not in struct def
 	scope := currScope
 	currScope = str.InnerScope
-	for _, nb := range currScope.NamedBlocks {
+	for nb := range currScope.NamedBlocks.All() {
 		currScope = nb.InnerScope
-		for _, fn := range currScope.Functions {
+		for fn := range currScope.Functions.All() {
 			for _, overload := range fn.Overloads {
 				if _, ok := found_nb_fns[nb.Name][overload.IRName]; !ok {
 					instructions = append(instructions, addMissingOverloadDefinition(fn.Name, overload, fn.ReturnType)...)
