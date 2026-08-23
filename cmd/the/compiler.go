@@ -33,7 +33,7 @@ var (
 	preserveWatFile  *bool   = flag.Bool("preserve-wat-file", false, "Writes generated WAT file to disk")
 	watfile          *string = flag.String("wat", "", "Path to the generated wat file (if preserved)")
 	outfile          *string = flag.String("o", "", "Path to the generated wasm executable")
-	nowasm           *bool   = flag.Bool("nowasm", false, "Only produce a WAT file instead of compiling it down to WASM. Cannot be used with run command.")
+	nowasm           *bool   = flag.Bool("nowasm", false, "Produce wasm but don't write it to a file")
 	enableTraces     *bool   = flag.Bool("enable-traces", false, "Show backtraces on runtime errors (only available in run mode)")
 
 	// env flags used to show output from different parts of compiler
@@ -55,6 +55,7 @@ var (
 )
 
 func init() {
+	log.SetFlags(log.Lshortfile)
 	log.SetOutput(&logBuffer)
 	// Override the default help message
 	flag.Usage = func() {
@@ -186,14 +187,14 @@ func compile(filename string, source []string) {
 		os.Exit(1)
 	}
 
-	err := codegen.BuildExecutable(target, *preserveWatFile, *watfile, *outfile, *nowasm)
+	wasm, err := codegen.BuildExecutable(target, *preserveWatFile, *watfile, *outfile, *nowasm)
 	if err != nil {
 		conf.PrintDebugLogs()
 		diagnostic.ReportFatal(err.Error(), 1, false)
 	}
 	status := 0
 	if !buildOnly {
-		status = runner.Run(target, outfile, *enableTraces)
+		status = runner.Run(wasm, *enableTraces)
 	}
 	conf.PrintDebugLogs()
 	os.Exit(status)

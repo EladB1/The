@@ -19,7 +19,7 @@ var stdlib embed.FS
 //go:embed shell.wat
 var shell embed.FS
 
-func BuildExecutable(target CompileTarget, preserve bool, watfile string, outfile string, nowasm bool) error {
+func BuildExecutable(target CompileTarget, preserve bool, watfile string, outfile string, nowasm bool) ([]byte, error) {
 	var wasmpath string
 	var watpath string
 	if watfile != "" {
@@ -42,31 +42,26 @@ func BuildExecutable(target CompileTarget, preserve bool, watfile string, outfil
 		shell,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 	watcode = append(watcode, target.String())
 	watcode = append(watcode, ")") // close the top level module paren
 	wat := strings.Join(watcode, "\n")
-	if !nowasm {
-		err = wat2wasm(wat, wasmpath)
-		if err != nil {
-			return err
-		}
+	wasm, err := wasmtime.Wat2Wasm(wat)
+	if err != nil {
+		return nil, err
 	}
 	if preserve {
 		err = filehandler.WriteToFile(watpath, []byte(wat))
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
-	return nil
-}
-
-func wat2wasm(wat, wasmpath string) error {
-	wasm, err := wasmtime.Wat2Wasm(wat)
-	if err != nil {
-		return err // TODO: update
+	if !nowasm {
+		err = filehandler.WriteToFile(wasmpath, wasm)
+		if err != nil {
+			return nil, err
+		}
 	}
-	err = filehandler.WriteToFile(wasmpath, wasm)
-	return err
+	return wasm, nil
 }

@@ -6,17 +6,16 @@ import (
 
 	"github.com/bytecodealliance/wasmtime-go"
 
-	"github.com/EladB1/The/internal/codegen"
 	"github.com/EladB1/The/internal/diagnostic"
 )
 
-func Run(target codegen.CompileTarget, outfile *string, enableTraces bool) int {
+func Run(wasm []byte, enableTraces bool) int {
 	var status int = 0
 	cleanExit := false
-	file := target.WasmFilepath
-	if *outfile != "" {
-		file = *outfile
-	}
+	// file := target.WasmFilepath
+	// if *outfile != "" {
+	// 	file = *outfile
+	// }
 	engine := wasmtime.NewEngine()
 	linker := wasmtime.NewLinker(engine)
 	store := wasmtime.NewStore(engine)
@@ -29,10 +28,10 @@ func Run(target codegen.CompileTarget, outfile *string, enableTraces bool) int {
 		store,
 		"wasi_snapshot_preview1",
 		"proc_exit",
-		func(exitCode int32) {
+		func(exitCode int32) *wasmtime.Trap {
 			status = int(exitCode)
 			cleanExit = true
-			wasmtime.NewTrap("") // terminate the wasmtime process silently
+			return wasmtime.NewTrap("") // terminate the wasmtime process silently
 		},
 	)
 	if err != nil {
@@ -44,7 +43,8 @@ func Run(target codegen.CompileTarget, outfile *string, enableTraces bool) int {
 	wasiConf.InheritStdin()
 	wasiConf.InheritEnv()
 	wasiConf.InheritArgv()
-	mod, err := wasmtime.NewModuleFromFile(engine, file)
+	mod, err := wasmtime.NewModule(engine, wasm)
+	// mod, err := wasmtime.NewModuleFromFile(engine, file)
 	if err != nil {
 		diagnostic.ReportFatal(err.Error(), 1, false)
 	}
@@ -64,14 +64,19 @@ func Run(target codegen.CompileTarget, outfile *string, enableTraces bool) int {
 			return status
 		} else {
 			if trap, ok := errors.AsType[*wasmtime.Trap](err); ok {
-				message := strings.Replace(trap.Error(), "wasm trap: ", "", 1)
-				if !enableTraces {
-					message = strings.Split(message, "\n")[0] // cut off the backtrace
-				}
+				message := formatTrap(trap, enableTraces)
 				diagnostic.ReportFatal(message, 1, true)
 
 			}
 		}
 	}
 	return status
+}
+
+func formatTrap(trap *wasmtime.Trap, enableTraces bool) string {
+	message := strings.Replace(trap.Error(), "wasm trap:", "", 1)
+	if !enableTraces {
+		message = strings.Split(message, "\n")[0] // cut off the backtrace
+	}
+	return message
 }
