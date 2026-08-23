@@ -1,9 +1,9 @@
     (global $__bool_true i32 (i32.const 40))
     (data (i32.const 40) "true")
-    (global $__bool_false i32 (i32.const 44))
-    (data (i32.const 44) "false")
-    (data (i32.const 50) "0123456789")
-    (global $itoa_out_buf i32 (i32.const 61))
+    (global $__bool_false i32 (i32.const 45))
+    (data (i32.const 45) "false")
+    (data (i32.const 51) "0123456789")
+    (global $itoa_out_buf i32 (i32.const 65))
     (global $__default_assertion_error i32 (i32.const 80))
     (data (i32.const 80) "Assertion error")
     ;;
@@ -92,7 +92,6 @@
         (local $isnegative i32)
         (local $index i32)
         (local.set $isnegative (i32.lt_s (local.get $num) (i32.const 0)))
-
         (i32.eq (local.get $isnegative) (i32.const 1))
         (if
             (then
@@ -129,7 +128,7 @@
         (loop $writeloop (block $breakwriteloop
             ;; digit = num % 10
             (local.set $digit (i32.rem_u (local.get $num) (i32.const 10)))
-            (local.set $dchar (i32.load8_u offset=50 (local.get $digit)))
+            (local.set $dchar (i32.load8_u offset=51 (local.get $digit)))
 
             ;; mem[writeidx] = dchar
             (i32.store8 (local.get $writeidx) (local.get $dchar))

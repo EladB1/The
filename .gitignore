@@ -21,3 +21,6 @@ the
 
 # Compiler output
 generated/
+
+# Misc.
+.DS_Store

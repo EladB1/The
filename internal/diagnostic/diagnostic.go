@@ -160,7 +160,9 @@ func (messages PhaseDiagnostics) ReportStatus(conf config.Config) (int, int) {
 		}
 		summary = fmt.Sprintf("\n%s:\n%s: %d, %s: %d", color.HiBlueString("Summary"), BoldRed("Errors"), errorCnt, BoldYellow("Warnings"), warningCnt)
 	}
-	fmt.Println(summary)
+	if summary != "" {
+		fmt.Println(summary)
+	}
 	return errorCnt, warningCnt
 }
 
