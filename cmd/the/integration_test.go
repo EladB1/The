@@ -8,7 +8,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 	"testing"
 
 	"github.com/gkampitakis/go-snaps/snaps"
@@ -30,7 +29,6 @@ func snapshotTestCompilerWithArgs(t *testing.T, snapshots *snaps.Config, args ..
 	out := combined.String()
 	re := regexp.MustCompile(`/.*/the.test`)
 	out = re.ReplaceAllString(out, "the")
-	out = strings.ReplaceAll(out, fmt.Sprintf("exit status %d", exitCode), "") // remove stderr line inserted by cmd.CombinedOutput
 	results := fmt.Sprintf("Exit code: %d\n===\n\nOutput:\n\n%s", exitCode, out)
 	snapshots.MatchSnapshot(t, results)
 

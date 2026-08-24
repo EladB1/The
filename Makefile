@@ -3,9 +3,6 @@
 build:
 	go build -o the ./cmd/the
 
-test:
-	go test -v ./internal/...
-
 IN_FILE ?= ''
 
 run: build
@@ -16,17 +13,20 @@ run-build: build
 
 # Example: make run IN_FILE=examples/src/strings.the
 
+test:
+	go test -v ./internal/...
+
+integration-test:
+	go test -tags=integration -v ./cmd/the/...
+
+execution-test:
+	go test -tags=execution -v ./cmd/the/...
+
 test-coverage:
 	go test -coverprofile cover.out ./internal/...
 
 test-coverage-html:
 	go test -coverprofile cover.out ./internal/...; go tool cover -html=cover.out
-
-integration-test: build
-	go test -tags=integration -v ./cmd/the/...
-
-execution-test: build
-	go test -tags=execution -v ./cmd/the/...
 
 update-snaps-lexer: 
 	UPDATE_SNAPS=true go test ./internal/lexer/...

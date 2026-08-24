@@ -1,12 +1,11 @@
 //go:build execution
 
-package main_test
+package main
 
 import (
 	"bytes"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -56,21 +55,17 @@ func TestExecution(t *testing.T) {
 	for _, sub := range executionTests {
 		t.Run(sub.filename, func(t *testing.T) {
 			source := filepath.Join(SOURCE_DIR, sub.filename)
-			wasm := filepath.Join(GENERATED_DIR, strings.Replace(sub.filename, ".the", ".wasm", 1))
-			cmd := exec.Command(targetBinary, "-o", wasm, "run", source)
-			cmd.Env = []string{}
 			var stdoutBuffer, stderrBuffer bytes.Buffer
-			cmd.Stdout = &stdoutBuffer
-			cmd.Stderr = &stderrBuffer
-			_ = cmd.Run()
+			args := []string{"the", "-nowasm", "run", source}
+			result := RunCompiler(args, &stdoutBuffer, &stderrBuffer)
 			actualResult := ExecutionResult{
-				status: cmd.ProcessState.ExitCode(),
+				status: result,
 				stdout: strings.TrimPrefix(stdoutBuffer.String(), "\n"),
 				stderr: strings.TrimPrefix(stderrBuffer.String(), "\n"),
 				// Extra new line gets inserted before the output
 			}
 			if actualResult != sub.expectedResult {
-				t.Errorf("\nExpected %v, but got %v\n", actualResult, sub.expectedResult)
+				t.Errorf("\nExpected %v, but got %v\n", sub.expectedResult, actualResult)
 			}
 		})
 	}

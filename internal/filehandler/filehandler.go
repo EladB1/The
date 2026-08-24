@@ -3,6 +3,7 @@ package filehandler
 import (
 	"embed"
 	"fmt"
+	"io"
 	"math"
 	"os"
 	"strings"
@@ -62,4 +63,34 @@ func ReadAllAndCombine(names []string, files []embed.FS) ([]string, error) {
 
 func WriteToFile(filename string, wasm []byte) error {
 	return os.WriteFile(filename, wasm, 0600)
+}
+
+func CreateTempFiles(dir string, names ...string) ([]*os.File, error) {
+	tempFiles := []*os.File{}
+	for _, name := range names {
+		if temp, err := os.CreateTemp(dir, name); err != nil {
+			return nil, err
+		} else {
+			tempFiles = append(tempFiles, temp)
+		}
+	}
+	return tempFiles, nil
+}
+
+func CopyFromTempFiles(temps []*os.File, destFiles ...io.Writer) error {
+	for i := range temps {
+		if _, err := io.Copy(destFiles[i], temps[i]); err != nil {
+			return err
+		}
+	}
+	return cleanTempFiles(temps)
+}
+
+func cleanTempFiles(temps []*os.File) error {
+	for _, temp := range temps {
+		if err := os.Remove(temp.Name()); err != nil {
+			return err
+		}
+	}
+	return nil
 }
