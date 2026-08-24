@@ -92,7 +92,7 @@ type EnvConfig struct {
 	Debug                bool
 }
 
-func LoadEnvConfig(stdout, stderr io.Writer) *EnvConfig {
+func LoadEnvConfig(stdout, stderr io.Writer, env []string) *EnvConfig {
 	conf := &EnvConfig{}
 	conf.Stdout = stdout
 	conf.Stderr = stderr
@@ -108,7 +108,7 @@ func LoadEnvConfig(stdout, stderr io.Writer) *EnvConfig {
 		"THE_DEV_DEBUG":     &conf.Debug,
 	}
 	for key, flag := range vars {
-		value, err := fetchEnvironmentVariableValue(key)
+		value, err := fetchEnvironmentVariableValue(env, key)
 		if err != nil {
 			*flag = false
 		} else {
@@ -118,8 +118,13 @@ func LoadEnvConfig(stdout, stderr io.Writer) *EnvConfig {
 	return conf
 }
 
-func fetchEnvironmentVariableValue(key string) (bool, error) {
-	envVar := os.Getenv(key)
+func fetchEnvironmentVariableValue(env []string, key string) (bool, error) {
+	envVar := "false"
+	for _, pair := range env {
+		if strings.HasPrefix(pair, key+"=") {
+			envVar = strings.Split(pair, "=")[1]
+		}
+	}
 	return strconv.ParseBool(envVar)
 }
 

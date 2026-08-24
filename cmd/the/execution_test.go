@@ -57,7 +57,8 @@ func TestExecution(t *testing.T) {
 			source := filepath.Join(SOURCE_DIR, sub.filename)
 			var stdoutBuffer, stderrBuffer bytes.Buffer
 			args := []string{"the", "-nowasm", "run", source}
-			result := RunCompiler(args, &stdoutBuffer, &stderrBuffer)
+			env := []string{}
+			result := RunCompiler(args, &stdoutBuffer, &stderrBuffer, env)
 			actualResult := ExecutionResult{
 				status: result,
 				stdout: strings.TrimPrefix(stdoutBuffer.String(), "\n"),

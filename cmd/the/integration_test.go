@@ -25,7 +25,8 @@ var (
 func snapshotTestCompilerWithArgs(t *testing.T, snapshots *snaps.Config, args ...string) {
 	combined := &bytes.Buffer{}
 	args = append(executable, args...) // prepend the program so it simulates the CLI
-	exitCode := RunCompiler(args, combined, combined)
+	env := []string{"THE_DEV_CODEGEN=true"}
+	exitCode := RunCompiler(args, combined, combined, env)
 	out := combined.String()
 	re := regexp.MustCompile(`/.*/the.test`)
 	out = re.ReplaceAllString(out, "the")

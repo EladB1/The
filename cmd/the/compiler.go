@@ -25,13 +25,13 @@ import (
 // }
 
 func main() {
-	result := RunCompiler(os.Args, os.Stdout, os.Stderr)
+	result := RunCompiler(os.Args, os.Stdout, os.Stderr, os.Environ())
 	os.Exit(result)
 }
 
-func RunCompiler(args []string, stdout, stderr io.Writer) int {
+func RunCompiler(args []string, stdout, stderr io.Writer, env []string) int {
 	runMode := false
-	envconf := config.LoadEnvConfig(stdout, stderr)
+	envconf := config.LoadEnvConfig(stdout, stderr, env)
 	conf, err := config.LoadAndValidateConfig(args[1:], stderr)
 	if err != nil {
 		diagnostic.ReportFatal(envconf, err.Error(), false)

@@ -44,6 +44,8 @@ Output:
         (local $__t6 i32)
         (local $less i32)
         (local $__t7 i32)
+        (local $__t8 i32)
+        (local $__t9 i32)
         (local $str i32)
         (local $indx i32)
         (local.set $logger (local.get $__t2))
@@ -71,6 +73,39 @@ Output:
         (global.get $UINT32_MAX)
         (i32.gt_u)
         (local.set $__t7)
+        (if (result i32)
+            (local.get $__t7)
+            (then
+                    (i32.const 113)
+                    (local.get $logger)
+                    (call $log)
+                    (i32.const 1)
+                    (return)
+
+            )
+            (else
+                    (local.get $__t8)
+                    (i32.const 0)
+                    (i32.eq)
+                    (local.set $__t9)
+                    (if (result i32)
+                        (local.get $__t9)
+                        (then
+                                (i32.const 137)
+                                (local.get $logger)
+                                (call $log)
+
+                        )
+                        (else
+                                (i32.const 152)
+                                (local.get $logger)
+                                (call $log)
+
+                        )
+                    )
+
+            )
+        )
         (local.set $str (i32.const 166))
         (local.set $indx (i32.const 0))
         (i32.const 0)
