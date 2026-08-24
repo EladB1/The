@@ -21,6 +21,7 @@ the
 
 # Compiler output
 generated/
+.wasmtime_std*
 
 # Misc.
 .DS_Store

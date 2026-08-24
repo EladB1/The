@@ -78,12 +78,13 @@ func CreateTempFiles(dir string, names ...string) ([]*os.File, error) {
 }
 
 func CopyFromTempFiles(temps []*os.File, destFiles ...io.Writer) error {
+	defer cleanTempFiles(temps)
 	for i := range temps {
 		if _, err := io.Copy(destFiles[i], temps[i]); err != nil {
 			return err
 		}
 	}
-	return cleanTempFiles(temps)
+	return nil
 }
 
 func cleanTempFiles(temps []*os.File) error {

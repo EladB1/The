@@ -2,6 +2,7 @@ package runner
 
 import (
 	"errors"
+	"os"
 	"strings"
 
 	"github.com/bytecodealliance/wasmtime-go"
@@ -38,23 +39,30 @@ func Run(wasm []byte, enableTraces bool, envconf *config.EnvConfig) int {
 	wasiConf := wasmtime.NewWasiConfig()
 	//wasiConf.InheritStdout()
 	//wasiConf.InheritStderr()
-	temps, err := filehandler.CreateTempFiles(".", ".wasmtime_stdout", ".wasmtime_stderr")
-	if err != nil {
-		diagnostic.ReportFatal(envconf, err.Error(), false)
-		return 1
+	if envconf.Stdout == os.Stdout && envconf.Stderr == os.Stderr {
+		wasiConf.InheritStdout()
+		wasiConf.InheritStderr()
+	} else {
+		temps, err := filehandler.CreateTempFiles(".", ".wasmtime_stdout", ".wasmtime_stderr")
+		if err != nil {
+			diagnostic.ReportFatal(envconf, err.Error(), false)
+			return 1
+		}
+		tempout := temps[0]
+		temperr := temps[1]
+		err = wasiConf.SetStdoutFile(tempout.Name())
+		if err != nil {
+			diagnostic.ReportFatal(envconf, err.Error(), false)
+			return 1
+		}
+		err = wasiConf.SetStderrFile(temperr.Name())
+		if err != nil {
+			diagnostic.ReportFatal(envconf, err.Error(), false)
+			return 1
+		}
+		defer filehandler.CopyFromTempFiles(temps, envconf.Stdout, envconf.Stderr)
 	}
-	tempout := temps[0]
-	temperr := temps[1]
-	err = wasiConf.SetStdoutFile(tempout.Name())
-	if err != nil {
-		diagnostic.ReportFatal(envconf, err.Error(), false)
-		return 1
-	}
-	err = wasiConf.SetStderrFile(temperr.Name())
-	if err != nil {
-		diagnostic.ReportFatal(envconf, err.Error(), false)
-		return 1
-	}
+
 	wasiConf.InheritStdin()
 	wasiConf.InheritEnv()
 	wasiConf.InheritArgv()
@@ -84,10 +92,6 @@ func Run(wasm []byte, enableTraces bool, envconf *config.EnvConfig) int {
 
 			}
 		}
-	}
-	if err = filehandler.CopyFromTempFiles(temps, envconf.Stdout, envconf.Stderr); err != nil {
-		diagnostic.ReportFatal(envconf, err.Error(), false)
-		status = 1
 	}
 	return status
 }
