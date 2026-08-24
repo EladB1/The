@@ -27,7 +27,7 @@ func handleInstruction(instruction irgen.Instruction) []Statement {
 			switch op {
 			case "add", "sub", "mul", "eq", "ne", "xor", "and", "or", "shl":
 				statements = generateBinarySignAgnosticTypedOperation(instruction, op)
-			case "div", "mod", "lt", "le", "gt", "ge", "shr":
+			case "div", "rem", "lt", "le", "gt", "ge", "shr":
 				statements = append(statements, generateBinaryTypedOperation(instruction, op)...)
 			}
 		}

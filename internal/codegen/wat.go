@@ -86,6 +86,7 @@ type (
 		Value    any
 	}
 	IfBlock struct {
+		ReturnType  dt.IRType
 		IfCondition Statement
 		IfCode      []Statement
 		ElseCode    []Statement
@@ -326,7 +327,11 @@ func (ifBlock IfBlock) String(indentLevel int) string {
 	indent := strings.Repeat(indentDelim, indentLevel+1)
 	output := strings.Builder{}
 	output.WriteString(start)
-	output.WriteString("(if (result i32)\n")
+	output.WriteString("(if")
+	if ifBlock.ReturnType != dt.NoneIR {
+		output.WriteString(fmt.Sprintf(" (result %s)", ifBlock.ReturnType))
+	}
+	output.WriteRune('\n')
 	output.WriteString(ifBlock.IfCondition.String(indentLevel + 1))
 	output.WriteString("\n")
 	output.WriteString(indent)

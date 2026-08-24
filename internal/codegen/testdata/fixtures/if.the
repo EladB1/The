@@ -1,8 +1,21 @@
-fn main() -> int {
+fn getIndexOfFirstAFromName() -> int {
     String name = prompt("Enter your name: ");
-    //if (name.contains('a')) {
-        return name.length;
-    //     return name.indexOf('a');
-    //}
-    //return 0;
+    if (name.contains('a')) {
+        return name.indexOf('a');
+    }
+    return -1;
+}
+
+fn isEven(int n) -> bool {
+    if (n % 2 == 0)
+        return true;
+    else
+        return false;
+}
+
+fn main() -> int {
+    println(getIndexOfFirstAFromName());
+    println(isEven(10));
+    println(isEven(9));
+    return 0;
 }
