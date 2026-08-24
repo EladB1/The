@@ -91,6 +91,14 @@ type (
 		IfCode      []Statement
 		ElseCode    []Statement
 	}
+	Block struct {
+		Label string
+		Code  []Statement
+	}
+	Loop struct {
+		Label string
+		Code  []Statement
+	}
 )
 
 const (
@@ -185,6 +193,14 @@ func (inst MemoryInstruction) GetStatementType() string {
 
 func (inst IfBlock) GetStatementType() string {
 	return "IfBlock"
+}
+
+func (inst Block) GetStatementType() string {
+	return "Block"
+}
+
+func (inst Loop) GetStatementType() string {
+	return "Loop"
 }
 
 // String representations
@@ -337,19 +353,41 @@ func (ifBlock IfBlock) String(indentLevel int) string {
 	output.WriteString(indent)
 	output.WriteString("(then\n")
 	output.WriteString(stringifyBody(ifBlock.IfCode, indentLevel+2))
-	output.WriteRune('\n')
 	output.WriteString(indent)
-	output.WriteString(")")
+	output.WriteString(")\n")
 	if len(ifBlock.ElseCode) != 0 {
-		output.WriteRune('\n')
 		output.WriteString(indent)
 		output.WriteString("(else\n")
 		output.WriteString(stringifyBody(ifBlock.ElseCode, indentLevel+2))
-		output.WriteRune('\n')
 		output.WriteString(indent)
-		output.WriteString(")")
+		output.WriteString(")\n")
 	}
+	output.WriteString(start)
+	output.WriteString(")")
+	return output.String()
+}
+
+func (block Block) String(indentLevel int) string {
+	start := strings.Repeat(indentDelim, indentLevel)
+	output := strings.Builder{}
+	output.WriteString(start)
+	output.WriteString("(block $")
+	output.WriteString(block.Label)
 	output.WriteRune('\n')
+	output.WriteString(stringifyBody(block.Code, indentLevel+1))
+	output.WriteString(start)
+	output.WriteString(")")
+	return output.String()
+}
+
+func (loop Loop) String(indentLevel int) string {
+	start := strings.Repeat(indentDelim, indentLevel)
+	output := strings.Builder{}
+	output.WriteString(start)
+	output.WriteString("(loop $")
+	output.WriteString(loop.Label)
+	output.WriteRune('\n')
+	output.WriteString(stringifyBody(loop.Code, indentLevel+1))
 	output.WriteString(start)
 	output.WriteString(")")
 	return output.String()

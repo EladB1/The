@@ -73,4 +73,7 @@ func TestCodeGeneration(t *testing.T) {
 	t.Run("should compile if.the", func(t *testing.T) {
 		snapshotTestCodeGenerator(t, "if.json")
 	})
+	t.Run("should compile loop.the", func(t *testing.T) {
+		snapshotTestCodeGenerator(t, "loop.json")
+	})
 }

@@ -17,10 +17,7 @@ fn main() -> int {
 }
 
 fn test(int x, int y) -> int {
-    if (y != 0)
-        return x - y;
-    else
-        return x;
+    return x - y;
 }
 
 // fn printTest() {

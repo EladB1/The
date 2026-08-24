@@ -20,9 +20,7 @@ func handleIfBlock(ifblock irgen.IfBlock) IfBlock {
 		Operator:   Get,
 		Name:       variable.Name,
 	}
-	if returnType := getBlockReturnType(ifblock); returnType != dt.NoneIR {
-		block.ReturnType = lowerIRTypeToWatType(returnType)
-	}
+	block.ReturnType = lowerIRTypeToWatType(getBlockReturnType(ifblock))
 	return block
 }
 

@@ -116,7 +116,6 @@ func variableDeclaration(ast *parser.AST) []TAC {
 		instructions = append(instructions, value_in...)
 	} else {
 		instructions, value = translateExpression(*valueNode)
-
 	}
 	return append(instructions, Instruction{
 		Operation: Store,
@@ -205,10 +204,10 @@ func translateLiteral(node parser.AST) Operand {
 			value = uint64(node.Token.IntVal)
 		} else if node.Type.Equals(dt.FloatType) {
 			irType = dt.F32
-			value = float32(node.Token.FloatVal)
+			value = float32(node.Token.IntVal)
 		} else if node.Type.Equals(dt.DoubleType) {
 			irType = dt.F64
-			value = node.Token.FloatVal
+			value = float64(node.Token.IntVal)
 		}
 	case lexer.LIT_FLOAT:
 		if node.Type.Equals(dt.FloatType) {

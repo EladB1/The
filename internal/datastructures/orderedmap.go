@@ -3,7 +3,6 @@ package datastructures
 import (
 	"fmt"
 	"iter"
-	"maps"
 	"strings"
 )
 
@@ -27,8 +26,12 @@ func (oMap *OrderedMap[T]) Add(value T, name string) {
 }
 
 func (oMap *OrderedMap[T]) AddAll(other *OrderedMap[T]) {
-	oMap.OrderedKeys = append(oMap.OrderedKeys, other.OrderedKeys...)
-	maps.Copy(oMap.Values, other.Values)
+	for i, otherVal := range other.AllWithIndex() {
+		name := other.OrderedKeys[i]
+		if _, ok := oMap.Lookup(name); !ok {
+			oMap.Add(otherVal, other.OrderedKeys[i])
+		}
+	}
 }
 
 func (oMap *OrderedMap[T]) Update(value T, name string) {

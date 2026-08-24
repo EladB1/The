@@ -1,0 +1,88 @@
+fn sum(int n) -> int {
+    mut int total = 0;
+    for (int i in 1 ..= n) {
+        total += i; 
+    }
+    return total;
+}
+
+fn sum(int start, int end) -> int {
+    mut int total = 0;
+    for (int i in start .. end) {
+        total += i;
+    }
+    return total;
+}
+
+fn gameLoop() {
+    mut double health = 100;
+    double enemyDmg = 20;
+    mut uint32 hits = 0;
+    while (health > 0) {
+        hits++;
+        print("Hit taken: #");
+        println(hits);
+        health -= enemyDmg;
+    }
+    printerr("game over");
+}
+
+fn product(int n) -> int {
+    mut int result = 1;
+    for (mut int i = 1; i <= n; i++) {
+        result *= i;
+    }
+    return result;
+}
+
+fn product(int start, int end) -> int {
+    mut int result = 1;
+    mut int i;
+    for (i = start; i <= end; i++) {
+        result *= i;
+    }
+    return result;
+}
+
+fn stop(int n) {
+    for (int i in 0..n) {
+        if (i != 0 && i % 3 == 0)
+            break;
+        println(i);
+    }
+}
+
+fn skip(int n) {
+    for (int i in 0..n) {
+        if (i % 2 != 0) {
+            continue;
+        }
+        print("Even number ");
+        println(i);
+    }
+}
+
+fn skipWhile(int n) {
+    mut int i = 0;
+    while (i < n) {
+        if (i % 2 == 0) {
+            i++;
+            continue;
+        }
+        print("Odd number ");
+        println(i);
+        i++;
+    }
+}
+
+fn main() -> int {
+    println(sum(2, 5));
+    println(sum(10));
+    gameLoop();
+    println(product(2, 5));
+    println(product(10));
+    stop(4);
+    skip(5);
+    skipWhile(5);
+    return 0;
+}

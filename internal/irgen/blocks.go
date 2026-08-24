@@ -275,18 +275,14 @@ func translateWhileLoop(node *parser.AST) []TAC {
 		currScope = scope
 		return instructions
 	}
-	loopBody := Block{
-		Label: fmt.Sprintf("loop_body@%d", loopIndex),
-	}
-	loopBody.Code = append(loopBody.Code, translateBlock(node.Children[1].Children, outerBlock.Label, loop.Label)...)
-	loopBody.Code = append(loopBody.Code, Instruction{
+	loop.Code = append(loop.Code, translateBlock(node.Children[1].Children, outerBlock.Label, loop.Label)...)
+	loop.Code = append(loop.Code, Instruction{
 		Operation: JMP,
 		Operand1: Operand{
 			Label: loop.Label,
 		},
 	}) // go back to the start of the loop
 	currScope = scope
-	loop.Code = append(loop.Code, loopBody)
 	outerBlock.Code = append(outerBlock.Code, loop)
 	loopIndex++
 	instructions = append(instructions, outerBlock)
@@ -303,8 +299,8 @@ func translateForLoop(node *parser.AST) []TAC {
 	loop := Loop{
 		Label: fmt.Sprintf("loop@%d", loopIndex),
 	}
-	loopBody := Block{
-		Label: fmt.Sprintf("loop_body@%d", loopIndex),
+	loopContinue := Block{
+		Label: fmt.Sprintf("loop_continue@%d", loopIndex),
 	}
 	loopConditions := node.Children[0]
 	loopType := semantic.ForLoopType(loopConditions.IRName)
@@ -465,18 +461,18 @@ func translateForLoop(node *parser.AST) []TAC {
 		Operand2:    limit,
 		SrcPosition: limit.SrcPosition,
 	})
-	loopBody.Code = append(loopBody.Code, translateBlock(node.Children[1].Children, outerBlock.Label, loop.Label)...)
+	loopContinue.Code = append(loopContinue.Code, translateBlock(node.Children[1].Children, outerBlock.Label, loopContinue.Label)...)
+	loop.Code = append(loop.Code, loopContinue)
 	if len(iter_in) == 0 {
 		iter_in, _ = translateExpression(*loopConditions.Children[2])
 	}
-	loopBody.Code = append(loopBody.Code, iter_in...)
-	loopBody.Code = append(loopBody.Code, Instruction{
+	loop.Code = append(loop.Code, iter_in...)
+	loop.Code = append(loop.Code, Instruction{
 		Operation: JMP,
 		Operand1: Operand{
 			Label: loop.Label,
 		},
 	})
-	loop.Code = append(loop.Code, loopBody)
 	outerBlock.Code = append(outerBlock.Code, loop)
 	loopIndex++
 	instructions = append(instructions, outerBlock)

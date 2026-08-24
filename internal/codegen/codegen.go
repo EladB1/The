@@ -83,6 +83,10 @@ func getVariables(ir []irgen.TAC, inGlobalScope bool) *ds.OrderedMap[Variable] {
 			if ifblock.ElseCode != nil {
 				vars.AddAll(getVariables(*ifblock.ElseCode, false))
 			}
+		} else if block, ok := tac.(irgen.Block); ok {
+			vars.AddAll(getVariables(block.Code, false))
+		} else if loop, ok := tac.(irgen.Loop); ok {
+			vars.AddAll(getVariables(loop.Code, false))
 		}
 	}
 	return vars
@@ -127,6 +131,10 @@ func generateBody(body []irgen.TAC) []Statement {
 			statements = append(statements, handleInstruction(instruction)...)
 		} else if ifblock, ok := tac.(irgen.IfBlock); ok {
 			statements = append(statements, handleIfBlock(ifblock))
+		} else if block, ok := tac.(irgen.Block); ok {
+			statements = append(statements, handleBlock(block))
+		} else if loop, ok := tac.(irgen.Loop); ok {
+			statements = append(statements, handleLoop(loop))
 		}
 	}
 	return statements

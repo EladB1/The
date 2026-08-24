@@ -13,6 +13,32 @@ func handleInstruction(instruction irgen.Instruction) []Statement {
 	switch instruction.Operation {
 	case irgen.Return:
 		statements = generateReturn(instruction)
+	case irgen.JMP:
+		statements = append(statements, ControlInstruction{
+			Operator:   BR,
+			Identifier: instruction.Operand1.Label,
+		})
+	case irgen.JMPIFNOT:
+		operand := instruction.Operand2.Var
+		vis := Local
+		if operand.Visibility == irgen.Global {
+			vis = Global
+		}
+		operandType := lowerIRTypeToWatType(operand.DataType)
+		jmp := []Statement{
+			VariableInstruction{
+				Operator:   Get,
+				Visibility: vis,
+				Name:       operand.Name,
+			}, NumericInstruction{
+				DataType: operandType,
+				Operator: "eqz",
+			}, ControlInstruction{
+				Operator:   BRIF,
+				Identifier: instruction.Operand1.Label,
+			},
+		}
+		statements = append(statements, jmp...)
 	case irgen.Store:
 		statements = generateStoreOperation(instruction)
 	case irgen.PrepareParam:
@@ -109,13 +135,16 @@ func generateBinarySignAgnosticTypedOperation(instruction irgen.Instruction, ope
 }
 
 func generateBinaryTypedOperation(instruction irgen.Instruction, operator string) []Statement {
-	suffix := "_s"
+	suffix := ""
 	statements := []Statement{
 		translateOperand(instruction.Operand1),
 		translateOperand(instruction.Operand2),
 	}
-	if instruction.Operand1.Type == datatypes.U32 || instruction.Operand1.Type == datatypes.U64 {
+	switch instruction.Operand1.Type {
+	case datatypes.U32, datatypes.U64:
 		suffix = "_u"
+	case datatypes.I32, datatypes.I64:
+		suffix = "_s"
 	}
 	statements = append(statements, NumericInstruction{
 		DataType: lowerIRTypeToWatType(instruction.Operand1.Type),
