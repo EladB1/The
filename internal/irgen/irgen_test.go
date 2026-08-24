@@ -50,7 +50,7 @@ func TestGenerateFixtures(t *testing.T) {
 			AST:       ast,
 			Literals:  pool,
 		}
-		testutils.WriteResultToFile(fix, dir, fixture.File)
+		testutils.WriteResultToFile(t, fix, dir, fixture.File)
 	}
 
 }

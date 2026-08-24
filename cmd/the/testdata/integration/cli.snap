@@ -5,8 +5,8 @@ Exit code: 1
 
 Output:
 
-Usage: ../../the version
-Usage: ../../the [options] [run | build] [file]
+Usage: the [version | help]
+Usage: the [options] [run | build] [file]
 options:
   -enable-traces
      Show backtraces on runtime errors (only available in run mode)
@@ -59,70 +59,13 @@ Error: stat something.the: no such file or directory
 
 ---
 
-[TestCommandLineArgs/should_pass_and_show_help_message_on_help_flag - 1]
-Exit code: 0
-===
-
-Output:
-
-Usage: ../../the version
-Usage: ../../the [options] [run | build] [file]
-options:
-  -enable-traces
-     Show backtraces on runtime errors (only available in run mode)
-  -no-color
-     Disable color output
-  -nowasm
-     Produce wasm but don't write it to a file
-  -o string
-     Path to the generated wasm executable
-  -preserve-wat-file
-     Writes generated WAT file to disk
-  -strict
-     Any warnings will cause compilation to fail
-  -suppress-warnings
-     Disable reporting of warnings
-  -wat string
-     Path to the generated wat file (if preserved)
-
----
-
-[TestCommandLineArgs/should_pass_and_show_version_message_on_version_flag - 1]
-Exit code: 0
-===
-
-Output:
-
-v0.0.0-20260818214836-ce51f1a5e30a+dirty
-
----
-
 [TestCommandLineArgs/should_fail_when_invalid_WAT_path_provided - 1]
 Exit code: 2
 ===
 
 Output:
 
-flag provided but not defined: -watfile
-Usage: ../../the version
-Usage: ../../the [options] [run | build] [file]
-options:
-  -enable-traces
-     Show backtraces on runtime errors (only available in run mode)
-  -no-color
-     Disable color output
-  -nowasm
-     Produce wasm but don't write it to a file
-  -o string
-     Path to the generated wasm executable
-  -preserve-wat-file
-     Writes generated WAT file to disk
-  -strict
-     Any warnings will cause compilation to fail
-  -suppress-warnings
-     Disable reporting of warnings
-  -wat string
-     Path to the generated wat file (if preserved)
+Error: wat file must have '.wat' extension 
 
 ---
 
@@ -132,9 +75,38 @@ Exit code: 2
 
 Output:
 
-flag provided but not defined: -watfile
-Usage: ../../the version
-Usage: ../../the [options] [run | build] [file]
+Error: wat file must have '.wat' extension 
+
+---
+
+[TestCommandLineArgs/should_fail_when_invalid_WASM_path_provided - 1]
+Exit code: 2
+===
+
+Output:
+
+Error: Output file must have '.wasm' extension 
+
+---
+
+[TestCommandLineArgs/should_ignore_invalid_WASM_when_nowasm_flag_present - 1]
+Exit code: 2
+===
+
+Output:
+
+Error: Cannot use nowasm and o flags together 
+
+---
+
+[TestCommandLineArgs/should_pass_and_show_help_message_on_help_flag - 1]
+Exit code: 0
+===
+
+Output:
+
+Usage: the [version | help]
+Usage: the [options] [run | build] [file]
 options:
   -enable-traces
      Show backtraces on runtime errors (only available in run mode)
@@ -152,25 +124,5 @@ options:
      Disable reporting of warnings
   -wat string
      Path to the generated wat file (if preserved)
-
----
-
-[TestCommandLineArgs/should_fail_when_invalid_WASM_path_provided - 1]
-Exit code: 1
-===
-
-Output:
-
-Error: outfile file must have '.wasm' extension 
-
----
-
-[TestCommandLineArgs/should_ignore_invalid_WASM_when_nowasm_flag_present - 1]
-Exit code: 1
-===
-
-Output:
-
-Error: stat something.the: no such file or directory 
 
 ---

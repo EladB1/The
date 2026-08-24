@@ -6,10 +6,11 @@ import (
 
 	"github.com/bytecodealliance/wasmtime-go"
 
+	"github.com/EladB1/The/internal/config"
 	"github.com/EladB1/The/internal/diagnostic"
 )
 
-func Run(wasm []byte, enableTraces bool) int {
+func Run(wasm []byte, enableTraces bool, envconf *config.EnvConfig) int {
 	var status int = 0
 	cleanExit := false
 	// file := target.WasmFilepath
@@ -46,7 +47,8 @@ func Run(wasm []byte, enableTraces bool) int {
 	mod, err := wasmtime.NewModule(engine, wasm)
 	// mod, err := wasmtime.NewModuleFromFile(engine, file)
 	if err != nil {
-		diagnostic.ReportFatal(err.Error(), 1, false)
+		diagnostic.ReportFatal(envconf, err.Error(), false)
+		return 1
 	}
 
 	store.SetWasi(wasiConf)
@@ -65,7 +67,8 @@ func Run(wasm []byte, enableTraces bool) int {
 		} else {
 			if trap, ok := errors.AsType[*wasmtime.Trap](err); ok {
 				message := formatTrap(trap, enableTraces)
-				diagnostic.ReportFatal(message, 1, true)
+				diagnostic.ReportFatal(envconf, message, true)
+				return 1
 
 			}
 		}

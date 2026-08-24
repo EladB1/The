@@ -30,8 +30,7 @@ func TestGenerateFixtures(t *testing.T) {
 	}
 	subdirs, err := os.ReadDir(dir)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
+		t.Fatalf("%v\n", err)
 	}
 	for _, pass := range subdirs {
 		if !pass.IsDir() {
@@ -46,22 +45,21 @@ func TestGenerateFixtures(t *testing.T) {
 				AST:      ast,
 				Literals: pool,
 			}
-			testutils.WriteResultToFile(fix, testpath, fixture.File)
+			testutils.WriteResultToFile(t, fix, testpath, fixture.File)
 		}
 	}
-
 }
 
 func loadFixture(t *testing.T, testdir string, filename string) Fixture {
 	path := filepath.Join(testdir, filename)
 	content, err := os.ReadFile(path)
 	if err != nil {
-		t.Errorf("Failed to read file %s\n%v", filename, err)
+		t.Fatalf("Failed to read file %s\n%v", filename, err)
 	}
 	var fixture Fixture
 	err = json.Unmarshal(content, &fixture)
 	if err != nil {
-		t.Errorf("Failed to unmarshal json %v\n", err)
+		t.Fatalf("Failed to unmarshal json %v\n", err)
 	}
 	return fixture
 }

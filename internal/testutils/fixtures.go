@@ -20,8 +20,7 @@ func GetSourceFromDirectory(t *testing.T, dir string) []FixtureFile {
 	var results []FixtureFile
 	files, err := os.ReadDir(dir)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to read directory\n", err)
-		os.Exit(1)
+		t.Fatalf("Failed to read directory with error: %v\n", err)
 	}
 	for _, file := range files {
 		if strings.HasSuffix(file.Name(), ".the") {
@@ -29,8 +28,7 @@ func GetSourceFromDirectory(t *testing.T, dir string) []FixtureFile {
 			path := filepath.Join(dir, file.Name())
 			src, err := filehandler.GetSourceCode(path)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "Failed to read source file\n", err)
-				os.Exit(1)
+				t.Fatalf("Failed to read source file with error: %v\n", err)
 			}
 			results = append(results, FixtureFile{
 				Source: src,
@@ -41,17 +39,15 @@ func GetSourceFromDirectory(t *testing.T, dir string) []FixtureFile {
 	return results
 }
 
-func WriteResultToFile(result any, dir string, source os.DirEntry) {
+func WriteResultToFile(t *testing.T, result any, dir string, source os.DirEntry) {
 	output, err := json.Marshal(result)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to mashal json\n", err)
-		os.Exit(1)
+		t.Fatalf("Failed to mashal json with error: %v\n", err)
 	}
 	path := filepath.Join(dir, strings.ReplaceAll(source.Name(), ".the", ".json"))
 	err = os.WriteFile(path, output, 0664)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to write file\n", err)
-		os.Exit(1)
+		t.Fatalf("Failed to write file with error: %v\n", err)
 	}
 	fmt.Println("Fixture updated")
 }

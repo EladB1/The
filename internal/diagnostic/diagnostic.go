@@ -2,7 +2,6 @@ package diagnostic
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"strings"
 
@@ -106,16 +105,12 @@ func (diagnostics *PhaseDiagnostics) WarnPositionless(message string, args ...an
 }
 
 func (diagnostics *PhaseDiagnostics) Combine(other PhaseDiagnostics) {
-	if len(diagnostics.Messages) == 0 {
-		diagnostics.Messages = other.Messages
-		return
-	}
-	diagnostics.HasError = diagnostics.HasError && other.HasError
 	diagnostics.Messages = append(diagnostics.Messages, other.Messages...)
+	diagnostics.HasError = diagnostics.HasError || other.HasError
 }
 
 // Use for errors outside of source code
-func ReportFatal(message string, status int, runtime bool) {
+func ReportFatal(envconf *config.EnvConfig, message string, runtime bool) {
 	level := Error
 	if runtime {
 		level = RuntimeError
@@ -128,11 +123,10 @@ func ReportFatal(message string, status int, runtime bool) {
 			Column: -1,
 		},
 	}
-	fmt.Fprintln(os.Stderr, fatal_err)
-	os.Exit(status)
+	fmt.Fprintln(envconf.Stderr, fatal_err)
 }
 
-func (messages PhaseDiagnostics) ReportStatus(conf config.Config) (int, int) {
+func (messages PhaseDiagnostics) ReportStatus(conf *config.Config, envconf *config.EnvConfig) (int, int) {
 	var warningCnt int = 0
 	var errorCnt int = 0
 	for _, message := range messages.Messages {
@@ -142,15 +136,15 @@ func (messages PhaseDiagnostics) ReportStatus(conf config.Config) (int, int) {
 			}
 			warningCnt++
 			if conf.Strict {
-				fmt.Fprintln(os.Stderr, message)
+				fmt.Fprintln(envconf.Stderr, message)
 			} else {
-				fmt.Println(message)
+				fmt.Fprintln(envconf.Stdout, message)
 			}
 		} else {
 			if message.Level != Info {
 				errorCnt++
 			}
-			fmt.Fprintln(os.Stderr, message)
+			fmt.Fprintln(envconf.Stderr, message)
 		}
 	}
 	var summary string = ""
@@ -161,17 +155,18 @@ func (messages PhaseDiagnostics) ReportStatus(conf config.Config) (int, int) {
 		summary = fmt.Sprintf("\n%s:\n%s: %d, %s: %d", color.HiBlueString("Summary"), BoldRed("Errors"), errorCnt, BoldYellow("Warnings"), warningCnt)
 	}
 	if summary != "" {
-		fmt.Println(summary)
+		fmt.Fprintln(envconf.Stdout, summary)
 	}
 	return errorCnt, warningCnt
 }
 
-func (messages PhaseDiagnostics) ExitOnError(conf config.Config) {
+func (messages PhaseDiagnostics) ExitOnError(conf *config.Config, envconf *config.EnvConfig) bool {
 	if messages.HasError {
-		messages.ReportStatus(conf)
-		conf.PrintDebugLogs()
-		os.Exit(1)
+		messages.ReportStatus(conf, envconf)
+		envconf.PrintDebugLogs()
+		return true
 	}
+	return false
 }
 
 func (diagnostic Diagnostic) String() string {

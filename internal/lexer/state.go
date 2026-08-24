@@ -1,7 +1,7 @@
 package lexer
 
 import (
-	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -172,7 +172,7 @@ func (state *lexerState) buildAndAppendTokenFromByte(tokenType TokenType, char b
 }
 
 func (state *lexerState) debug() {
-	fmt.Printf("State: {Sequence: %s, position: %d, flags: {in_multiline_comment: %v}, sequence start: %d}\n",
+	log.Printf("State: {Sequence: %s, position: %d, flags: {in_multiline_comment: %v}, sequence start: %d}\n",
 		state.sequence.String(),
 		state.startPosition,
 		state.in_multiline_comment,

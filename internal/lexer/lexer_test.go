@@ -13,7 +13,7 @@ import (
 func snapshotTestLexer(t *testing.T, filename string) {
 	src, err := filehandler.GetSourceCode(filename)
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		t.Fatalf("Error: %v\n", err)
 	}
 	snapshots := snaps.WithConfig(
 		snaps.Dir("testdata/lexer-snaps"),

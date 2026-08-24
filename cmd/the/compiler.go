@@ -1,15 +1,10 @@
 package main
 
 import (
-	"bytes"
-	"flag"
 	"fmt"
-	"log"
+	"io"
 	"os"
-	"path/filepath"
 	"runtime/debug"
-	"strconv"
-	"strings"
 
 	"github.com/fatih/color"
 
@@ -24,178 +19,125 @@ import (
 	"github.com/EladB1/The/internal/semantic"
 )
 
-var (
-	logBuffer bytes.Buffer
-	// cli flags
-	colorOff         *bool   = flag.Bool("no-color", false, "Disable color output")
-	suppressWarnings *bool   = flag.Bool("suppress-warnings", false, "Disable reporting of warnings")
-	strict           *bool   = flag.Bool("strict", false, "Any warnings will cause compilation to fail")
-	preserveWatFile  *bool   = flag.Bool("preserve-wat-file", false, "Writes generated WAT file to disk")
-	watfile          *string = flag.String("wat", "", "Path to the generated wat file (if preserved)")
-	outfile          *string = flag.String("o", "", "Path to the generated wasm executable")
-	nowasm           *bool   = flag.Bool("nowasm", false, "Produce wasm but don't write it to a file")
-	enableTraces     *bool   = flag.Bool("enable-traces", false, "Show backtraces on runtime errors (only available in run mode)")
-
-	// env flags used to show output from different parts of compiler
-	devMode_lexer    bool = false
-	devMode_parser   bool = false
-	devMode_semantic bool = false
-	devMode_irgen    bool = false
-	devMode_codegen  bool = false
-
-	// internal configurations
-	conf config.Config = config.Config{
-		Debug:            false,
-		Strict:           *strict,
-		SuppressWarnings: *suppressWarnings,
-		LogBuffer:        &logBuffer,
-	}
-	compilerDiagnostics diagnostic.PhaseDiagnostics
-	buildOnly           bool = true
-)
-
-func init() {
-	log.SetFlags(log.Lshortfile)
-	log.SetOutput(&logBuffer)
-	// Override the default help message
-	flag.Usage = func() {
-		output := flag.CommandLine.Output()
-
-		fmt.Fprintf(output, "Usage: %s version\n", os.Args[0])
-		fmt.Fprintf(output, "Usage: %s [options] [run | build] [file]\n", os.Args[0])
-		fmt.Fprintln(output, "options:")
-		flag.PrintDefaults()
-	}
-}
-
-func checkEnvironment() {
-	vars := map[string]*bool{
-		"THE_DEV_LEXER":    &devMode_lexer,
-		"THE_DEV_PARSER":   &devMode_parser,
-		"THE_DEV_SEMANTIC": &devMode_semantic,
-		"THE_DEV_IRGEN":    &devMode_irgen,
-		"THE_DEV_CODEGEN":  &devMode_codegen,
-		"THE_DEV_DEBUG":    &conf.Debug,
-	}
-	for key, flag := range vars {
-		value, err := fetchEnvironmentVariableValue(key)
-		if err != nil {
-			*flag = false
-		} else {
-			*flag = value
-		}
-	}
-}
-
-func fetchEnvironmentVariableValue(key string) (bool, error) {
-	envVar := os.Getenv(key)
-	return strconv.ParseBool(envVar)
-}
+// func init() {
+// 	// Override the default help message
+// 	flag.Usage = config.FlagUsageMessage
+// }
 
 func main() {
-	flag.Parse()
-	checkEnvironment()
-	if *strict && *suppressWarnings {
-		diagnostic.ReportFatal("Cannot use strict and suppress-warnings flags together", 2, false)
+	result := RunCompiler(os.Args, os.Stdout, os.Stderr)
+	os.Exit(result)
+}
+
+func RunCompiler(args []string, stdout, stderr io.Writer) int {
+	buildOnly := false
+	envconf := config.LoadEnvConfig(stdout, stderr)
+	conf, err := config.LoadAndValidateConfig(args[1:], stderr)
+	if err != nil {
+		diagnostic.ReportFatal(envconf, err.Error(), false)
+		return 2
 	}
-	if *colorOff {
+	if conf.ColorOff {
 		color.NoColor = true
 	}
-	args := os.Args
 	if len(args) == 1 {
-		flag.Usage() // show help message
-		fmt.Fprintln(os.Stderr)
-		diagnostic.ReportFatal("no input file", 1, false)
+		conf.Flags.Usage() // show help message
+		fmt.Fprintln(stderr)
+		diagnostic.ReportFatal(envconf, "no input file", false)
+		return 1
 	}
-	if len(args) == 2 && args[1] == "version" {
-		if buildinfo, ok := debug.ReadBuildInfo(); ok {
-			fmt.Println(buildinfo.Main.Version)
-		} else {
-			fmt.Fprintln(os.Stderr, "Unknown version")
-			os.Exit(1)
-		}
-		return
-	}
-	if *preserveWatFile && watfile != nil && *watfile != "" {
-		*watfile = filepath.Clean(*watfile)
-		if !strings.HasSuffix(*watfile, ".wat") {
-			diagnostic.ReportFatal("wat file must have '.wat' extension", 1, false)
-		}
-	}
-	if !*nowasm && outfile != nil && *outfile != "" {
-		*outfile = filepath.Clean(*outfile)
-		if !strings.HasSuffix(*outfile, ".wasm") {
-			diagnostic.ReportFatal("outfile file must have '.wasm' extension", 1, false)
+	if len(args) == 2 {
+		switch args[1] {
+		case "version":
+			status := 0
+			if buildinfo, ok := debug.ReadBuildInfo(); ok {
+				fmt.Fprintln(envconf.Stdout, buildinfo.Main.Version)
+			} else {
+				fmt.Fprintln(envconf.Stderr, "Unknown version")
+				status = 1
+			}
+			return status
+		case "help":
+			conf.Flags.Usage()
+			return 0
 		}
 	}
 	filename := args[len(args)-1]
 	if len(args) >= 3 {
-		switch args[len(args)-2] {
-		case "run":
-			if *nowasm {
-				diagnostic.ReportFatal("Cannot use -nowasm with run command", 1, false)
-			}
+		mode := args[len(args)-2]
+		if mode == "run" {
 			buildOnly = false
-		case "build":
-			buildOnly = true
 		}
 	}
 	src, err := filehandler.GetSourceCode(filename)
 	if err != nil {
-		diagnostic.ReportFatal(err.Error(), 1, false)
+		diagnostic.ReportFatal(envconf, err.Error(), false)
+		return 1
 	}
-	compile(filename, src)
+	return Compile(filename, src, conf, envconf, buildOnly)
 }
 
-func compile(filename string, source []string) {
+func Compile(filename string, source []string, conf *config.Config, envconf *config.EnvConfig, buildOnly bool) int {
+	compilerDiagnostics := diagnostic.PhaseDiagnostics{}
 	tokens, literals, lexerDiagnostics := lexer.Lex(source, false)
 	compilerDiagnostics.Combine(lexerDiagnostics)
-	if devMode_lexer {
-		lexer.PrintTokens(tokens, literals)
+	if envconf.DevMode_Lexer {
+		lexer.PrintTokens(envconf, tokens, literals)
 	}
-	lexerDiagnostics.ExitOnError(conf)
+	if compilerDiagnostics.ExitOnError(conf, envconf) {
+		return 1
+	}
 
 	ast, parserDiagnostics := parser.Parse(tokens, literals)
 	compilerDiagnostics.Combine(parserDiagnostics)
-	if devMode_parser && !devMode_semantic {
-		fmt.Println(ast.String(literals))
+	if envconf.DevMode_AST && !envconf.DevMode_AnnotatedAST {
+		fmt.Fprintln(envconf.Stdout, ast.String(literals))
 	}
-	parserDiagnostics.ExitOnError(conf)
+	if compilerDiagnostics.ExitOnError(conf, envconf) {
+		return 1
+	}
 
 	scopeTree, semanticDiagnostics := semantic.Analyze(&ast)
 	compilerDiagnostics.Combine(semanticDiagnostics)
-	if devMode_semantic {
-		fmt.Println(scopeTree)
-		fmt.Println(ast.String(literals))
+	if envconf.DevMode_ScopeTree {
+		fmt.Fprintln(envconf.Stdout, scopeTree)
 	}
-	semanticDiagnostics.ExitOnError(conf)
+	if envconf.DevMode_AnnotatedAST {
+		fmt.Fprintln(envconf.Stdout, ast.String(literals))
+	}
+	if compilerDiagnostics.ExitOnError(conf, envconf) {
+		return 1
+	}
 
 	ir, irDiagnostics := irgen.Generate(ast, scopeTree)
 	compilerDiagnostics.Combine(irDiagnostics)
-	if devMode_irgen {
-		fmt.Println(ir.String())
+	if envconf.DevMode_irgen {
+		fmt.Fprintln(envconf.Stdout, ir.String())
 	}
-	irDiagnostics.ExitOnError(conf)
+	if compilerDiagnostics.ExitOnError(conf, envconf) {
+		return 1
+	}
 
 	target := codegen.Generate(filename, ir, literals)
-	if devMode_codegen {
-		fmt.Println(target)
+	if envconf.DevMode_codegen {
+		fmt.Fprintln(envconf.Stdout, target)
 	}
-	errors, warnings := compilerDiagnostics.ReportStatus(conf)
+	errors, warnings := compilerDiagnostics.ReportStatus(conf, envconf)
 	if (conf.Strict && warnings != 0) || errors != 0 {
-		conf.PrintDebugLogs()
-		os.Exit(1)
+		envconf.PrintDebugLogs()
+		return 1
 	}
 
-	wasm, err := codegen.BuildExecutable(target, *preserveWatFile, *watfile, *outfile, *nowasm)
+	wasm, err := codegen.BuildExecutable(target, conf.PreserveWatFile, conf.WatFile, conf.OutFile, conf.NoWASM)
 	if err != nil {
-		conf.PrintDebugLogs()
-		diagnostic.ReportFatal(err.Error(), 1, false)
+		envconf.PrintDebugLogs()
+		diagnostic.ReportFatal(envconf, err.Error(), false)
+		return 1
 	}
 	status := 0
 	if !buildOnly {
-		status = runner.Run(wasm, *enableTraces)
+		status = runner.Run(wasm, conf.EnableTraces, envconf)
 	}
-	conf.PrintDebugLogs()
-	os.Exit(status)
+	envconf.PrintDebugLogs()
+	return status
 }

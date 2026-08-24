@@ -1,12 +1,13 @@
 //go:build integration
 
-package main_test
+package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -18,12 +19,17 @@ const (
 	FIX_DIR   string = "testdata/integration/fixtures"
 )
 
+var (
+	executable []string = []string{"the"}
+)
+
 func snapshotTestCompilerWithArgs(t *testing.T, snapshots *snaps.Config, args ...string) {
-	targetBinary := "../../the"
-	cmd := exec.Command(targetBinary, args...)
-	output, _ := cmd.CombinedOutput() // ignore errors since we'll be expecting errors from the compiler for some tests
-	out := string(output)
-	exitCode := cmd.ProcessState.ExitCode()
+	combined := &bytes.Buffer{}
+	args = append(executable, args...) // prepend the program so it simulates the CLI
+	exitCode := RunCompiler(args, combined, combined)
+	out := combined.String()
+	re := regexp.MustCompile(`/.*/the.test`)
+	out = re.ReplaceAllString(out, "the")
 	out = strings.ReplaceAll(out, fmt.Sprintf("exit status %d", exitCode), "") // remove stderr line inserted by cmd.CombinedOutput
 	results := fmt.Sprintf("Exit code: %d\n===\n\nOutput:\n\n%s", exitCode, out)
 	snapshots.MatchSnapshot(t, results)
@@ -48,10 +54,10 @@ func TestCommandLineArgs(t *testing.T) {
 		snapshotTestCompilerWithArgs(t, snapshots, "something.the")
 	})
 	t.Run("should fail when invalid WAT path provided", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "-preserve-wat-file", "-watfile", "something.txt", "build", "something.the")
+		snapshotTestCompilerWithArgs(t, snapshots, "-preserve-wat-file", "-wat", "something.txt", "build", "something.the")
 	})
 	t.Run("should ignore invalid WAT path when no preserve flag", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "-watfile", "something.txt", "build", "something.the")
+		snapshotTestCompilerWithArgs(t, snapshots, "-wat", "something.txt", "build", "something.the")
 	})
 	t.Run("should fail when invalid WASM path provided", func(t *testing.T) {
 		snapshotTestCompilerWithArgs(t, snapshots, "-o", "out.txt", "build", "something.the")
@@ -60,7 +66,7 @@ func TestCommandLineArgs(t *testing.T) {
 		snapshotTestCompilerWithArgs(t, snapshots, "-nowasm", "-o", "out.txt", "build", "something.the")
 	})
 	t.Run("should pass and show help message on help flag", func(t *testing.T) {
-		snapshotTestCompilerWithArgs(t, snapshots, "-h")
+		snapshotTestCompilerWithArgs(t, snapshots, "help")
 	})
 }
 

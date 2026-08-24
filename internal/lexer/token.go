@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/EladB1/The/internal/config"
 	ds "github.com/EladB1/The/internal/datastructures"
 )
 
@@ -94,9 +95,9 @@ func (token Token) HasValue(value string) bool {
 	return token.Value == value
 }
 
-func PrintTokens(tokens []Token, pool ds.LiteralPool) {
+func PrintTokens(envconf *config.EnvConfig, tokens []Token, pool ds.LiteralPool) {
 	for _, token := range tokens {
-		fmt.Println(token.String(pool))
+		fmt.Fprintln(envconf.Stdout, token.String(pool))
 	}
 }
 

@@ -23,7 +23,7 @@ type Fixture struct {
 
 var dir string = "./testdata/fixtures/"
 
-func snapshotTestParser(t *testing.T, filename string, debug bool) {
+func snapshotTestParser(t *testing.T, filename string) {
 	snapshots := snaps.WithConfig(
 		snaps.Dir("testdata/parser-snaps"),
 	)
@@ -38,9 +38,6 @@ func snapshotTestParser(t *testing.T, filename string, debug bool) {
 		msgBuilder.WriteString(fmt.Sprintf("\n\t\"%v\"%s", msg, delim))
 	}
 	results := fmt.Sprintf("AST:\n%v\n, Compiler messages:\n[%s]\n", ast.String(fixture.Literals), msgBuilder.String())
-	if debug {
-		lexer.PrintTokens(fixture.Tokens, fixture.Literals)
-	}
 	snapshots.MatchSnapshot(t, results)
 }
 
@@ -48,14 +45,12 @@ func loadFixture(t *testing.T, filename string) Fixture {
 	path := filepath.Join(dir, filename)
 	content, err := os.ReadFile(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to read file %s\n%v", filename, err)
-		os.Exit(1)
+		t.Fatalf("Failed to read file %s\n%v", filename, err)
 	}
 	var fixture Fixture
 	err = json.Unmarshal(content, &fixture)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to unmarshal json", err)
-		os.Exit(1)
+		t.Fatalf("Failed to unmarshal json %v", err)
 	}
 	return fixture
 }
@@ -71,7 +66,7 @@ func TestGenerateFixtures(t *testing.T) {
 			Tokens:   tokens,
 			Literals: pool,
 		}
-		testutils.WriteResultToFile(fix, dir, fixture.File)
+		testutils.WriteResultToFile(t, fix, dir, fixture.File)
 	}
 }
 
@@ -86,39 +81,37 @@ func TestParser(t *testing.T) {
 		}
 		ast, messages := Parse([]lexer.Token{token}, ds.LiteralPool{})
 		if len(messages.Messages) != 0 {
-			t.Errorf("Expected no warnings or errors but got %v\n", messages)
-			os.Exit(1)
+			t.Fatalf("Expected no warnings or errors but got %v\n", messages)
 		}
 		emptyAST := AST{Label: "program"}
 		if !reflect.DeepEqual(ast, emptyAST) {
-			t.Errorf("Expected empty AST but got %v\n", ast)
-			os.Exit(1)
+			t.Fatalf("Expected empty AST but got %v\n", ast)
 		}
 	})
 	t.Run("should run variables.the and have no errors", func(t *testing.T) {
-		snapshotTestParser(t, "variables.json", false)
+		snapshotTestParser(t, "variables.json")
 	})
 	t.Run("should run variables_errors.the and have errors", func(t *testing.T) {
-		snapshotTestParser(t, "variables_errors.json", false)
+		snapshotTestParser(t, "variables_errors.json")
 	})
 	t.Run("should run functions.the and have no errors", func(t *testing.T) {
-		snapshotTestParser(t, "functions.json", false)
+		snapshotTestParser(t, "functions.json")
 	})
 	t.Run("should run functions_errors.the and have errors", func(t *testing.T) {
-		snapshotTestParser(t, "functions_errors.json", false)
+		snapshotTestParser(t, "functions_errors.json")
 	})
 	t.Run("should run structs.the and have no errors", func(t *testing.T) {
-		snapshotTestParser(t, "structs.json", false)
+		snapshotTestParser(t, "structs.json")
 	})
 	t.Run("should run structs_errors.the and have errors", func(t *testing.T) {
-		snapshotTestParser(t, "structs_errors.json", false)
+		snapshotTestParser(t, "structs_errors.json")
 	})
 	t.Run("should run branch.the and have no errors", func(t *testing.T) {
-		snapshotTestParser(t, "branch.json", false)
+		snapshotTestParser(t, "branch.json")
 	})
 
 	t.Run("should run branch_errors.the and have errors", func(t *testing.T) {
-		snapshotTestParser(t, "branch_errors.json", false)
+		snapshotTestParser(t, "branch_errors.json")
 	})
 
 }

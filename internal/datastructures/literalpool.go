@@ -1,6 +1,10 @@
 package datastructures
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/EladB1/The/internal/config"
+)
 
 // Store string, float, and int literals
 type Literal string
@@ -14,14 +18,14 @@ func (pool LiteralPool) Add(value string) (LiteralPool, int) {
 	return pool, index
 }
 
-func (pool LiteralPool) Show() {
-	fmt.Println("[")
+func (pool LiteralPool) Show(envconf *config.EnvConfig) {
+	fmt.Fprintln(envconf.Stdout, "[")
 	for i, literal := range pool {
 		if i == len(pool)-1 {
-			fmt.Printf("\t%s\n", literal)
+			fmt.Fprintf(envconf.Stdout, "\t%s\n", literal)
 		} else {
-			fmt.Printf("\t%s,\n", literal)
+			fmt.Fprintf(envconf.Stdout, "\t%s,\n", literal)
 		}
 	}
-	fmt.Println("]")
+	fmt.Fprintln(envconf.Stdout, "]")
 }
