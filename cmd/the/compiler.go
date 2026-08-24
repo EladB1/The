@@ -30,7 +30,7 @@ func main() {
 }
 
 func RunCompiler(args []string, stdout, stderr io.Writer) int {
-	buildOnly := false
+	runMode := false
 	envconf := config.LoadEnvConfig(stdout, stderr)
 	conf, err := config.LoadAndValidateConfig(args[1:], stderr)
 	if err != nil {
@@ -66,7 +66,7 @@ func RunCompiler(args []string, stdout, stderr io.Writer) int {
 	if len(args) >= 3 {
 		mode := args[len(args)-2]
 		if mode == "run" {
-			buildOnly = false
+			runMode = true
 		}
 	}
 	src, err := filehandler.GetSourceCode(filename)
@@ -74,10 +74,10 @@ func RunCompiler(args []string, stdout, stderr io.Writer) int {
 		diagnostic.ReportFatal(envconf, err.Error(), false)
 		return 1
 	}
-	return Compile(filename, src, conf, envconf, buildOnly)
+	return Compile(filename, src, conf, envconf, runMode)
 }
 
-func Compile(filename string, source []string, conf *config.Config, envconf *config.EnvConfig, buildOnly bool) int {
+func Compile(filename string, source []string, conf *config.Config, envconf *config.EnvConfig, runMode bool) int {
 	compilerDiagnostics := diagnostic.PhaseDiagnostics{}
 	tokens, literals, lexerDiagnostics := lexer.Lex(source, false)
 	compilerDiagnostics.Combine(lexerDiagnostics)
@@ -127,7 +127,6 @@ func Compile(filename string, source []string, conf *config.Config, envconf *con
 		envconf.PrintDebugLogs()
 		return 1
 	}
-
 	wasm, err := codegen.BuildExecutable(target, conf.PreserveWatFile, conf.WatFile, conf.OutFile, conf.NoWASM)
 	if err != nil {
 		envconf.PrintDebugLogs()
@@ -135,7 +134,7 @@ func Compile(filename string, source []string, conf *config.Config, envconf *con
 		return 1
 	}
 	status := 0
-	if !buildOnly {
+	if runMode {
 		status = runner.Run(wasm, conf.EnableTraces, envconf)
 	}
 	envconf.PrintDebugLogs()

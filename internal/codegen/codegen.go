@@ -47,9 +47,6 @@ func buildData(literals ds.LiteralPool) []Data {
 func getVariables(ir []irgen.TAC, inGlobalScope bool) *ds.OrderedMap[Variable] {
 	vars := ds.NewOrderedMap[Variable]()
 	for _, tac := range ir {
-		if tac.GetTACType() != "Instruction" {
-			continue
-		}
 		var vis WatVisibility = Local
 		empty := irgen.Variable{}
 		if instruction, ok := tac.(irgen.Instruction); ok {
@@ -80,6 +77,11 @@ func getVariables(ir []irgen.TAC, inGlobalScope bool) *ds.OrderedMap[Variable] {
 						Visibility: vis,
 					}, variable.Name)
 				}
+			}
+		} else if ifblock, ok := tac.(irgen.IfBlock); ok {
+			vars.AddAll(getVariables(*ifblock.IfCode, false))
+			if ifblock.ElseCode != nil {
+				vars.AddAll(getVariables(*ifblock.ElseCode, false))
 			}
 		}
 	}
@@ -114,15 +116,17 @@ func generateFunction(fn irgen.Function) Function {
 	}
 	function.Parameters = params
 	function.LocalVariables = getVariables(fn.Code, false)
-	function.Code = generateFunctionBody(fn)
+	function.Code = generateBody(fn.Code)
 	return function
 }
 
-func generateFunctionBody(fn irgen.Function) []Statement {
+func generateBody(body []irgen.TAC) []Statement {
 	statements := []Statement{}
-	for _, tac := range fn.Code {
+	for _, tac := range body {
 		if instruction, ok := tac.(irgen.Instruction); ok {
 			statements = append(statements, handleInstruction(instruction)...)
+		} else if ifblock, ok := tac.(irgen.IfBlock); ok {
+			statements = append(statements, handleIfBlock(ifblock))
 		}
 	}
 	return statements

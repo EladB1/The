@@ -3,6 +3,7 @@ package datastructures
 import (
 	"fmt"
 	"iter"
+	"maps"
 	"strings"
 )
 
@@ -23,6 +24,11 @@ func NewOrderedMap[T any]() *OrderedMap[T] {
 func (oMap *OrderedMap[T]) Add(value T, name string) {
 	oMap.OrderedKeys = append(oMap.OrderedKeys, name)
 	oMap.Values[name] = value
+}
+
+func (oMap *OrderedMap[T]) AddAll(other *OrderedMap[T]) {
+	oMap.OrderedKeys = append(oMap.OrderedKeys, other.OrderedKeys...)
+	maps.Copy(oMap.Values, other.Values)
 }
 
 func (oMap *OrderedMap[T]) Update(value T, name string) {

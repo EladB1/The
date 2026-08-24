@@ -85,6 +85,11 @@ type (
 		Operator string
 		Value    any
 	}
+	IfBlock struct {
+		IfCondition Statement
+		IfCode      []Statement
+		ElseCode    []Statement
+	}
 )
 
 const (
@@ -175,6 +180,10 @@ func (inst VariableInstruction) GetStatementType() string {
 
 func (inst MemoryInstruction) GetStatementType() string {
 	return "MemoryInstruction"
+}
+
+func (inst IfBlock) GetStatementType() string {
+	return "IfBlock"
 }
 
 // String representations
@@ -309,5 +318,34 @@ func (variable Variable) String(indentLevel int) string {
 		output.WriteString(")\n")
 		// TODO: value
 	}
+	return output.String()
+}
+
+func (ifBlock IfBlock) String(indentLevel int) string {
+	start := strings.Repeat(indentDelim, indentLevel)
+	indent := strings.Repeat(indentDelim, indentLevel+1)
+	output := strings.Builder{}
+	output.WriteString(start)
+	output.WriteString("(if (result i32)\n")
+	output.WriteString(ifBlock.IfCondition.String(indentLevel + 1))
+	output.WriteString("\n")
+	output.WriteString(indent)
+	output.WriteString("(then\n")
+	output.WriteString(stringifyBody(ifBlock.IfCode, indentLevel+2))
+	output.WriteRune('\n')
+	output.WriteString(indent)
+	output.WriteString(")")
+	if len(ifBlock.ElseCode) != 0 {
+		output.WriteRune('\n')
+		output.WriteString(indent)
+		output.WriteString("(else\n")
+		output.WriteString(stringifyBody(ifBlock.ElseCode, indentLevel+2))
+		output.WriteRune('\n')
+		output.WriteString(indent)
+		output.WriteString(")")
+	}
+	output.WriteRune('\n')
+	output.WriteString(start)
+	output.WriteString(")")
 	return output.String()
 }

@@ -123,6 +123,7 @@ func ReportFatal(envconf *config.EnvConfig, message string, runtime bool) {
 			Column: -1,
 		},
 	}
+	envconf.PrintDebugLogs()
 	fmt.Fprintln(envconf.Stderr, fatal_err)
 }
 
