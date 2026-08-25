@@ -10,4 +10,6 @@ fn testCasts() {
     println('c');
     println(true);
     println(false);
+    int64 i = -221;
+    println(i);
 }

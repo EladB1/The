@@ -3,7 +3,6 @@
     (global $__bool_false i32 (i32.const 45))
     (data (i32.const 45) "false")
     (data (i32.const 51) "0123456789")
-    (global $itoa_out_buf i32 (i32.const 65))
     (global $__default_assertion_error i32 (i32.const 80))
     (data (i32.const 80) "Assertion error")
     ;;
@@ -159,14 +158,13 @@
         (local $dchar i32)
         (local $isnegative i32)
         (local $index i32)
+        (local $addr i32)
         (local.set $isnegative (i64.lt_s (local.get $num) (i64.const 0)))
 
         (i32.eq (local.get $isnegative) (i32.const 1))
         (if
             (then
                 (local.set $index (i32.const 1))
-                ;; result[0] = '-'
-                (i32.store8 (global.get $itoa_out_buf) (i32.const 45))
                 ;; num *= -1
                 (local.set $num (i64.mul (local.get $num) (i64.const -1)))
             )
@@ -188,9 +186,15 @@
                 br $countloop
             ))
         end
+        (local.set $addr (call $__malloc (local.get $numlen)))
+        (if (i32.eq (local.get $isnegative) (i32.const 1))
+            (then ;; result[0] = '-'
+                (i32.store8 (local.get $addr) (i32.const 45))
+            )
+        )
         (local.set $writeidx 
             (i32.sub 
-                (i32.add (global.get $itoa_out_buf) (local.get $numlen))
+                (i32.add (local.get $addr) (local.get $numlen))
                 (i32.const 1)
             )
         )
@@ -200,7 +204,7 @@
             (i64.rem_u (local.get $num) (i64.const 10))
             (i32.wrap_i64)
             (local.set $digit)
-            (local.set $dchar (i32.load8_u offset=50 (local.get $digit)))
+            (local.set $dchar (i32.load8_u offset=51 (local.get $digit)))
 
             ;; mem[writeidx] = dchar
             (i32.store8 (local.get $writeidx) (local.get $dchar))
@@ -209,13 +213,13 @@
             (local.set $num (i64.div_u (local.get $num) (i64.const 10)))
 
             ;; if wrote first index, exit loop
-            (i32.eq (local.get $writeidx) (i32.add (global.get $itoa_out_buf) (local.get $index)))
+            (i32.eq (local.get $writeidx) (i32.add (local.get $addr) (local.get $index)))
             br_if $breakwriteloop
 
             (local.set $writeidx (i32.sub (local.get $writeidx) (i32.const 1)))
             br $writeloop
         ))
-        (global.get $itoa_out_buf)
+        (local.get $addr)
     )
 
     (func $__str_fromBool (export "__str_fromBool") (param $value i32) (result i32)
