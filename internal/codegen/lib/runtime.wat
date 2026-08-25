@@ -26,6 +26,25 @@
     ;; byte counter
     (global $stdin_byte_counter i32 (i32.const 36))
     (data (i32.const 36) "\00\00\00\00")
+
+    (global $malloc_start i32 (i32.const 1024))
+    (global $malloc_next i32 (i32.const 1024))
+
+    (func $__malloc (param $size i32) (result (;memory address;) i32)
+        (local $curr_alloc_addr i32)
+        (local $next_alloc_addr i32)
+
+        (global.get $malloc_next)
+        (local.set $curr_alloc_addr)
+
+        (i32.add (local.get $curr_alloc_addr) (local.get $size))
+        (local.set $next_alloc_addr)
+
+        (local.get $next_alloc_addr)
+        (i32.store (global.get $malloc_next))
+
+        (local.get $curr_alloc_addr)
+    )
     
     (func $__fd_write (param $fd i32) (param $ptr i32) (param $newline i32)
         (local $len i32)

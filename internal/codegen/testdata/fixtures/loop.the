@@ -16,7 +16,7 @@ fn sum(int start, int end) -> int {
 
 fn gameLoop() {
     mut double health = 100;
-    double enemyDmg = 20;
+    double enemyDmg = 33.333;
     mut uint32 hits = 0;
     while (health > 0) {
         hits++;
@@ -76,13 +76,13 @@ fn skipWhile(int n) {
 }
 
 fn main() -> int {
-    println(sum(2, 5));
-    println(sum(10));
+    // println(sum(2, 5));
+    //println(sum(10));
     gameLoop();
-    println(product(2, 5));
-    println(product(10));
-    stop(4);
-    skip(5);
-    skipWhile(5);
+    // println(product(2, 5));
+    // println(product(10));
+    // stop(4);
+    //skip(5);
+    //skipWhile(5);
     return 0;
 }

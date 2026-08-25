@@ -91,13 +91,12 @@
         (local $dchar i32)
         (local $isnegative i32)
         (local $index i32)
+        (local $addr i32)
         (local.set $isnegative (i32.lt_s (local.get $num) (i32.const 0)))
         (i32.eq (local.get $isnegative) (i32.const 1))
         (if
             (then
                 (local.set $index (i32.const 1))
-                ;; result[0] = '-'
-                (i32.store8 (global.get $itoa_out_buf) (i32.const 45))
                 ;; num *= -1
                 (local.set $num (i32.mul (local.get $num) (i32.const -1)))
             )
@@ -119,9 +118,15 @@
                 br $countloop
             ))
         end
+        (local.set $addr (call $__malloc (local.get $numlen)))
+        (if (i32.eq (local.get $isnegative) (i32.const 1))
+            (then ;; result[0] = '-'
+                (i32.store8 (local.get $addr) (i32.const 45))
+            )
+        )
         (local.set $writeidx 
             (i32.sub 
-                (i32.add (global.get $itoa_out_buf) (local.get $numlen))
+                (i32.add (local.get $addr) (local.get $numlen))
                 (i32.const 1)
             ))
         
@@ -137,13 +142,13 @@
             (local.set $num (i32.div_u (local.get $num) (i32.const 10)))
 
             ;; if wrote first index, exit loop
-            (i32.eq (local.get $writeidx) (i32.add (global.get $itoa_out_buf) (local.get $index)))
+            (i32.eq (local.get $writeidx) (i32.add (local.get $addr) (local.get $index)))
             br_if $breakwriteloop
 
             (local.set $writeidx (i32.sub (local.get $writeidx) (i32.const 1)))
             br $writeloop
         ))
-        (global.get $itoa_out_buf)
+        (local.get $addr)
     )
 
     (func $__str_fromInt64 (export "__str_fromInt64") (param $num i64) (result i32)
@@ -222,9 +227,12 @@
     )
 
     (func $__str_fromChar (export "__str_fromChar") (param $value i32) (result i32)
-        (i32.store8 (i32.add (global.get $itoa_out_buf) (i32.const 0)) (local.get $value))
-        (i32.store8 (i32.add (global.get $itoa_out_buf) (i32.const 1)) (i32.const 0))
-        (global.get $itoa_out_buf)
+        (local $addr i32)
+        (call $__malloc (i32.const 2))
+        (local.set $addr)
+        (i32.store8 (i32.add (local.get $addr) (i32.const 0)) (local.get $value))
+        (i32.store8 (i32.add (local.get $addr) (i32.const 1)) (i32.const 0)) ;; null terminator
+        (local.get $addr)
     )
 
     (func $__str_indexOf (export "__str_indexOf") (param $char i32) (param $ptr i32) (result i32)

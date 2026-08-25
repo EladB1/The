@@ -1,0 +1,13 @@
+fn main() -> int {
+    testCasts();
+    return 0;
+}
+
+fn testCasts() {
+    println(92);
+    println(1);
+    println(-45);
+    println('c');
+    println(true);
+    println(false);
+}

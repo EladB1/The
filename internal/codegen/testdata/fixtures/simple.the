@@ -3,30 +3,17 @@ int64 y = 4;
 fn main() -> int {
     mut int i = 1;
     i += test(1, 2);
-    // double fromInt = i as double;
-    // String s = "hello";
-    // printTest();
-    // //return 0.01 as int;
-    // 1 * 2 >> 3 << 4 ^ 5 | 6 & 7;
-    // uint64 u = 50000;
-    // // String name = prompt("Name: ");
-    // // println(name);
-    // "hello".contains('a');
-    // u / 2;
+    double fromInt = i as double;
+    String s = "hello";
+    1 * 2 >> 3 << 4 ^ 5 | 6 & 7;
+    uint64 u = 50000;
+    String name = prompt("Name: ");
+    println(name);
+    "hello".contains('a');
+    u / 2;
     return i;
 }
 
 fn test(int x, int y) -> int {
     return x - y;
 }
-
-// fn printTest() {
-//     printerr("Error");
-//     println(1 - 222);
-//     println(false);
-//     println('c');
-//     uint32 u = 30;
-//     println(u);
-//     int64 i = 1;
-//     println(i);
-// }
