@@ -16,16 +16,35 @@
     (global $iovec_newline_ptr i32 (i32.const 8))
     (global $iovec_newline_len i32 (i32.const 12))
     (global $return_space i32 (i32.const 16))
-    (global $NEWLINE_CHAR_ADDR i32 (i32.const 1000))
-    (data (i32.const 1000) "\n")
-    (global $stdin_buffer i32 (i32.const 200))
-    (data (i32.const 200) "\00")
-    (global $iovec_stdin i32 (i32.const 300))
-    (global $iovec_stdin_len i32 (i32.const 304))
-    (data (i32.const 300) "\00\00\00\00\00\00\00\00")
+    (global $NEWLINE_CHAR_ADDR i32 (i32.const 20))
+    (data (i32.const 20) "\n")
+    (global $stdin_buffer i32 (i32.const 24))
+    (data (i32.const 24) "\00")
+    (global $iovec_stdin i32 (i32.const 28))
+    (global $iovec_stdin_len i32 (i32.const 32))
+    (data (i32.const 32) "\00\00\00\00\00\00\00\00")
     ;; byte counter
-    (global $stdin_byte_counter i32 (i32.const 400))
-    (data (i32.const 400) "\00\00\00\00")
+    (global $stdin_byte_counter i32 (i32.const 36))
+    (data (i32.const 36) "\00\00\00\00")
+
+    (global $malloc_start i32 (i32.const 1024))
+    (global $malloc_next i32 (i32.const 1024))
+
+    (func $__malloc (param $size i32) (result (;memory address;) i32)
+        (local $curr_alloc_addr i32)
+        (local $next_alloc_addr i32)
+
+        (global.get $malloc_next)
+        (local.set $curr_alloc_addr)
+
+        (i32.add (local.get $curr_alloc_addr) (local.get $size))
+        (local.set $next_alloc_addr)
+
+        (local.get $next_alloc_addr)
+        (i32.store (global.get $malloc_next))
+
+        (local.get $curr_alloc_addr)
+    )
     
     (func $__fd_write (param $fd i32) (param $ptr i32) (param $newline i32)
         (local $len i32)
@@ -93,38 +112,109 @@
         (local.get $len)
     )
 
-    ;; (func $__i32_pow (param $base i32) (param $exponent i32) (result i32)
-    ;;     ;; TODO
-    ;; )
+    (func $__i32_pow (param $base i32) (param $expo i32) (result i32)
+        (local $result i32)
+        (local $i i32)
+        (i32.eqz (local.get $expo))
+        if 
+            (i32.const 1)
+            (return)
+        else
+            (i32.lt_s (local.get $expo) (i32.const 0))
+            if 
+                (i32.const 0)
+                (return)
+            end
+        end
+        (local.set $i (i32.const 0))
+        (local.set $result (i32.const 1))
+        (loop $pow_loop (block $exit_pow_loop
+            (local.set $result (i32.mul (local.get $result) (local.get $base)))
+            (local.set $i (i32.add (local.get $i) (i32.const 1)))
+            (i32.eq (local.get $i) (local.get $expo))
+            br_if $exit_pow_loop
+            br $pow_loop
+        )
+        )
+        (local.get $result)
+    )
 
-    ;; (func $__i64_pow (param $base i64) (param $exponent i64) (result i64)
-    ;;     ;; TODO
-    ;; )
+    (func $__i64_pow (param $base i64) (param $expo i64) (result i64)
+        (local $result i64)
+        (local $i i64)
+        (i64.eqz (local.get $expo))
+        if 
+            (i64.const 1)
+            (return)
+        else
+            (i64.lt_s (local.get $expo) (i64.const 0))
+            if 
+                (i64.const 0)
+                (return)
+            end
+        end
+        (local.set $i (i64.const 0))
+        (local.set $result (i64.const 1))
+        (loop $pow_loop (block $exit_pow_loop
+            (local.set $result (i64.mul (local.get $result) (local.get $base)))
+            (local.set $i (i64.add (local.get $i) (i64.const 1)))
+            (i64.eq (local.get $i) (local.get $expo))
+            br_if $exit_pow_loop
+            br $pow_loop
+        )
+        )
+        (local.get $result)
+    )
 
-    ;; (func $__u32_pow (param $base i32) (param $exponent i32) (result i32)
-    ;;     ;; TODO
-    ;; )
+    (func $__u32_pow (param $base i32) (param $expo i32) (result i32)
+        (local $result i32)
+        (local $i i32)
+        (i32.eqz (local.get $expo))
+        if 
+            (i32.const 1)
+            (return)
+        end
+        (local.set $i (i32.const 0))
+        (local.set $result (i32.const 1))
+        (loop $pow_loop (block $exit_pow_loop
+            (local.set $result (i32.mul (local.get $result) (local.get $base)))
+            (local.set $i (i32.add (local.get $i) (i32.const 1)))
+            (i32.eq (local.get $i) (local.get $expo))
+            br_if $exit_pow_loop
+            br $pow_loop
+        )
+        )
+        (local.get $result)
+    )
 
-    ;; (func $__u64_pow (param $base i64) (param $exponent i64) (result i64)
-    ;;     ;; TODO
-    ;; )
+    (func $__u64_pow (param $base i64) (param $expo i64) (result i64)
+        (local $result i64)
+        (local $i i64)
+        (i64.eqz (local.get $expo))
+        if 
+            (i64.const 1)
+            (return)
+        end
+        (local.set $i (i64.const 0))
+        (local.set $result (i64.const 1))
+        (loop $pow_loop (block $exit_pow_loop
+            (local.set $result (i64.mul (local.get $result) (local.get $base)))
+            (local.set $i (i64.add (local.get $i) (i64.const 1)))
+            (i64.eq (local.get $i) (local.get $expo))
+            br_if $exit_pow_loop
+            br $pow_loop
+        )
+        )
+        (local.get $result)
+    )
 
-    ;; (func $__f32_pow (param $base f32) (param $exponent f32) (result f32)
-    ;;     ;; TODO
-    ;; )
-
-    ;; (func $__f64_pow (param $base f64) (param $exponent f64) (result f64)
-    ;;     ;; TODO
-    ;; )
-
-
-
-    (data (i32.const 60) "true")
-    (data (i32.const 65) "false")
-    (data (i32.const 5000) "0123456789")
-    (global $itoa_out_buf i32 (i32.const 5050))
-    (global $__bool_true i32 (i32.const 60))
-    (global $__bool_false i32 (i32.const 65))
+    (global $__bool_true i32 (i32.const 40))
+    (data (i32.const 40) "true")
+    (global $__bool_false i32 (i32.const 45))
+    (data (i32.const 45) "false")
+    (data (i32.const 51) "0123456789")
+    (global $__default_assertion_error i32 (i32.const 80))
+    (data (i32.const 80) "Assertion error")
     ;;
     ;; constants
     ;;
@@ -156,8 +246,6 @@
     (global $PI f64 (f64.const 3.141592653589793))
     (global $E f64 (f64.const 2.718281828459045))
 
-    (data (i32.const 4000) "Assertion error")
-
     ;;
     ;; functions
     ;;
@@ -185,7 +273,7 @@
     (func $assert_bool (export "assert_bool") (param $cond i32)
         (if (i32.eqz (local.get $cond))
             (then
-                (call $exit_int_String (i32.const 1) (i32.const 4000))
+                (call $exit_int_String (i32.const 1) (global.get $__default_assertion_error))
             )
         )
     )
@@ -212,14 +300,12 @@
         (local $dchar i32)
         (local $isnegative i32)
         (local $index i32)
+        (local $addr i32)
         (local.set $isnegative (i32.lt_s (local.get $num) (i32.const 0)))
-
         (i32.eq (local.get $isnegative) (i32.const 1))
         (if
             (then
                 (local.set $index (i32.const 1))
-                ;; result[0] = '-'
-                (i32.store8 (global.get $itoa_out_buf) (i32.const 45))
                 ;; num *= -1
                 (local.set $num (i32.mul (local.get $num) (i32.const -1)))
             )
@@ -241,16 +327,22 @@
                 br $countloop
             ))
         end
+        (local.set $addr (call $__malloc (local.get $numlen)))
+        (if (i32.eq (local.get $isnegative) (i32.const 1))
+            (then ;; result[0] = '-'
+                (i32.store8 (local.get $addr) (i32.const 45))
+            )
+        )
         (local.set $writeidx 
             (i32.sub 
-                (i32.add (global.get $itoa_out_buf) (local.get $numlen))
+                (i32.add (local.get $addr) (local.get $numlen))
                 (i32.const 1)
             ))
         
         (loop $writeloop (block $breakwriteloop
             ;; digit = num % 10
             (local.set $digit (i32.rem_u (local.get $num) (i32.const 10)))
-            (local.set $dchar (i32.load8_u offset=5000 (local.get $digit)))
+            (local.set $dchar (i32.load8_u offset=51 (local.get $digit)))
 
             ;; mem[writeidx] = dchar
             (i32.store8 (local.get $writeidx) (local.get $dchar))
@@ -259,13 +351,13 @@
             (local.set $num (i32.div_u (local.get $num) (i32.const 10)))
 
             ;; if wrote first index, exit loop
-            (i32.eq (local.get $writeidx) (i32.add (global.get $itoa_out_buf) (local.get $index)))
+            (i32.eq (local.get $writeidx) (i32.add (local.get $addr) (local.get $index)))
             br_if $breakwriteloop
 
             (local.set $writeidx (i32.sub (local.get $writeidx) (i32.const 1)))
             br $writeloop
         ))
-        (global.get $itoa_out_buf)
+        (local.get $addr)
     )
 
     (func $__str_fromInt64 (export "__str_fromInt64") (param $num i64) (result i32)
@@ -276,14 +368,13 @@
         (local $dchar i32)
         (local $isnegative i32)
         (local $index i32)
+        (local $addr i32)
         (local.set $isnegative (i64.lt_s (local.get $num) (i64.const 0)))
 
         (i32.eq (local.get $isnegative) (i32.const 1))
         (if
             (then
                 (local.set $index (i32.const 1))
-                ;; result[0] = '-'
-                (i32.store8 (global.get $itoa_out_buf) (i32.const 45))
                 ;; num *= -1
                 (local.set $num (i64.mul (local.get $num) (i64.const -1)))
             )
@@ -305,9 +396,15 @@
                 br $countloop
             ))
         end
+        (local.set $addr (call $__malloc (local.get $numlen)))
+        (if (i32.eq (local.get $isnegative) (i32.const 1))
+            (then ;; result[0] = '-'
+                (i32.store8 (local.get $addr) (i32.const 45))
+            )
+        )
         (local.set $writeidx 
             (i32.sub 
-                (i32.add (global.get $itoa_out_buf) (local.get $numlen))
+                (i32.add (local.get $addr) (local.get $numlen))
                 (i32.const 1)
             )
         )
@@ -317,7 +414,7 @@
             (i64.rem_u (local.get $num) (i64.const 10))
             (i32.wrap_i64)
             (local.set $digit)
-            (local.set $dchar (i32.load8_u offset=5000 (local.get $digit)))
+            (local.set $dchar (i32.load8_u offset=51 (local.get $digit)))
 
             ;; mem[writeidx] = dchar
             (i32.store8 (local.get $writeidx) (local.get $dchar))
@@ -326,13 +423,13 @@
             (local.set $num (i64.div_u (local.get $num) (i64.const 10)))
 
             ;; if wrote first index, exit loop
-            (i32.eq (local.get $writeidx) (i32.add (global.get $itoa_out_buf) (local.get $index)))
+            (i32.eq (local.get $writeidx) (i32.add (local.get $addr) (local.get $index)))
             br_if $breakwriteloop
 
             (local.set $writeidx (i32.sub (local.get $writeidx) (i32.const 1)))
             br $writeloop
         ))
-        (global.get $itoa_out_buf)
+        (local.get $addr)
     )
 
     (func $__str_fromBool (export "__str_fromBool") (param $value i32) (result i32)
@@ -344,9 +441,12 @@
     )
 
     (func $__str_fromChar (export "__str_fromChar") (param $value i32) (result i32)
-        (i32.store8 (i32.add (global.get $itoa_out_buf) (i32.const 0)) (local.get $value))
-        (i32.store8 (i32.add (global.get $itoa_out_buf) (i32.const 1)) (i32.const 0))
-        (global.get $itoa_out_buf)
+        (local $addr i32)
+        (call $__malloc (i32.const 2))
+        (local.set $addr)
+        (i32.store8 (i32.add (local.get $addr) (i32.const 0)) (local.get $value))
+        (i32.store8 (i32.add (local.get $addr) (i32.const 1)) (i32.const 0)) ;; null terminator
+        (local.get $addr)
     )
 
     (func $__str_indexOf (export "__str_indexOf") (param $char i32) (param $ptr i32) (result i32)
@@ -392,6 +492,12 @@
 
     (data $__str_const0 (i32.const 100) "")
     (func $main (export "main") (result i32)
+        (call $__i32_pow (i32.const 2) (i32.const 10))
+        (call $__str_fromInt32)
+        (call $println)
+        (call $__i64_pow (i64.const 10) (i64.const 3))
+        (call $__str_fromInt64)
+        (call $println)
         (i32.const 0)
         (return)
     )

@@ -111,3 +111,121 @@
         )
         (local.get $len)
     )
+    
+    (func $__str_length (param $ptr i32) (result i32)
+        (local $len i32)
+        (local $curr i32)
+
+        (local.set $len (i32.const 0))
+
+        (loop $length_loop
+            ;; Use pointer arithmetic to load a byte from memory
+            (i32.load8_u (i32.add (local.get $ptr) (local.get $len)))
+            (local.set $curr)
+            ;; check for null terminator
+            (if (i32.eqz (local.get $curr))
+                (then
+                    (return (local.get $len))
+                )
+            )
+            (local.set $len (i32.add (local.get $len) (i32.const 1)))
+            (br $length_loop)
+        )
+        (local.get $len)
+    )
+
+    (func $__i32_pow (param $base i32) (param $expo i32) (result i32)
+        (local $result i32)
+        (local $i i32)
+        (i32.eqz (local.get $expo))
+        if 
+            (i32.const 1)
+            (return)
+        else
+            (i32.lt_s (local.get $expo) (i32.const 0))
+            if 
+                (i32.const 0)
+                (return)
+            end
+        end
+        (local.set $i (i32.const 0))
+        (local.set $result (i32.const 1))
+        (loop $pow_loop (block $exit_pow_loop
+            (local.set $result (i32.mul (local.get $result) (local.get $base)))
+            (local.set $i (i32.add (local.get $i) (i32.const 1)))
+            (i32.eq (local.get $i) (local.get $expo))
+            br_if $exit_pow_loop
+            br $pow_loop
+        )
+        )
+        (local.get $result)
+    )
+
+    (func $__i64_pow (param $base i64) (param $expo i64) (result i64)
+        (local $result i64)
+        (local $i i64)
+        (i64.eqz (local.get $expo))
+        if 
+            (i64.const 1)
+            (return)
+        else
+            (i64.lt_s (local.get $expo) (i64.const 0))
+            if 
+                (i64.const 0)
+                (return)
+            end
+        end
+        (local.set $i (i64.const 0))
+        (local.set $result (i64.const 1))
+        (loop $pow_loop (block $exit_pow_loop
+            (local.set $result (i64.mul (local.get $result) (local.get $base)))
+            (local.set $i (i64.add (local.get $i) (i64.const 1)))
+            (i64.eq (local.get $i) (local.get $expo))
+            br_if $exit_pow_loop
+            br $pow_loop
+        )
+        )
+        (local.get $result)
+    )
+
+    (func $__u32_pow (param $base i32) (param $expo i32) (result i32)
+        (local $result i32)
+        (local $i i32)
+        (i32.eqz (local.get $expo))
+        if 
+            (i32.const 1)
+            (return)
+        end
+        (local.set $i (i32.const 0))
+        (local.set $result (i32.const 1))
+        (loop $pow_loop (block $exit_pow_loop
+            (local.set $result (i32.mul (local.get $result) (local.get $base)))
+            (local.set $i (i32.add (local.get $i) (i32.const 1)))
+            (i32.eq (local.get $i) (local.get $expo))
+            br_if $exit_pow_loop
+            br $pow_loop
+        )
+        )
+        (local.get $result)
+    )
+
+    (func $__u64_pow (param $base i64) (param $expo i64) (result i64)
+        (local $result i64)
+        (local $i i64)
+        (i64.eqz (local.get $expo))
+        if 
+            (i64.const 1)
+            (return)
+        end
+        (local.set $i (i64.const 0))
+        (local.set $result (i64.const 1))
+        (loop $pow_loop (block $exit_pow_loop
+            (local.set $result (i64.mul (local.get $result) (local.get $base)))
+            (local.set $i (i64.add (local.get $i) (i64.const 1)))
+            (i64.eq (local.get $i) (local.get $expo))
+            br_if $exit_pow_loop
+            br $pow_loop
+        )
+        )
+        (local.get $result)
+    )
