@@ -268,11 +268,16 @@ func stringifyBody(body []Statement, indentLevel int) string {
 
 func (inst MemoryInstruction) String(indentLevel int) string {
 	output := strings.Builder{}
+	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteString("(")
 	output.WriteString(fmt.Sprintf("%s.%s ", string(inst.DataType), inst.Operator))
-	output.WriteString(inst.Address.String(0))
-	output.WriteString(" ")
-	output.WriteString(inst.Value.String(0))
+	if inst.Address != nil {
+		output.WriteString(inst.Address.String(0))
+	}
+	if inst.Value != nil {
+		output.WriteString(" ")
+		output.WriteString(inst.Value.String(0))
+	}
 	output.WriteString(")")
 	return output.String()
 }

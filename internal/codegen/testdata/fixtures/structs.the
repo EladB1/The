@@ -1,0 +1,36 @@
+struct S {
+    int i;
+    private int j;
+
+    cast {
+        fn toString() -> String {
+            return j as String;
+        }
+    }
+
+    compare {
+        fn equals(S other) -> bool {
+            println(other);
+            return this.i == other.i && this.j == other.j;
+        }
+    }
+
+    // fn Print() {
+    //     println(this as String);
+    // }
+}
+
+fn main() -> int {
+    S s = S{
+        i: 12,
+        j: 51,
+    };
+    // S s2 = S{
+    //     i: 121,
+    //     j: 51,
+    // };
+    println(s.i);
+    // println(s2.i);
+    //println(s == s2);
+    return 0;
+}

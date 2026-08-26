@@ -83,7 +83,7 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 					SrcPosition: str.Def.Location,
 				},
 				Operand2: Operand{
-					Constant:    prop.Offset.Value,
+					Offset:      prop.Offset,
 					SrcPosition: str.Def.Location,
 				},
 				SrcPosition: str.Def.Location,
@@ -96,7 +96,7 @@ func structDefaultEquals(str *semantic.StructSymbol) Function {
 					SrcPosition: str.Def.Location,
 				},
 				Operand2: Operand{
-					Constant:    prop.Offset.Value,
+					Offset:      prop.Offset,
 					SrcPosition: str.Def.Location,
 				},
 				SrcPosition: str.Def.Location,
@@ -220,7 +220,7 @@ func structDefaultToString(str *semantic.StructSymbol) Function {
 				Var: load,
 			},
 			Operand2: Operand{
-				Constant: prop.Offset.Value,
+				Offset: prop.Offset,
 			},
 		})
 		if prop.Type.Equals(dt.StringType) {

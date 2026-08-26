@@ -195,7 +195,7 @@ func translateDotAssignment(node *parser.AST) []TAC {
 			Operation:   Load,
 			Operand1:    ptr,
 			Operand2: Operand{
-				Constant: propSymbol.Offset.Value,
+				Offset: propSymbol.Offset,
 			},
 			SrcPosition: node.Location,
 		})

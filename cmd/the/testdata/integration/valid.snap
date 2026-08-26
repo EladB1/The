@@ -67,6 +67,9 @@ Output:
         (local $__t24 i32)
         (local $__t25 i32)
         (local $__t26 i32)
+        (i32.const 0)
+        (call $__malloc)
+        (local.set $__t2)
         (local.set $logger (local.get $__t2))
         (global.get $SOME_CONST)
         (i32.const 2)
@@ -232,9 +235,9 @@ Output:
     )
 
 Error: unexpected token, expected an identifier or u32
-     --> <anon>:502:36
+     --> <anon>:713:36
       |
-  502 |                         (local.get $)
+  713 |                         (local.get $)
       |                                    ^ 
 
 ---

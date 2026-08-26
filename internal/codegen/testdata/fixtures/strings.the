@@ -1,4 +1,6 @@
 fn main() -> int {
+    String str = "hello, world";
+    println(str[1]);
     testCasts();
     return 0;
 }

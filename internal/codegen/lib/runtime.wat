@@ -111,28 +111,6 @@
         )
         (local.get $len)
     )
-    
-    (func $__str_length (param $ptr i32) (result i32)
-        (local $len i32)
-        (local $curr i32)
-
-        (local.set $len (i32.const 0))
-
-        (loop $length_loop
-            ;; Use pointer arithmetic to load a byte from memory
-            (i32.load8_u (i32.add (local.get $ptr) (local.get $len)))
-            (local.set $curr)
-            ;; check for null terminator
-            (if (i32.eqz (local.get $curr))
-                (then
-                    (return (local.get $len))
-                )
-            )
-            (local.set $len (i32.add (local.get $len) (i32.const 1)))
-            (br $length_loop)
-        )
-        (local.get $len)
-    )
 
     (func $__i32_pow (param $base i32) (param $expo i32) (result i32)
         (local $result i32)

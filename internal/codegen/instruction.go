@@ -41,10 +41,68 @@ func handleInstruction(instruction irgen.Instruction) []Statement {
 		statements = append(statements, jmp...)
 	case irgen.Store:
 		statements = generateStoreOperation(instruction)
+	case irgen.Set:
+		base := translateOperand(instruction.Operand1)
+		value := translateOperand(instruction.Operand2)
+		statements = append(statements, base, NumericInstruction{
+			DataType: datatypes.I32,
+			Operator: "const",
+			Value:    instruction.Operand1.Offset.Value,
+		}, NumericInstruction{
+			DataType: datatypes.I32,
+			Operator: "add",
+		}, value, MemoryInstruction{
+			DataType: datatypes.I32,
+			Operator: Store,
+		})
+
+	case irgen.Load:
+		base := instruction.Operand1.Var
+		offset := instruction.Operand2.Offset
+		vis := Local
+		if base.Visibility == irgen.Global {
+			vis = Global
+		}
+		statements = append(statements, VariableInstruction{
+			Visibility: vis,
+			Operator:   Get,
+			Name:       base.Name,
+		}, NumericInstruction{
+			DataType: datatypes.I32,
+			Operator: "const",
+			Value:    offset.Value,
+		}, NumericInstruction{
+			DataType: datatypes.I32,
+			Operator: "add",
+		}, NumericInstruction{
+			DataType: datatypes.I32,
+			Operator: "load",
+		}, VariableInstruction{
+			Visibility: Local,
+			Operator:   Set,
+			Name:       instruction.Destination.Name,
+		})
 	case irgen.PrepareParam:
 		statements = append(statements, translateOperand(instruction.Operand1))
 	case irgen.Call:
 		statements = generateCall(instruction)
+	case irgen.Malloc:
+		size, ok := instruction.Operand1.Constant.(int)
+		if !ok {
+			size = 0
+		}
+		statements = append(statements, NumericInstruction{
+			DataType: datatypes.I32,
+			Operator: "const",
+			Value:    size,
+		}, ControlInstruction{
+			Operator:   Call,
+			Identifier: "__malloc",
+		}, VariableInstruction{
+			Visibility: Local,
+			Operator:   Set,
+			Name:       instruction.Destination.Name,
+		})
 	default:
 		operation := instruction.Operation
 		if isTypeCast(operation) {

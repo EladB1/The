@@ -274,6 +274,8 @@ func (op Operand) String() string {
 			off = fmt.Sprintf("+%d", op.Offset.Value)
 		}
 		output.WriteString(fmt.Sprintf(" %s%s%s", vis, op.Var.Name, off))
+	} else if op.Offset.IsSet {
+		output.WriteString(fmt.Sprintf(" %d", op.Offset.Value))
 	} else {
 		if op.Type == "" {
 			output.WriteString(fmt.Sprintf(" %v", op.Constant))

@@ -866,7 +866,7 @@ func translateDot(node parser.AST) ([]TAC, Operand) {
 			Operation:   Load,
 			Operand1:    ptr,
 			Operand2: Operand{
-				Constant:    propSymbol.Offset.Value,
+				Offset:      propSymbol.Offset,
 				SrcPosition: node.Location,
 			},
 			SrcPosition: node.Location,
@@ -914,7 +914,6 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 			paramType := param.Type
 			irParamType := dt.TranslateSourceType(paramType)
 			if !castTo.Equals(dt.NoneType) && !paramType.Equals(castTo) {
-				// TODO: struct
 				paramType = castTo
 				irParamType = dt.TranslateSourceType(paramType)
 				op := getTypeCastOperation(param_op.Type, irParamType)
@@ -933,8 +932,13 @@ func translateCall(node parser.AST) ([]TAC, Operand) {
 					}
 				} else {
 					var call []TAC
-					fn := getToStringFn(param.Type)
-					call, param_op = callFunction(string(fn), dt.Str_const, param.Location, param_op)
+					var fn string
+					if param.Type.IsDynamic {
+						fn = getStructToString(param.Type.String())
+					} else {
+						fn = string(getToStringFn(param.Type))
+					}
+					call, param_op = callFunction(fn, dt.Str_const, param.Location, param_op)
 					instructions = append(instructions, call...)
 				}
 			}
@@ -1068,7 +1072,7 @@ func loadVariable(node parser.AST) ([]TAC, Operand) {
 				SrcPosition: get.SrcPosition,
 			},
 			Operand2: Operand{
-				Constant: variable.Offset.Value,
+				Offset: variable.Offset,
 			},
 			SrcPosition: node.Location,
 		})

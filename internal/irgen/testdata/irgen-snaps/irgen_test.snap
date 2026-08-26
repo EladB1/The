@@ -782,7 +782,7 @@ Program: [
     __t101: i32 = CALL __Nested_compare__default__equals 2
     __t102: ptr = LOAD local.n1 8
     PARAM __t102
-    __t103: str_const = CALL  1
+    __t103: str_const = CALL __Inner_cast_toString 1
     PARAM __t103
     CALL println 1
     __t104: str_const = LOAD local.n1 12
@@ -804,11 +804,11 @@ Program: [
     SET local.p2+4 __t111
     __t112: u32 = LOAD local.p2 4
     __t113: u32 = u32.sub __t112 u32(1)
-    SET local.p2+4 __t113
+    SET local.p2 __t113
     STORE local.newage __t112
     __t114: u32 = LOAD local.p2 4
     __t115: u32 = u32.sub __t114 u32(1)
-    SET local.p2+4 __t115
+    SET local.p2 __t115
     STORE local.newage __t115
     PARAM local.p2
     __t116: i32 = CALL __Person1_cast_toInt 1
@@ -821,7 +821,7 @@ Program: [
     PARAM local.p2
     CALL __Person1_P_do 1
     PARAM local.p2
-    __t118: str_const = CALL  1
+    __t118: str_const = CALL __Person1_cast__default_toString 1
     PARAM __t118
     CALL println 1
     __t119: ptr = Malloc 0
