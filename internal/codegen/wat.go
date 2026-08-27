@@ -6,6 +6,7 @@ import (
 
 	ds "github.com/EladB1/The/internal/datastructures"
 	dt "github.com/EladB1/The/internal/datatypes"
+	"github.com/EladB1/The/internal/semantic"
 )
 
 const (
@@ -77,6 +78,7 @@ type (
 		DataType dt.IRType
 		Operator MemoryOperator
 		Address  Statement
+		Offset   semantic.OffsetValue
 		Value    Statement
 	}
 
@@ -84,6 +86,7 @@ type (
 		DataType dt.IRType
 		Operator string
 		Value    any
+		Offset   semantic.OffsetValue
 	}
 	IfBlock struct {
 		ReturnType  dt.IRType
@@ -271,6 +274,9 @@ func (inst MemoryInstruction) String(indentLevel int) string {
 	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteString("(")
 	output.WriteString(fmt.Sprintf("%s.%s ", string(inst.DataType), inst.Operator))
+	if inst.Offset.IsSet {
+		output.WriteString(fmt.Sprintf(" offset=%d ", inst.Offset.Value))
+	}
 	if inst.Address != nil {
 		output.WriteString(inst.Address.String(0))
 	}
@@ -299,6 +305,9 @@ func (inst NumericInstruction) String(indentLevel int) string {
 	output.WriteString(strings.Repeat(indentDelim, indentLevel))
 	output.WriteRune('(')
 	output.WriteString(fmt.Sprintf("%s.%s", inst.DataType, inst.Operator))
+	if inst.Offset.IsSet {
+		output.WriteString(fmt.Sprintf(" offset=%d", inst.Offset.Value))
+	}
 	if inst.Value != nil {
 		output.WriteString(fmt.Sprintf(" %v", inst.Value))
 	}

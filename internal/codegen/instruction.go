@@ -44,39 +44,21 @@ func handleInstruction(instruction irgen.Instruction) []Statement {
 	case irgen.Set:
 		base := translateOperand(instruction.Operand1)
 		value := translateOperand(instruction.Operand2)
-		statements = append(statements, base, NumericInstruction{
-			DataType: datatypes.I32,
-			Operator: "const",
-			Value:    instruction.Operand1.Offset.Value,
-		}, NumericInstruction{
-			DataType: datatypes.I32,
-			Operator: "add",
-		}, value, MemoryInstruction{
+		statements = append(statements, MemoryInstruction{
 			DataType: datatypes.I32,
 			Operator: Store,
+			Address:  base,
+			Offset:   instruction.Operand1.Offset,
+			Value:    value,
 		})
 
 	case irgen.Load:
-		base := instruction.Operand1.Var
-		offset := instruction.Operand2.Offset
-		vis := Local
-		if base.Visibility == irgen.Global {
-			vis = Global
-		}
-		statements = append(statements, VariableInstruction{
-			Visibility: vis,
-			Operator:   Get,
-			Name:       base.Name,
-		}, NumericInstruction{
+		base := translateOperand(instruction.Operand1)
+		statements = append(statements, MemoryInstruction{
 			DataType: datatypes.I32,
-			Operator: "const",
-			Value:    offset.Value,
-		}, NumericInstruction{
-			DataType: datatypes.I32,
-			Operator: "add",
-		}, NumericInstruction{
-			DataType: datatypes.I32,
-			Operator: "load",
+			Operator: Load,
+			Address:  base,
+			Offset:   instruction.Operand2.Offset,
 		}, VariableInstruction{
 			Visibility: Local,
 			Operator:   Set,

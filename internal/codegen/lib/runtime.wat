@@ -27,8 +27,15 @@
     (global $stdin_byte_counter i32 (i32.const 36))
     (data (i32.const 36) "\00\00\00\00")
 
+    (global $error_prefix i32 (i32.const 900))
+    (data (i32.const 900) "\1b[1;31mRuntimeError:\1b[0m ")
+    (global $bounds_error1 i32 (i32.const 700))
+    (data (i32.const 700) " index ")
+    (global $bounds_error2 i32 (i32.const 800))
+    (data (i32.const 800) " out of range ")
+
     (global $malloc_start i32 (i32.const 1024))
-    (global $malloc_next i32 (i32.const 1024))
+    (global $malloc_next (mut i32) (i32.const 1024))
 
     (func $__malloc (param $size i32) (result (;memory address;) i32)
         (local $curr_alloc_addr i32)
@@ -40,10 +47,52 @@
         (i32.add (local.get $curr_alloc_addr) (local.get $size))
         (local.set $next_alloc_addr)
 
-        (local.get $next_alloc_addr)
-        (i32.store (global.get $malloc_next))
+        (global.set $malloc_next (local.get $next_alloc_addr))
+
+        (call $__align)
 
         (local.get $curr_alloc_addr)
+    )
+
+    (func $__align
+        (i32.eqz (i32.rem_u (global.get $malloc_next) (i32.const 4)))
+        if
+            (return)
+        else
+            (i32.mul
+                (i32.const 4)
+                (i32.add
+                    (i32.const 1)
+                    (i32.div_u (global.get $malloc_next) (i32.const 4))
+                )
+            )
+            (global.set $malloc_next)
+        end
+    )
+
+    (func $__panic (param $list i32) (param $len i32)
+        (local $msg i32)
+        (local $index i32)
+        (local $tmp i32)
+        (local.set $index (i32.const 0))
+        (global.get $error_prefix)
+        (local.set $msg)
+        (loop $concat_loop (block $exit_concat_loop
+            (i32.load
+                (i32.add 
+                    (local.get $list)
+                    (i32.mul (local.get $index) (i32.const 4))
+                )
+            )
+            (local.set $tmp)
+            (call $__str_concat (local.get $msg) (local.get $tmp))
+            (local.set $msg)
+            (local.set $index (i32.add (local.get $index) (i32.const 1)))
+            (i32.eq (local.get $index) (local.get $len))
+            br_if $exit_concat_loop
+            br $concat_loop
+        ))
+        (call $exit_int_String (i32.const 1) (local.get $msg))
     )
     
     (func $__fd_write (param $fd i32) (param $ptr i32) (param $newline i32)

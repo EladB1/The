@@ -1,10 +1,12 @@
 struct S {
     int i;
-    private int j;
+    /*private */int j;
+    char c;
 
     cast {
         fn toString() -> String {
-            return j as String;
+            String rep = i as String + c as String;
+            return (this.i as String) + (c as String);
         }
     }
 
@@ -24,13 +26,17 @@ fn main() -> int {
     S s = S{
         i: 12,
         j: 51,
+        c: 'a',
     };
     // S s2 = S{
     //     i: 121,
     //     j: 51,
     // };
+    
     println(s.i);
-    // println(s2.i);
+    println(s.j);
+    println(s.c);
+    println(s);
     //println(s == s2);
     return 0;
 }
