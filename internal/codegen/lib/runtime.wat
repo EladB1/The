@@ -49,21 +49,21 @@
 
         (global.set $malloc_next (local.get $next_alloc_addr))
 
-        (call $__align)
+        (call $__align (i32.const 4))
 
         (local.get $curr_alloc_addr)
     )
 
-    (func $__align
-        (i32.eqz (i32.rem_u (global.get $malloc_next) (i32.const 4)))
+    (func $__align (param $size i32)
+        (i32.eqz (i32.rem_u (global.get $malloc_next) (local.get $size)))
         if
             (return)
         else
             (i32.mul
-                (i32.const 4)
+                (local.get $size)
                 (i32.add
                     (i32.const 1)
-                    (i32.div_u (global.get $malloc_next) (i32.const 4))
+                    (i32.div_u (global.get $malloc_next) (local.get $size))
                 )
             )
             (global.set $malloc_next)

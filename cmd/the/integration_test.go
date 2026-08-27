@@ -5,7 +5,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"os"
 	"path/filepath"
 	"regexp"
 	"testing"
@@ -76,9 +75,7 @@ func TestValidPrograms(t *testing.T) {
 	)
 	path := filepath.Join(FIX_DIR, "valid")
 	t.Run("should compile program.the with no issues", func(t *testing.T) {
-		os.Setenv("THE_DEV_CODEGEN", "true")
 		snapshotTestCompilerWithArgs(t, snapshots, "-nowasm", "build", filepath.Join(path, "program.the"))
-		os.Setenv("THE_DEV_CODEGEN", "")
 	})
 }
 

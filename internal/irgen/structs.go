@@ -391,11 +391,15 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 	//compare := formTempVar(dt.I32)
 	var compare Operand
 	var call []TAC
+	/* NOTE:
+	 * Since the comparison functions have parameters (other, this)
+	 * need to pass in right operand before left operand
+	 */
 	if compareBlock := str.GetInnerScope().LookupNamedBlock("compare"); compareBlock != nil {
 		if strings.Contains(comp, "l") {
 			if lessFn := compareBlock.InnerScope.LookupFunctionByName("lessThan"); lessFn != nil {
 				lessName := lessFn.Overloads[0].IRName
-				call, compare = callFunction(lessName, dt.I32, l_op.SrcPosition, l_op, r_op)
+				call, compare = callFunction(lessName, dt.I32, l_op.SrcPosition, r_op, l_op)
 				instructions = append(instructions, call...)
 				compared = true
 			}
@@ -403,7 +407,7 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 		if strings.Contains(comp, "g") {
 			if greaterFn := compareBlock.InnerScope.LookupFunctionByName("greaterThan"); greaterFn != nil {
 				greaterName := greaterFn.Overloads[0].IRName
-				call, compare = callFunction(greaterName, dt.I32, l_op.SrcPosition, l_op, r_op)
+				call, compare = callFunction(greaterName, dt.I32, l_op.SrcPosition, r_op, l_op)
 				instructions = append(instructions, call...)
 				compared = true
 			}
@@ -411,7 +415,7 @@ func translateStructComparison(l_op, r_op Operand, struct_name string, comp stri
 	}
 	if strings.Contains(comp, "e") {
 		first := compare
-		call, compare = callFunction(equalsName, dt.I32, l_op.SrcPosition, l_op, r_op)
+		call, compare = callFunction(equalsName, dt.I32, l_op.SrcPosition, r_op, l_op)
 		instructions = append(instructions, call...)
 		if compared {
 			or := formTempVar(dt.I32)
