@@ -22,6 +22,11 @@ integration-test:
 execution-test:
 	go test -tags=execution -v ./cmd/the/...
 
+test-all: build
+	$(MAKE) test
+	$(MAKE) integration-test
+	$(MAKE) execution-test
+
 test-coverage:
 	go test -coverprofile cover.out ./internal/...
 

@@ -19,21 +19,14 @@ func handleInstruction(instruction irgen.Instruction) []Statement {
 			Identifier: instruction.Operand1.Label,
 		})
 	case irgen.JMPIFNOT:
-		operand := instruction.Operand2.Var
-		vis := Local
-		if operand.Visibility == irgen.Global {
-			vis = Global
-		}
-		operandType := lowerIRTypeToWatType(operand.DataType)
+		operand := translateOperand(instruction.Operand2)
 		jmp := []Statement{
-			VariableInstruction{
-				Operator:   Get,
-				Visibility: vis,
-				Name:       operand.Name,
-			}, NumericInstruction{
-				DataType: operandType,
+			operand,
+			NumericInstruction{
+				DataType: lowerIRTypeToWatType(instruction.Operand2.Type),
 				Operator: "eqz",
-			}, ControlInstruction{
+			},
+			ControlInstruction{
 				Operator:   BRIF,
 				Identifier: instruction.Operand1.Label,
 			},

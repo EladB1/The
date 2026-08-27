@@ -28,15 +28,15 @@ fn main() -> int {
         j: 51,
         c: 'a',
     };
-    // S s2 = S{
-    //     i: 121,
-    //     j: 51,
-    // };
+    S s2 = S{
+        i: 121,
+        j: 51,
+    };
     
     println(s.i);
     println(s.j);
     println(s.c);
     println(s);
-    //println(s == s2);
+    println(s == s2);
     return 0;
 }

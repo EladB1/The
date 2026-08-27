@@ -1,6 +1,6 @@
 
 [TestValidPrograms/should_compile_program.the_with_no_issues - 1]
-Exit code: 1
+Exit code: 0
 ===
 
 Output:
@@ -49,9 +49,9 @@ Output:
         (local $str i32)
         (local $__t10 i32)
         (local $k i32)
+        (local $__t12 i32)
         (local $__t11 i32)
         (local $c i32)
-        (local $__t12 i32)
         (local $__t14 i32)
         (local $__t15 i32)
         (local $__t16 i32)
@@ -100,7 +100,7 @@ Output:
             (then
                     (i32.const 113)
                     (local.get $logger)
-                    (call $log)
+                    (call $__ErrorLogger_Logger_log)
                     (i32.const 1)
                     (return)
             )
@@ -118,12 +118,12 @@ Output:
                         (then
                                 (i32.const 137)
                                 (local.get $logger)
-                                (call $log)
+                                (call $__ErrorLogger_Logger_log)
                         )
                         (else
                                 (i32.const 152)
                                 (local.get $logger)
-                                (call $log)
+                                (call $__ErrorLogger_Logger_log)
                         )
                     )
             )
@@ -135,18 +135,18 @@ Output:
                 (local.set $__t10)
                 (local.set $k (i32.const 0))
                 (loop $loop@0
+                        (local.get $k)
+                        (local.get $__t10)
+                        (i32.lt_s)
+                        (local.set $__t12)
+                        (local.get $__t12)
+                        (i32.eqz)
+                        (br_if $loop_exit@0)
                         (local.get $str)
                         (local.get $k)
                         (call $__str_index)
                         (local.set $__t11)
                         (local.set $c (local.get $__t11))
-                        (local.get $k)
-                        (local.get $__t10)
-                        (i32.lt_s)
-                        (local.set $__t12)
-                        (local.get $)
-                        (none.eqz)
-                        (br_if $loop_exit@0)
                         (block $loop_continue@0
                                 (local.get $k)
                                 (i32.const 0)
@@ -234,10 +234,5 @@ Output:
         (return)
     )
 
-Error: unexpected token, expected an identifier or u32
-     --> <anon>:713:36
-      |
-  713 |                         (local.get $)
-      |                                    ^ 
 
 ---

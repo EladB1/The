@@ -13,7 +13,8 @@ struct ErrorLogger impl Logger {
 }
 
 fn main() -> int {
-    Logger logger = ErrorLogger{};
+    // Logger logger = ErrorLogger{};
+    ErrorLogger logger = ErrorLogger{};
     mut uint32 i = SOME_CONST ** 2;
     i += 2;
     i = i * 2;

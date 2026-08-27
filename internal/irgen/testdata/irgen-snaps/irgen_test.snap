@@ -368,12 +368,12 @@ Program: [
         __t14: i32 = CALL __str_length 1
         STORE local.__foreach_iter i32(0)
         loop@5: {
+            __t16: i32 = i32.lt local.__foreach_iter __t14
+            JMPIFNOT loop_exit@5 __t16
             PARAM param.str
             PARAM local.__foreach_iter
             __t15: i32 = CALL __str_index 2
             STORE local.ch __t15
-            __t16: i32 = i32.lt local.__foreach_iter __t14
-            JMPIFNOT loop_exit@5
             loop_continue@5: {
                 PARAM local.ch
                 __t18: str_const = CALL __str_fromChar 1
@@ -395,12 +395,12 @@ Program: [
         __t19: i32 = CALL __str_length 1
         STORE local.i i32(0)
         loop@6: {
+            __t21: i32 = i32.lt local.i __t19
+            JMPIFNOT loop_exit@6 __t21
             PARAM param.str
             PARAM local.i
             __t20: i32 = CALL __str_index 2
             STORE local.ch __t20
-            __t21: i32 = i32.lt local.i __t19
-            JMPIFNOT loop_exit@6
             loop_continue@6: {
                 PARAM local.ch
                 __t23: str_const = CALL __str_fromChar 1
@@ -422,12 +422,12 @@ Program: [
         __t24: i32 = CALL __str_length 1
         STORE local.i i32(0)
         loop@7: {
+            __t26: i32 = i32.lt local.i __t24
+            JMPIFNOT loop_exit@7 __t26
             PARAM param.str
             PARAM local.i
             __t25: i32 = CALL __str_index 2
             STORE local.ch __t25
-            __t26: i32 = i32.lt local.i __t24
-            JMPIFNOT loop_exit@7
             loop_continue@7: {
                 PARAM local.ch
                 __t28: str_const = CALL __str_fromChar 1
