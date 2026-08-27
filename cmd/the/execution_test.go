@@ -7,14 +7,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 )
 
 const (
 	SOURCE_DIR    string = "testdata/execution/source"
 	GENERATED_DIR string = "testdata/execution/generated"
-	targetBinary  string = "../../the"
 )
 
 type ExecutionResult struct {
@@ -46,6 +44,11 @@ var executionTests = []struct {
 		stdout: "",
 		stderr: "RuntimeError: integer divide by zero \n",
 	}},
+	{"bounds.the", ExecutionResult{
+		status: 1,
+		stdout: "hlo",
+		stderr: "\x1b[1;31mRuntimeError:\x1b[0m  index 6 out of range 5\n",
+	}},
 }
 
 func TestExecution(t *testing.T) {
@@ -61,8 +64,8 @@ func TestExecution(t *testing.T) {
 			result := RunCompiler(args, &stdoutBuffer, &stderrBuffer, env)
 			actualResult := ExecutionResult{
 				status: result,
-				stdout: strings.TrimPrefix(stdoutBuffer.String(), "\n"),
-				stderr: strings.TrimPrefix(stderrBuffer.String(), "\n"),
+				stdout: stdoutBuffer.String(),
+				stderr: stderrBuffer.String(),
 				// Extra new line gets inserted before the output
 			}
 			if actualResult != sub.expectedResult {
