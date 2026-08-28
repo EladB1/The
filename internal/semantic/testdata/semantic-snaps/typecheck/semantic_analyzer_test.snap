@@ -49,7 +49,7 @@ children: [
     children: [
         Node: { Token: {Value: String, Type: type keyword, Line: 7, Column: 0} },
         Node: { Token: {Value: s, Type: identifier, Line: 7, Column: 7} },
-        Node: { Token: {Value: "hello, world!", Type: string literal, Line: 7, Column: 11}, Type: String }
+        Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 7, Column: 11}, Type: String }
     ] },
     Node: { Label: "Variable", Type: bool
     children: [
@@ -287,7 +287,7 @@ children: [
     children: [
         Node: { Token: {Value: String, Type: type keyword, Line: 7, Column: 0} },
         Node: { Token: {Value: s, Type: identifier, Line: 7, Column: 7} },
-        Node: { Token: {Value: "hello, world!", Type: string literal, Line: 7, Column: 11}, Type: String }
+        Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 7, Column: 11}, Type: String }
     ] },
     Node: { Label: "Variable", Type: bool
     children: [
@@ -340,7 +340,7 @@ children: [
             ] },
             Node: { Token: {Value: *, Type: multiply operator, Line: 16, Column: 8}, Type: None
             children: [
-                Node: { Token: {Value: "2", Type: string literal, Line: 16, Column: 4}, Type: String },
+                Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 16, Column: 4}, Type: String },
                 Node: { Token: {Value: 2, Type: int literal, Line: 16, Column: 10}, Type: int }
             ] },
             Node: { Token: {Value: +, Type: add operator, Line: 17, Column: 6}, Type: None
@@ -435,7 +435,7 @@ children: [
             Node: { Label: "index", Type: char
             children: [
                 Node: { Token: {Value: s, Type: identifier, Line: 28, Column: 4}, Type: String },
-                Node: { Token: {Value: "world", Type: string literal, Line: 28, Column: 6}, Type: String }
+                Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 28, Column: 6}, Type: String }
             ] },
             Node: { Label: "index", Type: String
             children: [
@@ -471,7 +471,7 @@ children: [
             Node: { Label: "index", Type: char
             children: [
                 Node: { Token: {Value: 0, Type: int literal, Line: 33, Column: 4}, Type: int },
-                Node: { Token: {Value: "hello", Type: string literal, Line: 33, Column: 6}, Type: String }
+                Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 33, Column: 6}, Type: String }
             ] },
             Node: { Token: {Value: *=, Type: assign operator, Line: 34, Column: 6}
             children: [

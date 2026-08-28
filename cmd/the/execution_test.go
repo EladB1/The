@@ -47,7 +47,7 @@ var executionTests = []struct {
 	{"bounds.the", ExecutionResult{
 		status: 1,
 		stdout: "hlo",
-		stderr: "\x1b[1;31mRuntimeError:\x1b[0m  index 6 out of range 5\n",
+		stderr: "\x1b[1;31mRuntimeError:\x1b[0m index 6 out of range 5\n",
 	}},
 }
 

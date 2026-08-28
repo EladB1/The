@@ -28,6 +28,7 @@ Added related issue [here](#)
 
 - [ ] Unit tests written/updated
 - [ ] Integraiton tests written/updated
+- [ ] Execution tests written/udpated
 - [ ] Manual testing (provide evidence below)
 
 **Evidence**:
@@ -36,6 +37,7 @@ Added related issue [here](#)
 
 - [ ] Successfully run `make build` without warnings or errors
 - [ ] All unit tests passing (`make test`)
-- [ ] All integration tests passing (`make integration`)
+- [ ] All integration tests passing (`make integration-test`)
+- [ ] All execution tests passing (`make execution-test`)
 - [ ] Snapshot updates reviewed for correctness
 - [ ] Documentation updates (if necessary)

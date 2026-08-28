@@ -29,12 +29,12 @@
 
     ;; (tag $bounds_error (param i32))
     ;; (export "bounds_error_tag" (tag $bounds_error))
-    (global $error_prefix i32 (i32.const 900))
-    (data (i32.const 900) "\1b[1;31mRuntimeError:\1b[0m ")
-    (global $bounds_error1 i32 (i32.const 700))
-    (data (i32.const 700) " index ")
-    (global $bounds_error2 i32 (i32.const 800))
-    (data (i32.const 800) " out of range ")
+    (global $error_prefix i32 (i32.const 9000))
+    (data (i32.const 9000) "\00\01\00\00\1b[1;31mRuntimeError:\1b[0m ")
+    (global $bounds_error1 i32 (i32.const 7000))
+    (data (i32.const 7000) "\06\00\00\00index ")
+    (global $bounds_error2 i32 (i32.const 8000))
+    (data (i32.const 8000) "\FC\00\00\00 out of range ")
 
     (global $malloc_start i32 (i32.const 1024))
     (global $malloc_next (mut i32) (i32.const 1024))
@@ -73,12 +73,9 @@
     )
     
     (func $__fd_write (param $fd i32) (param $ptr i32) (param $newline i32)
-        (local $len i32)
-        (call $__str_length (local.get $ptr))
-        (local.set $len)
         ;; Update reusable iovec
-        (i32.store (global.get $iovec_ptr) (local.get $ptr))
-        (i32.store (global.get $iovec_len) (local.get $len))
+        (i32.store (global.get $iovec_ptr) (i32.add (local.get $ptr) (i32.const 4)))
+        (i32.store (global.get $iovec_len) (call $__str_length (local.get $ptr)))
         (call $__print
             (local.get $fd)
             (global.get $iovec_base)
@@ -110,6 +107,8 @@
         (global.get $error_prefix)
         (local.set $msg)
         (loop $concat_loop (block $exit_concat_loop
+            (i32.eq (local.get $index) (local.get $len))
+            br_if $exit_concat_loop
             (i32.load
                 (i32.add 
                     (local.get $list)
@@ -120,14 +119,15 @@
             (call $__str_concat (local.get $msg) (local.get $tmp))
             (local.set $msg)
             (local.set $index (i32.add (local.get $index) (i32.const 1)))
-            (i32.eq (local.get $index) (local.get $len))
-            br_if $exit_concat_loop
+            
             br $concat_loop
         ))
         (call $exit_int_String (i32.const 1) (local.get $msg))
     )
 
     (func $__read_stdin (result i32)
+        (local $result i32)
+        (local $len i32)
         (i32.store (global.get $iovec_stdin) (global.get $stdin_buffer))
         (i32.store (global.get $iovec_stdin_len) (i32.const 256)) ;; allow 256 bytes
         (call $__fd_read
@@ -137,30 +137,21 @@
             (global.get $stdin_byte_counter)
         )
         drop
-        (i32.store (global.get $iovec_stdin_len) (i32.load (global.get $stdin_byte_counter)))
-        (global.get $stdin_buffer)
+        (call $__malloc (i32.add (global.get $stdin_byte_counter) (i32.const 4)))
+        (local.set $result)
+        (i32.sub (i32.load (global.get $stdin_byte_counter)) (i32.const 1)) ;; remove EOL character
+        (local.set $len)
+        (i32.store (local.get $result) (local.get $len))
+        (memory.copy
+            (i32.add (local.get $result) (i32.const 4))
+            (global.get $stdin_buffer)
+            (local.get $len)
+        )
+        (local.get $result)
     )
 
     (func $__str_length (param $ptr i32) (result i32)
-        (local $len i32)
-        (local $curr i32)
-
-        (local.set $len (i32.const 0))
-
-        (loop $length_loop
-            ;; Use pointer arithmetic to load a byte from memory
-            (i32.load8_u (i32.add (local.get $ptr) (local.get $len)))
-            (local.set $curr)
-            ;; check for null terminator
-            (if (i32.eqz (local.get $curr))
-                (then
-                    (return (local.get $len))
-                )
-            )
-            (local.set $len (i32.add (local.get $len) (i32.const 1)))
-            (br $length_loop)
-        )
-        (local.get $len)
+        (i32.load offset=0 (local.get $ptr))
     )
 
     (func $__i32_pow (param $base i32) (param $expo i32) (result i32)
@@ -259,13 +250,13 @@
         (local.get $result)
     )
 
-    (global $__bool_true i32 (i32.const 40))
-    (data (i32.const 40) "true")
-    (global $__bool_false i32 (i32.const 45))
-    (data (i32.const 45) "false")
+    (global $__bool_true i32 (i32.const 4000))
+    (data (i32.const 4000) "\04\00\00\00true")
+    (global $__bool_false i32 (i32.const 4500))
+    (data (i32.const 4500) "\05\00\00\00false")
     (data (i32.const 51) "0123456789")
     (global $__default_assertion_error i32 (i32.const 80))
-    (data (i32.const 80) "Assertion error")
+    (data (i32.const 80) "\FF\00\00\00Assertion error")
     ;;
     ;; constants
     ;;
@@ -352,6 +343,8 @@
         (local $isnegative i32)
         (local $index i32)
         (local $addr i32)
+        (local $start i32)
+
         (local.set $isnegative (i32.lt_s (local.get $num) (i32.const 0)))
         (i32.eq (local.get $isnegative) (i32.const 1))
         (if
@@ -378,15 +371,21 @@
                 br $countloop
             ))
         end
-        (local.set $addr (call $__malloc (local.get $numlen)))
+        ;; (local.set $addr (call $__malloc (local.get $numlen)))
+        (local.set $addr (call $__malloc (i32.add (local.get $numlen) (i32.const 4))))
+        (local.set $start (i32.add (local.get $addr) (i32.const 4)))
+        (i32.store offset=0 (local.get $addr) (local.get $numlen))
         (if (i32.eq (local.get $isnegative) (i32.const 1))
             (then ;; result[0] = '-'
-                (i32.store8 (local.get $addr) (i32.const 45))
+                ;; (i32.store8 (local.get $addr) (i32.const 45))
+                (i32.store8 (local.get $start) (i32.const 45))
+
             )
         )
         (local.set $writeidx 
             (i32.sub 
-                (i32.add (local.get $addr) (local.get $numlen))
+                ;; (i32.add (local.get $addr) (local.get $numlen))
+                (i32.add (local.get $start) (local.get $numlen))
                 (i32.const 1)
             ))
         
@@ -402,7 +401,7 @@
             (local.set $num (i32.div_u (local.get $num) (i32.const 10)))
 
             ;; if wrote first index, exit loop
-            (i32.eq (local.get $writeidx) (i32.add (local.get $addr) (local.get $index)))
+            (i32.eq (local.get $writeidx) (i32.add (local.get $start) (local.get $index)))
             br_if $breakwriteloop
 
             (local.set $writeidx (i32.sub (local.get $writeidx) (i32.const 1)))
@@ -420,6 +419,7 @@
         (local $isnegative i32)
         (local $index i32)
         (local $addr i32)
+        (local $start i32)
         (local.set $isnegative (i64.lt_s (local.get $num) (i64.const 0)))
 
         (i32.eq (local.get $isnegative) (i32.const 1))
@@ -447,15 +447,17 @@
                 br $countloop
             ))
         end
-        (local.set $addr (call $__malloc (local.get $numlen)))
+        (local.set $addr (call $__malloc (i32.add (local.get $numlen) (i32.const 4))))
+        (local.set $start (i32.add (local.get $addr) (i32.const 4)))
+        (i32.store offset=0 (local.get $addr) (local.get $numlen))
         (if (i32.eq (local.get $isnegative) (i32.const 1))
             (then ;; result[0] = '-'
-                (i32.store8 (local.get $addr) (i32.const 45))
+                (i32.store8 (local.get $start) (i32.const 45))
             )
         )
         (local.set $writeidx 
             (i32.sub 
-                (i32.add (local.get $addr) (local.get $numlen))
+                (i32.add (local.get $start) (local.get $numlen))
                 (i32.const 1)
             )
         )
@@ -474,7 +476,7 @@
             (local.set $num (i64.div_u (local.get $num) (i64.const 10)))
 
             ;; if wrote first index, exit loop
-            (i32.eq (local.get $writeidx) (i32.add (local.get $addr) (local.get $index)))
+            (i32.eq (local.get $writeidx) (i32.add (local.get $start) (local.get $index)))
             br_if $breakwriteloop
 
             (local.set $writeidx (i32.sub (local.get $writeidx) (i32.const 1)))
@@ -493,24 +495,29 @@
 
     (func $__str_fromChar (export "__str_fromChar") (param $value i32) (result i32)
         (local $addr i32)
-        (call $__malloc (i32.const 2))
+        (call $__malloc (i32.const 5))
         (local.set $addr)
-        (i32.store8 (i32.add (local.get $addr) (i32.const 0)) (local.get $value))
-        (i32.store8 (i32.add (local.get $addr) (i32.const 1)) (i32.const 0)) ;; null terminator
+        (i32.store8 offset=0 (local.get $addr) (i32.const 1))
+        (i32.store8 offset=4 (local.get $addr) (local.get $value))
+        ;;(i32.store8 (i32.add (local.get $addr) (i32.const 1)) (i32.const 0)) ;; null terminator
         (local.get $addr)
     )
 
     (func $__str_indexOf (export "__str_indexOf") (param $char i32) (param $ptr i32) (result i32)
        (local $i i32)
        (local $curr i32)
+       (local $start i32)
+       (local $len i32)
+       (local.set $start (i32.add (local.get $ptr) (i32.const 4)))
+       (local.set $len (call $__str_length (local.get $ptr)))
        (loop $str_loop (block $exit__str_loop
-        (i32.load8_u (i32.add (local.get $ptr) (local.get $i)))
-        (local.tee $curr)
-        (if (i32.eqz)
+        (if (i32.eq (local.get $len) (local.get $i))
             (then
                 (br $exit__str_loop)
             )
         )
+        (i32.load8_u (i32.add (local.get $start) (local.get $i)))
+        (local.set $curr)
         (if (i32.eq (local.get $curr) (local.get $char))
             (then
                 (return (local.get $i))
@@ -539,10 +546,6 @@
         (local $lenLen i32)
         (call $__str_length (local.get $str))
         (local.set $len)
-        (call $__str_length (local.get $indexStr))
-        (local.set $indexLen)
-        (call $__str_length (local.get $lenStr))
-        (local.set $lenLen)
         (i32.or (i32.lt_s (local.get $index) (i32.const 0)) (i32.ge_s (local.get $index) (local.get $len)))
         if
             (call $__str_fromInt32 (local.get $index))
@@ -550,74 +553,89 @@
             (call $__str_fromInt32 (local.get $len))
             (local.set $lenStr)
             (call $__malloc (i32.const 16))
-            (local.tee $error)
-            (i32.store offset=0 (global.get $bounds_error1))
+            (local.set $error)
+            (i32.store offset=0 (local.get $error) (global.get $bounds_error1))
             (i32.store offset=4 (local.get $error) (local.get $indexStr))
             (i32.store offset=8 (local.get $error) (global.get $bounds_error2))
             (i32.store offset=12 (local.get $error) (local.get $lenStr))
             (call $__panic (local.get $error) (i32.const 4))
         end
-        (i32.load8_u (i32.add (local.get $str) (local.get $index)))
+        (i32.load8_u (i32.add (i32.add (local.get $str) (i32.const 4)) (local.get $index)))
     )
 
     (func $__char_concat (export "__char_concat") (param $char1 i32) (param $char2 i32) (result i32)
         (local $string i32)
-        (call $__malloc (i32.const 2))
+        (call $__malloc (i32.const 6))
         (local.set $string)
-        (i32.store8 (local.get $string) (local.get $char1))
-        (i32.store8 (i32.add (local.get $string) (i32.const 1)) (local.get $char2))
+        (i32.store (local.get $string) (i32.const 2))
+        (i32.store8 (i32.add (local.get $string) (i32.const 4)) (local.get $char1))
+        (i32.store8 (i32.add (local.get $string) (i32.const 5)) (local.get $char2))
         (local.get $string)
     )
+
     (func $__char_concat_str (export "__char_concat_str") (param $char i32) (param $str i32) (result i32)
         (local $string i32)
+        (local $start i32)
         (local $len i32)
         (call $__str_length (local.get $str))
         (local.set $len)
-        (call $__malloc (i32.add (local.get $len) (i32.const 1)))
+        (call $__malloc (i32.add (local.get $len) (i32.const 5)))
         (local.set $string)
-        (i32.store8 (local.get $string) (local.get $char))
+        (i32.store (local.get $string) (i32.add (local.get $len) (i32.const 1)))
+        (local.set $start (i32.add (local.get $string) (i32.const 4)))
+        (i32.store8 (local.get $start) (local.get $char))
         (memory.copy 
-            (i32.add (local.get $string) (i32.const 1))
-            (local.get $str)
+            (i32.add (local.get $start) (i32.const 1))
+            (i32.add (local.get $str) (i32.const 4))
             (local.get $len)
         )        
         (local.get $string)
     )
+
     (func $__str_concat (export "__str_concat") (param $str1 i32) (param $str2 i32) (result i32)
         (local $string i32)
         (local $len1 i32)
         (local $len2 i32)
+        (local $total_len i32)
+        (local $start i32)
         (call $__str_length (local.get $str1))
         (local.set $len1)
         (call $__str_length (local.get $str2))
         (local.set $len2)
-        (call $__malloc (i32.add (local.get $len1) (local.get $len2)))
+        (local.set $total_len (i32.add (local.get $len1) (local.get $len2)))
+        (call $__malloc (i32.add (local.get $total_len) (i32.const 4)))
         (local.set $string)
+        (i32.store (local.get $string) (local.get $total_len))
+        (local.set $start (i32.add (local.get $string) (i32.const 4)))
         (memory.copy 
-            (local.get $string)
-            (local.get $str1)
+            (local.get $start)
+            (i32.add (local.get $str1) (i32.const 4))
             (local.get $len1)
         )
         (memory.copy 
-            (i32.add (local.get $string) (local.get $len1))
-            (local.get $str2)
+            (i32.add (local.get $start) (local.get $len1))
+            (i32.add (local.get $str2) (i32.const 4))
             (local.get $len2)
         )    
         (local.get $string)
     )
+
     (func $__str_concat_char (export "__str_concat_char") (param $str i32) (param $char i32) (result i32)
         (local $string i32)
         (local $len i32)
+        (local $start i32)
         (call $__str_length (local.get $str))
         (local.set $len)
-        (call $__malloc (i32.add (local.get $len) (i32.const 1)))
+        (call $__malloc (i32.add (local.get $len) (i32.const 5))) ;; length + 1 (char) + 4 (length prefix for strings)
         (local.set $string)
+        (i32.store (local.get $string) (i32.add (local.get $len) (i32.const 1)))
+        (local.set $start (i32.add (local.get $string) (i32.const 4)))
         (memory.copy 
-            (local.get $string)
-            (local.get $str)
+            (local.get $start)
+            (i32.add (local.get $str) (i32.const 4))
             (local.get $len)
         )
-        (i32.store8 (i32.add (local.get $string) (local.get $len)) (local.get $char))
+        (i32.store8 (i32.add (local.get $start) (local.get $len)) (local.get $char))
         (local.get $string)
     )
     ;;
@@ -632,24 +650,25 @@
     ;; Compiler Generated Code
     ;;
 
-    (data $__str_const0 (i32.const 100) "")
-    (data $__str_const1 (i32.const 105) "50")
-    (data $__str_const2 (i32.const 108) "-$abc")
-    (data $__str_const3 (i32.const 200) "hello")
+    (data $__str_const0 (i32.const 100) "\0c\00\00\00hello, world")
+    (data $__str_const1 (i32.const 500) "\06\00\00\00Name: ")
+    ;;(data $__str_const1 (i32.const 200) "\02\00\00\00!\n")
     (func $main (export "main") (result i32)
-        ;; (call $__i32_pow (i32.const 2) (i32.const 10))
-        ;; (call $__str_fromInt32)
-        ;; (call $println)
-        ;; (call $__i64_pow (i64.const 10) (i64.const 3))
-        ;; (call $__str_fromInt64)
-        ;; (call $println)
-        ;;(call $__char_concat (i32.const 45) (i32.const 65))
-        ;;(call $__char_concat_str (i32.const 45) (i32.const 105))
-        ;;(call $__str_concat (i32.const 108) (i32.const 105))
-        ;; (call $__str_concat_char (i32.const 108) (i32.const 45))
-        ;;(i32.load8_u (i32.add (i32.const 200) (i32.const 15)))
-        (call $__str_index (i32.const 200) (i32.const 21))
-        (call $__str_fromChar)
+        (call $println (i32.const 100))
+        ;;(call $__str_fromInt32 (i32.const -11203))
+        (call $__str_fromInt64 (i64.const 56))
+        ;;(call $__str_fromChar (i32.const 65))
+        ;;(call $__str_fromBool (i32.const 1))
+        ;;(call $__str_indexOf (i32.const 101) (i32.const 100))
+        ;;(call $__str_contains_char (i32.const 101) (i32.const 100))
+        ;; (call $__str_fromChar 
+        ;;     (call $__str_index (i32.const 100) (i32.const 100))
+        ;; )
+        ;;(call $__char_concat (i32.const 65) (i32.const 45))
+        ;;(call $__char_concat_str (i32.const 45) (i32.const 100))
+        ;;(call $__str_concat (i32.const 100) (i32.const 200))
+        ;;(call $__str_concat_char (i32.const 100) (i32.const 72))
+        ;;(call $prompt (i32.const 500))
         (call $println)
         (i32.const 0)
         (return)

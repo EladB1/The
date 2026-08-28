@@ -79,11 +79,12 @@ func FlagUsageMessage(fs *flag.FlagSet) func() {
 }
 
 type EnvConfig struct {
-	Stdout        io.Writer
-	Stderr        io.Writer
-	LogBuffer     bytes.Buffer
-	DevMode_Lexer bool
-	DevMode_AST   bool // after parser
+	Stdout               io.Writer
+	Stderr               io.Writer
+	LogBuffer            bytes.Buffer
+	DevMode_ShowLiterals bool
+	DevMode_Lexer        bool
+	DevMode_AST          bool // after parser
 	// after semantic
 	DevMode_ScopeTree    bool
 	DevMode_AnnotatedAST bool
@@ -99,6 +100,7 @@ func LoadEnvConfig(stdout, stderr io.Writer, env []string) *EnvConfig {
 	log.SetFlags(log.Lshortfile)
 	log.SetOutput(&conf.LogBuffer)
 	vars := map[string]*bool{
+		"THE_DEV_LITERALS":  &conf.DevMode_ShowLiterals,
 		"THE_DEV_LEXER":     &conf.DevMode_Lexer,
 		"THE_DEV_PARSER":    &conf.DevMode_AST,
 		"THE_DEV_SCOPES":    &conf.DevMode_ScopeTree,

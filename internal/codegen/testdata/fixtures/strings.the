@@ -1,5 +1,6 @@
 fn main() -> int {
     String str = "hello, world";
+    println(str);
     println(str[1]);
     //println(str[27000]);
     testCasts();

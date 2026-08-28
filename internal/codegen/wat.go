@@ -34,7 +34,7 @@ type (
 		Name     string
 		MemoryId int
 		Offset   int
-		Value    ds.Literal
+		Value    ds.LengthPrefixString
 	}
 
 	Function struct {
@@ -220,7 +220,7 @@ func (target CompileTarget) String() string {
 			Value:    data.Offset,
 		}.String(0))
 		output.WriteString(" ")
-		output.WriteString(fmt.Sprintf("\"%s\")\n", string(data.Value)))
+		output.WriteString(fmt.Sprintf("\"%s\")\n", data.Value.WasmString()))
 	}
 	for glob := range target.GlobalVariables.All() {
 		output.WriteString(glob.String(1))

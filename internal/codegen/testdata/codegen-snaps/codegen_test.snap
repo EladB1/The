@@ -1,10 +1,9 @@
 
 [TestCodeGeneration/should_compile_simple.the - 1]
 {Target:
-    (data $__str_const0 (i32.const 100) "")
-    (data $__str_const1 (i32.const 105) "hello")
-    (data $__str_const2 (i32.const 111) "Name: ")
-    (data $__str_const3 (i32.const 118) "hello")
+    (data $__str_const0 (i32.const 100) "\05\00\00\00hello")
+    (data $__str_const1 (i32.const 110) "\06\00\00\00Name: ")
+    (data $__str_const2 (i32.const 121) "\05\00\00\00hello")
     (global $y i64 (i64.const 4))
     (func $main (export "main") (result i32)
         (local $i i32)
@@ -94,8 +93,7 @@
 
 [TestCodeGeneration/should_compile_if.the - 1]
 {Target:
-    (data $__str_const0 (i32.const 100) "")
-    (data $__str_const1 (i32.const 105) "Enter your name: ")
+    (data $__str_const0 (i32.const 100) "\11\00\00\00Enter your name: ")
     (func $getIndexOfFirstAFromName (result i32)
         (local $__t0 i32)
         (local $name i32)
@@ -189,13 +187,12 @@
 
 [TestCodeGeneration/should_compile_loop.the - 1]
 {Target:
-    (data $__str_const0 (i32.const 100) "")
-    (data $__str_const1 (i32.const 105) "Hit taken: #")
-    (data $__str_const2 (i32.const 118) "game over")
-    (data $__str_const3 (i32.const 128) "Even number ")
-    (data $__str_const4 (i32.const 141) "Odd number ")
-    (data $__str_const5 (i32.const 153) ":\t")
-    (data $__str_const6 (i32.const 157) "hello, world")
+    (data $__str_const0 (i32.const 100) "\0c\00\00\00Hit taken: #")
+    (data $__str_const1 (i32.const 117) "\09\00\00\00game over")
+    (data $__str_const2 (i32.const 131) "\0c\00\00\00Even number ")
+    (data $__str_const3 (i32.const 148) "\0b\00\00\00Odd number ")
+    (data $__str_const4 (i32.const 164) "\03\00\00\00:\t")
+    (data $__str_const5 (i32.const 172) "\0c\00\00\00hello, world")
     (func $sum (param $n i32) (result i32)
         (local $total i32)
         (local $i i32)

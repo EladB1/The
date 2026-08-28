@@ -771,12 +771,14 @@ Flags:
 
 | Env. Variable | Compiler Variable | Description |
 | --- | --- | --- |
-| `THE_DEV_LEXER` | `devMode_lexer` | Print the Tokens |
-| `THE_DEV_PARSER` | `devMode_parser`| Print the AST unless the semantic flag is set |
-| `THE_DEV_SEMANTIC` | `devMode_semantic` | Print the annotated AST and ScopeTree |
-| `THE_DEV_IRGEN` | `devMode_irgen` | Print the generated IR code |
-| `THE_DEV_CODEGEN` | `devMode_codegen` | Print the generated WAT code |
-| `THE_DEV_DEBUG` | `conf.Debug` | Set to be able to debug different compiler internals using go `log` package |
+| `THE_DEV_LITERALS` | `EnvConfig.DevMode_ShowLiterals` | Print the string literal values |
+| `THE_DEV_LEXER` | `EnvConfig.DevMode_lexer` | Print the Tokens |
+| `THE_DEV_PARSER` | `EnvConfig.DevMode_AST`| Print the AST unless the `THE_DEV_ANNOTATED` flag is set |
+| `THE_DEV_SCOPES` |  `EnvConfig.DevMode_ScopeTree` | Print the ScopeTree |
+| `THE_DEV_ANNOTATED` | `EnvConfig.DevMode_AnnotatedAST` | Print the annotated AST |
+| `THE_DEV_IRGEN` | `EnvConfig.DevMode_irgen` | Print the generated IR code |
+| `THE_DEV_CODEGEN` | `EnvConfig.DevMode_codegen` | Print the generated WAT code |
+| `THE_DEV_DEBUG` | `EnvConfig.Debug` | Set to be able to debug different compiler internals using go `log` package |
 
 Example:
 
@@ -800,8 +802,10 @@ Testing strategy:
 
 1. Compiler phase unit tests: Use snapshot testing to confirm valid, warnings, and errors for each phase
 2. Integration tests: Use snapshot testing to confirm the inter-phase behavior of the compiler
-3. Fuzzing: Make sure each phase doesn't have unexpected crashes, infinite loops, or unrecoverable panics
+3. Fuzzing*: Make sure each phase doesn't have unexpected crashes, infinite loops, or unrecoverable panics
 4. Execution test: Make sure the generated code is valid and produces expected results
+
+> \* = Not yet implemented
 
 As you move down the test types, the number of tests decreases but the complexity of each test increases.
 
@@ -963,3 +967,17 @@ Each temporary starts with `__t` and is followed by a number. Internally, there 
 All struct methods are given an IRName which is in the form: `__StructName_functionName`. If the function comes from named block, then the name is changed to this form: `__StructName_NamedBlock_functionName`.
 
 All struct methods also get a reference to themselves passed in as the last parameter.
+
+### String representation
+
+Strings in `The` are all represented as length prefixed pointers. Constant string literals are placed in the data section, while dynamic strings get allocated on the heap (linear memory in WASM).
+
+A string follows this format:
+
+```
+"\0c\00\00\00hello, world"
+```
+
+The prefix (part before *hello, world*) is a little endian hexadecimal representation of the strings length. Each of the four parts has a max value of 0xFF (256).
+
+Dynamic strings are generated from operations like concatenating strings, slices, function calls that generated strings (like `prompt`), etc. When a dynamic string is created, a memory allocation happens using `$__malloc` from the runtime library.

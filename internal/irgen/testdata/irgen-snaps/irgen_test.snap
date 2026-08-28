@@ -10,7 +10,7 @@ Program: [
     STORE global.x __t1
     STORE global.x3 __t1
     STORE global.y u64(1)
-    STORE global.s str_const(1)
+    STORE global.s str_const(0)
     STORE global.c i32(97)
     STORE global.isSomething i32(1)
     __t2: i32 = i32.add i32(1) i32(5)
@@ -60,17 +60,17 @@ Program: [
     __t28: str_const = CALL __char_concat 2
     STORE global.concat1 __t28
     PARAM global.concat1
-    PARAM str_const(2)
+    PARAM str_const(1)
     __t29: i32 = CALL __str_lt 2
     STORE global.lessStr __t29
-    PARAM str_const(3)
+    PARAM str_const(2)
     PARAM i32(0)
     __t30: i32 = CALL __str_index 2
     STORE global.h __t30
-    PARAM str_const(4)
+    PARAM str_const(3)
     __t31: i32 = CALL __str_length 1
     __t32: i32 = i32.sub __t31 i32(1)
-    PARAM str_const(4)
+    PARAM str_const(3)
     PARAM __t32
     __t33: i32 = CALL __str_index 2
     STORE global.end __t33
@@ -95,7 +95,7 @@ Program: [
     PARAM __t39
     __t40: i32 = CALL __str_slice_inclusive 3
     STORE global.secondHalf __t40
-    PARAM str_const(5)
+    PARAM str_const(4)
     PARAM i32(3)
     PARAM i32(4)
     __t41: i32 = CALL __str_slice_inclusive 3
@@ -103,18 +103,18 @@ Program: [
     PARAM global.s
     __t42: i32 = CALL __str_length 1
     STORE global.len __t42
-    PARAM str_const(6)
+    PARAM str_const(5)
     __t43: str_const = CALL getEnv 1
     STORE global.env __t43
     PARAM i32(97)
-    PARAM str_const(7)
+    PARAM str_const(6)
     __t44: i32 = CALL __str_contains_char 2
     STORE global.hasA __t44
   fn main()->i32 {
-    PARAM str_const(9)
-    PARAM str_const(10)
-    __t45: str_const = CALL __str_concat 2
     PARAM str_const(8)
+    PARAM str_const(9)
+    __t45: str_const = CALL __str_concat 2
+    PARAM str_const(7)
     PARAM __t45
     __t46: i32 = CALL __str_eq 2
     return i32(0)
@@ -235,7 +235,7 @@ Program: [
             __t22: i32 = i32.rem param.x i32(2)
             __t23: i32 = i32.eq __t22 i32(0)
             if __t23 {
-                PARAM str_const(1)
+                PARAM str_const(0)
                 CALL println 1
                 __t24: i32 = i32.div param.x i32(2)
                 return __t24
@@ -385,7 +385,7 @@ Program: [
             JMP loop@5
         }
     }
-    PARAM str_const(1)
+    PARAM str_const(0)
     CALL println 1
   }
 
@@ -412,7 +412,7 @@ Program: [
             JMP loop@6
         }
     }
-    PARAM str_const(2)
+    PARAM str_const(1)
     CALL println 1
   }
 
@@ -439,7 +439,7 @@ Program: [
             JMP loop@7
         }
     }
-    PARAM str_const(3)
+    PARAM str_const(2)
     CALL println 1
   }
 
@@ -530,27 +530,27 @@ Program: [
   }
 
   fn __Person1_greet(__this: ptr) {
-    STORE local.alt str_const(2)
+    STORE local.alt str_const(1)
     __t31: str_const = LOAD param.__this 8
     PARAM __t31
-    PARAM str_const(3)
+    PARAM str_const(2)
     __t32: i32 = CALL __str_ne 2
     if __t32 {
         __t33: str_const = LOAD param.__this 8
-        PARAM str_const(4)
+        PARAM str_const(3)
         PARAM __t33
         __t34: str_const = CALL __str_concat 2
         STORE local.alt __t34
     }
     __t35: str_const = LOAD param.__this 0
-    PARAM str_const(5)
+    PARAM str_const(4)
     PARAM __t35
     __t36: str_const = CALL __str_concat 2
     PARAM __t36
     PARAM local.alt
     __t37: str_const = CALL __str_concat 2
     PARAM __t37
-    PARAM str_const(6)
+    PARAM str_const(5)
     __t38: str_const = CALL __str_concat 2
     __t39: u32 = LOAD param.__this 4
     PARAM __t39
@@ -559,7 +559,7 @@ Program: [
     PARAM __t40
     __t41: str_const = CALL __str_concat 2
     PARAM __t41
-    PARAM str_const(7)
+    PARAM str_const(6)
     __t42: str_const = CALL __str_concat 2
     PARAM __t42
     CALL println 1
@@ -570,13 +570,13 @@ Program: [
   }
 
   fn __Person1_P_do(__this: ptr) {
-    PARAM str_const(8)
+    PARAM str_const(7)
     CALL println 1
   }
 
   fn __Person1_P_donot() {
     STORE global.x i32(2)
-    PARAM str_const(1)
+    PARAM str_const(0)
     CALL println 1
   }
 
@@ -664,8 +664,8 @@ Program: [
     __t72: i32 = f64.eq __t70 __t71
     __t73: ptr = LOAD param.__this 8
     __t74: ptr = LOAD param.__other 8
-    PARAM __t73
     PARAM __t74
+    PARAM __t73
     __t76: i32 = CALL __Inner_compare_equals 2
     __t77: str_const = LOAD param.__this 12
     __t78: str_const = LOAD param.__other 12
@@ -689,7 +689,7 @@ Program: [
   }
 
   fn __T_P_do(__this: ptr) {
-    PARAM str_const(10)
+    PARAM str_const(9)
     CALL println 1
   }
 
@@ -699,39 +699,39 @@ Program: [
   }
 
   fn __T_I_do() {
-    PARAM str_const(9)
+    PARAM str_const(8)
     CALL println 1
   }
 
   fn __T_P_donot() {
     STORE global.x i32(2)
-    PARAM str_const(1)
+    PARAM str_const(0)
     CALL println 1
   }
 
     STORE global.x i32(1)
   fn testInnerCompare(i: ptr, i2: ptr)->ptr {
-    PARAM param.i
     PARAM param.i2
+    PARAM param.i
     __t84: i32 = CALL __Inner_compare_equals 2
     if __t84 {
         return param.i
     }
-    PARAM param.i
     PARAM param.i2
+    PARAM param.i
     __t85: i32 = CALL __Inner_compare_lessThan 2
-    PARAM param.i
     PARAM param.i2
+    PARAM param.i
     __t86: i32 = CALL __Inner_compare_equals 2
     __t87: i32 = i32.or __t85 __t86
     if __t87 {
         return param.i
     }
-    PARAM param.i
     PARAM param.i2
+    PARAM param.i
     __t88: i32 = CALL __Inner_compare_greaterThan 2
-    PARAM param.i
     PARAM param.i2
+    PARAM param.i
     __t89: i32 = CALL __Inner_compare_equals 2
     __t90: i32 = i32.or __t88 __t89
     if __t90 {
@@ -742,7 +742,7 @@ Program: [
 
   fn main()->i32 {
     __t91: ptr = Malloc 16
-    SET __t91+0 str_const(11)
+    SET __t91+0 str_const(10)
     SET __t91+4 u32(112)
     SET __t91+8 str_const(0)
     SET __t91+12 i32(1)
@@ -750,20 +750,20 @@ Program: [
     __t92: u32 = LOAD local.p 4
     STORE local.age __t92
     __t93: ptr = Malloc 16
-    SET __t93+0 str_const(12)
+    SET __t93+0 str_const(11)
     SET __t93+4 u32(0)
     SET __t93+8 str_const(0)
     SET __t93+12 i32(1)
     STORE local.p2 __t93
-    PARAM local.p
     PARAM local.p2
+    PARAM local.p
     __t94: i32 = CALL __Person1_compare__default__equals 2
     __t95: ptr = Malloc 16
     SET __t95+0 f64(0)
     __t96: ptr = Malloc 4
     SET __t96+0 i32(1)
     SET __t95+8 __t96
-    SET __t95+12 str_const(13)
+    SET __t95+12 str_const(12)
     STORE local.n1 __t95
     __t97: ptr = Malloc 4
     SET __t97+0 i32(5)
@@ -774,11 +774,11 @@ Program: [
     __t100: ptr = Malloc 4
     SET __t100+0 i32(2)
     SET __t99+8 __t100
-    SET __t99+12 str_const(14)
+    SET __t99+12 str_const(13)
     SET __t99+0 f64(0)
     STORE local.n2 __t99
-    PARAM local.n1
     PARAM local.n2
+    PARAM local.n1
     __t101: i32 = CALL __Nested_compare__default__equals 2
     __t102: ptr = LOAD local.n1 8
     PARAM __t102
