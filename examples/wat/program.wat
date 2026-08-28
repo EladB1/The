@@ -745,6 +745,36 @@
         (local.get $string)
     )
 
+    (func $__str_eq (export "__str_eq") (param $str1 i32) (param $str2 i32) (result i32)
+        (local $len1 i32)
+        (local $len2 i32)
+        (local $start1 i32)
+        (local $start2 i32)
+        (local $i i32)
+        (local.set $len1 (call $__str_length (local.get $str1)))
+        (local.set $len2 (call $__str_length (local.get $str2)))
+        
+        (if (i32.ne (local.get $len1) (local.get $len2))
+            (then
+                (return (i32.const 0))
+            )
+        )
+        (local.set $start1 (i32.add (local.get $str1) (i32.const 4)))
+        (local.set $start2 (i32.add (local.get $str2) (i32.const 4)))
+        (loop $eq_loop (block $exit_eq_loop
+            (i32.eq (local.get $i) (local.get $len1))
+            br_if $exit_eq_loop
+            (i32.load8_u (i32.add (local.get $start1) (local.get $i)))
+            (i32.load8_u (i32.add (local.get $start2) (local.get $i)))
+            (if (i32.ne)
+                (then (return (i32.const 0)))  
+            )
+            (local.set $i (i32.add (local.get $i) (i32.const 1)))
+            br $eq_loop
+        ))
+        i32.const 1
+    )
+
     ;;
     ;; Entry point
     ;;
@@ -777,9 +807,11 @@
         ;;(call $__str_concat_char (i32.const 100) (i32.const 72))
         ;;(call $prompt (i32.const 500))
         ;;(call $__str_slice (i32.const 100) (i32.const 10) (i32.const 4))
-        (call $__str_slice_inclusive (i32.const 100) (i32.const 1) (i32.const 11))
-        (call $println)
-        (i32.const 0)
+        ;;(call $__str_slice_inclusive (i32.const 100) (i32.const 1) (i32.const 11))
+        
+        ;;(call $println)
+        ;;(i32.const 0)
+        (call $__str_eq (i32.const 100) (i32.const 100))
         (return)
     )
 

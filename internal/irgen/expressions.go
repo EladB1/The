@@ -836,7 +836,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 	if autoEnd || node.Children[rangeIndex].Token.Value == "..=" {
 		fn = StringSliceInclusive
 	}
-	call, operand := callFunction(string(fn), dt.I32, node.Location, arr, start_op, end_op)
+	call, operand := callFunction(string(fn), dt.Str_const, node.Location, arr, start_op, end_op)
 	instructions = append(instructions, call...)
 	return instructions, operand
 }
