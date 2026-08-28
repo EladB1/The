@@ -51,7 +51,7 @@ var executionTests = []struct {
 	}},
 	{"slices.the", ExecutionResult{
 		status: 1,
-		stdout: "hello, world!\nello, world\nhell\nello\nello\n",
+		stdout: "hello, world!\nello, world!\nhell\nello\nello\nl\nld!\n",
 		stderr: "\x1b[1;31mRuntimeError:\x1b[0m slice start 10 cannot be greater than slice end 1\n",
 	}},
 }

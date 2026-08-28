@@ -735,14 +735,20 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 	rangeIndex := 0
 	length := len(node.Children)
 	fn := StringSlice
+	autoEnd := false
 	switch length {
 	case 1: // str[..]
 		end_in, end_op = getArrayEnd(arr)
 		instructions = append(instructions, end_in...)
+		autoEnd = true
 	case 2:
 		if node.Children[0].Token.Kind == lexer.OPERATOR_RANGE { // str[..1]
 			rangeIndex = 0
-			end_in, end_op = translateExpression(*node.Children[1])
+			if node.Children[1].Label == "ARR-END" {
+				end_in, end_op = translateArrayEnd(*node.Children[1], arr)
+			} else {
+				end_in, end_op = translateExpression(*node.Children[1])
+			}
 			instructions = append(instructions, end_in...)
 			if end_op.Type != dt.I32 {
 				cast := formTempVar(dt.I32)
@@ -760,7 +766,11 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 			}
 		} else { // str[1..]
 			rangeIndex = 1
-			start_in, start_op = translateExpression(*node.Children[0])
+			if node.Children[0].Label == "ARR-END" {
+				start_in, start_op = translateArrayEnd(*node.Children[0], arr)
+			} else {
+				start_in, start_op = translateExpression(*node.Children[0])
+			}
 			instructions = append(instructions, start_in...)
 			if start_op.Type != dt.I32 {
 				cast := formTempVar(dt.I32)
@@ -778,10 +788,15 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 			}
 			end_in, end_op = getArrayEnd(arr)
 			instructions = append(instructions, end_in...)
+			autoEnd = true
 		}
 	case 3: // str[1..5]
 		rangeIndex = 1
-		start_in, start_op = translateExpression(*node.Children[0])
+		if node.Children[0].Label == "ARR-END" {
+			start_in, start_op = translateArrayEnd(*node.Children[0], arr)
+		} else {
+			start_in, start_op = translateExpression(*node.Children[0])
+		}
 		instructions = append(instructions, start_in...)
 		if start_op.Type != dt.I32 {
 			cast := formTempVar(dt.I32)
@@ -797,7 +812,11 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 				SrcPosition: node.Children[0].Location,
 			}
 		}
-		end_in, end_op = translateExpression(*node.Children[2])
+		if node.Children[2].Label == "ARR-END" {
+			end_in, end_op = translateArrayEnd(*node.Children[2], arr)
+		} else {
+			end_in, end_op = translateExpression(*node.Children[2])
+		}
 		instructions = append(instructions, end_in...)
 		if end_op.Type != dt.I32 {
 			cast := formTempVar(dt.I32)
@@ -814,7 +833,7 @@ func translateSlice(node parser.AST, arr Operand) ([]TAC, Operand) {
 			}
 		}
 	}
-	if node.Children[rangeIndex].Token.Value == "..=" {
+	if autoEnd || node.Children[rangeIndex].Token.Value == "..=" {
 		fn = StringSliceInclusive
 	}
 	call, operand := callFunction(string(fn), dt.I32, node.Location, arr, start_op, end_op)

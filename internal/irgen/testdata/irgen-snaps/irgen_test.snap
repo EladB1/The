@@ -80,7 +80,7 @@ Program: [
     PARAM global.s
     PARAM i32(0)
     PARAM __t35
-    __t36: i32 = CALL __str_slice 3
+    __t36: i32 = CALL __str_slice_inclusive 3
     STORE global.copy __t36
     PARAM global.s
     PARAM i32(0)
