@@ -13,6 +13,8 @@ Tokens:
     {Value: b, Type: identifier, Line: 8, Column: 0},
     {Value: EOF, Type: EOF, Line: 12, Column: 0}
 ]
+Literals:
+[]
 Compiler messages:
 [
     "SyntaxError: Unterminated character literal at line: 8, column: 1",
@@ -29,16 +31,16 @@ Tokens:
     {Value: String, Type: type keyword, Line: 1, Column: 0},
     {Value: s, Type: identifier, Line: 1, Column: 7},
     {Value: =, Type: assign operator, Line: 1, Column: 9},
-    {Value: "hello, world!", Type: string literal, Line: 1, Column: 11},
+    {Value: stringIndex: 0, Type: string literal, Line: 1, Column: 11},
     {Value: ;, Type: separator, Line: 1, Column: 26},
-    {Value: "world + 1", Type: string literal, Line: 2, Column: 0},
-    {Value: "", Type: string literal, Line: 3, Column: 0},
-    {Value: "\"", Type: string literal, Line: 4, Column: 0},
-    {Value: "Is this string \"hello\" valid?", Type: string literal, Line: 5, Column: 0},
-    {Value: "\\", Type: string literal, Line: 6, Column: 0},
-    {Value: "\\\\", Type: string literal, Line: 7, Column: 0},
-    {Value: "\n", Type: string literal, Line: 8, Column: 0},
-    {Value: "hello", Type: string literal, Line: 9, Column: 0},
+    {Value: stringIndex: 1, Type: string literal, Line: 2, Column: 0},
+    {Value: stringIndex: 2, Type: string literal, Line: 3, Column: 0},
+    {Value: stringIndex: 3, Type: string literal, Line: 4, Column: 0},
+    {Value: stringIndex: 4, Type: string literal, Line: 5, Column: 0},
+    {Value: stringIndex: 5, Type: string literal, Line: 6, Column: 0},
+    {Value: stringIndex: 6, Type: string literal, Line: 7, Column: 0},
+    {Value: stringIndex: 7, Type: string literal, Line: 8, Column: 0},
+    {Value: stringIndex: 8, Type: string literal, Line: 9, Column: 0},
     {Value: [, Type: separator, Line: 9, Column: 7},
     {Value: 1, Type: int literal, Line: 9, Column: 8},
     {Value: ], Type: separator, Line: 9, Column: 9},
@@ -64,10 +66,24 @@ Tokens:
     {Value: String, Type: type keyword, Line: 13, Column: 0},
     {Value: prefix, Type: identifier, Line: 13, Column: 7},
     {Value: =, Type: assign operator, Line: 13, Column: 14},
-    {Value: "⚠️ Warning: ", Type: string literal, Line: 13, Column: 16},
+    {Value: stringIndex: 9, Type: string literal, Line: 13, Column: 16},
     {Value: ;, Type: separator, Line: 13, Column: 34},
     {Value: hello, Type: identifier, Line: 18, Column: 0},
     {Value: EOF, Type: EOF, Line: 20, Column: 5}
+]
+Literals:
+[
+    {Length: 13, String: hello, world!},
+    {Length: 9, String: world + 1},
+    {Length: 0, String: },
+    {Length: 1, String: "},
+    {Length: 29, String: Is this string "hello" valid?},
+    {Length: 1, String: \},
+    {Length: 2, String: \\},
+    {Length: 1, String: 
+},
+    {Length: 5, String: hello},
+    {Length: 16, String: ⚠️ Warning: }
 ]
 Compiler messages:
 [
@@ -176,6 +192,8 @@ Tokens:
     {Value: a1, Type: identifier, Line: 35, Column: 3},
     {Value: EOF, Type: EOF, Line: 38, Column: 6}
 ]
+Literals:
+[]
 Compiler messages:
 [
     "SyntaxError: Incomplete hex literal: 0x at line: 34, column: 1",
@@ -297,6 +315,8 @@ Tokens:
     {Value: isOpen, Type: identifier, Line: 35, Column: 5},
     {Value: EOF, Type: EOF, Line: 37, Column: 2}
 ]
+Literals:
+[]
 Compiler messages:
 [
     "SyntaxError: Unrecognized character: '?' at line: 36, column: 12",
@@ -315,6 +335,8 @@ Tokens:
     {Value: ;, Type: separator, Line: 0, Column: 17},
     {Value: EOF, Type: EOF, Line: 11, Column: 14}
 ]
+Literals:
+[]
 Compiler messages:
 [
     "SyntaxError: Reached EOF while scanning for */ "
@@ -411,7 +433,7 @@ Tokens:
     {Value: {, Type: separator, Line: 25, Column: 19},
     {Value: println, Type: identifier, Line: 26, Column: 12},
     {Value: (, Type: separator, Line: 26, Column: 19},
-    {Value: "...", Type: string literal, Line: 26, Column: 20},
+    {Value: stringIndex: 0, Type: string literal, Line: 26, Column: 20},
     {Value: ), Type: separator, Line: 26, Column: 25},
     {Value: ;, Type: separator, Line: 26, Column: 26},
     {Value: }, Type: separator, Line: 27, Column: 8},
@@ -424,11 +446,11 @@ Tokens:
     {Value: {, Type: separator, Line: 31, Column: 21},
     {Value: firstName, Type: identifier, Line: 32, Column: 4},
     {Value: :, Type: separator, Line: 32, Column: 13},
-    {Value: "name", Type: string literal, Line: 32, Column: 15},
+    {Value: stringIndex: 1, Type: string literal, Line: 32, Column: 15},
     {Value: ,, Type: separator, Line: 32, Column: 21},
     {Value: lastName, Type: identifier, Line: 33, Column: 4},
     {Value: :, Type: separator, Line: 33, Column: 12},
-    {Value: "otherName", Type: string literal, Line: 33, Column: 14},
+    {Value: stringIndex: 2, Type: string literal, Line: 33, Column: 14},
     {Value: ,, Type: separator, Line: 33, Column: 25},
     {Value: shift, Type: identifier, Line: 34, Column: 4},
     {Value: :, Type: separator, Line: 34, Column: 9},
@@ -456,6 +478,12 @@ Tokens:
     {Value: ), Type: separator, Line: 40, Column: 13},
     {Value: ;, Type: separator, Line: 40, Column: 14},
     {Value: EOF, Type: EOF, Line: 41, Column: 15}
+]
+Literals:
+[
+    {Length: 3, String: ...},
+    {Length: 4, String: name},
+    {Length: 9, String: otherName}
 ]
 Compiler messages:
 []

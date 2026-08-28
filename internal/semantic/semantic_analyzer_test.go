@@ -80,7 +80,7 @@ func snapshotTestSemanticAnalyzer(t *testing.T, filename string, subdir string) 
 		}
 		msgBuilder.WriteString(fmt.Sprintf("\n\t\"%v\"%s", msg, delim))
 	}
-	results := fmt.Sprintf("AST:\n%v\nScopeTree:\n%v\nCompiler messages:\n[%s]\n", fixture.AST.String(fixture.Literals), scopeTree, msgBuilder.String())
+	results := fmt.Sprintf("AST:\n%v\nScopeTree:\n%v\nCompiler messages:\n[%s]\n", fixture.AST.String(), scopeTree, msgBuilder.String())
 	snapshots.MatchSnapshot(t, results)
 }
 

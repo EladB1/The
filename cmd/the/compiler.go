@@ -81,8 +81,11 @@ func Compile(filename string, source []string, conf *config.Config, envconf *con
 	compilerDiagnostics := diagnostic.PhaseDiagnostics{}
 	tokens, literals, lexerDiagnostics := lexer.Lex(source, false)
 	compilerDiagnostics.Combine(lexerDiagnostics)
+	if envconf.DevMode_ShowLiterals {
+		fmt.Fprintln(envconf.Stdout, literals)
+	}
 	if envconf.DevMode_Lexer {
-		lexer.PrintTokens(envconf, tokens, literals)
+		lexer.PrintTokens(envconf, tokens)
 	}
 	if compilerDiagnostics.ExitOnError(conf, envconf) {
 		return 1
@@ -91,7 +94,7 @@ func Compile(filename string, source []string, conf *config.Config, envconf *con
 	ast, parserDiagnostics := parser.Parse(tokens, literals)
 	compilerDiagnostics.Combine(parserDiagnostics)
 	if envconf.DevMode_AST && !envconf.DevMode_AnnotatedAST {
-		fmt.Fprintln(envconf.Stdout, ast.String(literals))
+		fmt.Fprintln(envconf.Stdout, ast.String())
 	}
 	if compilerDiagnostics.ExitOnError(conf, envconf) {
 		return 1
@@ -103,7 +106,7 @@ func Compile(filename string, source []string, conf *config.Config, envconf *con
 		fmt.Fprintln(envconf.Stdout, scopeTree)
 	}
 	if envconf.DevMode_AnnotatedAST {
-		fmt.Fprintln(envconf.Stdout, ast.String(literals))
+		fmt.Fprintln(envconf.Stdout, ast.String())
 	}
 	if compilerDiagnostics.ExitOnError(conf, envconf) {
 		return 1

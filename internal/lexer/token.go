@@ -2,7 +2,6 @@ package lexer
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/EladB1/The/internal/config"
@@ -56,7 +55,7 @@ const (
 	OPERATOR_UNARY   TokenType = "unary operator"
 )
 
-func (token Token) GetValueString(pool ds.LiteralPool) string {
+func (token Token) GetValueString() string {
 	value := token.Value
 	switch token.Kind {
 	case LIT_INT:
@@ -66,11 +65,7 @@ func (token Token) GetValueString(pool ds.LiteralPool) string {
 	case LIT_FLOAT:
 		value = fmt.Sprintf("%g", token.FloatVal)
 	case LIT_STRING:
-		if len(pool) == 0 {
-			value = fmt.Sprintf("stringIndex: %d", token.StrIndex)
-		} else {
-			value = strconv.Quote(string(pool[token.StrIndex]))
-		}
+		value = fmt.Sprintf("stringIndex: %d", token.StrIndex)
 	case LIT_CHAR:
 		if token.CharVal == 0 {
 			value = "''"
@@ -83,21 +78,21 @@ func (token Token) GetValueString(pool ds.LiteralPool) string {
 	return value
 }
 
-func (token Token) String(pool ds.LiteralPool) string {
+func (token Token) String() string {
 	missing := ""
 	if token.Missing {
 		missing = " Missing: true,"
 	}
-	return fmt.Sprintf("{Value: %s, Type: %s,%s Line: %d, Column: %d}", token.GetValueString(pool), token.Kind, missing, token.Location.Line, token.Location.Column)
+	return fmt.Sprintf("{Value: %s, Type: %s,%s Line: %d, Column: %d}", token.GetValueString(), token.Kind, missing, token.Location.Line, token.Location.Column)
 }
 
 func (token Token) HasValue(value string) bool {
 	return token.Value == value
 }
 
-func PrintTokens(envconf *config.EnvConfig, tokens []Token, pool ds.LiteralPool) {
+func PrintTokens(envconf *config.EnvConfig, tokens []Token) {
 	for _, token := range tokens {
-		fmt.Fprintln(envconf.Stdout, token.String(pool))
+		fmt.Fprintln(envconf.Stdout, token.String())
 	}
 }
 

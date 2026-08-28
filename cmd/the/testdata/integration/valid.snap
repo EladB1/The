@@ -5,12 +5,11 @@ Exit code: 0
 
 Output:
 
-    (data $__str_const0 (i32.const 100) "")
-    (data $__str_const1 (i32.const 105) "Error: ")
-    (data $__str_const2 (i32.const 113) "This number is too big!")
-    (data $__str_const3 (i32.const 137) "Number is even")
-    (data $__str_const4 (i32.const 152) "Number is odd")
-    (data $__str_const5 (i32.const 166) "hello")
+    (data $__str_const0 (i32.const 100) "\07\00\00\00Error: ")
+    (data $__str_const1 (i32.const 112) "\17\00\00\00This number is too big!")
+    (data $__str_const2 (i32.const 140) "\0e\00\00\00Number is even")
+    (data $__str_const3 (i32.const 159) "\0d\00\00\00Number is odd")
+    (data $__str_const4 (i32.const 177) "\05\00\00\00hello")
     (global $SOME_CONST i32 (i32.const 50000))
     (func $__ErrorLogger_cast__default_toString (param $__this i32) (result i32)
         (local $__t0 i32)
@@ -27,7 +26,7 @@ Output:
     )
     (func $__ErrorLogger_Logger_log (param $error i32) (param $__this i32)
         (local $__t1 i32)
-        (i32.const 105)
+        (i32.const 100)
         (local.get $error)
         (call $__str_concat)
         (local.set $__t1)
@@ -98,7 +97,7 @@ Output:
         (if
             (local.get $__t7)
             (then
-                    (i32.const 113)
+                    (i32.const 112)
                     (local.get $logger)
                     (call $__ErrorLogger_Logger_log)
                     (i32.const 1)
@@ -116,19 +115,19 @@ Output:
                     (if
                         (local.get $__t9)
                         (then
-                                (i32.const 137)
+                                (i32.const 140)
                                 (local.get $logger)
                                 (call $__ErrorLogger_Logger_log)
                         )
                         (else
-                                (i32.const 152)
+                                (i32.const 159)
                                 (local.get $logger)
                                 (call $__ErrorLogger_Logger_log)
                         )
                     )
             )
         )
-        (local.set $str (i32.const 166))
+        (local.set $str (i32.const 177))
         (block $loop_exit@0
                 (local.get $str)
                 (call $__str_length)

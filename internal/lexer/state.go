@@ -30,7 +30,7 @@ func initState() *lexerState {
 		sequence:             strings.Builder{},
 		startPosition:        0,
 		tokens:               []Token{},
-		pool:                 ds.LiteralPool{ds.Literal("")},
+		pool:                 ds.LiteralPool{},
 		messages:             diagnostic.PhaseDiagnostics{},
 		lineNum:              0,
 		lineIndex:            0,

@@ -27,13 +27,6 @@
     (global $stdin_byte_counter i32 (i32.const 36))
     (data (i32.const 36) "\00\00\00\00")
 
-    (global $error_prefix i32 (i32.const 900))
-    (data (i32.const 900) "\1b[1;31mRuntimeError:\1b[0m ")
-    (global $bounds_error1 i32 (i32.const 700))
-    (data (i32.const 700) " index ")
-    (global $bounds_error2 i32 (i32.const 800))
-    (data (i32.const 800) " out of range ")
-
     (global $malloc_start i32 (i32.const 1024))
     (global $malloc_next (mut i32) (i32.const 1024))
 
@@ -78,6 +71,8 @@
         (global.get $error_prefix)
         (local.set $msg)
         (loop $concat_loop (block $exit_concat_loop
+            (i32.eq (local.get $index) (local.get $len))
+            br_if $exit_concat_loop
             (i32.load
                 (i32.add 
                     (local.get $list)
@@ -88,20 +83,16 @@
             (call $__str_concat (local.get $msg) (local.get $tmp))
             (local.set $msg)
             (local.set $index (i32.add (local.get $index) (i32.const 1)))
-            (i32.eq (local.get $index) (local.get $len))
-            br_if $exit_concat_loop
+            
             br $concat_loop
         ))
         (call $exit_int_String (i32.const 1) (local.get $msg))
     )
     
     (func $__fd_write (param $fd i32) (param $ptr i32) (param $newline i32)
-        (local $len i32)
-        (call $__str_length (local.get $ptr))
-        (local.set $len)
         ;; Update reusable iovec
-        (i32.store (global.get $iovec_ptr) (local.get $ptr))
-        (i32.store (global.get $iovec_len) (local.get $len))
+        (i32.store (global.get $iovec_ptr) (i32.add (local.get $ptr) (i32.const 4)))
+        (i32.store (global.get $iovec_len) (call $__str_length (local.get $ptr)))
         (call $__print
             (local.get $fd)
             (global.get $iovec_base)
@@ -126,6 +117,8 @@
     )
 
     (func $__read_stdin (result i32)
+        (local $result i32)
+        (local $len i32)
         (i32.store (global.get $iovec_stdin) (global.get $stdin_buffer))
         (i32.store (global.get $iovec_stdin_len) (i32.const 256)) ;; allow 256 bytes
         (call $__fd_read
@@ -135,30 +128,21 @@
             (global.get $stdin_byte_counter)
         )
         drop
-        (i32.store (global.get $iovec_stdin_len) (i32.load (global.get $stdin_byte_counter)))
-        (global.get $stdin_buffer)
+        (call $__malloc (i32.add (global.get $stdin_byte_counter) (i32.const 4)))
+        (local.set $result)
+        (i32.sub (i32.load (global.get $stdin_byte_counter)) (i32.const 1)) ;; remove EOL character
+        (local.set $len)
+        (i32.store (local.get $result) (local.get $len))
+        (memory.copy
+            (i32.add (local.get $result) (i32.const 4))
+            (global.get $stdin_buffer)
+            (local.get $len)
+        )
+        (local.get $result)
     )
 
     (func $__str_length (param $ptr i32) (result i32)
-        (local $len i32)
-        (local $curr i32)
-
-        (local.set $len (i32.const 0))
-
-        (loop $length_loop
-            ;; Use pointer arithmetic to load a byte from memory
-            (i32.load8_u (i32.add (local.get $ptr) (local.get $len)))
-            (local.set $curr)
-            ;; check for null terminator
-            (if (i32.eqz (local.get $curr))
-                (then
-                    (return (local.get $len))
-                )
-            )
-            (local.set $len (i32.add (local.get $len) (i32.const 1)))
-            (br $length_loop)
-        )
-        (local.get $len)
+        (i32.load offset=0 (local.get $ptr))
     )
 
     (func $__i32_pow (param $base i32) (param $expo i32) (result i32)

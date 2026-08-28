@@ -37,7 +37,7 @@ func snapshotTestParser(t *testing.T, filename string) {
 		}
 		msgBuilder.WriteString(fmt.Sprintf("\n\t\"%v\"%s", msg, delim))
 	}
-	results := fmt.Sprintf("AST:\n%v\n, Compiler messages:\n[%s]\n", ast.String(fixture.Literals), msgBuilder.String())
+	results := fmt.Sprintf("AST:\n%v\n, Compiler messages:\n[%s]\n", ast.String(), msgBuilder.String())
 	snapshots.MatchSnapshot(t, results)
 }
 

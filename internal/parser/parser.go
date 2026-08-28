@@ -74,7 +74,7 @@ func expectValue(value string) lexer.Token {
 		panic(err)
 	}
 	token := peek()
-	state.addError("Expected '%s' but got '%s'", value, token.GetValueString(state.pool))
+	state.addError("Expected '%s' but got '%s'", value, token.GetValueString())
 	return lexer.Token{
 		Kind:     lexer.Virtual,
 		Value:    value,
@@ -96,7 +96,7 @@ func expectType() lexer.Token {
 		panic(err)
 	}
 	token := peek()
-	state.addError("Expected type but got '%s'", token.GetValueString(state.pool))
+	state.addError("Expected type but got '%s'", token.GetValueString())
 	return lexer.Token{
 		Kind:     lexer.Virtual,
 		Value:    "none",
@@ -183,7 +183,7 @@ func Parse(lexerTokens []lexer.Token, pool ds.LiteralPool) (AST, diagnostic.Phas
 			if checkNonVariableDeclaration() || checkVariableDeclaration() {
 				root.AddChildren(parseDeclaration())
 			} else {
-				state.addError("Expected declaration but found '%s'", peek().GetValueString(state.pool))
+				state.addError("Expected declaration but found '%s'", peek().GetValueString())
 				sync(topLevelCtx)
 				//consume()
 			}
@@ -274,7 +274,7 @@ func parseBlock(label string) *AST {
 		if checkKind(lexer.KW_BRANCH) {
 			ast.AddChildren(parseBranch())
 		} else if checkNonVariableDeclaration() {
-			state.addError("Declaration %s not valid in block", peek().GetValueString(state.pool))
+			state.addError("Declaration %s not valid in block", peek().GetValueString())
 			sync(blockCtx)
 		} else {
 			ast.AddChildren(parseStatement())
@@ -299,7 +299,7 @@ func parseStatement() *AST {
 	} else if checkExpressionStart() {
 		ast = parseExpression()
 	} else {
-		state.addError("Expected statement but got %s", peek().GetValueString(state.pool))
+		state.addError("Expected statement but got %s", peek().GetValueString())
 		ast := nodeFromToken(lexer.Token{
 			Kind:     lexer.Virtual,
 			Value:    "statement",
@@ -370,7 +370,7 @@ func parseStructBody() *AST {
 		} else if checkValue("fn") {
 			ast.AddChildren(parseFunction())
 		} else {
-			state.addError("Only variables, functions, and named blocks supported in struct definition, found %s", peek().GetValueString(state.pool))
+			state.addError("Only variables, functions, and named blocks supported in struct definition, found %s", peek().GetValueString())
 			sync(structBodyCtx)
 			//consume()
 		}
@@ -399,7 +399,7 @@ func parseNamedBlock() *AST {
 		} else if checkValue("fn") {
 			body.AddChildren(parseFunction())
 		} else {
-			state.addError("Only functions and variable definitions supported in named blocks, found %s", peek().GetValueString(state.pool))
+			state.addError("Only functions and variable definitions supported in named blocks, found %s", peek().GetValueString())
 			sync(blockCtx)
 		}
 	}
@@ -421,7 +421,7 @@ func parseInterface() *AST {
 		if checkValue("fn") {
 			body.AddChildren(parseFunction())
 		} else {
-			state.addError("Only function definitions supported within interface body. Found %s", consume().GetValueString(state.pool))
+			state.addError("Only function definitions supported within interface body. Found %s", consume().GetValueString())
 			sync(interfaceCtx)
 		}
 	}
@@ -513,7 +513,7 @@ func parseWhile() *AST {
 	expectValue("(")
 	//log.Println(checkExpressionStart(), peek())
 	if !checkExpressionStart() {
-		state.addError("Expected expression but got '%s'", peek().GetValueString(state.pool))
+		state.addError("Expected expression but got '%s'", peek().GetValueString())
 		sync(whileSignatureCtx)
 	} else {
 		ast.AddChildren(parseExpression())
@@ -643,7 +643,7 @@ func parseAssignment() *AST {
 func parseExpression() *AST {
 	//log.Println("In expression with:", peek())
 	if !checkExpressionStart() {
-		state.addError("Expected expression but got '%s'", peek().GetValueString(state.pool))
+		state.addError("Expected expression but got '%s'", peek().GetValueString())
 		sync(expressionCtx)
 	}
 	return parseLogicalOr()
@@ -662,7 +662,7 @@ func parseLogicalOr() *AST {
 		ast.AddChildren(operand, parseLogicalAnd())
 	}
 	if checkValue("||") {
-		state.addError("Expected operand but got %s", peek().GetValueString(state.pool))
+		state.addError("Expected operand but got %s", peek().GetValueString())
 	}
 	return ast
 }
@@ -680,7 +680,7 @@ func parseLogicalAnd() *AST {
 		ast.AddChildren(operand, parseComparison())
 	}
 	if checkValue("&&") {
-		state.addError("Expected operand but got %s", peek().GetValueString(state.pool))
+		state.addError("Expected operand but got %s", peek().GetValueString())
 	}
 	return ast
 }
@@ -713,7 +713,7 @@ func parseBitshift() *AST {
 		ast.AddChildren(operand, parseBitwise())
 	}
 	if checkKind(lexer.OPERATOR_BS) {
-		state.addError("Expected operand but got %s", consume().GetValueString(state.pool))
+		state.addError("Expected operand but got %s", consume().GetValueString())
 	}
 	return ast
 }
@@ -731,7 +731,7 @@ func parseBitwise() *AST {
 		ast.AddChildren(operand, parseAdd())
 	}
 	if checkKind(lexer.OPERATOR_BW) {
-		state.addError("Expected operand but got %s", consume().GetValueString(state.pool))
+		state.addError("Expected operand but got %s", consume().GetValueString())
 	}
 
 	return ast
@@ -751,7 +751,7 @@ func parseAdd() *AST {
 		ast.AddChildren(parseMult())
 	}
 	if checkKind(lexer.OPERATOR_ADD) {
-		state.addError("Expected operand but got %s", consume().GetValueString(state.pool))
+		state.addError("Expected operand but got %s", consume().GetValueString())
 	}
 	return ast
 }
@@ -770,7 +770,7 @@ func parseMult() *AST {
 		ast.AddChildren(parseExpo())
 	}
 	if checkKind(lexer.OPERATOR_MULT) {
-		state.addError("Expected operand but got %s", consume().GetValueString(state.pool))
+		state.addError("Expected operand but got %s", consume().GetValueString())
 	}
 	return ast
 }
@@ -789,7 +789,7 @@ func parseExpo() *AST {
 		ast.AddChildren(parseExpo())
 	}
 	if checkValue("**") {
-		state.addError("Expected operand but got %s", consume().GetValueString(state.pool))
+		state.addError("Expected operand but got %s", consume().GetValueString())
 	}
 	return ast
 }
