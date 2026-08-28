@@ -49,6 +49,11 @@ var executionTests = []struct {
 		stdout: "hlo",
 		stderr: "\x1b[1;31mRuntimeError:\x1b[0m index 6 out of range 5\n",
 	}},
+	{"slices.the", ExecutionResult{
+		status: 1,
+		stdout: "hello, world!\nello, world\nhell\nello\nello\n",
+		stderr: "\x1b[1;31mRuntimeError:\x1b[0m slice start 10 cannot be greater than slice end 1\n",
+	}},
 }
 
 func TestExecution(t *testing.T) {
