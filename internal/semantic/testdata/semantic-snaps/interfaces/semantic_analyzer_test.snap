@@ -60,7 +60,7 @@ children: [
                                 children: [
                                     Node: { Token: {Value: +, Type: add operator, Line: 12, Column: 38}, Type: String
                                     children: [
-                                        Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 12, Column: 20}, Type: String },
+                                        Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 12, Column: 20}, Type: String },
                                         Node: { Token: {Value: status, Type: identifier, Line: 12, Column: 40}, Type: String }
                                     ] }
                                 ] }
@@ -104,7 +104,7 @@ children: [
                         Node: { Token: {Value: println, Type: identifier, Line: 23, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 23, Column: 16}, Type: String }
+                            Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 23, Column: 16}, Type: String }
                         ] }
                     ] }
                 ] }
@@ -119,7 +119,7 @@ children: [
                         Node: { Token: {Value: println, Type: identifier, Line: 26, Column: 8} },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 26, Column: 16}, Type: String }
+                            Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 26, Column: 16}, Type: String }
                         ] }
                     ] }
                 ] }
@@ -161,7 +161,7 @@ children: [
                                         Node: { Label: "property", Type: String
                                         children: [
                                             Node: { Token: {Value: status, Type: identifier, Line: 34, Column: 30} },
-                                            Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 34, Column: 38}, Type: String }
+                                            Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 34, Column: 38}, Type: String }
                                         ] }
                                     ] }
                                 ] }
@@ -178,7 +178,7 @@ children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 37, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 37, Column: 20}, Type: String }
+                                    Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 37, Column: 20}, Type: String }
                                 ] }
                             ] },
                             Node: { Label: "call", Type: None
@@ -186,7 +186,7 @@ children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 38, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 38, Column: 20}, Type: String }
+                                    Node: { Token: {Value: stringIndex: 6, Type: string literal, Line: 38, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -312,7 +312,7 @@ children: [
                                 Node: { Token: {Value: printerr, Type: identifier, Line: 16, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 16, Column: 21}, Type: String }
+                                    Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 16, Column: 21}, Type: String }
                                 ] }
                             ] },
                             Node: { Label: "call", Type: None

@@ -27,10 +27,15 @@ type (
 func initState() *lexerState {
 	return &lexerState{
 
-		sequence:             strings.Builder{},
-		startPosition:        0,
-		tokens:               []Token{},
-		pool:                 ds.LiteralPool{},
+		sequence:      strings.Builder{},
+		startPosition: 0,
+		tokens:        []Token{},
+		pool: ds.LiteralPool{
+			ds.LengthPrefixString{
+				Length: 0,
+				Str:    "",
+			},
+		},
 		messages:             diagnostic.PhaseDiagnostics{},
 		lineNum:              0,
 		lineIndex:            0,

@@ -112,7 +112,7 @@ children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 23, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 23, Column: 20}, Type: String }
+                                    Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 23, Column: 20}, Type: String }
                                 ] }
                             ] },
                             Node: { Label: "call", Type: None
@@ -140,7 +140,7 @@ children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 28, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 28, Column: 20}, Type: String }
+                                    Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 28, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -192,7 +192,7 @@ children: [
                     Node: { Label: "control-flow", Type: String
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 42, Column: 8} },
-                        Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 42, Column: 15}, Type: String }
+                        Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 42, Column: 15}, Type: String }
                     ] }
                 ] }
             ] }
@@ -217,7 +217,7 @@ children: [
                     Node: { Label: "control-flow", Type: String
                     children: [
                         Node: { Token: {Value: return, Type: flow keyword, Line: 48, Column: 8} },
-                        Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 48, Column: 15}, Type: String }
+                        Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 48, Column: 15}, Type: String }
                     ] }
                 ] }
             ] },
@@ -240,7 +240,7 @@ children: [
                             Node: { Label: "control-flow", Type: String
                             children: [
                                 Node: { Token: {Value: return, Type: flow keyword, Line: 54, Column: 12} },
-                                Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 54, Column: 19}, Type: String }
+                                Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 54, Column: 19}, Type: String }
                             ] }
                         ] }
                     ] }
@@ -514,12 +514,12 @@ children: [
                         Node: { Label: "property", Type: String
                         children: [
                             Node: { Token: {Value: first, Type: identifier, Line: 105, Column: 8} },
-                            Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 105, Column: 15}, Type: String }
+                            Node: { Token: {Value: stringIndex: 6, Type: string literal, Line: 105, Column: 15}, Type: String }
                         ] },
                         Node: { Label: "property", Type: String
                         children: [
                             Node: { Token: {Value: last, Type: identifier, Line: 106, Column: 8} },
-                            Node: { Token: {Value: stringIndex: 6, Type: string literal, Line: 106, Column: 14}, Type: String }
+                            Node: { Token: {Value: stringIndex: 7, Type: string literal, Line: 106, Column: 14}, Type: String }
                         ] },
                         Node: { Label: "property", Type: uint32
                         children: [
@@ -529,7 +529,7 @@ children: [
                         Node: { Label: "property", Type: String
                         children: [
                             Node: { Token: {Value: ssn, Type: identifier, Line: 108, Column: 8} },
-                            Node: { Token: {Value: stringIndex: 7, Type: string literal, Line: 108, Column: 13}, Type: String }
+                            Node: { Token: {Value: stringIndex: 8, Type: string literal, Line: 108, Column: 13}, Type: String }
                         ] },
                         Node: { Label: "property", Type: EmploymentStatus
                         children: [
@@ -566,12 +566,12 @@ children: [
                         Node: { Label: "property", Type: String
                         children: [
                             Node: { Token: {Value: first, Type: identifier, Line: 112, Column: 8} },
-                            Node: { Token: {Value: stringIndex: 8, Type: string literal, Line: 112, Column: 15}, Type: String }
+                            Node: { Token: {Value: stringIndex: 9, Type: string literal, Line: 112, Column: 15}, Type: String }
                         ] },
                         Node: { Label: "property", Type: String
                         children: [
                             Node: { Token: {Value: last, Type: identifier, Line: 113, Column: 8} },
-                            Node: { Token: {Value: stringIndex: 9, Type: string literal, Line: 113, Column: 14}, Type: String }
+                            Node: { Token: {Value: stringIndex: 10, Type: string literal, Line: 113, Column: 14}, Type: String }
                         ] },
                         Node: { Label: "property", Type: uint32
                         children: [
@@ -597,7 +597,7 @@ children: [
                         Node: { Label: "property", Type: String
                         children: [
                             Node: { Token: {Value: ssn, Type: identifier, Line: 116, Column: 8} },
-                            Node: { Token: {Value: stringIndex: 10, Type: string literal, Line: 116, Column: 13}, Type: String }
+                            Node: { Token: {Value: stringIndex: 11, Type: string literal, Line: 116, Column: 13}, Type: String }
                         ] }
                     ] }
                 ] }
@@ -662,7 +662,7 @@ children: [
                             Node: { Token: {Value: println, Type: identifier, Line: 122, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: stringIndex: 11, Type: string literal, Line: 122, Column: 16}, Type: String }
+                                Node: { Token: {Value: stringIndex: 12, Type: string literal, Line: 122, Column: 16}, Type: String }
                             ] }
                         ] }
                     ] }
@@ -714,7 +714,7 @@ children: [
                                     Node: { Label: "property", Type: String
                                     children: [
                                         Node: { Token: {Value: value, Type: identifier, Line: 127, Column: 12} },
-                                        Node: { Token: {Value: stringIndex: 12, Type: string literal, Line: 127, Column: 19}, Type: String }
+                                        Node: { Token: {Value: stringIndex: 13, Type: string literal, Line: 127, Column: 19}, Type: String }
                                     ] }
                                 ] }
                             ] }
@@ -733,7 +733,7 @@ children: [
                     ] },
                     Node: { Token: {Value: value, Type: identifier, Line: 130, Column: 16}, Type: String }
                 ] },
-                Node: { Token: {Value: stringIndex: 13, Type: string literal, Line: 130, Column: 24}, Type: String }
+                Node: { Token: {Value: stringIndex: 14, Type: string literal, Line: 130, Column: 24}, Type: String }
             ] },
             Node: { Label: "control-flow", Type: int
             children: [
@@ -889,7 +889,7 @@ children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 11, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 11, Column: 20}, Type: String }
+                                    Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 11, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -1047,7 +1047,7 @@ children: [
                                         Node: { Token: {Value: name, Type: identifier, Line: 44, Column: 19} },
                                         Node: { Token: {Value: id, Type: identifier, Line: 44, Column: 26}, Type: String }
                                     ] },
-                                    Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 44, Column: 31}, Type: String }
+                                    Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 44, Column: 31}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -1259,7 +1259,7 @@ children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 83, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 83, Column: 20}, Type: String }
+                                    Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 83, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -1282,7 +1282,7 @@ children: [
                                 Node: { Label: "params"
                                 children: [
                                     Node: { Token: {Value: 1, Type: int literal, Line: 88, Column: 17}, Type: int },
-                                    Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 88, Column: 20}, Type: String }
+                                    Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 88, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -1315,7 +1315,7 @@ children: [
                                 Node: { Token: {Value: println, Type: identifier, Line: 96, Column: 12} },
                                 Node: { Label: "params"
                                 children: [
-                                    Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 96, Column: 20}, Type: String }
+                                    Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 96, Column: 20}, Type: String }
                                 ] }
                             ] }
                         ] }
@@ -1345,7 +1345,7 @@ children: [
                                             Node: { Token: {Value: println, Type: identifier, Line: 100, Column: 16} },
                                             Node: { Label: "params"
                                             children: [
-                                                Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 100, Column: 24}, Type: String }
+                                                Node: { Token: {Value: stringIndex: 6, Type: string literal, Line: 100, Column: 24}, Type: String }
                                             ] }
                                         ] }
                                     ] }
@@ -1359,7 +1359,7 @@ children: [
                                             Node: { Token: {Value: printerr, Type: identifier, Line: 102, Column: 16} },
                                             Node: { Label: "params"
                                             children: [
-                                                Node: { Token: {Value: stringIndex: 6, Type: string literal, Line: 102, Column: 25}, Type: String }
+                                                Node: { Token: {Value: stringIndex: 7, Type: string literal, Line: 102, Column: 25}, Type: String }
                                             ] }
                                         ] },
                                         Node: { Label: "call", Type: None
@@ -1367,7 +1367,7 @@ children: [
                                             Node: { Token: {Value: println, Type: identifier, Line: 103, Column: 16} },
                                             Node: { Label: "params"
                                             children: [
-                                                Node: { Token: {Value: stringIndex: 7, Type: string literal, Line: 103, Column: 24}, Type: String }
+                                                Node: { Token: {Value: stringIndex: 8, Type: string literal, Line: 103, Column: 24}, Type: String }
                                             ] }
                                         ] }
                                     ] }
@@ -1452,7 +1452,7 @@ children: [
                         ] },
                         Node: { Token: {Value: int, Type: type keyword, Line: 124, Column: 16} },
                         Node: { Token: {Value: y, Type: identifier, Line: 124, Column: 20} },
-                        Node: { Token: {Value: stringIndex: 8, Type: string literal, Line: 124, Column: 24}, Type: String }
+                        Node: { Token: {Value: stringIndex: 9, Type: string literal, Line: 124, Column: 24}, Type: String }
                     ] },
                     Node: { Label: "Variable", Type: None
                     children: [
@@ -1599,12 +1599,12 @@ children: [
                         Node: { Label: "property", Type: String
                         children: [
                             Node: { Token: {Value: id, Type: identifier, Line: 152, Column: 30} },
-                            Node: { Token: {Value: stringIndex: 9, Type: string literal, Line: 152, Column: 34}, Type: String }
+                            Node: { Token: {Value: stringIndex: 10, Type: string literal, Line: 152, Column: 34}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: id, Type: identifier, Line: 152, Column: 41} },
-                            Node: { Token: {Value: stringIndex: 10, Type: string literal, Line: 152, Column: 45} }
+                            Node: { Token: {Value: stringIndex: 11, Type: string literal, Line: 152, Column: 45} }
                         ] }
                     ] }
                 ] }
@@ -1621,12 +1621,12 @@ children: [
                         Node: { Label: "property", Type: String
                         children: [
                             Node: { Token: {Value: id, Type: identifier, Line: 153, Column: 30} },
-                            Node: { Token: {Value: stringIndex: 11, Type: string literal, Line: 153, Column: 34}, Type: String }
+                            Node: { Token: {Value: stringIndex: 12, Type: string literal, Line: 153, Column: 34}, Type: String }
                         ] },
                         Node: { Label: "property"
                         children: [
                             Node: { Token: {Value: image, Type: identifier, Line: 153, Column: 41} },
-                            Node: { Token: {Value: stringIndex: 12, Type: string literal, Line: 153, Column: 48} }
+                            Node: { Token: {Value: stringIndex: 13, Type: string literal, Line: 153, Column: 48} }
                         ] }
                     ] }
                 ] }
@@ -1711,13 +1711,13 @@ children: [
                     Node: { Token: {Value: two, Type: identifier, Line: 160, Column: 4}, Type: Container },
                     Node: { Token: {Value: id, Type: identifier, Line: 160, Column: 8}, Type: String }
                 ] },
-                Node: { Token: {Value: stringIndex: 13, Type: string literal, Line: 160, Column: 13} }
+                Node: { Token: {Value: stringIndex: 14, Type: string literal, Line: 160, Column: 13} }
             ] },
             Node: { Token: {Value: =, Type: assign operator, Line: 161, Column: 19}
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: stringIndex: 14, Type: string literal, Line: 161, Column: 4}, Type: String },
+                    Node: { Token: {Value: stringIndex: 15, Type: string literal, Line: 161, Column: 4}, Type: String },
                     Node: { Token: {Value: length, Type: identifier, Line: 161, Column: 12} }
                 ] },
                 Node: { Token: {Value: 0, Type: int literal, Line: 161, Column: 21} }

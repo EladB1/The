@@ -17,7 +17,7 @@ children: [
     children: [
         Node: { Token: {Value: String, Type: type keyword, Line: 1, Column: 0} },
         Node: { Token: {Value: description, Type: identifier, Line: 1, Column: 7} },
-        Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 1, Column: 21}, Type: String }
+        Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 1, Column: 21}, Type: String }
     ] },
     Node: { Label: "Variable", Type: int
     children: [
@@ -256,7 +256,7 @@ children: [
         ] },
         Node: { Token: {Value: uint32, Type: type keyword, Line: 1, Column: 4} },
         Node: { Token: {Value: j, Type: identifier, Line: 1, Column: 11} },
-        Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 1, Column: 15}, Type: String }
+        Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 1, Column: 15}, Type: String }
     ] },
     Node: { Label: "Variable", Type: char
     children: [
@@ -338,7 +338,7 @@ children: [
                 Node: { Token: {Value: result, Type: identifier, Line: 13, Column: 8} },
                 Node: { Token: {Value: +, Type: add operator, Line: 13, Column: 25}
                 children: [
-                    Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 13, Column: 17}, Type: String },
+                    Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 13, Column: 17}, Type: String },
                     Node: { Token: {Value: i, Type: identifier, Line: 13, Column: 27} }
                 ] }
             ] },
@@ -380,7 +380,7 @@ children: [
                 Node: { Token: {Value: eq, Type: identifier, Line: 16, Column: 9} },
                 Node: { Token: {Value: ==, Type: compare operator, Line: 16, Column: 18}
                 children: [
-                    Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 16, Column: 14}, Type: String },
+                    Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 16, Column: 14}, Type: String },
                     Node: { Token: {Value: 1, Type: int literal, Line: 16, Column: 21}, Type: int }
                 ] }
             ] },

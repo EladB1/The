@@ -7,7 +7,7 @@ children: [
     children: [
         Node: { Token: {Value: String, Type: type keyword, Line: 0, Column: 0} },
         Node: { Token: {Value: s, Type: identifier, Line: 0, Column: 7} },
-        Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 0, Column: 11}, Type: String }
+        Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 0, Column: 11}, Type: String }
     ] },
     Node: { Label: "fn", IRName: "main", Type: int
     children: [
@@ -21,7 +21,7 @@ children: [
                 Node: { Token: {Value: len, Type: identifier, Line: 2, Column: 8} },
                 Node: { Label: "dot", Type: int
                 children: [
-                    Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 2, Column: 14}, Type: String },
+                    Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 2, Column: 14}, Type: String },
                     Node: { Token: {Value: length, Type: identifier, Line: 2, Column: 22}, Type: int }
                 ] }
             ] },
@@ -33,7 +33,7 @@ children: [
                 children: [
                     Node: { Label: "dot"
                     children: [
-                        Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 3, Column: 20}, Type: String },
+                        Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 3, Column: 20}, Type: String },
                         Node: { Token: {Value: contains, Type: identifier, Line: 3, Column: 28}, IRName: "__str_contains_char" }
                     ] },
                     Node: { Label: "params"
@@ -107,10 +107,10 @@ children: [
                 children: [
                     Node: { Token: {Value: +, Type: add operator, Line: 7, Column: 31}, Type: String
                     children: [
-                        Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 7, Column: 23}, Type: String },
+                        Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 7, Column: 23}, Type: String },
                         Node: { Token: {Value: ',', Type: char literal, Line: 7, Column: 33}, Type: char }
                     ] },
-                    Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 7, Column: 39}, Type: String }
+                    Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 7, Column: 39}, Type: String }
                 ] }
             ] },
             Node: { Token: {Value: +=, Type: assign operator, Line: 8, Column: 10}, Type: char
@@ -124,7 +124,7 @@ children: [
                 Node: { Token: {Value: withNum, Type: identifier, Line: 9, Column: 11} },
                 Node: { Token: {Value: +, Type: add operator, Line: 9, Column: 32}, Type: String
                 children: [
-                    Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 9, Column: 21}, Type: String },
+                    Node: { Token: {Value: stringIndex: 6, Type: string literal, Line: 9, Column: 21}, Type: String },
                     Node: { Label: "typecast", Type: String
                     children: [
                         Node: { Token: {Value: 2, Type: int literal, Line: 9, Column: 34}, Type: int },
@@ -167,7 +167,7 @@ children: [
                 Node: { Token: {Value: repeat, Type: identifier, Line: 1, Column: 11} },
                 Node: { Token: {Value: **, Type: operator, Line: 1, Column: 24}
                 children: [
-                    Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 1, Column: 20}, Type: String },
+                    Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 1, Column: 20}, Type: String },
                     Node: { Token: {Value: 2, Type: int literal, Line: 1, Column: 27}, Type: int }
                 ] }
             ] },
@@ -177,7 +177,7 @@ children: [
                 Node: { Token: {Value: withNum, Type: identifier, Line: 2, Column: 11} },
                 Node: { Token: {Value: +, Type: add operator, Line: 2, Column: 32}
                 children: [
-                    Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 2, Column: 21}, Type: String },
+                    Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 2, Column: 21}, Type: String },
                     Node: { Token: {Value: 2, Type: int literal, Line: 2, Column: 34}, Type: int }
                 ] }
             ] },
@@ -185,32 +185,32 @@ children: [
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 3, Column: 4}, Type: String },
+                    Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 3, Column: 4}, Type: String },
                     Node: { Token: {Value: length, Type: identifier, Line: 3, Column: 8} }
                 ] },
                 Node: { Token: {Value: 2, Type: int literal, Line: 3, Column: 17} }
             ] },
             Node: { Label: "dot", Type: None
             children: [
-                Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 4, Column: 4}, Type: String },
+                Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 4, Column: 4}, Type: String },
                 Node: { Token: {Value: something, Type: identifier, Line: 4, Column: 8} }
             ] },
             Node: { Label: "call", Type: None
             children: [
                 Node: { Label: "dot"
                 children: [
-                    Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 5, Column: 4}, Type: String },
+                    Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 5, Column: 4}, Type: String },
                     Node: { Token: {Value: something, Type: identifier, Line: 5, Column: 8} }
                 ] }
             ] },
             Node: { Label: "index", Type: char
             children: [
-                Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 6, Column: 4}, Type: String },
+                Node: { Token: {Value: stringIndex: 6, Type: string literal, Line: 6, Column: 4}, Type: String },
                 Node: { Token: {Value: 'a', Type: char literal, Line: 6, Column: 8}, Type: char }
             ] },
             Node: { Label: "index", Type: char
             children: [
-                Node: { Token: {Value: stringIndex: 6, Type: string literal, Line: 7, Column: 4}, Type: String },
+                Node: { Token: {Value: stringIndex: 7, Type: string literal, Line: 7, Column: 4}, Type: String },
                 Node: { Label: "ARR-END"
                 children: [
                     Node: { Token: {Value: 'a', Type: char literal, Line: 7, Column: 9}, Type: char }
@@ -218,8 +218,8 @@ children: [
             ] },
             Node: { Token: {Value: -, Type: add operator, Line: 8, Column: 9}, Type: None
             children: [
-                Node: { Token: {Value: stringIndex: 7, Type: string literal, Line: 8, Column: 4}, Type: String },
-                Node: { Token: {Value: stringIndex: 8, Type: string literal, Line: 8, Column: 11}, Type: String }
+                Node: { Token: {Value: stringIndex: 8, Type: string literal, Line: 8, Column: 4}, Type: String },
+                Node: { Token: {Value: stringIndex: 9, Type: string literal, Line: 8, Column: 11}, Type: String }
             ] },
             Node: { Label: "control-flow", Type: int
             children: [

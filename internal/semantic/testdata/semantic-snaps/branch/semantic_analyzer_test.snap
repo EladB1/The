@@ -22,7 +22,7 @@ children: [
                         children: [
                             Node: { Label: "dot"
                             children: [
-                                Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 1, Column: 25}, Type: String },
+                                Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 1, Column: 25}, Type: String },
                                 Node: { Token: {Value: toUpper, Type: identifier, Line: 1, Column: 32}, IRName: "__str_toUpper" }
                             ] }
                         ] }
@@ -36,7 +36,7 @@ children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 2, Column: 13}, Type: bool
                     children: [
                         Node: { Token: {Value: user, Type: identifier, Line: 2, Column: 8}, Type: String },
-                        Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 2, Column: 16}, Type: String }
+                        Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 2, Column: 16}, Type: String }
                     ] },
                     Node: { Label: "conditional-body"
                     children: [
@@ -46,7 +46,7 @@ children: [
                             Node: { Label: "params"
                             children: [
                                 Node: { Token: {Value: 1, Type: int literal, Line: 3, Column: 13}, Type: int },
-                                Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 3, Column: 16}, Type: String }
+                                Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 3, Column: 16}, Type: String }
                             ] }
                         ] }
                     ] }
@@ -68,14 +68,14 @@ children: [
                     Node: { Token: {Value: ==, Type: compare operator, Line: 5, Column: 13}, Type: bool
                     children: [
                         Node: { Token: {Value: user, Type: identifier, Line: 5, Column: 8}, Type: String },
-                        Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 5, Column: 16}, Type: String }
+                        Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 5, Column: 16}, Type: String }
                     ] },
                     Node: { Label: "conditional_body"
                     children: [
                         Node: { Token: {Value: =, Type: assign operator, Line: 6, Column: 20}, Type: String
                         children: [
                             Node: { Token: {Value: accountType, Type: identifier, Line: 6, Column: 8}, Type: String },
-                            Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 6, Column: 22}, Type: String }
+                            Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 6, Column: 22}, Type: String }
                         ] }
                     ] }
                 ] },
@@ -90,7 +90,7 @@ children: [
                         ] },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: stringIndex: 5, Type: string literal, Line: 8, Column: 27}, Type: String }
+                            Node: { Token: {Value: stringIndex: 6, Type: string literal, Line: 8, Column: 27}, Type: String }
                         ] }
                     ] },
                     Node: { Label: "conditional-body"
@@ -98,7 +98,7 @@ children: [
                         Node: { Token: {Value: =, Type: assign operator, Line: 9, Column: 20}, Type: String
                         children: [
                             Node: { Token: {Value: accountType, Type: identifier, Line: 9, Column: 8}, Type: String },
-                            Node: { Token: {Value: stringIndex: 6, Type: string literal, Line: 9, Column: 22}, Type: String }
+                            Node: { Token: {Value: stringIndex: 7, Type: string literal, Line: 9, Column: 22}, Type: String }
                         ] }
                     ] }
                 ] },
@@ -113,7 +113,7 @@ children: [
                         ] },
                         Node: { Label: "params"
                         children: [
-                            Node: { Token: {Value: stringIndex: 7, Type: string literal, Line: 10, Column: 27}, Type: String }
+                            Node: { Token: {Value: stringIndex: 8, Type: string literal, Line: 10, Column: 27}, Type: String }
                         ] }
                     ] },
                     Node: { Label: "conditional_body"
@@ -121,7 +121,7 @@ children: [
                         Node: { Token: {Value: =, Type: assign operator, Line: 11, Column: 20}, Type: String
                         children: [
                             Node: { Token: {Value: accountType, Type: identifier, Line: 11, Column: 8}, Type: String },
-                            Node: { Token: {Value: stringIndex: 8, Type: string literal, Line: 11, Column: 22}, Type: String }
+                            Node: { Token: {Value: stringIndex: 9, Type: string literal, Line: 11, Column: 22}, Type: String }
                         ] }
                     ] }
                 ] },
@@ -132,7 +132,7 @@ children: [
                         Node: { Token: {Value: =, Type: assign operator, Line: 14, Column: 20}, Type: String
                         children: [
                             Node: { Token: {Value: accountType, Type: identifier, Line: 14, Column: 8}, Type: String },
-                            Node: { Token: {Value: stringIndex: 9, Type: string literal, Line: 14, Column: 22}, Type: String }
+                            Node: { Token: {Value: stringIndex: 10, Type: string literal, Line: 14, Column: 22}, Type: String }
                         ] }
                     ] }
                 ] }
@@ -441,7 +441,7 @@ children: [
                             Node: { Token: {Value: println, Type: identifier, Line: 59, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: stringIndex: 10, Type: string literal, Line: 59, Column: 16}, Type: String }
+                                Node: { Token: {Value: stringIndex: 11, Type: string literal, Line: 59, Column: 16}, Type: String }
                             ] }
                         ] }
                     ] }
@@ -455,7 +455,7 @@ children: [
                             Node: { Token: {Value: println, Type: identifier, Line: 61, Column: 8} },
                             Node: { Label: "params"
                             children: [
-                                Node: { Token: {Value: stringIndex: 11, Type: string literal, Line: 61, Column: 16}, Type: String }
+                                Node: { Token: {Value: stringIndex: 12, Type: string literal, Line: 61, Column: 16}, Type: String }
                             ] }
                         ] }
                     ] }
@@ -572,7 +572,7 @@ children: [
                     Node: { Token: {Value: in, Type: operator keyword, Line: 72, Column: 23} },
                     Node: { Label: "index"
                     children: [
-                        Node: { Token: {Value: stringIndex: 12, Type: string literal, Line: 72, Column: 26} },
+                        Node: { Token: {Value: stringIndex: 13, Type: string literal, Line: 72, Column: 26} },
                         Node: { Label: "slice"
                         children: [
                             Node: { Token: {Value: 2, Type: int literal, Line: 72, Column: 34} },
@@ -600,7 +600,7 @@ children: [
                             children: [
                                 Node: { Token: {Value: +, Type: add operator, Line: 74, Column: 18}, Type: String
                                 children: [
-                                    Node: { Token: {Value: stringIndex: 13, Type: string literal, Line: 74, Column: 14}, Type: String },
+                                    Node: { Token: {Value: stringIndex: 14, Type: string literal, Line: 74, Column: 14}, Type: String },
                                     Node: { Token: {Value: c, Type: identifier, Line: 74, Column: 20}, Type: char }
                                 ] },
                                 Node: { Token: {Value: '\n', Type: char literal, Line: 74, Column: 24}, Type: char }
@@ -678,7 +678,7 @@ children: [
                         Node: { Token: {Value: i, Type: identifier, Line: 1, Column: 13} }
                     ] },
                     Node: { Token: {Value: in, Type: operator keyword, Line: 1, Column: 15} },
-                    Node: { Token: {Value: stringIndex: 0, Type: string literal, Line: 1, Column: 18}, Type: String }
+                    Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 1, Column: 18}, Type: String }
                 ] },
                 Node: { Label: "loop-body" }
             ] },
@@ -914,7 +914,7 @@ children: [
                         Node: { Token: {Value: s, Type: identifier, Line: 13, Column: 16} }
                     ] },
                     Node: { Token: {Value: in, Type: operator keyword, Line: 13, Column: 18} },
-                    Node: { Token: {Value: stringIndex: 1, Type: string literal, Line: 13, Column: 21}, Type: String }
+                    Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 13, Column: 21}, Type: String }
                 ] },
                 Node: { Label: "loop-body" }
             ] },
@@ -930,7 +930,7 @@ children: [
                     Node: { Token: {Value: in, Type: operator keyword, Line: 14, Column: 16} },
                     Node: { Label: "index", Type: char
                     children: [
-                        Node: { Token: {Value: stringIndex: 2, Type: string literal, Line: 14, Column: 19}, Type: String },
+                        Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 14, Column: 19}, Type: String },
                         Node: { Token: {Value: 1, Type: int literal, Line: 14, Column: 27}, Type: int }
                     ] }
                 ] },
@@ -951,7 +951,7 @@ children: [
                         Node: { Token: {Value: d, Type: identifier, Line: 15, Column: 22} }
                     ] },
                     Node: { Token: {Value: in, Type: operator keyword, Line: 15, Column: 24} },
-                    Node: { Token: {Value: stringIndex: 3, Type: string literal, Line: 15, Column: 27} }
+                    Node: { Token: {Value: stringIndex: 4, Type: string literal, Line: 15, Column: 27} }
                 ] },
                 Node: { Label: "loop-body" }
             ] },
