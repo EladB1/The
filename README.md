@@ -149,16 +149,16 @@ Strings also have their own methods which can be called as `string.method(params
 | `contains(char chr) -> bool` | Check if a string contains a character |
 | `startsWith(String prefix) -> bool` | Check if a string starts with `prefix` |
 | `endsWith(String suffix) -> bool` | Check if a string ends with `suffix` |
-| `replace(String old, String new) -> String` | Replace the first occurence of `old` with `new` |
-| `replace(String string, char old, char new) -> String` | Replace the first occurence of `old` with `new` |
-| `replaceAll(String old, String new) -> String` |  Replace all occurences of `old` with `new` |
-| `replaceAll(char old, char new) -> String` |  Replace all occurences of `old` with `new` |
-| `reverse() -> String` | Get a string in reverse order |
-| `toUpper() -> String` | Change all characters to uppercase |
-| `toLower() -> String` | Change all characters to lowercase |
-| `trim() -> String` | Remove whitespace from the start and end of string |
-| `trimStart() -> String` | Remove whitespace from the start of string |
-| `trimEnd() -> String` | Remove whitespace from the end of string |
+| `replace(String old, String new) -> String` | Create a new string with the first occurence of `old` replaced with `new` |
+| `replace(String string, char old, char new) -> String` | Create a new string with the first occurence of `old` replaced with `new` |
+| `replaceAll(String old, String new) -> String` |  Create a new string with all occurences of `old` replaced with `new` |
+| `replaceAll(char old, char new) -> String` |  Replace all occurences of `old` replaced with `new` |
+| `reverse() -> String` | Create a new string in reverse order |
+| `toUpper() -> String` | Create a new string with all characters to uppercase |
+| `toLower() -> String` | Create a new string with all characters to lowercase |
+| `trim() -> String` | Create a new string with whitespace removed from the start and end of string |
+| `trimStart() -> String` | Create a new string with whitespace removed from the start of string |
+| `trimEnd() -> String` | Create a new string with whitespace removed from the end of string |
 
 ### Type Compatibility
 
@@ -981,3 +981,9 @@ A string follows this format:
 The prefix (part before *hello, world*) is a little endian hexadecimal representation of the strings length. Each of the four parts has a max value of 0xFF (256).
 
 Dynamic strings are generated from operations like concatenating strings, slices, function calls that generated strings (like `prompt`), etc. When a dynamic string is created, a memory allocation happens using `$__malloc` from the runtime library.
+
+### Runtime vs Standard Library
+
+Runtime library: Any code need for the language to function for operations like memory management, bounds checking, error handling, and operations not directly supported in WASM
+
+Standard Library (AKA stdlib): Any variables, functions, etc. built into the language provided to the users without needing to import anything

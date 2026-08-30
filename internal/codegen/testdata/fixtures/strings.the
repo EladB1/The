@@ -7,17 +7,28 @@ fn main() -> int {
     println(str[1..4]);
     println(str[1..=4]);
     println(str == "hello");
+    println(str.reverse());
     testCasts();
     return 0;
 }
 
 fn testCasts() {
+    println(true);
     println(92);
     println(1);
     println(-45);
     println('c');
-    println(true);
-    println(false);
     int64 i = -221;
     println(i);
+    testStrComparisons("hello", "halo");
+}
+
+fn testStrComparisons(String str1, String str2) {
+    println(str1 == str2);
+    println(str1 != str2);
+    println(str1 < str2);
+    println(str1 <= str2);
+    println(str1 > str2);
+    println(str1 >= str2);
+
 }

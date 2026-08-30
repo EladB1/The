@@ -80,12 +80,12 @@ Program: [
     PARAM global.s
     PARAM i32(0)
     PARAM __t35
-    __t36: i32 = CALL __str_slice_inclusive 3
+    __t36: str_const = CALL __str_slice_inclusive 3
     STORE global.copy __t36
     PARAM global.s
     PARAM i32(0)
     PARAM i32(6)
-    __t37: i32 = CALL __str_slice 3
+    __t37: str_const = CALL __str_slice 3
     STORE global.firstHalf __t37
     PARAM global.s
     __t38: i32 = CALL __str_length 1
@@ -93,12 +93,12 @@ Program: [
     PARAM global.s
     PARAM i32(6)
     PARAM __t39
-    __t40: i32 = CALL __str_slice_inclusive 3
+    __t40: str_const = CALL __str_slice_inclusive 3
     STORE global.secondHalf __t40
     PARAM str_const(5)
     PARAM i32(3)
     PARAM i32(4)
-    __t41: i32 = CALL __str_slice_inclusive 3
+    __t41: str_const = CALL __str_slice_inclusive 3
     STORE global.slice __t41
     PARAM global.s
     __t42: i32 = CALL __str_length 1
