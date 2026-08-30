@@ -30,6 +30,10 @@ fn testStrMethods(String str) {
     println(str.contains(""));
     println(str.toUpper());
     println("HELLO".toLower());
+    print("  abc    ".trim());
+    print(" abc".trimStart());
+    print("abc  ".trimEnd());
+    println("");
 }
 
 fn testCasts() {
