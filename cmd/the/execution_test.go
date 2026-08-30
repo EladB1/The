@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 const (
@@ -16,13 +18,13 @@ const (
 )
 
 type ExecutionResult struct {
-	status int
-	stdout string
-	stderr string
+	Status int
+	Stdout string
+	Stderr string
 }
 
 func (result ExecutionResult) String() string {
-	return fmt.Sprintf("{\n\tstatus: %d,\n\tstdout: %q,\n\tstderr: %q\n}", result.status, result.stdout, result.stderr)
+	return fmt.Sprintf("{\n\tstatus: %d,\n\tstdout: %q,\n\tstderr: %q\n}", result.Status, result.Stdout, result.Stderr)
 }
 
 var executionTests = []struct {
@@ -30,29 +32,29 @@ var executionTests = []struct {
 	expectedResult ExecutionResult
 }{
 	{"helloworld.the", ExecutionResult{
-		status: 0,
-		stdout: "hello, world!\n",
-		stderr: "",
+		Status: 0,
+		Stdout: "hello, world!\n",
+		Stderr: "",
 	}},
 	{"nonzeroreturn.the", ExecutionResult{
-		status: 1,
-		stdout: "",
-		stderr: "Something went wrong\n",
+		Status: 1,
+		Stdout: "",
+		Stderr: "Something went wrong\n",
 	}},
 	{"divisionbyzero.the", ExecutionResult{
-		status: 1,
-		stdout: "",
-		stderr: "RuntimeError: integer divide by zero \n",
+		Status: 1,
+		Stdout: "",
+		Stderr: "RuntimeError: integer divide by zero \n",
 	}},
 	{"bounds.the", ExecutionResult{
-		status: 1,
-		stdout: "hlo",
-		stderr: "\x1b[1;31mRuntimeError:\x1b[0m index 6 out of range 5\n",
+		Status: 1,
+		Stdout: "hlo",
+		Stderr: "\x1b[1;31mRuntimeError:\x1b[0m index 6 out of range 5\n",
 	}},
 	{"slices.the", ExecutionResult{
-		status: 1,
-		stdout: "hello, world!\nello, world!\nhell\ntrue\nl\nld!\n",
-		stderr: "\x1b[1;31mRuntimeError:\x1b[0m slice start 10 cannot be greater than slice end 1\n",
+		Status: 1,
+		Stdout: "hello, world!\nello, world!\nhell\ntrue\nl\nld!\n",
+		Stderr: "\x1b[1;31mRuntimeError:\x1b[0m slice start 10 cannot be greater than slice end 1\n",
 	}},
 }
 
@@ -68,13 +70,14 @@ func TestExecution(t *testing.T) {
 			env := []string{}
 			result := RunCompiler(args, &stdoutBuffer, &stderrBuffer, env)
 			actualResult := ExecutionResult{
-				status: result,
-				stdout: stdoutBuffer.String(),
-				stderr: stderrBuffer.String(),
+				Status: result,
+				Stdout: stdoutBuffer.String(),
+				Stderr: stderrBuffer.String(),
 				// Extra new line gets inserted before the output
 			}
-			if actualResult != sub.expectedResult {
-				t.Errorf("\nExpected %v, but got %v\n", sub.expectedResult, actualResult)
+			if !cmp.Equal(actualResult, sub.expectedResult) {
+				diff := cmp.Diff(actualResult, sub.expectedResult)
+				t.Errorf("\nActual result(-) did not match expected result(+):\n%v\n", diff)
 			}
 		})
 	}
