@@ -28,6 +28,8 @@ fn testStrMethods(String str) {
     println(str.contains("ll"));
     println(str.contains("abc"));
     println(str.contains(""));
+    println(str.toUpper());
+    println("HELLO".toLower());
 }
 
 fn testCasts() {
