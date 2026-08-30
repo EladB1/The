@@ -30,9 +30,9 @@ fn testStrMethods(String str) {
     println(str.contains(""));
     println(str.toUpper());
     println("HELLO".toLower());
-    print("  abc    ".trim());
-    print(" abc".trimStart());
-    print("abc  ".trimEnd());
+    print("  \n\tabc   \n\r\v ".trim());
+    print(" \nabc".trimStart());
+    print("abc\n\r  ".trimEnd());
     println("");
 }
 

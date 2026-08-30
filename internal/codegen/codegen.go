@@ -29,6 +29,7 @@ func buildData(literals ds.LiteralPool) []Data {
 	data := []Data{}
 	offset := dataStart
 	for i, literal := range literals {
+		literal.Str = encodeStr(literal.Str)
 		data = append(data, Data{
 			Name:     fmt.Sprintf("$__str_const%d", i),
 			MemoryId: 0,
@@ -42,6 +43,24 @@ func buildData(literals ds.LiteralPool) []Data {
 		}
 	}
 	return data
+}
+
+func encodeStr(literal string) string {
+	newStr := strings.Builder{}
+	for _, b := range literal {
+		if b == '"' {
+			newStr.WriteString("\"")
+		}
+		if b == '\'' {
+			newStr.WriteString("\\'")
+		}
+		if b >= 0x20 && b < 0x7F {
+			newStr.WriteRune(b)
+		} else {
+			newStr.WriteString(fmt.Sprintf("\\%02x", b))
+		}
+	}
+	return newStr.String()
 }
 
 func getVariables(ir []irgen.TAC, inGlobalScope bool) *ds.OrderedMap[Variable] {
