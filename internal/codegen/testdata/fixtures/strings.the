@@ -1,26 +1,43 @@
 fn main() -> int {
     String str = "hello, world";
     println(str);
+    testStrIndex(str);
+    testStrMethods(str);
+    testCasts();
+    testStrComparisons("hello", "halo");
+    return 0;
+}
+
+fn testStrIndex(String str) {
     println(str[1]);
     //println(str[27000]);
     println(str[^1]);
     println(str[1..4]);
     println(str[1..=4]);
-    println(str == "hello");
+    println(str.startsWith("hello"));
+}
+
+fn testStrMethods(String str) {
     println(str.reverse());
-    testCasts();
-    return 0;
+    println(str.startsWith("hello"));
+    println(str.startsWith("helo"));
+    println(str.endsWith("world"));
+    println(str.endsWith("RLD"));
+    println(str.contains('l'));
+    println(str.contains('L'));
+    println(str.contains("ll"));
+    println(str.contains("abc"));
+    println(str.contains(""));
 }
 
 fn testCasts() {
-    println(true);
     println(92);
     println(1);
     println(-45);
     println('c');
+    println(true);
     int64 i = -221;
     println(i);
-    testStrComparisons("hello", "halo");
 }
 
 fn testStrComparisons(String str1, String str2) {
@@ -30,5 +47,4 @@ fn testStrComparisons(String str1, String str2) {
     println(str1 <= str2);
     println(str1 > str2);
     println(str1 >= str2);
-
 }
