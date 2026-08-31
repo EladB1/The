@@ -2,4 +2,4 @@
 
 ## Use this to check for compiler environment variables
 
-env | grep 'THE_DEV_'
+python3 scripts/checkEnv.py | jq

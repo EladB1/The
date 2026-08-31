@@ -788,6 +788,8 @@ export THE_DEV_CODEGEN=true
 the run source.the
 ```
 
+You can run `scripts/checkEnv.bash` to check the environment variable values
+
 ### Tooling
 
 1. Go

@@ -1276,7 +1276,7 @@
         ;;(call $__str_toUpper (i32.const 100))
         ;;(call $__str_toLower (i32.const 300))
         ;;(call $__str_trimStart (i32.const 300))
-        (call $__str_trimEnd (i32.const 300))
+        ;;(call $__str_trimEnd (i32.const 300))
         (call $__str_trim (i32.const 300))
         ;; (call $__str_length)
         ;; (call $__str_fromInt32)
