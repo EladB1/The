@@ -45,6 +45,13 @@ fn testStrMethods(String str) {
     println("".replace('', ''));
     println("".replace('', 'k'));
     println("".replace('k', 'k'));
+    println(str.replaceAll('', '_'));
+    println(str.replaceAll('l', '_'));
+    println(str.replaceAll('l', 'l'));
+    println(str.replaceAll('l', ''));
+    println("".replaceAll('', ''));
+    println("".replaceAll('', 'k'));
+    println("".replaceAll('k', 'k'));
 }
 
 fn testCasts() {
