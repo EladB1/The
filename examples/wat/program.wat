@@ -584,7 +584,7 @@
                 (call $__newBoundsError (local.get $start) (local.get $len))
             )
             (else
-                (i32.ge_s (local.get $end) (local.get $len))
+                (i32.gt_s (local.get $end) (local.get $len))
                 if
                     (call $__newBoundsError (local.get $end) (local.get $len))
                 end
@@ -1237,6 +1237,79 @@
         )
         (local.get $newStr)
     )
+    
+    (func $__str_replace_char_char (export "__str_replace_char_char") (param $old i32) (param $new i32) (param $str i32) (result i32)
+        (local $newStr i32)
+        (local $len i32)
+        (local $newLen i32)
+        (local $replaced i32)
+        (local $start i32)
+        (local $newStart i32)
+        (local $char i32)
+        (local $i i32)
+        (local.set $len (call $__str_length (local.get $str)))
+        (local.set $start (i32.add (local.get $str) (i32.const 4)))
+        (if (i32.eq (local.get $old) (local.get $new))
+            (then
+                (call $__str_slice (local.get $str) (i32.const 0) (local.get $len))) ;; make a copy
+                (return)
+            )
+        )
+        (if (i32.eqz (local.get $len))
+            (then 
+                (if (i32.eqz (local.get $new))
+                    (then
+                        (local.set $newStr (call $__malloc (i32.const 4)))
+                        (i32.store (local.get $newStr) (i32.const 0))
+                        (return (local.get $newStr))
+                    )
+                    (else
+                        (if (i32.eqz (local.get $old))
+                            (then
+                                (local.set $newStr (call $__malloc (i32.const 5)))
+                                (i32.store (local.get $newStr) (i32.const 1))
+                                (i32.store8 (i32.add (local.get $newStr) (i32.const 4)) (local.get $new))
+                                (return (local.get $newStr))
+                            )
+                        )
+                        
+                    )
+                )
+            )
+        )
+        (if (i32.eqz (local.get $old))
+            (then
+                (call $__char_concat_str (local.get $new) (local.get $str))
+                (return)
+            )
+        )
+        (call $__malloc (i32.add (local.get $len) (i32.const 4)))
+        (local.set $newStr)
+        (i32.store (local.get $newStr) (local.get $len))
+        (local.set $newStart (i32.add (local.get $newStr) (i32.const 4)))
+        (loop $replace_loop (block $exit_replace_loop
+            (i32.eq (local.get $i) (local.get $len))
+            (br_if $exit_replace_loop)
+            (i32.load8_u (i32.add (local.get $start) (local.get $i)))
+            (local.set $char)
+            (if (i32.and (i32.eq (local.get $char) (local.get $old)) (i32.eqz (local.get $replaced)))
+                (then
+                    (local.set $replaced (i32.const 1))
+                    (if (i32.ne(local.get $new) (i32.const 0))
+                        (then
+                            (i32.store8 (i32.add (local.get $newStart) (local.get $i)) (local.get $new))
+                        )
+                    )
+                )
+                (else
+                    (i32.store8 (i32.add (local.get $newStart) (local.get $i)) (local.get $char))
+                )
+            )
+            (local.set $i (i32.add (local.get $i) (i32.const 1)))
+            (br $replace_loop)
+        ))
+        (local.get $newStr)
+    )
 
     ;;
     ;; Entry point
@@ -1253,6 +1326,7 @@
     (data $__str_const0 (i32.const 100) "\0c\00\00\00hello, world")
     (data $__str_const1 (i32.const 500) "\06\00\00\00Name: ")
     (data $__str_const2 (i32.const 300) "\06\00\00\00\n\tLL \n")
+    (data $__str_const3 (i32.const 310) "\00\00\00\00")
     ;;(data $__str_const1 (i32.const 200) "\02\00\00\00!\n")
     (func $main (export "main") (result i32)
         (call $println (i32.const 100))
@@ -1277,10 +1351,11 @@
         ;;(call $__str_toLower (i32.const 300))
         ;;(call $__str_trimStart (i32.const 300))
         ;;(call $__str_trimEnd (i32.const 300))
-        (call $__str_trim (i32.const 300))
+        ;;(call $__str_trim (i32.const 300))
         ;; (call $__str_length)
         ;; (call $__str_fromInt32)
-        (call $print)
+        (call $__str_replace_char_char (i32.const 0) (i32.const 95) (i32.const 100))
+        (call $println)
         (i32.const 0)
         ;;(call $__str_eq (i32.const 100) (i32.const 100))
         ;;(call $__str_gt (i32.const 100) (i32.const 300))

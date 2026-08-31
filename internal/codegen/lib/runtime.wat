@@ -303,7 +303,7 @@
                 (call $__newBoundsError (local.get $start) (local.get $len))
             )
             (else
-                (i32.ge_s (local.get $end) (local.get $len))
+                (i32.gt_s (local.get $end) (local.get $len))
                 if
                     (call $__newBoundsError (local.get $end) (local.get $len))
                 end

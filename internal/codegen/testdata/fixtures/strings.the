@@ -37,9 +37,14 @@ fn testStrMethods(String str) {
     println("HELLO".toLower());
     print("  \n\tabc   \n\r\v ".trim());
     print(" \nabc".trimStart());
-    print("abc\n\r  ".trimEnd());
-    // println(str.replace('l', '_'));
-    println("");
+    println("abc\n\r  ".trimEnd());
+    println(str.replace('', '_'));
+    println(str.replace('l', '_'));
+    println(str.replace('l', 'l'));
+    println(str.replace('l', ''));
+    println("".replace('', ''));
+    println("".replace('', 'k'));
+    println("".replace('k', 'k'));
 }
 
 fn testCasts() {
