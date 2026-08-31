@@ -8,12 +8,13 @@ The goal of **The** language is to start with something simple to build a compil
 
 #### Initial version features
 
-- [ ] Static strong typing
-- [ ] Immutability by default; `mut` used to declare mutability
-- [ ] User defined types and interfaces
-- [ ] Generates WAT file and automatically calls `wat2wasm` on it
+- Static strong typing
+- Immutability by default; `mut` used to declare mutability
+- User defined types and interfaces
+- Can generate both WAT and WASM files
+- Can execute code using `run` command
 
-Future state features can be found [here](TODO.md)
+Plans for future features can be found [here](Roadmap.md).
 
  > Subject to change as development progresses
 
@@ -142,23 +143,7 @@ data[..= ^1]; // valid; returns "abcde"
 
 Strings also have their own methods which can be called as `string.method(params)`
 
-| Function | Description
-| --- | --- |
-| `indexOf(char chr) -> int` | Get the index of `chr` |
-| `contains(String substring) -> bool` | Check if a string contains a substring |
-| `contains(char chr) -> bool` | Check if a string contains a character |
-| `startsWith(String prefix) -> bool` | Check if a string starts with `prefix` |
-| `endsWith(String suffix) -> bool` | Check if a string ends with `suffix` |
-| `replace(String old, String new) -> String` | Create a new string with the first occurence of `old` replaced with `new` |
-| `replace(String string, char old, char new) -> String` | Create a new string with the first occurence of `old` replaced with `new` |
-| `replaceAll(String old, String new) -> String` |  Create a new string with all occurences of `old` replaced with `new` |
-| `replaceAll(char old, char new) -> String` |  Replace all occurences of `old` replaced with `new` |
-| `reverse() -> String` | Create a new string in reverse order |
-| `toUpper() -> String` | Create a new string with all characters to uppercase |
-| `toLower() -> String` | Create a new string with all characters to lowercase |
-| `trim() -> String` | Create a new string with whitespace removed from the start and end of string |
-| `trimStart() -> String` | Create a new string with whitespace removed from the start of string |
-| `trimEnd() -> String` | Create a new string with whitespace removed from the end of string |
+Can be found [here](#string-methods)
 
 ### Type Compatibility
 
@@ -728,17 +713,32 @@ Standard library functions/variables are included without importing anything (im
 | `print(Any value)` | Print value to stdout |
 | `println(Any value)` | Print value to stdout with new line ending |
 | `printerr(Any value)` | Print value to stderr |
-| `typeOf(Any value) -> String` | Get the type of a value as a string | 
 | `exit(int status)` | Terminate execution with status code |
 | `exit(int status, String error)` | Terminate execution with status code and error message (will print to stderr) |
 | `sleep(double seconds)` | Block the thread for specified amount of seconds |
-| `getEnv(String key) -> String` | Get the value of environment variable |
-| `setEnv(String key, String value)` | Set the value of environment variable |
 | `assert(bool condition)` | Check if a condition is true and fail otherwise |
 | `assert(bool condition, String message)` | Check if a condition is true and fail otherwise with a message |
 | `prompt(String promptText) -> String` | Print `promptText` and read from stdin |
-| `secretPrompt(String promptText) -> String` | Print `promptText` and read from stdin but hide characters being typed |
 
+#### String Methods
+
+| Function | Description
+| --- | --- |
+| `indexOf(char chr) -> int` | Get the index of `chr` |
+| `contains(String substring) -> bool` | Check if a string contains a substring |
+| `contains(char chr) -> bool` | Check if a string contains a character |
+| `startsWith(String prefix) -> bool` | Check if a string starts with `prefix` |
+| `endsWith(String suffix) -> bool` | Check if a string ends with `suffix` |
+| `replace(String old, String new) -> String` | Create a new string with the first occurence of `old` replaced with `new` |
+| `replace(String string, char old, char new) -> String` | Create a new string with the first occurence of `old` replaced with `new` |
+| `replaceAll(String old, String new) -> String` |  Create a new string with all occurences of `old` replaced with `new` |
+| `replaceAll(char old, char new) -> String` |  Replace all occurences of `old` replaced with `new` |
+| `reverse() -> String` | Create a new string in reverse order |
+| `toUpper() -> String` | Create a new string with all characters to uppercase |
+| `toLower() -> String` | Create a new string with all characters to lowercase |
+| `trim() -> String` | Create a new string with whitespace removed from the start and end of string |
+| `trimStart() -> String` | Create a new string with whitespace removed from the start of string |
+| `trimEnd() -> String` | Create a new string with whitespace removed from the end of string |
 
 ### Memory Management
 

@@ -20,11 +20,7 @@ var rootScope *Scope = &Scope{
 			"exit",
 			"assert",
 			"prompt",
-			"typeOf",
 			"sleep",
-			"getEnv",
-			"setEnv",
-			"secretPrompt",
 		},
 		Values: map[string]FunctionSymbol{
 			"print": {
@@ -91,15 +87,6 @@ var rootScope *Scope = &Scope{
 				}},
 				ReturnType: dt.StringType,
 			},
-			"typeOf": {
-				Name: "typeOf",
-				Overloads: []FnOverloadSymbol{{
-					Parameters:               []dt.SourceType{dt.AnyType},
-					HasDefaultImplementation: true,
-				}},
-				ReturnType: dt.StringType,
-			},
-
 			"sleep": {
 				Name: "sleep",
 				Overloads: []FnOverloadSymbol{{
@@ -107,31 +94,6 @@ var rootScope *Scope = &Scope{
 					HasDefaultImplementation: true,
 				}},
 				ReturnType: dt.NoneType,
-			},
-			"getEnv": {
-				Name: "getEnv",
-				Overloads: []FnOverloadSymbol{{
-					Parameters:               []dt.SourceType{dt.StringType},
-					HasDefaultImplementation: true,
-				}},
-				ReturnType: dt.StringType,
-			},
-			"setEnv": {
-				Name: "setEnv",
-				Overloads: []FnOverloadSymbol{{
-					Parameters:               []dt.SourceType{dt.StringType, dt.StringType},
-					HasDefaultImplementation: true,
-				}},
-				ReturnType: dt.NoneType,
-			},
-
-			"secretPrompt": {
-				Name: "secretPrompt",
-				Overloads: []FnOverloadSymbol{{
-					Parameters:               []dt.SourceType{dt.StringType},
-					HasDefaultImplementation: true,
-				}},
-				ReturnType: dt.StringType,
 			},
 		},
 	},

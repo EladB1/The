@@ -27,7 +27,6 @@ String firstHalf = s[..6];
 String secondHalf = s[6 ..=];
 String slice = "hello"[3..=4];
 int len = s.length;
-String env = getEnv("SHELL");
 bool hasA = "abc".contains('a');
 
 fn main() -> int {

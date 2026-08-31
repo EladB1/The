@@ -103,20 +103,17 @@ Program: [
     PARAM global.s
     __t42: i32 = CALL __str_length 1
     STORE global.len __t42
-    PARAM str_const(6)
-    __t43: str_const = CALL getEnv 1
-    STORE global.env __t43
     PARAM i32(97)
-    PARAM str_const(7)
-    __t44: i32 = CALL __str_contains_char 2
-    STORE global.hasA __t44
+    PARAM str_const(6)
+    __t43: i32 = CALL __str_contains_char 2
+    STORE global.hasA __t43
   fn main()->i32 {
-    PARAM str_const(9)
-    PARAM str_const(10)
-    __t45: str_const = CALL __str_concat 2
     PARAM str_const(8)
-    PARAM __t45
-    __t46: i32 = CALL __str_eq 2
+    PARAM str_const(9)
+    __t44: str_const = CALL __str_concat 2
+    PARAM str_const(7)
+    PARAM __t44
+    __t45: i32 = CALL __str_eq 2
     return i32(0)
   }
 

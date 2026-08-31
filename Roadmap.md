@@ -1,16 +1,50 @@
+Roadmap
+---
+
+> Plans for the future of the compiler and language. \
+> Nothing is guaranteed to be included and there are no dates in mind
+
 # Future State
 
 - [Compiler](#compiler)
+    - [Optimization Phase](#optimization-phase)
+    - [LSP/Code editor](#lspcode-editor)
+    - [Variable cache](#semanticir-variable-cache)
+    - [Package/Dependency Management](#packagedependency-management)
 - [Language](#language)
+    - [Structured concurrency](#structured-concurrency)
+    - [Types](#types)
+        - [Enums](#enums)
+        - [Fixed size arrays](#fixed-size-arrays)
+        - [Variable size arrays](#variable-size-arrays)
+        - [Set](#set)
+        - [Map](#map)
+        - [User defined container types](#user-defined-container-types)
+        - [File types](#file-types)
+        - [Maybe (Null Safety)](#maybe-null-safety)
+        - [Try (Error handling)](#try-error-handling)
+    - [Standard Library functions](#standard-library-functions)
+    - [Strings](#strings)
+        - [Format strings](#format-strings)
+        - [Multi-line strings](#multi-line-strings)
+    - [Imports/Exports](#importsexports)
 
 ## Compiler
 
-- Optimization stage
-- Direct WASM byte code generation (skipping WAT)
-- LSP
-- Debugger
+### Optimization Phase
 
-#### Semantic/IR Variable cache
+- Constant folding
+- Dead code elimination
+- etc.
+
+
+### LSP/Code editor
+
+- Syntax highlighting
+- Error detection
+- etc.
+
+### Semantic/IR Variable cache
 
 For code like this:
 
@@ -80,16 +114,20 @@ else {
 
 ```
 
+### Package/Dependency Management
+
+Build a way to publish and consume packages similar to the way `package.json` and `go.mod` work.
+
 ## Language
 
 > **NOTE**: Any code examples in this file are just ideas. The syntax and semantics are subject to change as development progresses and ideas are fleshed out a bit more.
 
-Structured concurrency
----
+### Structured concurrency
+
 
 Any function marked with `async` can be called with `await` to run multiple threads. If any `async`/`await` calls fail in a function with multiple, the errors will be reported to the caller which can either handle them gracefully or return early; an early return would stop all other threads spawned by the function from running.
 
-Exhaustive pattern matching
+### Exhaustive pattern matching
 ---
 
 Use `match` block to do pattern. Developers will be required to handle all cases, but can use `else` to avoid writing them all out.
@@ -112,13 +150,100 @@ match i {
 }
 ```
 
-Container Types
----
+### Types
 
-Support for types which can contain other subtypes such as `Array<subtype>` or `Map<subtype1, subtype2>`
+#### Enums
+May support simple enums that are names and numbers or may decide to make these more complex by making it a container type
 
-Null Safety
----
+#### Fixed size arrays
+
+```
+mut int[5] arr = {1, 2, 3};
+arr[3] = 10; // result: {1, 2, 3, 10}
+arr[4] = 20; // result: {1, 2, 3, 10, 20}
+arr[0]++; // result: {2, 2, 3, 10, 20}
+println(arr.length); // result: 5
+println(arr.capacity); // result: 5
+arr[5]; // bounds error
+```
+
+#### Variable size arrays
+
+```
+mut Vector<int> arr = {1, 2, 3};
+arr.append(10); // result: {1, 2, 3, 10}
+arr.append(20); // result: {1, 2, 3, 10, 20}
+arr[0]++; // result: {2, 2, 3, 10, 20}
+println(arr.length); // result: 5
+println(arr.capacity); // result: default size (TBD)
+```
+
+#### Set
+
+A hashset: a vector with hash key for each unique entry
+
+```
+mut Set<int> set = {1, 2, 3};
+set.append(4); // result: {1, 2, 3, 4}
+set.append(1); // result: {1, 2, 3, 4}
+```
+
+#### Map
+
+
+A hashmap: a key/value store
+
+```
+mut Map<String, int> values = {"name1": 10, "name2": 23};
+values["name1"] += 5; // result: {"name1": 15, "name2": 23};
+values["name3"] = 32; // result: {"name1": 15, "name2": 23, "name3": 32};
+for (string key, int value in values) {
+    println(key + ": " + value as String);
+}
+```
+
+#### User defined container types
+
+Provide some mechanism for a user to define a struct which can contain some generic value
+
+```
+struct Container<T> {
+    Vector<T> values;
+    container {
+        fn index(int i) -> T {
+            return values[i];
+        }
+        fn append(T value) {
+            values.append(value);
+        }
+    }
+}
+
+Container<String> c = Container<String>{};
+c.append("The");
+println(c[0]);
+```
+
+#### File types
+
+Provided some native file system types for I/O.
+
+```
+File file = Open("somefile.txt");
+println(file.name); // result: "somefile.txt"
+println(file.permissions); // result: 0644
+
+FilePermissions perms = FilePermissions{
+    User: {'r', 'w', 'x'},
+    Group: '{'r'},
+    Public: {}
+};
+
+Directory dir = CreateDir("/tmp/results", perms);
+```
+
+
+#### Maybe (Null Safety)
 
 Establish a `Maybe<Type>` which states that it could either contain a value of type `Type` or could be empty. Both cases would have to be handled either by `match`, if statements, or a special syntax like `?` for `Type` and `?:` for empty. The "zero value" of a `Maybe` is empty.
 
@@ -149,8 +274,7 @@ fn deleteEverythingAfterNode(Node head) {
 > An empty value means the pointer is null\
 > Resolved is used to safely dereference the pointer
 
-Error Handling
----
+#### Try (Error Handling)
 
 Create an error handling system where there are a set of built-in errors as well as user defined errors. Anything that could throw an error must have type `Try<Type, ErrorType>`. Both causes would have to be handled either by `match`, if statements, or a special syntax like `?` for `Type` and `?:` for error. Essentially, `Try<Type, ErrorType>` is 
 
@@ -185,13 +309,21 @@ fn main() -> int {
 > `raise` sets the internal flag to 1, indicating that the error type should be used\
 > `fold` resolves down to conditional blocks that run the `resolved` and `failed` code depending on the tagged union flag
 
-Enums
----
+### Standard Library Functions
 
-May support simple enums that are names and numbers or may decide to make these more complex by making it a container type
+| Signature(s) | Description |
+| --- | --- |
+| `typeOf(Any value) -> String` | Get the type of a value as a string |
+| `sizeOf(Any value) -> uint32` | Get the size of a value in bytes | 
+| `secretPrompt(String promptText) -> String` | Print `promptText` and read from stdin but hide characters being typed |
+| `getEnv(String key) -> String` | Get the value of environment variable |
+| `setEnv(String key, String value)` | Set the value of environment variable |
+| `readEnv() -> Map<String, String>` | Get all environment variables |
 
-Format strings
----
+
+### Strings
+
+#### Format strings
 
 Strings that can insert dynamic values to cut down on typecasting and string concatenation
 
@@ -214,17 +346,17 @@ EBNF rule:
 FormatStringLiteral = "`" .* { "{" expression "}" } .* "`" ;
 ```
 
-Multi-line strings
----
+#### Multi-line strings
 
 Strings that span multiple lines. Optionally, can be made compatible with format strings as well. Would start with `/"` and end with `"\`. 
 
-Imports/Exports
----
+### Imports/Exports
 
 The ability to share code between multiple files. Thinking of something like this:
 
 ```
+    package somename; 
+
     import something, otherthing from package;
     import thirdthing from "../data/types.the";
     import otherpackage;
@@ -241,7 +373,3 @@ The ability to share code between multiple files. Thinking of something like thi
     }
 ```
 
-Package/Dependency Management
----
-
-Build a way to publish and consume packages similar to the way `package.json` and `go.mod` work.

@@ -1,28 +1,19 @@
 struct S {
     int i;
-    /*private */int j;
+    int j;
     char c;
-
-    cast {
-    //     fn toString() -> String {
-    //         String rep = i as String + c as String;
-    //         return (this.i as String) + (c as String);
-    //     }
-    
-    // fn default_toString() -> String {
-    //     return '{' + (this.i as String) + ',' + (this.j as String) + ',' + (this.c as String) + '}';
-    // }
-    }
 
     compare {
         fn equals(S other) -> bool {
             return this.i == other.i && this.j == other.j;
         }
     }
+}
 
-    // fn Print() {
-    //     println(this as String);
-    // }
+struct Empty {
+    fn method() {
+        println("In Empty");
+    }
 }
 
 fn main() -> int {
@@ -52,5 +43,7 @@ fn main() -> int {
     println(s3);
     println(s == s2);
     println(s == s);
+    Empty empty = Empty{};
+    empty.method();
     return 0;
 }

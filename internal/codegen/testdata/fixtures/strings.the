@@ -5,6 +5,11 @@ fn main() -> int {
     testStrMethods(str);
     testCasts();
     testStrComparisons("hello", "halo");
+    mut String a = "hi";
+    String b = a;
+    a = a + "!";
+    println(a);
+    println(b);
     return 0;
 }
 
@@ -33,6 +38,7 @@ fn testStrMethods(String str) {
     print("  \n\tabc   \n\r\v ".trim());
     print(" \nabc".trimStart());
     print("abc\n\r  ".trimEnd());
+    // println(str.replace('l', '_'));
     println("");
 }
 
