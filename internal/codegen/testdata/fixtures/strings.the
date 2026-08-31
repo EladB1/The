@@ -24,34 +24,71 @@ fn testStrIndex(String str) {
 
 fn testStrMethods(String str) {
     println(str.reverse());
+    testStartsWith(str);
+    testEndsWith(str);
+    testContains(str);
+    println(str.toUpper());
+    println("HELLO".toLower());
+    testReplaceChar(str);
+    testReplaceChar("");
+    testReplaceString(str);
+    testReplaceString("");
+    testReplaceAllChar(str);
+    testReplaceAllChar("");
+    testReplaceAllString(str);
+    testReplaceAllString("");
+}
+
+fn testStartsWith(String str) {
     println(str.startsWith("hello"));
     println(str.startsWith("helo"));
+}
+
+fn testEndsWith(String str) {
     println(str.endsWith("world"));
     println(str.endsWith("RLD"));
+}
+
+fn testContains(String str) {
     println(str.contains('l'));
     println(str.contains('L'));
     println(str.contains("ll"));
     println(str.contains("abc"));
     println(str.contains(""));
-    println(str.toUpper());
-    println("HELLO".toLower());
+}
+
+fn testTrim(String str) {
     print("  \n\tabc   \n\r\v ".trim());
     print(" \nabc".trimStart());
     println("abc\n\r  ".trimEnd());
+}
+
+fn testReplaceChar(String str) {
     println(str.replace('', '_'));
     println(str.replace('l', '_'));
     println(str.replace('l', 'l'));
     println(str.replace('l', ''));
-    println("".replace('', ''));
-    println("".replace('', 'k'));
-    println("".replace('k', 'k'));
+}
+
+fn testReplaceString(String str) {
+    println(str.replace("", "(y)"));
+    println(str.replace("ll", "(y)"));
+    println(str.replace("ll", "ll"));
+    println(str.replace("ll", ""));
+}
+
+fn testReplaceAllChar(String str) {
     println(str.replaceAll('', '_'));
     println(str.replaceAll('l', '_'));
     println(str.replaceAll('l', 'l'));
     println(str.replaceAll('l', ''));
-    println("".replaceAll('', ''));
-    println("".replaceAll('', 'k'));
-    println("".replaceAll('k', 'k'));
+}
+
+fn testReplaceAllString(String str) {
+    println(str.replaceAll("", "(y)"));
+    println(str.replaceAll("ll", "(y)"));
+    println(str.replaceAll("ll", "ll"));
+    println(str.replaceAll("ll", ""));
 }
 
 fn testCasts() {
